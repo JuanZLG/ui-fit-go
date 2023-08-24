@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Applications.products'
+    'Applications.products.apps.ProductsConfig'
 ]
 
 MIDDLEWARE = [
@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'tuiranfit',
+        'USER': 'root',
+        'PASSWORD': '',
+        #En password pongan la contraseña de su conexión de MySQL
+        'HOST':'localhost',
     }
 }
 
