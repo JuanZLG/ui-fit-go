@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from .db import MYSQL as conexion
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Applications.products.apps.ProductsConfig'
+    # 'Applications.products.apps.ProductsConfig'
 ]
 
 MIDDLEWARE = [
@@ -74,16 +75,7 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tuiranfit',
-        'USER': 'root',
-        'PASSWORD': '',
-        #En password pongan la contraseña de su conexión de MySQL
-        'HOST':'localhost',
-    }
-}
+DATABASES = conexion
 
 
 # Password validation
@@ -108,7 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-co'
 
 TIME_ZONE = 'UTC'
 
