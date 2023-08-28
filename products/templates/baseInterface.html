@@ -387,7 +387,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    {% block body%}
+                    {% block body %}
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Nombre Tabla</h1>
                     <p class="mb-4">Este es el modulo de //NombreTabla, aquí puedes gestionar registros de tus //NombreTabla.cuando hagan lo de la base de datos borren todo este voleo de registros</p>
@@ -440,8 +440,8 @@
                                         {% for p in productos %}
                                         <tr>
                                             <td>{{p.id_producto}}</td>
-                                            <td>{{p.id_categoria}}</td>
-                                            <td>{{p.id_marca}}</td>
+                                            <td>{{p.id_categoria.nombre_categoria}}</td>
+                                            <td>{{p.id_marca.nombre_marca}}</td>
                                             <td>{{p.nombre_producto}}</td>
                                             <td>{{p.cantidad}}</td>
                                             <td><button type="button" class="btn btn-warning">Editar</button></td>
@@ -453,7 +453,7 @@
                             </div>
                         </div>
                     </div>
-                    {% end block%}
+                    {% endblock %}
                 </div>
                 <!-- /.container-fluid -->
 

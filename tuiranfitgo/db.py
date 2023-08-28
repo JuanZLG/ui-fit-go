@@ -4,6 +4,6 @@ MYSQL = {
         'NAME':'tuiranfit',
         'USER': 'root',
         'PASSWORD': 'monitoc10',
-        'PORT': '3306'
+        'PORT': '1010'
     }
 }
