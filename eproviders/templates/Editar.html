@@ -1,0 +1,53 @@
+{% extends "../tuiranfitgo/templates/baseInterface.html" %}
+
+{% block title %} Editar Proveedor {% endblock %}
+
+{% block body %}
+<div class="container-fluid col-8">
+    <h1 class="h3 mt-2 text-gray-800">Modificar informacion del Proveedor</h1>
+    <br>
+    <form action="{% url 'Editar' proveedor.id_proveedor %}" method="post" class="container mt-3 bg-body-secondary p-4">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-3 d-flex align-items-center bg-body-tertiary">
+                <label for="inputId_proveedor" class="m-2">Id: {{proveedor.id_proveedor}} </label>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputNombre" class="m-2">Nombre del proveedor</label>
+                    <input type="text" class="form-control" value="{{proveedor.nombre_proveedor}}" id="inputNombre" name="nombre" placeholder="Nombre">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputTelefono" class="m-2"># de celular</label>
+                    <input type="text" class="form-control" value="{{proveedor.telefono}}" id="inputTelefono" name="telefono" placeholder="Teléfono">
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputEmail" class="m-2">Correo electrónico</label>
+                    <input type="email" class="form-control" value="{{proveedor.correo}}" id="inputEmail" name="correo" placeholder="Correo">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputEstado" class="m-2">Estado</label>
+                    <select id="inputEstado" class="form-control" name="estado">
+                        <option value="1" {% if proveedor.estado == 1 %}selected{% endif %}>Activo</option>
+                        <option value="0" {% if proveedor.estado == 0 %}selected{% endif %}>Inactivo</option>
+                    </select>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar proveedor</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

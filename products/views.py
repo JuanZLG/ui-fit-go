@@ -4,4 +4,4 @@ from .models import Productos
 # Create your views here.
 
 def home(request):
-    return render(request, 'baseInterface.html',{'productos': Productos.objects.all()})
+    return render(request, 'productsHome.html',{'productos': Productos.objects.all()})

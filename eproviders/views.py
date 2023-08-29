@@ -1,0 +1,66 @@
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from eproviders.forms import CrearProveedorForm
+from .models import Proveedores
+# import requests
+
+
+
+def Home(request):
+    proveedores = Proveedores.objects.all()
+    # .order_by('-estado') (Arriba, luego de all())
+    return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
+
+
+def registrar(request):
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        telefono = request.POST['telefono']
+        correo = request.POST['correo']
+        estado = request.POST['estado']
+        proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
+        return redirect('/Home')
+    return render(request, 'Registrar.html')
+
+def crearProveedor(request):
+     if (request.method == 'POST'):
+         form = CrearProveedorForm(request.POST)
+         if (form.is_valid()):
+            nombre = form.cleaned_data['nombre_proveedor']
+            proveedor = Proveedores.objects.create(nombre_proveedor=nombre)
+            proveedor.save()
+            return HttpResponse('El proveedor ha sido registrado' + proveedor.nombre_proveedor)
+     form = CrearProveedorForm()
+     return render(request, 'Crear.html', {'form':form})
+
+
+def editar(request, id_proveedor):
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        telefono = request.POST['telefono']
+        correo = request.POST['correo']
+        estado = request.POST['estado']     
+        proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
+        proveedor.nombre_proveedor = nombre
+        proveedor.telefono = telefono
+        proveedor.correo = correo
+        proveedor.estado = estado
+        proveedor.save()
+        return redirect('/Home')
+    else:
+        proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
+        return render(request, 'Editar.html', {"proveedor":proveedor}) 
+
+
+
+# def Estado(request, id_proveedor):
+#     proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
+    
+#     if proveedor.estado == 1:
+#         proveedor.estado = 0
+#     else:
+#         proveedor.estado = 1
+    
+#     proveedor.save()
+#     return redirect('/Home')  # O redirige a donde quieras
+
