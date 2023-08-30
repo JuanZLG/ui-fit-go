@@ -1,5 +1,8 @@
-from django.urls import path
-from .views import *
+from django.urls import path, include  # Funciones de manejo de rutas y urls
+from . import views 
+
 
 urlpatterns=[
-    path('home/',home)]
+    path('', views.Home), 
+
+]

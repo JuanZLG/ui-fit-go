@@ -58,9 +58,9 @@ ROOT_URLCONF = 'tuiranfitgo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'products','templates'),
+        'DIRS': [os.path.join(BASE_DIR, 'products', 'templates'),
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
-                 os.path.join(BASE_DIR, 'tuiranfitgo', 'templates')
+                 os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -80,8 +80,16 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = conexion
-
+# DATABASES = conexion
+DATABASES = {
+    'default': {
+        'ENGINE':'django.db.backends.mysql',
+        'NAME':'tuiranfit',
+        'USER': 'root',
+        'PASSWORD': '3127123250',
+        'PORT': '3306'
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

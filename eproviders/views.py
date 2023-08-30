@@ -2,13 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from eproviders.forms import CrearProveedorForm
 from .models import Proveedores
-# import requests
-
 
 
 def Home(request):
-    proveedores = Proveedores.objects.all()
-    # .order_by('-estado') (Arriba, luego de all())
+    proveedores = Proveedores.objects.all().order_by('-estado')
     return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
 
 
