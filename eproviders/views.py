@@ -20,15 +20,21 @@ def Home(request):
 #     return render(request, 'Registrar.html')
 
 def crear_proveedor(request):
-     if (request.method == 'POST'):
-         form = CrearProveedorForm(request.POST)
-         if (form.is_valid()):
+    if request.method == 'POST':
+        form = CrearProveedorForm(request.POST)
+        if form.is_valid():
             nombre = form.cleaned_data['nombre_proveedor']
-            proveedor = Proveedores.objects.create(nombre_proveedor=nombre)
+            telefono = form.cleaned_data['telefono']
+            correo = form.cleaned_data['correo']
+            estado = form.cleaned_data['estado']  
+            proveedor = Proveedores(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
             proveedor.save()
-            return HttpResponse('El proveedor ha sido registrado' + proveedor.nombre_proveedor)
-     form = CrearProveedorForm()
-     return render(request, 'create.html', {'form':form})
+            
+            return HttpResponse('El proveedor ha sido registrado: ' + proveedor.nombre_proveedor)
+    else:
+        form = CrearProveedorForm()
+    
+    return render(request, 'create.html', {'form': form})
 
 
 def editar(request, id_proveedor):
