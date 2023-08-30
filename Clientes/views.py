@@ -23,6 +23,11 @@ def agregar_cliente(request):
     municipios = Municipios.objects.all()  
     return render(request, 'PlantillaAgregar.html', {'municipios': municipios})
 
+
+
+
+
+
 def agregar_cliente_post(request):
     if request.method == 'POST':
         documento = request.POST.get('iDocumento')
@@ -46,10 +51,12 @@ def agregar_cliente_post(request):
                            celular=celular, barrio=barrio, direccion=direccion, estado=estado, id_municipio=municipio)
         cliente.save()
         
-        return redirect('Lista')  
+        return redirect('lista_clientes')  
     
     municipios = Municipios.objects.all()  
     return render(request, 'PlantillaAgregar.html', {'municipios': municipios})
+
+
 
 
 def redirigir_editar_cliente(request, cliente_id):
@@ -81,21 +88,30 @@ def editar_cliente(request, cliente_id):
         cliente.id_municipio = Municipios.objects.get(pk=id_municipio)
         cliente.save()
 
-        return redirect('Lista')  
+        return redirect('lista_clientes')  
 
     municipios = Municipios.objects.all()  
     return render(request, 'PlantillaModificar.html', {'cliente': cliente, 'municipios': municipios})
 
-def cambiar_estado_cliente(request, cliente_id):
-    cliente = Clientes.objects.get(id_cliente=cliente_id)
-    
-    if cliente.estado == 1: 
-        cliente.estado = 0
-    else:
-        cliente.estado = 1
-    
-    cliente.save()
-    return redirect('Lista')  
+
+
+def cambiar_estado_cliente_ajax(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        cliente_id = request.GET.get('cliente_id')
+        nuevo_estado = request.GET.get('nuevo_estado')
+        
+        try:
+            cliente = Clientes.objects.get(id_cliente=cliente_id)
+            cliente.estado = int(nuevo_estado)
+            cliente.save()
+            
+            return JsonResponse({'status': 'success'})
+        except Clientes.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Cliente no encontrado'})
+        
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
 
 
 
