@@ -9,17 +9,17 @@ def Home(request):
     return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
 
 
-def registrar(request):
-    if request.method == 'POST':
-        nombre = request.POST['nombre']
-        telefono = request.POST['telefono']
-        correo = request.POST['correo']
-        estado = request.POST['estado']
-        proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
-        return redirect('/Home')
-    return render(request, 'Registrar.html')
+# def registrar(request):
+#     if request.method == 'POST':
+#         nombre = request.POST['nombre']
+#         telefono = request.POST['telefono']
+#         correo = request.POST['correo']
+#         estado = request.POST['estado']
+#         proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
+#         return redirect('/Home')
+#     return render(request, 'Registrar.html')
 
-def crearProveedor(request):
+def crear_proveedor(request):
      if (request.method == 'POST'):
          form = CrearProveedorForm(request.POST)
          if (form.is_valid()):
@@ -28,7 +28,7 @@ def crearProveedor(request):
             proveedor.save()
             return HttpResponse('El proveedor ha sido registrado' + proveedor.nombre_proveedor)
      form = CrearProveedorForm()
-     return render(request, 'Crear.html', {'form':form})
+     return render(request, 'create.html', {'form':form})
 
 
 def editar(request, id_proveedor):
