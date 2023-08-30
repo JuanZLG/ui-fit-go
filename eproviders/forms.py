@@ -5,5 +5,3 @@ class CrearProveedorForm (forms.Form):
     telefono = forms.CharField(label='# de celular',max_length=10)
     correo = forms.CharField(label='Correo electrónico',max_length=65)
     estado = forms.BooleanField(initial=True, widget=forms.HiddenInput)
-
-    
