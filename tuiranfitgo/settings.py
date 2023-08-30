@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
-    'eproviders'
+    'eproviders',
+    'Clientes'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'products', 'templates'),
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
+                 os.path.join(BASE_DIR, 'Clientes', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  ],
         'APP_DIRS': True,

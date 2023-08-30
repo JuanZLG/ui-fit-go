@@ -8,14 +8,14 @@ from django.http import JsonResponse
 #     return render(request, "Plantilla.html", {"clientes": clienteRegistrados})
 
 
-def Listica(request):
-    clientes = Clientes.objects.all()  
-    context = {'clientes': clientes} 
-    return render(request, 'Plantilla.html', context)
+# def Listica(request):
+#     clientes = Clientes.objects.all()  
+#     context = {'clientes': clientes} 
+#     return render(request, 'Plantilla.html', context)
 
 
 def lista_clientes(request):
-    clientes = Clientes.objects.all()  
+    clientes = Clientes.objects.all().order_by('-estado')  
     context = {'clientes': clientes}  
     return render(request, 'Plantilla.html', context)
 
