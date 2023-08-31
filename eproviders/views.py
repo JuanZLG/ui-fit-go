@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from eproviders.forms import CrearProveedorForm
 from .models import Proveedores
 
 
@@ -9,32 +8,15 @@ def Home(request):
     return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
 
 
-# def registrar(request):
-#     if request.method == 'POST':
-#         nombre = request.POST['nombre']
-#         telefono = request.POST['telefono']
-#         correo = request.POST['correo']
-#         estado = request.POST['estado']
-#         proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
-#         return redirect('/Home')
-#     return render(request, 'Registrar.html')
-
 def crear_proveedor(request):
     if request.method == 'POST':
-        form = CrearProveedorForm(request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre_proveedor']
-            telefono = form.cleaned_data['telefono']
-            correo = form.cleaned_data['correo']
-            estado = form.cleaned_data['estado']  
-            proveedor = Proveedores(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
-            proveedor.save()
-            
-            return HttpResponse('El proveedor ha sido registrado: ' + proveedor.nombre_proveedor)
-    else:
-        form = CrearProveedorForm()
-    
-    return render(request, 'create.html', {'form': form})
+        nombre = request.POST['nombre']
+        telefono = request.POST['telefono']
+        correo = request.POST['correo']
+        estado = request.POST['estado']
+        proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
+        return redirect('proveedores')
+    return render(request, 'create.html')
 
 
 def editar(request, id_proveedor):

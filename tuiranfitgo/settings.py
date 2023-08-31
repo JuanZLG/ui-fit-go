@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
-    'eproviders'
+    'eproviders',
+    # 'eclients',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'products', 'templates'),
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
+                 os.path.join(BASE_DIR, 'eclients', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  ],
         'APP_DIRS': True,
@@ -69,7 +71,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '3127123250',
         'PORT': '3306'
     }
 }
