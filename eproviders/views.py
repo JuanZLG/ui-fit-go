@@ -5,7 +5,7 @@ from .models import Proveedores
 
 def Home(request):
     proveedores = Proveedores.objects.all().order_by('-estado')
-    return render(request, 'Home.html', {"proveedores":proveedores})  # Enviar lista
+    return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
 
 
 # def crear_proveedor(request):

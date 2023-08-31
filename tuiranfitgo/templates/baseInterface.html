@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% block title %}Dashboard{% endblock %}</title>
+    <title>{% block title %} Dashboard {% endblock %}</title>
 
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
@@ -34,7 +34,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                 <div class="sidebar-brand-text mx-3"><img src="./img/gorille.png" width="48%" style="margin-right: 1rem;"></div>
+                 <div class="sidebar-brand-text mx-3"><img src={% static 'img/gorille.png' %} width="48%" style="margin-right: 1rem;"></div>
             </a>
 
             <!-- Divider -->
@@ -355,7 +355,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-black-600 bold" style="color:black;font:bolder">Bienvenido, Jobserd</span>
                                 <img class="img-profile rounded-circle"
-                                    src="./img/jobser.jpg">
+                                    src={% static 'img/rock.jpg' %}>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
