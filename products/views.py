@@ -7,5 +7,5 @@ from django.urls import reverse
 
 def Home(request):
     product = Productos.objects.all()
-    return render(request, 'Home.html', {"Products":product})  # Enviar lista
+    return render(request, 'productsHome.html', {"Products":product})  # Enviar lista
 
