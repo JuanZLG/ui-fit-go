@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title></title>
+    <title>{% block title %}Dashboard{% endblock %}</title>
 
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
@@ -68,14 +68,14 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{% url 'proveedores' %}" data-toggle="collapse" data-target="#collapseProv"
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProv"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fa-solid fa-truck-fast"></i>
                     <span>Proveedores</span>
                 </a>
                 <div id="collapseProv" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Gestión de Proveedores</a>
+                        <a class="collapse-item" href="{% url 'proveedores' %}">Gestión de Proveedores</a>
                     </div>
                 </div>
             </li>
@@ -92,7 +92,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{% url 'productos' %}" data-toggle="collapse" data-target="#collapseProducts"
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fa-solid fa-blender"></i>
                     <span>Productos</span>
@@ -100,9 +100,7 @@
                 <div id="collapseProducts" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        
-                        <a class="collapse-item" href="utilities-color.html">Gestión de Productos</a>
-                    
+                        <a class="collapse-item" href="{% url 'productos' %}">Gestión de Productos</a>
                     </div>
                 </div>
             </li>
@@ -114,8 +112,7 @@
                 </a>
                 <div id="collapseCustomers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="charts.html">Gestión de Clientes</a>
-
+                        <a class="collapse-item" href="{% url 'clientes' %}">Gestión de Clientes</a>
                     </div>
                 </div>
             </li>
@@ -399,6 +396,10 @@
             </div>
             <!-- Fin del Contenido Principal... -->
 
+            
+
+    </div>
+    <!-- End of Page Wrapper -->
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">

@@ -6,7 +6,7 @@ class Proveedores(models.Model):
     nombre_proveedor = models.CharField(max_length=65)
     telefono = models.CharField(max_length=10)
     correo = models.CharField(max_length=65)
-    estado = models.IntegerField()
+    estado = models.IntegerField(default=True)
     class Meta:
         managed = True
         db_table = 'proveedores'
