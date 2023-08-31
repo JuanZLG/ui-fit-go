@@ -26,6 +26,7 @@
 
 <body id="page-top">
 
+
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -447,6 +448,24 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+    <script> 
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "language": {
+                    "search": "Buscar:",
+                    "searchPlaceholder": "Buscar registro",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente"
+                    },
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "info": "Mostrando _START_ al _END_ de _TOTAL_ registros",
+            "infoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+                }
+            });
+        });
+        
+    </script>
 
     <!-- Page level plugins -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
