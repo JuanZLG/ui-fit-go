@@ -1,7 +1,84 @@
+{% extends "baseInterface.html" %}
 
-<form action="crear_proveedor" method="post">
+{% block title %} Agregar Proveedor {% endblock %}
+
+{% block body %}
+
+<div class="container-fluid col-8">
+    <h1 class="h3 mt-2 text-gray-800">Agregar Proveedor</h1>
+    <br>
+    <form action="{% url 'create' %}" method="post" class="container mt-3 bg-body-secondary p-4">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputNombre" class="m-2">Nombre del Proveedor</label>
+                    <input type="text" class="form-control" id="inputNombre" name="nombre" placeholder="Nombre">
+                    {% if form.errors.nombre %}
+                        <p class="error-message">{{ form.errors.nombre }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputTelefono" class="m-2">Número de Celular</label>
+                    <input type="text" class="form-control" id="inputTelefono" name="telefono" placeholder="Teléfono">
+                    {% if form.errors.telefono %}
+                        <p class="error-message">{{ form.errors.telefono }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputEmail" class="m-2">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="inputEmail" name="correo" placeholder="Escribe un correo electrónico">
+                    {% if form.errors.correo %}
+                        <p class="error-message">{{ form.errors.correo }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group p-2">
+                    <label for="inputEstado" class="m-2">Estado</label>
+                    <select id="inputEstado" class="form-control" name="estado">
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar proveedor</button>
+        </div>
+    </form>
+</div>
+
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<form method="post">
     {% csrf_token %}
+    <label for="nombre_proveedor">Nombre del proveedor</label>
+    <input type="text" name="nombre_proveedor" required>
+    
+    <label for="telefono">Teléfono</label>
+    <input type="text" name="telefono" required>
+    
+    <label for="correo">Correo electrónico</label>
+    <input type="text" name="correo" required>
 
-    {{form}}
-    <button type="submit" class="btn btn-primary">Guardar proveedor</button>
+
+    
+    <button type="submit">Guardar proveedor</button>
 </form>
+
+
+    {% endblock %}

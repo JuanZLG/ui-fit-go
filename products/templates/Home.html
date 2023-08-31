@@ -1,0 +1,72 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Productos {% endblock %}
+
+{% block body %}
+
+
+<h1 class="h3 mb-2 text-gray-800">Módulo de Productos</h1>
+<p class="mb-4">Este es el entorno de Productos, aquí puedes gestionar registros de tus Productos.</p>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <span>
+            <a href="#" class="m-0 btn btn-success btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span class="text">Agregar</span>
+            </a>
+        </span>
+        <span style="display: flex; align-items: flex-end;">
+            <h6 style="margin-bottom: 1; color: black; font-weight: bold; margin-right: 10px;">Informes:</h6>
+            <button class="m-0 btn btn-danger">Ir a Dashboard</button>
+        </span>
+    </div>
+</div>
+</div>
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="color:black">ID</th>
+                    <th style="color:black">Categoría</th>
+                    <th style="color:black">Marca</th>
+                    <th style="color:black">Producto</th>
+                    <th style="color:black">Stock</th>
+                    <th style="color:black">Modificar</th>
+                    <th style="color:black">Estado</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th style="color:black">ID</th>
+                    <th style="color:black">Categoría</th>
+                    <th style="color:black">Marca</th>
+                    <th style="color:black">Producto</th>
+                    <th style="color:black">Stock</th>
+                    <th style="color:black">Modificar</th>
+                    <th style="color:black">Estado</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for p in productos %}
+                <tr>
+                    <td>{{p.id_producto}}</td>
+                    <td>{{p.id_categoria.nombre_categoria}}</td>
+                    <td>{{p.id_marca.nombre_marca}}</td>
+                    <td>{{p.nombre_producto}}</td>
+                    <td>{{p.cantidad}}</td>
+                    <td><button type="button" class="btn btn-warning">Editar</button></td>
+                    <td><button type="button" class="btn btn-dark">Estado</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+{% endblock %}

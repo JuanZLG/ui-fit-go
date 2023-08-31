@@ -1,35 +1,41 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from eproviders.forms import CrearProveedorForm
 from .models import Proveedores
 
 
 def Home(request):
     proveedores = Proveedores.objects.all().order_by('-estado')
-    return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
+    return render(request, 'Home.html', {"proveedores":proveedores})  # Enviar lista
 
 
-# def registrar(request):
+# def crear_proveedor(request):
 #     if request.method == 'POST':
 #         nombre = request.POST['nombre']
 #         telefono = request.POST['telefono']
 #         correo = request.POST['correo']
 #         estado = request.POST['estado']
 #         proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo, estado=estado)
-#         return redirect('/Home')
-#     return render(request, 'Registrar.html')
+#         return redirect('proveedores')
+#     return render(request, 'create.html')
+
+from django.contrib import messages
 
 def crear_proveedor(request):
-     if (request.method == 'POST'):
-         form = CrearProveedorForm(request.POST)
-         if (form.is_valid()):
-            nombre = form.cleaned_data['nombre_proveedor']
-            proveedor = Proveedores.objects.create(nombre_proveedor=nombre)
-            proveedor.save()
-            return HttpResponse('El proveedor ha sido registrado' + proveedor.nombre_proveedor)
-     form = CrearProveedorForm()
-     return render(request, 'create.html', {'form':form})
+    if request.method == 'POST':
+        nombre = request.POST['nombre_proveedor']
+        telefono = request.POST['telefono']
+        correo = request.POST['correo']
 
+        if not nombre or not telefono or not correo:
+            messages.error(request, 'Todos los campos son requeridos.')
+        elif not telefono.isdigit() or len(telefono) not in [8, 10]:
+            messages.error(request, 'Número de teléfono inválido.')
+        else:
+            proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo)
+            messages.success(request, 'El proveedor ha sido registrado: ' + proveedor.nombre_proveedor)
+            return redirect('proveedores')
+
+    return render(request, 'create.html')
 
 def editar(request, id_proveedor):
     if request.method == 'POST':

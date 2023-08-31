@@ -28,7 +28,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products',
     'eproviders',
-    'Clientes'
+<<<<<<< HEAD
+    'Clientes',
+=======
+    'eclients',
+>>>>>>> 008816afd4a6a2bb91ebe3baba51fa2205b197ed
 ]
 
 MIDDLEWARE = [
@@ -48,7 +52,11 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'products', 'templates'),
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
+<<<<<<< HEAD
                  os.path.join(BASE_DIR, 'Clientes', 'templates'),
+=======
+                 os.path.join(BASE_DIR, 'eclients', 'templates'),
+>>>>>>> 008816afd4a6a2bb91ebe3baba51fa2205b197ed
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  ],
         'APP_DIRS': True,
@@ -71,7 +79,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': '3127123250',
         'PORT': '3306'
     }
 }
@@ -110,9 +118,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Default primary key field type
+# Default primary key field typeF
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
