@@ -3,72 +3,80 @@
 
 {% block body %}
 
-<!-- Begin Page Content -->
-<div class="container-fluid">
 
-    <h1 class="h3 mb-2 text-gray-800">Modificar Cliente</h1>
-    <br>
+            <!-- End of Topbar -->
 
-    <form action="{% url 'editar_cliente' cliente.id_cliente %}" method="post">
-        {% csrf_token %}
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="Documento"> Documento</label>
-                <input type="number" class="form-control" id="iDocumento" placeholder="Documento" name="iDocumento"
-                    value="{{ cliente.documento }}" required>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <h1 class="h3 mb-2 text-gray-800">Modificar Cliente</h1>
+                <br>
+
+                <form action="{% url 'editar_cliente' cliente.id_cliente %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="Documento"> Documento</label>
+                        <input type="number" class="form-control" id="iDocumento" placeholder="Documento" name="iDocumento"value="{{ cliente.documento }}" required>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="Nombres">Nombres</label>
+                        <input type="text" class="form-control" id="iNombres" placeholder="Nombres" name="iNombres" value="{{ cliente.nombres }}" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="Apellidos">Apellidos</label>
+                      <input type="text" class="form-control" id="iApellidos" placeholder="Apellidos" name="iApellidos" value="{{ cliente.apellidos }}" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="Celular">Celular</label>
+                      <input type="text" class="form-control" id="iCelular" placeholder="Celular" name="iCelular" value="{{ cliente.celular }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Barrio">Barrio</label>
+                        <input type="text" class="form-control" id="iBarrio" placeholder="Barrio" name="iBarrio" value="{{ cliente.barrio }}" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="Direccion">Direccion</label>
+                        <input type="text" class="form-control" id="iDireccion" placeholder="Direccion" name="iDireccion" value="{{ cliente.direccion }}" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="id_estado">Estado</label>
+                        <select class="form-control" id="id_estado" name="id_estado" value="{{ cliente.id_estado}}" required>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                    
+                      
+                      <div class="form-group">
+                        <label for="id_municipio">Municipio</label>
+                        <select class="form-control" id="id_municipio" name="id_municipio" value="{{ cliente.id_municipio }}" required>
+                            {% for municipio in municipios %}
+                                <option value="{{ municipio.id_municipio }}">{{ municipio.nombre_municipio }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Modificar</button>
+                  </form>
             </div>
-            <div class="form-group col-md-6">
-                <label for="Nombres">Nombres</label>
-                <input type="text" class="form-control" id="iNombres" placeholder="Nombres" name="iNombres"
-                    value="{{ cliente.nombres }}" required>
-            </div>
+            <!-- /.container-fluid -->
+
         </div>
-        <div class="form-group">
-            <label for="Apellidos">Apellidos</label>
-            <input type="text" class="form-control" id="iApellidos" placeholder="Apellidos" name="iApellidos"
-                value="{{ cliente.apellidos }}" required>
-        </div>
-        <div class="form-group">
-            <label for="Celular">Celular</label>
-            <input type="text" class="form-control" id="iCelular" placeholder="Celular" name="iCelular"
-                value="{{ cliente.celular }}" required>
-        </div>
-        <div class="form-group">
-            <label for="Barrio">Barrio</label>
-            <input type="text" class="form-control" id="iBarrio" placeholder="Barrio" name="iBarrio"
-                value="{{ cliente.barrio }}" required>
-        </div>
-        <div class="form-group">
-            <label for="Direccion">Direccion</label>
-            <input type="text" class="form-control" id="iDireccion" placeholder="Direccion" name="iDireccion"
-                value="{{ cliente.direccion }}" required>
-        </div>
-        <div class="form-group">
-            <label for="id_estado">Estado</label>
-            <select class="form-control" id="id_estado" name="id_estado" value="{{ cliente.id_estado}}" required>
-                <option value="1">Activo</option>
-                <option value="0">Inactivo</option>
-            </select>
-        </div>
+        <!-- Fin del Contenido Principal... -->
+
+        <!-- Footer -->
 
 
-        <div class="form-group">
-            <label for="id_municipio">Municipio</label>
-            <select class="form-control" id="id_municipio" name="id_municipio" value="{{ cliente.id_municipio }}"
-                required>
-                {% for municipio in municipios %}
-                <option value="{{ municipio.id_municipio }}">{{ municipio.nombre_municipio }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-
-        <button type="submit" class="btn btn-primary">Modificar</button>
-    </form>
-</div>
-<!-- /.container-fluid -->
+    </div>
+    <!-- End of Content Wrapper -->
 
 </div>
+<!-- End of Page Wrapper -->
+
+
 
 
 

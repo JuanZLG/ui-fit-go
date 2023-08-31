@@ -9,4 +9,6 @@ urlpatterns = [
     path('admin/', TemplateView.as_view(template_name='baseInterface.html'), name='base-interface'),
     path('admin/products/', include('products.urls')),
     path('admin/providers/', include('eproviders.urls')),  
+    path('admin/eclients/', include('eclients.urls')),  
 ]
+

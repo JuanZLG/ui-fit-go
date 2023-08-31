@@ -1,14 +1,12 @@
 {% extends "baseInterface.html" %}
-{% block title %} Clientes {% endblock %}
 
 
 {% block body %}
 
 <style>
+    
     tbody td.inactivo {
-        background-color: #f8f9fc;
-    }
-
+            background-color: #f8f9fc; }
     .switch {
         position: relative;
         display: inline-block;
@@ -45,15 +43,15 @@
         border-radius: 50%;
     }
 
-    input:checked+.slider {
-        background-color: #28a745;
+    input:checked + .slider {
+        background-color: #28a745; 
     }
 
-    input:checked+.slider:before {
+    input:checked + .slider:before {
         transform: translateX(20px);
     }
 
-    input:checked+.slider:after {
+    input:checked + .slider:after {
         content: "Activo";
         position: absolute;
         top: -5px;
@@ -63,12 +61,12 @@
         font-weight: bold;
     }
 
-    input:not(:checked)+.slider:after {
+    input:not(:checked) + .slider:after {
         content: "Inactivo";
         position: absolute;
         top: -5px;
         right: -36px;
-        color: #dc3545;
+        color: #dc3545; 
         font-size: 12px;
         font-weight: bold;
     }
@@ -81,99 +79,150 @@
         border-radius: 50%;
     }
 </style>
+   <!-- Page Wrapper -->
+   
+            <!-- End of Topbar -->
 
-
-<!-- Begin Page Content -->
-<div class="container-fluid">
-    <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Clientes</h1>
-    <p class="mb-4">Este es el módulo de Clientes, aquí puedes gestionar registros de tus Clientes</p>
-
-    <!-- Botón para agregar cliente -->
-    <a href="{% URL 'create' %}" class="m-0 btn btn-success btn-icon-split">
-        <span class="icon text-white-50">
-            <i class="fa-solid fa-plus"></i>
-        </span>
-        <span class="text">Agregar</span>
-    </a>
-
-
-    <br>
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <!-- Tabla de Clientes -->
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th style="color:black">ID Cliente</th>
-                            <th style="color:black">Municipio</th>
-                            <th style="color:black">Documento</th>
-                            <th style="color:black">Nombres</th>
-                            <th style="color:black">Apellidos</th>
-                            <th style="color:black">Celular</th>
-                            <th style="color:black">Barrio</th>
-                            <th style="color:black">Dirección</th>
-                            <th style="color:black">Estado</th>
-                            <th style="color:black">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th style="color:black">ID Cliente</th>
-                            <th style="color:black">Municipio</th>
-                            <th style="color:black">Documento</th>
-                            <th style="color:black">Nombres</th>
-                            <th style="color:black">Apellidos</th>
-                            <th style="color:black">Celular</th>
-                            <th style="color:black">Barrio</th>
-                            <th style="color:black">Dirección</th>
-                            <th style="color:black">Estado</th>
-                            <th style="color:black">Acciones</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-
-                        {% for cliente in clientes %}
-                        <tr>
-                            <td>{{ cliente.id_cliente }}</td>
-                            <td>{{ cliente.id_municipio.nombre_municipio }}</td>
-                            <td>{{ cliente.documento }}</td>
-                            <td>{{ cliente.nombres }}</td>
-                            <td>{{ cliente.apellidos }}</td>
-                            <td>{{ cliente.celular }}</td>
-                            <td>{{ cliente.barrio }}</td>
-                            <td>{{ cliente.direccion }}</td>
-                            <td>
-                                {% if cliente.estado == 1 %}
-                                Activo
-                                {% elif cliente.estado == 0 %}
-                                Inactivo
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if cliente.estado == 1 %}
-                                <a href="#"
-                                    class="btn btn-danger">Inactivar</a>
-                                {% else %}
-                                <a href="#"
-                                    class="btn btn-success">Activar</a>
-                                {% endif %}
-                                <a href="#"
-                                    class="btn btn-primary {% if cliente.estado == 0 %}disabled{% endif %}">Editar</a>
-                            </td>
-
-
-
-
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Clientes</h1>
+                <p class="mb-4">Este es el módulo de Clientes, aquí puedes gestionar registros de tus Clientes</p>
+            
+                <!-- Botón para agregar cliente -->
+                <a href="{% url 'agregar_cliente_post' %}" class="m-0 btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-plus"></i>
+                    </span>
+                    <span class="text">Agregar</span>
+                </a>
+            
+            
+            <br>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <!-- Tabla de Clientes -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="color:black">ID Cliente</th>
+                                    <th style="color:black">Municipio</th>
+                                    <th style="color:black">Documento</th>
+                                    <th style="color:black">Nombres</th>
+                                    <th style="color:black">Apellidos</th>
+                                    <th style="color:black">Celular</th>
+                                    <th style="color:black">Barrio</th>
+                                    <th style="color:black">Dirección</th>
+                                    <th style="color:black">Estado</th>
+                                    <th style="color:black">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th style="color:black">ID Cliente</th>
+                                    <th style="color:black">Municipio</th>
+                                    <th style="color:black">Documento</th>
+                                    <th style="color:black">Nombres</th>
+                                    <th style="color:black">Apellidos</th>
+                                    <th style="color:black">Celular</th>
+                                    <th style="color:black">Barrio</th>
+                                    <th style="color:black">Dirección</th>
+                                    <th style="color:black">Estado</th>
+                                    <th style="color:black">Acciones</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                               
+                                {% for cliente in clientes %}
+                                <tr>
+                                    <td>{{ cliente.id_cliente }}</td>
+                                    <td>{{ cliente.id_municipio.nombre_municipio }}</td>
+                                    <td>{{ cliente.documento }}</td>
+                                    <td>{{ cliente.nombres }}</td>
+                                    <td>{{ cliente.apellidos }}</td>
+                                    <td>{{ cliente.celular }}</td>
+                                    <td>{{ cliente.barrio }}</td>
+                                    <td>{{ cliente.direccion }}</td>
+                                    <td>
+                                        {% if cliente.estado == 1 %}
+                                            <button class="btn btn-danger cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="0">Inactivar</button>
+                                        {% else %}
+                                            <button class="btn btn-success cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="1">Activar</button>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $(".cambiar-estado").click(function() {
+                                                var clienteId = $(this).data("cliente-id");
+                                                var nuevoEstado = $(this).data("nuevo-estado");
+                                    
+                                                Swal.fire({
+                                                    title: 'Confirmar',
+                                                    text: '¿Estás seguro de que deseas cambiar el estado?',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Confirmar',
+                                                    cancelButtonText: 'Cancelar'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        $.ajax({
+                                                            url: "{% url 'cambiar_estado_cliente_ajax'  %}",
+                                                            data: {
+                                                                cliente_id: clienteId,
+                                                                nuevo_estado: nuevoEstado
+                                                            },
+                                                            method: "GET",
+                                                            success: function(response) {
+                                                                // Actualiza la página o la sección relevante según sea necesario
+                                                                location.reload();
+                                                            },
+                                                            error: function(error) {
+                                                                // Maneja el error si es necesario
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                    
+                                    
+                                    <td>
+                                       
+                                        <a href="{% url 'editar_cliente' cliente.id_cliente %}" class="btn btn-primary {% if cliente.estado == 0 %}disabled{% endif %}">Editar</a>
+                                   </td>
+                                    
+                                    
+                                  
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
             </div>
+            
+            <!-- /.container-fluid -->
+
         </div>
+        <!-- Fin del Contenido Principal... -->
+
+        <!-- Footer -->
+     
+
     </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+
 
 
 
