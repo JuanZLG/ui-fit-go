@@ -5,6 +5,8 @@ urlpatterns = [
     path('', views.Home, name='proveedores'), 
     path('create/', views.crear_proveedor, name='create'), 
 
-    # path('Editar/<int:id_proveedor>/', views.editar, name='Editar'),
-    # path('Home/Estado/<int:id_proveedor>/', views.estado, name='Estado'),
+    # path('edit/<int:id_proveedor>/', views.editar_proveedor, name='Editar'),
+    # path('status/<int:id_proveedor>/', views.estado_proveedor, name='Estado'),
+    path('ajax/', views.estado_ajax, name='estado_ajax'),
+
 ]
