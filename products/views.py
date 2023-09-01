@@ -9,3 +9,5 @@ def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product})  # Enviar lista
 
+def createProduct(request):
+    return render(request, 'createProducts.html')

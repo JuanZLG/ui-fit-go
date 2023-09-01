@@ -32,7 +32,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: flex-center;">
                 <span>
-                    <a href="#" class="m-0 btn btn-success btn-icon-split" style="padding:2px">
+                    <a href="{% url 'agregarProducto' %}" class="m-0 btn btn-success btn-icon-split" style="padding:2px">
                         <span class="icon text-white-50">
                             <i class="fa-solid fa-plus"></i>
                         </span>
@@ -62,17 +62,6 @@
                         <th style="color:black">Estado</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th style="color:black">ID</th>
-                        <th style="color:black">Categoría</th>
-                        <th style="color:black">Marca</th>
-                        <th style="color:black">Producto</th>
-                        <th style="color:black">Stock</th>
-                        <th style="color:black">Modificar</th>
-                        <th style="color:black">Estado</th>
-                    </tr>
-                </tfoot>
                 <tbody>
                     {% for p in productos %}
                     <tr>
