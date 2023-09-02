@@ -28,24 +28,25 @@
         background-color: black;
         color: white;
     }
+
 </style>
 
-<h1 class="h3 mb-2 text-gray-800">Proveedores</h1>
+<h3 class="mb-2 text-gray-900">Proveedores</h1>
 <p class="mb-4">Este es el entorno de Proveedores, aquí puedes gestionar registros de tus Proveedores.</p>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: flex-center;">
+    <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'create' %}" class="m-0 btn btn-success btn-icon-split" style="padding:2px">
+            <a href="{% url 'create' %}" class="btn btn-success btn-icon-split ">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-plus"></i>
                 </span>
                 <span class="text">Agregar</span>
             </a>
         </span>
-        <span style="display: flex; align-items: flex-end;">
-            <h6 style="margin-bottom: 1; color: black; font-weight: bold; margin-right: 10px;">Informes:</h6>
-            <button class="m-0 btn btn-danger">Ir a Dashboard</button>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger">Ir a Dashboard</button>
         </span>
     </div>
 </div>
@@ -54,39 +55,26 @@
     <div class="card-header py-4">
         <!-- Tabla de Clientes -->
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="3"
-                style="border: 3px solid black; border-radius:7px">
+            <table class="table table-bordered mx-auto" id="dataTable" width="90%" cellspacing="3">
                 <thead>
                     <tr>
-                        <th style="color:black">ID</th>
-                        <th style="color:black">Nombre</th>
-                        <th style="color:black">Teléfono</th>
-                        <th style="color:black">Correo</th>
-                        <th style="color:black">Modificar</th>
-                        <th style="color:black">Estado</th>
+                        <th>Nombre del proveedor</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Modificar</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th style="color:black">ID</th>
-                        <th style="color:black">Nombre</th>
-                        <th style="color:black">Teléfono</th>
-                        <th style="color:black">Correo</th>
-                        <th style="color:black">Modificar</th>
-                        <th style="color:black">Estado</th>
-                    </tr>
-                </tfoot>
                 <tbody>
                     {% for proveedor in proveedores %}
-                    <tr>
-                        <td>{{ proveedor.id_proveedor }}</td>
+                    <tr class="{% if proveedor.estado == 0 %}table-secondary{% endif %}">
                         <td>{{ proveedor.nombre_proveedor }}</td>
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-primary">Editar <i class="bi bi-pencil"></i></a></td>
+                            <a href="#" class="btn btn-sm btn-primary">Editar <i class="fa-solid fa-pen-to-square"></i></i></a></td>
                         <td>
-                            <button class="btn cambiar-estado {% if proveedor.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ proveedor.id_proveeodor }}" data-nuevo-estado="btn {% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
+                            <button class="btn cambiar-estado {% if proveedor.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ proveedor.id_proveedor }}" data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if proveedor.estado == 1 %}
                                 Activo
                                 {% else %}

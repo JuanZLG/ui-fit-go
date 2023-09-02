@@ -6,7 +6,7 @@ from .models import Proveedores
 def Home(request):
     proveedores = Proveedores.objects.all()
     return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
-# .order_by('-estado')
+
 
 # def crear_proveedor(request):
 #     if request.method == 'POST':
@@ -18,7 +18,7 @@ def Home(request):
 #         return redirect('proveedores')
 #     return render(request, 'create.html')
 
-from django.contrib import messages
+from django.http import JsonResponse
 
 def crear_proveedor(request):
     if request.method == 'POST':
@@ -26,16 +26,28 @@ def crear_proveedor(request):
         telefono = request.POST['telefono']
         correo = request.POST['correo']
 
-        if not nombre or not telefono or not correo:
-            messages.error(request, 'Todos los campos son requeridos.')
-        elif not telefono.isdigit() or len(telefono) not in [8, 10]:
-            messages.error(request, 'Número de teléfono inválido.')
+        # Validaciones de campo requerido
+        errors = {}
+        if not nombre:
+            errors['nombre_proveedor'] = 'El campo Nombre es requerido.'
+        if not telefono:
+            errors['telefono'] = 'El campo Teléfono es requerido.'
+        if not correo:
+            errors['correo'] = 'El campo Correo es requerido.'
+
+        if errors:
+            # Devuelve una respuesta JSON con los errores
+            return JsonResponse({'success': False, 'errors': errors})
         else:
+            # Si no hay errores, realiza el proceso de creación del proveedor
+            # y devuelve una respuesta JSON de éxito
+            # (debes agregar aquí la lógica para crear el proveedor)
             proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo)
-            messages.success(request, 'El proveedor ha sido registrado: ' + proveedor.nombre_proveedor)
-            return redirect('proveedores')
+
+            return JsonResponse({'success': True})
 
     return render(request, 'createProvider.html')
+
 
 # def editar_proveedor(request, id_proveedor):
 #     if request.method == 'POST':

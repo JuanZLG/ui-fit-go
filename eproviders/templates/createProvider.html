@@ -4,81 +4,79 @@
 
 {% block body %}
 
-<div class="container-fluid col-8">
-    <h1 class="h3 mt-2 text-gray-800">Agregar Proveedor</h1>
-    <br>
-    <form action="{% url 'create' %}" method="post" class="container mt-3 bg-body-secondary p-4">
-        {% csrf_token %}
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="form-group p-2">
-                    <label for="inputNombre" class="m-2">Nombre del Proveedor</label>
-                    <input type="text" class="form-control" id="inputNombre" name="nombre" placeholder="Nombre">
-                    {% if form.errors.nombre %}
-                        <p class="error-message">{{ form.errors.nombre }}</p>
-                    {% endif %}
+<h1 class="h3 mx-5 text-gray-800">Agregar Proveedor</h1>
+<br>
+<div class="container">
+    <div class="card shadow mb-4 w-50">
+        <div class="card-header py-4">
+            <form id="proveedor-form" method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        <label for="#">Nombre del proveedor *</label>
+                        <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor" placeholder="Nombre" required>
+                        <span class="error-message" id="nombre-error"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="#">Número de contacto *</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número" required>
+                        <span class="error-message" id="telefono-error"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group p-2">
-                    <label for="inputTelefono" class="m-2">Número de Celular</label>
-                    <input type="text" class="form-control" id="inputTelefono" name="telefono" placeholder="Teléfono">
-                    {% if form.errors.telefono %}
-                        <p class="error-message">{{ form.errors.telefono }}</p>
-                    {% endif %}
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="#">Correo Electrónico *</label>
+                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                        <span class="error-message" id="correo-error"></span>
+                    </div>                    
                 </div>
-            </div>
+                <button class="btn btn-primary" type="submit">Submit form</button>
+            </form>
         </div>
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="form-group p-2">
-                    <label for="inputEmail" class="m-2">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="inputEmail" name="correo" placeholder="Escribe un correo electrónico">
-                    {% if form.errors.correo %}
-                        <p class="error-message">{{ form.errors.correo }}</p>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group p-2">
-                    <label for="inputEstado" class="m-2">Estado</label>
-                    <select id="inputEstado" class="form-control" name="estado">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Guardar proveedor</button>
-        </div>
-    </form>
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Función para validar el número de teléfono en tiempo real
+        $('#telefono').on('input', function () {
+            // Realiza la validación y muestra el mensaje de error si es necesario
+            const telefonoValue = $(this).val();
+            // Aquí puedes realizar la validación y mostrar el mensaje de error en #telefono-error en tiempo real
+            // Puedes usar AJAX para enviar la solicitud al servidor y obtener la respuesta asincrónicamente.
+        });
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+        // Función para validar el correo electrónico en tiempo real
+        $('#correo').on('input', function () {
+            // Realiza la validación y muestra el mensaje de error si es necesario
+            const correoValue = $(this).val();
+            // Aquí puedes realizar la validación y mostrar el mensaje de error en #correo-error en tiempo real
+            // Puedes usar AJAX para enviar la solicitud al servidor y obtener la respuesta asincrónicamente.
+        });
 
-<form method="post">
-    {% csrf_token %}
-    <label for="nombre_proveedor">Nombre del proveedor</label>
-    <input type="text" name="nombre_proveedor" required>
-    
-    <label for="telefono">Teléfono</label>
-    <input type="text" name="telefono" required>
-    
-    <label for="correo">Correo electrónico</label>
-    <input type="text" name="correo" required>
+        $('#proveedor-form').submit(function (event) {
+            event.preventDefault();
 
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'create' %}",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // Éxito: redirige o realiza acciones adicionales
+                        alert('Proveedor creado con éxito.');
+                        window.location.href = "{% url 'proveedores' %}";
+                    } else {
+                        // Mostrar mensajes de error en los campos correspondientes
+                        $.each(response.errors, function (field, message) {
+                            $('#' + field + '-error').text(message);
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
 
-    
-    <button type="submit">Guardar proveedor</button>
-</form>
-
-
-    {% endblock %}
+{% endblock %}
