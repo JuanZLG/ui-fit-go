@@ -1,46 +1,4 @@
-{% extends "baseInterface.html" %}
-{% block title %} Agregar Proveedor {% endblock %}
-{% block body %}
-
-<h1 class="h3 mx-5 text-gray-800">Agregar Proveedor</h1>
-<br>
-<div class="container">
-    <div class="card shadow mb-4 w-50">
-        <div class="card-header py-4">
-            <form id="proveedor-form" method="post">
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <label for="#">Nombre del proveedor *</label>
-                        <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
-                            placeholder="Nombre">
-                        <span class="error-message" id="nombre_proveedor-error"></span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="#">Número de contacto *</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                        <span class="error-message" id="telefono-error"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-12 mb-3">
-                        <label for="#">Correo Electrónico *</label>
-                        <input type="text" class="form-control" id="correo" name="correo"
-                            placeholder="Correo Electrónico">
-                        <span class="error-message" id="correo-error"></span>
-                    </div>
-                </div>
-                <button class="btn btn-primary" type="submit">Crear Proveedor</button>
-            </form>
-        </div>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<script>
-    $(document).ready(function () {
+$(document).ready(function () {
     // Función para validar que todos los campos estén llenos
     function validarCamposLlenos() {
         let camposLlenos = true;
@@ -111,8 +69,3 @@
         });
     });
 });
-</script>
-
-
-
-{% endblock %}
