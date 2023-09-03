@@ -1,7 +1,6 @@
-from django.urls import path, include  # Funciones de manejo de rutas y urls
+from django.urls import path, include 
 from . import views 
 
 urlpatterns = [
-    path('', views.Home, name='ventas'), 
-
+    path('', views.Home, name='ventas')
 ]
