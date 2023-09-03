@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'products',
     'eproviders',
     'eclients',
+    # 'sales',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,8 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
                  os.path.join(BASE_DIR, 'eclients', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
+                 os.path.join(BASE_DIR, 'sales', 'templates'),
+
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
