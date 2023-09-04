@@ -9,33 +9,42 @@
         <div class="card-header py-4">
             <form id="venta-form" method="post">
                 {% csrf_token %}
-                <div class="form-row d-flex justify-content-between">
+                <div class="form-row justify-content-around">
                     <div class="col-md-3 mb-3">
                         <label for="documento">Documento del cliente *</label>
                         <input type="text" class="form-control" id="documento" name="documento" autocomplete="off"
                             placeholder="Documento">
+                        <label class="text-secondary" id="mess-sugges-doc">Sugerencias:</label>
                         <span class="error-message" id="documento-error"></span>
                     </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-secondary" type="button">Agregar producto</button>
-                    </div>
-                </div>
-                <div class="form-row mb-3">
                     <div class="col-md-3">
                         <label for="producto">Nombre del Producto *</label>
                         <input type="text" class="form-control" id="producto" name="producto" autocomplete="off"
                             placeholder="Producto">
+                        <label class="text-secondary" id="mess-sugges-prod">Sugerencias:</label>
                         <span class="error-message" id="producto-error"></span>
                     </div>
-                    <div class="col-md-2 ml-3">
-                        <label for="Precio Unitario">Precio Unitario</label>
-                        <input type="text" class="form-control" id="precioUnidad" name="precioUnidad" readonly>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Precio Unitario">Precio Unitario</label>
+                                <input type="text" class="form-control" id="precioUnidad" name="precioUnidad" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Precio total">TOTAL</label>
+                                <input type="text" class="form-control" id="precioTotal" name="precioTotal" readonly>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end mt-5">
+                            <button class="btn btn-secondary col-md-5" type="button"> Agregar producto</button>
+                        </div>
                     </div>
-                    <div class="col-md-2 ml-4">
-                        <label for="Precio total">TOTAL</label>
-                        <input type="text" class="form-control" id="precioTotal" name="precioTotal" readonly>
-                    </div>
+                    
                 </div>
+               
                 <button class="btn btn-primary" type="submit">Crear Venta</button>
             </form>
         </div>
@@ -48,18 +57,17 @@
         display: flex;
         flex-direction: column;
         gap: 3px;
-        background-color: #c50202b9;
         width: 100%;
-        color: #fff;
+        color: #000;
         cursor: pointer;
     }
 
     .select {
-        padding: 6px;
+        padding: 2px;
     }
 
     .select:hover {
-        background-color: #c502027d;
+        background-color: #ccc;
     }
 </style>
 
@@ -67,7 +75,7 @@
 
 <script>
     $(document).ready(function () {
-        $("#documento").after('<div id="documento-suggestions"></div>');
+        $("#mess-sugges-doc").after('<div id="documento-suggestions"></div>');
         $("#documento").on("input", function () {
             var input = $(this).val();
             if (input.length >= 3) {
@@ -96,12 +104,21 @@
             }
         });
 
+        // Controlador de eventos para clics en el documento
+        $(document).on("click", function (event) {
+            // Verificar si se hizo clic fuera del campo de producto o fuera de las sugerencias
+            if (!$(event.target).closest("#producto").length && !$(event.target).closest("#producto-suggestions").length) {
+                // Si se hizo clic fuera del campo de producto o fuera de las sugerencias, vaciar y ocultar las sugerencias
+                $("#producto-suggestions").empty().hide();
+            }
+        });
+
         $("#documento-suggestions").on("click", "span", function () {
             $("#documento").val($(this).text());
             $("#documento-suggestions").empty().hide();
         });
 
-        $("#producto").after('<div id="producto-suggestions"></div>');
+        $("#mess-sugges-prod").after('<div id="producto-suggestions"></div>');
         $("#producto").on("input", function () {
             var input = $(this).val();
             if (input.length >= 3) {
@@ -110,6 +127,8 @@
                     type: "GET",
                     success: function (data) {
                         var suggestions = $("#producto-suggestions");
+                        console.log("Respuesta de búsqueda de productos:", data);
+
                         suggestions.empty();
                         if (data.productos.length > 0) {
                             $.each(data.productos, function (index, producto) {
@@ -136,31 +155,59 @@
             $("#producto-suggestions").empty().hide();
         });
 
+        var timer;
+        var isSearching = false; // Definir la variable isSearching para controlar las búsquedas
 
-        $("#producto").on("blur", function () {
+        $("#producto").on("input", function () {
+            clearTimeout(timer); // Limpiar el temporizador anterior si existe
+            // Verificar si se está realizando una búsqueda antes de mostrar contenido en el campo de precio
+            if (!isSearching) {
+                $('#precioUnidad').val("..."); // Mostrar puntos suspensivos durante la búsqueda
+            }
             var nombreProducto = $(this).val();
             if (nombreProducto.length >= 3) {
-                $.ajax({
-                    url: "{% url 'obtener_precio_producto'%}",
-                    type: 'GET',
-                    data: {
-                        nombre_producto: nombreProducto
-                    },
-                    success: function (data) {
-                        if ('precio' in data) {
-                            $('#precioUnidad').val(data.precio);
-                        } else {
-                            $('#precioUnidad').val('Producto no encontrado');
-                        }
-                    },
-                    error: function () {
-                        $('#precioUnidad').val('Error al obtener el precio');
-                    }
-                });
+                timer = setTimeout(function () {
+                    obtenerPrecioProducto(nombreProducto);
+                }, 500); // Espera 500 milisegundos (0.5 segundos) después de que el usuario deje de escribir
             } else {
-                $('#precioUnidad').empty();
+                $('#precioUnidad').val("");
             }
         });
+
+        // Manejar la selección de sugerencias
+        $("#producto-suggestions").on("click", "span.select", function () {
+            var nombreProducto = $(this).text();
+            $("#producto").val(nombreProducto);
+            obtenerPrecioProducto(nombreProducto);
+        });
+
+        function obtenerPrecioProducto(nombreProducto) {
+            isSearching = true;
+            $.ajax({
+                url: "{% url 'obtener_precio_producto' %}",
+                type: 'GET',
+                data: {
+                    nombre_producto: nombreProducto
+                },
+                success: function (data) {
+                    isSearching = false; // Establecer la bandera a false después de completar la búsqueda
+
+                    if ('precio' in data) {
+                        $('#precioUnidad').val(data.precio); // Mostrar el precio si se encuentra
+                    } else {
+                        $('#precioUnidad').val("..."); // Mostrar puntos suspensivos si no se encuentra
+                    }
+                },
+                error: function () {
+                    isSearching = false; // Establecer la bandera a false en caso de error
+
+                    // Mostrar un mensaje de error personalizado en caso de que el usuario haya escrito mal el nombre del producto
+                    $('#precioUnidad').val("Error al obtener el producto");
+                }
+            });
+        }
+
+
 
 
     });

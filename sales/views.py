@@ -31,13 +31,10 @@ def buscar_productos(request):
     return JsonResponse({'productos': list(productos)})
 
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
 
-@require_GET
+
 def obtener_precio_producto(request):
     nombre_producto = request.GET.get('nombre_producto', None)  # Obtiene el valor de 'nombre_producto' de la solicitud GET
-
     if nombre_producto is not None:
         try:
             producto = Productos.objects.get(nombre_producto=nombre_producto)
@@ -47,3 +44,16 @@ def obtener_precio_producto(request):
             return JsonResponse({'error': 'Producto no encontrado'}, status=404)
     else:
         return JsonResponse({'error': 'Parámetro "nombre_producto" no proporcionado en la solicitud'}, status=400)
+
+
+
+# def obtener_precio_producto(request, nombreProducto):
+#     try:
+#         producto = Productos.objects.get(nombre_producto=nombreProducto)
+#         precio = producto.precio  
+#         return JsonResponse({'precio': precio})
+#     except Productos.DoesNotExist:
+#         return JsonResponse({'error': 'Producto no encontrado'}, status=404)
+#     else:
+#         return JsonResponse({'error': 'Parámetro "nombre_producto" no proporcionado en la solicitud'}, status=400)
+
