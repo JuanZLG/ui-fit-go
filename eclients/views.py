@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Clientes, Municipios
+from .models import Clientes, Municipios, Departamentos
 from django.http import JsonResponse
 
 
@@ -19,16 +19,16 @@ def lista_clientes(request):
     context = {'clientes': clientes}  
     return render(request, 'customersHome.html', context)
 
-def agregar_cliente(request):
+def agregarCliente(request):
     municipios = Municipios.objects.all()  
-    return render(request, 'create.html', {'municipios': municipios})
+    return render(request, 'createCustomer.html', {'municipios': municipios})
 
 
 
 
+from eclients.models import Clientes, Municipios, Departamentos
 
-
-def agregar_cliente_post(request):
+def agregarClientePost(request):
     if request.method == 'POST':
         documento = request.POST.get('iDocumento')
         nombres = request.POST.get('iNombres')
@@ -37,35 +37,68 @@ def agregar_cliente_post(request):
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
         estado = request.POST.get('id_estado')
-        id_municipio = request.POST.get('id_municipio')
-        
+        departamento_nombre = request.POST.get('nombre_departamento')
+        municipio_nombre = request.POST.get('nombre_municipio')
+
         if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
-            return render(request, 'create.html', {'error': 'Todos los campos son obligatorios'})
-        
-        try:
-            municipio = Municipios.objects.get(pk=id_municipio)
-        except Municipios.DoesNotExist:
-            return render(request, 'create.html', {'error': 'El municipio seleccionado no es válido'})
-        
-        cliente = Clientes(documento=documento, nombres=nombres, apellidos=apellidos,
-                           celular=celular, barrio=barrio, direccion=direccion, estado=estado, id_municipio=municipio)
+            # Devuelve un JSON con un mensaje de error
+            return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
+
+        # Intenta obtener el departamento existente o el primero con el mismo nombre
+        departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
+
+        if not departamento:
+            # Si no existe, crea uno nuevo
+            departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
+
+        # Verifica si el municipio ya existe en la base de datos o créalo si no existe
+        municipio, created = Municipios.objects.get_or_create(
+            nombre_municipio=municipio_nombre,
+            id_departamento=departamento
+        )
+
+        cliente = Clientes(
+            id_municipio=municipio,
+            documento=documento,
+            nombres=nombres,
+            apellidos=apellidos,
+            celular=celular,
+            barrio=barrio,
+            direccion=direccion,
+            estado=estado,
+        )
         cliente.save()
-        
-        return redirect('lista_clientes')  
-    
-    municipios = Municipios.objects.all()  
-    return render(request, 'create.html', {'municipios': municipios})
+
+        # Devuelve un JSON con éxito
+        return JsonResponse({'success': True, 'message': 'Cliente creado con éxito'})
+
+    municipios = Municipios.objects.all()
+    return render(request, 'createCustomer.html', {'municipios': municipios})
 
 
 
 
-def redirigir_editar_cliente(request, cliente_id):
+
+
+
+
+
+
+
+
+
+def redirigirEditar(request, cliente_id):
     cliente = Clientes.objects.get(id_cliente=cliente_id)
     municipios = Municipios.objects.all()  
-    return render(request, 'edit.html', {'cliente': cliente, 'municipios': municipios})
+    return render(request, 'editCustomer.html', {'cliente': cliente, 'municipios': municipios})
 
-def editar_cliente(request, cliente_id):
-    cliente = Clientes.objects.get(id_cliente=cliente_id)
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from .models import Clientes, Municipios, Departamentos
+
+def editarCliente(request, cliente_id):
+    # Obtener el cliente existente o mostrar un error 404 si no se encuentra
+    cliente = get_object_or_404(Clientes, id_cliente=cliente_id)
 
     if request.method == 'POST':
         documento = request.POST.get('iDocumento')
@@ -75,9 +108,28 @@ def editar_cliente(request, cliente_id):
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
         estado = request.POST.get('id_estado')
-        id_municipio = request.POST.get('id_municipio')
+        departamento_nombre = request.POST.get('nombre_departamento')
+        municipio_nombre = request.POST.get('nombre_municipio')
 
-        
+        if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
+            # Devuelve un JSON con un mensaje de error
+            return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
+
+        # Intenta obtener el departamento existente o el primero con el mismo nombre
+        departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
+
+        if not departamento:
+            # Si no existe, crea uno nuevo
+            departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
+
+        # Verifica si el municipio ya existe en la base de datos o créalo si no existe
+        municipio, created = Municipios.objects.get_or_create(
+            nombre_municipio=municipio_nombre,
+            id_departamento=departamento
+        )
+
+        # Actualiza los campos del cliente existente con los valores recibidos
+        cliente.id_municipio = municipio
         cliente.documento = documento
         cliente.nombres = nombres
         cliente.apellidos = apellidos
@@ -85,17 +137,18 @@ def editar_cliente(request, cliente_id):
         cliente.barrio = barrio
         cliente.direccion = direccion
         cliente.estado = estado
-        cliente.id_municipio = Municipios.objects.get(pk=id_municipio)
         cliente.save()
 
-        return redirect('lista_clientes')  
+        # Devuelve un JSON con éxito
+        return JsonResponse({'success': True, 'message': 'Cliente actualizado con éxito'})
 
-    municipios = Municipios.objects.all()  
-    return render(request, 'edit.html', {'cliente': cliente, 'municipios': municipios})
+    municipios = Municipios.objects.all()
+    return render(request, 'editCustomer.html', {'cliente': cliente, 'municipios': municipios})
 
 
 
-def cambiar_estado_cliente_ajax(request):
+
+def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         cliente_id = request.GET.get('cliente_id')
         nuevo_estado = request.GET.get('nuevo_estado')
