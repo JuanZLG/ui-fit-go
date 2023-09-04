@@ -7,7 +7,6 @@ def Home(request):
     return render(request, 'salesHome.html', {"ventas":ventas})  
 
 
-
 def crear_venta(request):
     # if request.method == 'POST':
     #     nombre = request.POST['nombre_proveedor']

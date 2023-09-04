@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'eproviders',
     'eclients',
     'sales',
+    'dashboard'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'eclients', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  os.path.join(BASE_DIR, 'sales', 'templates'),
+                 os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -73,8 +75,8 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
-        'PORT': '3306'
+        'PASSWORD': 'monitoc10',
+        'PORT': '1010'
     }
 }
 

@@ -1,5 +1,8 @@
 {% extends "baseInterface.html" %}
+
 {% block title %} Agregar Proveedor {% endblock %}
+
+
 {% block body %}
 
 <h1 class="h3 mx-5 text-gray-800">Agregar Proveedor</h1>
@@ -99,7 +102,7 @@
         // Continuar con el envío del formulario si todos los campos están llenos
         $.ajax({
             type: 'POST',
-            url: "{% url 'create' %}",
+            url: "{% url 'createProv' %}",
             data: $(this).serialize(),
             success: function (response) {
                 if (response.success) {

@@ -4,38 +4,8 @@
 {% block body %}
 
 
-
-
-
-<style>
-    /* Estilos para el menú desplegable de registros por página */
-    .dataTables_length select {
-        padding: 6px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        background-color: white;
-        padding-right: 30px;
-        /* Ajusta el espacio para el icono */
-    }
-
-    .dataTables_length label {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: start;
-        align-items: center;
-        gap: 10px;
-    }
-
-
-    .dataTables_paginate .paginate_button.current {
-        background-color: black;
-        color: white;
-    }
-
-</style>
-
-<h3 class="mb-2 text-gray-900">clientes</h1>
-<p class="mb-4">Este es el entorno de Proveedores, aquí puedes gestionar registros de tus Clientes.</p>
+<h3 class="mb-2 text-gray-900">Clientes</h1>
+<p class="mb-4">Este es el entorno de Clientes, aquí puedes gestionar los registros de tus Clientes.</p>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
@@ -49,16 +19,15 @@
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger">Ir a Dashboard</button>
+            <button class="btn btn-danger" href="{% url 'admin' %}">Ir a Dashboard</button>
         </span>
     </div>
 </div>
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <!-- Tabla de Clientes -->
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered m-auto" id="dataTable" width="80%" cellspacing="0">
                 <thead>
                     <tr>
                         <th style="color:black">ID Cliente</th>
@@ -67,26 +36,10 @@
                         <th style="color:black">Nombres</th>
                         <th style="color:black">Apellidos</th>
                         <th style="color:black">Celular</th>
-                        <th style="color:black">Barrio</th>
-                        <th style="color:black">Dirección</th>
                         <th style="color:black">Estado</th>
                         <th style="color:black">Acciones</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th style="color:black">ID Cliente</th>
-                        <th style="color:black">Municipio</th>
-                        <th style="color:black">Documento</th>
-                        <th style="color:black">Nombres</th>
-                        <th style="color:black">Apellidos</th>
-                        <th style="color:black">Celular</th>
-                        <th style="color:black">Barrio</th>
-                        <th style="color:black">Dirección</th>
-                        <th style="color:black">Estado</th>
-                        <th style="color:black">Acciones</th>
-                    </tr>
-                </tfoot>
                 <tbody>
                    
                     {% for cliente in clientes %}
@@ -97,8 +50,6 @@
                         <td>{{ cliente.nombres }}</td>
                         <td>{{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
-                        <td>{{ cliente.barrio }}</td>
-                        <td>{{ cliente.direccion }}</td>
                         <td>
                             {% if cliente.estado == 1 %}
                                 <button class="btn btn-danger cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="0">Inactivar</button>

@@ -392,6 +392,31 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <style>
+                        .dataTables_length select {
+                            padding: 6px;
+                            border-radius: 4px;
+                            border: 1px solid #ccc;
+                            background-color: white;
+                            padding-right: 30px;
+                            /* Ajusta el espacio para el icono */
+                        }
+                    
+                        .dataTables_length label {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: start;
+                            align-items: center;
+                            gap: 10px;
+                        }
+                    
+                    
+                        .dataTables_paginate .paginate_button.current {
+                            background-color: black;
+                            color: white;
+                        }
+                    
+                    </style>
                     {% block body %}
 
                     {% endblock %}

@@ -4,32 +4,6 @@
 
 {% block body %}
 
-<style>
-    /* Estilos para el menú desplegable de registros por página */
-    .dataTables_length select {
-        padding: 6px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        background-color: white;
-        padding-right: 30px;
-        /* Ajusta el espacio para el icono */
-    }
-
-    .dataTables_length label {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: start;
-        align-items: center;
-        gap: 10px;
-    }
-
-
-    .dataTables_paginate .paginate_button.current {
-        background-color: black;
-        color: white;
-    }
-
-</style>
 
 <h3 class="mb-2 text-gray-900">Proveedores</h1>
 <p class="mb-4">Este es el entorno de Proveedores, aquí puedes gestionar registros de tus Proveedores.</p>
@@ -37,7 +11,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'create' %}" class="btn btn-success btn-icon-split ">
+            <a href="{% url 'createProv' %}" class="btn btn-success btn-icon-split ">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-plus"></i>
                 </span>

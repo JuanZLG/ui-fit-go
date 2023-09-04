@@ -2,18 +2,6 @@ from django.shortcuts import render, redirect
 from .models import Clientes, Municipios, Departamentos
 from django.http import JsonResponse
 
-
-# def home(request):
-#     clienteRegistrados = Clientes.objects.all()
-#     return render(request, "Plantilla.html", {"clientes": clienteRegistrados})
-
-
-# def Listica(request):
-#     clientes = Clientes.objects.all()  
-#     context = {'clientes': clientes} 
-#     return render(request, 'Plantilla.html', context)
-
-
 def lista_clientes(request):
     clientes = Clientes.objects.all().order_by('-estado')  
     context = {'clientes': clientes}  
@@ -22,9 +10,6 @@ def lista_clientes(request):
 def agregarCliente(request):
     municipios = Municipios.objects.all()  
     return render(request, 'createCustomer.html', {'municipios': municipios})
-
-
-
 
 from eclients.models import Clientes, Municipios, Departamentos
 
@@ -41,17 +26,13 @@ def agregarClientePost(request):
         municipio_nombre = request.POST.get('nombre_municipio')
 
         if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
-            # Devuelve un JSON con un mensaje de error
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
-        # Intenta obtener el departamento existente o el primero con el mismo nombre
         departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
 
         if not departamento:
-            # Si no existe, crea uno nuevo
             departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
 
-        # Verifica si el municipio ya existe en la base de datos o créalo si no existe
         municipio, created = Municipios.objects.get_or_create(
             nombre_municipio=municipio_nombre,
             id_departamento=departamento

@@ -1,11 +1,98 @@
-{% extends "baseInterface.html" %}
+{% extends "baseInterface.html" %} 
 
-{% block title %} Formulario {% endblock %}
+{% block title %} Agregar Producto {%endblock %} 
 
 {% block body %}
 
+<h1 class="h3 mx-5 text-gray-800">Agregar Producto</h1>
 
+<div class="card shadow mb-4">
+  <div
+    class="card-header py-3"
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-center;
+    ">
 
-
+    <form class="" method="POST">
+      {% csrf_token %}
+      <div class="form-row ">
+        <div class="col-md-4 mb-3">
+          <label>Categoría</label>
+          <select class="form-select" aria-label="Default select example" name="categoria">
+            {% for c in categorias %}
+            <option value="{{ c.nombre_categoria }}">{{ c.nombre_categoria }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label>Marcas</label>
+          <select class="form-select" aria-label="Default select example" name="categoria">
+            {% for m in marcas %}
+            <option value="{{ m.nombre_marca }}">{{ m.nombre_marca }}</option>
+            {% endfor %}
+          </select>
+          <div class="valid-  feedback">Looks good!</div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label>Nombre del Producto</label>
+          <input type="text" class="form-control" id="nombreproducto" placeholder="Ingrese el nombre del producto"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <label for="validationServer03">City</label>
+          <input
+            type="text"
+            class="form-control is-invalid"
+            id="validationServer03"
+            placeholder="City"
+            required
+          />
+          <div class="invalid-feedback">Please provide a valid city.</div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="validationServer04">State</label>
+          <input
+            type="text"
+            class="form-control is-invalid"
+            id="validationServer04"
+            placeholder="State"
+            required
+          />
+          <div class="invalid-feedback">Please provide a valid state.</div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="validationServer05">Zip</label>
+          <input
+            type="text"
+            class="form-control is-invalid"
+            id="validationServer05"
+            placeholder="Zip"
+            required
+          />
+          <div class="invalid-feedback">Please provide a valid zip.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-check">
+          <input
+            class="form-check-input is-invalid"
+            type="checkbox"
+            value=""
+            id="invalidCheck3"
+            required
+          />
+          <label class="form-check-label" for="invalidCheck3">
+            Agree to terms and conditions
+          </label>
+          <div class="invalid-feedback">You must agree before submitting.</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit">Submit form</button>
+    </form>
+  </div>
+</div>
 
 {% endblock %}

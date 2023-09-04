@@ -5,29 +5,8 @@
 {% block body %}
 
 
-<style>
-    /* Estilos para el menú desplegable de registros por página */
-.dataTables_length select {
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: white;
-  padding-right: 30px; /* Ajusta el espacio para el icono */
-}
-
-.dataTables_length label {
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: start;
-    align-items:center;
-    gap: 10px;
-    }
-
-</style>
-
-
-<h1 class="h3 mb-2 text-gray-800">Módulo de Productos</h1>
-<p class="mb-4">Este es el entorno de Productos, aquí puedes gestionar registros de tus Productos.</p>
+<h1 class="h1 mb-2 text-gray-800">Módulo de Productos</h1>
+<p class="mb-4">Este es el entorno de Productos, aquí puedes gestionar los registros de tus Productos.</p>
 
         <div class="card shadow mb-4">
             <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: flex-center;">
@@ -48,9 +27,8 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-4">
-                <!-- Tabla de Clientes -->
                 <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered m-auto" id="dataTable" width="80%" cellspacing="0">
                 <thead>
                     <tr>
                         <th style="color:black">ID</th>
@@ -63,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for p in productos %}
+                    {% for p in Products %}
                     <tr>
                         <td>{{p.id_producto}}</td>
                         <td>{{p.id_categoria.nombre_categoria}}</td>

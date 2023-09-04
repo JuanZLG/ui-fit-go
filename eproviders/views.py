@@ -5,7 +5,7 @@ from .models import Proveedores
 
 def Home(request):
     proveedores = Proveedores.objects.all()
-    return render(request, 'providersHome.html', {"proveedores":proveedores})  # Enviar lista
+    return render(request, 'providersHome.html', {"proveedores":proveedores}) 
 
 def crear_proveedor(request):
     if request.method == 'POST':
