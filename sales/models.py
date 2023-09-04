@@ -73,6 +73,7 @@ class Productos(models.Model):
     sabor = models.CharField(max_length=50)
     tamaño = models.CharField(max_length=45)
     estado = models.IntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=3)
 
     class Meta:
         managed = False
