@@ -1,0 +1,133 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Ventas {% endblock %}
+
+{% block body %}
+
+<style>
+    /* Estilos para el menú desplegable de registros por página */
+    .dataTables_length select {
+        padding: 6px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: white;
+        padding-right: 30px;
+        /* Ajusta el espacio para el icono */
+    }
+
+    .dataTables_length label {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: black;
+        color: white;
+    }
+
+</style>
+
+<h3 class="mb-2 text-gray-900">Ventas</h1>
+<p class="mb-4">Este es el entorno de ventas, aquí puedes gestionar registros de tus Proveedores.</p>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <span>
+            <a href="{% url 'create' %}" class="btn btn-success btn-icon-split ">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span class="text">Agregar</span>
+            </a>
+        </span>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger">Ir a Dashboard</button>
+        </span>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <!-- Tabla de Clientes -->
+        <div class="table-responsive">
+            <table class="table table-bordered mx-auto" id="dataTable" width="90%" cellspacing="3">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Fecha de registro</th>
+                        <th>Estado</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in ventas %}
+                    <tr class="{% if venta.estado == 0 %}table-secondary{% endif %}">
+                        <td> <span class="text-secondary">Julanito</span><span> - 1002580286</span></td>
+                        <td>{{ venta.fechareg }}</td>
+                        <td> 
+                            <button class="btn cambiar-estado {% if venta.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ venta.id_proveedor }}" data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
+                                {% if venta.estado == 1 %}
+                                Activo
+                                {% else %}
+                                Inhabilitado
+                                {% endif %}
+                            </button>
+                        </td> 
+                        <td>
+                            <a href="#" class="btn btn-sm btn-primary m-1">Detalles  <i class="fa-solid fa-circle-info"></i></i></i></a> |
+                            <a href="#" class="btn btn-sm btn-primary m-1">Editar <i class="fa-solid fa-pen-to-square"></i></i></a>
+                        </td> 
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            $(document).ready(function () {
+                                $(".cambiar-estado").click(function () {
+                                    var provId = $(this).data("prov-id");
+                                    var nuevoEstado = $(this).data("nuevo-estado");
+
+                                    Swal.fire({
+                                        title: 'Confirmar',
+                                        text: '¿Estás seguro de que deseas cambiar el estado?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Confirmar',
+                                        cancelButtonText: 'Cancelar'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $.ajax({
+                                                url: "#",
+                                                data: {
+                                                    proveedor_id: provId,
+                                                    nuevo_estado: nuevoEstado
+                                                },
+                                                method: "GET",
+                                                success: function (response) {
+                                                    // Actualiza la página o la sección relevante según sea necesario
+                                                    location.reload();
+                                                },
+                                                error: function (error) {
+                                                    // Maneja el error si es necesario
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

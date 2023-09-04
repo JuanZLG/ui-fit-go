@@ -10,5 +10,9 @@ urlpatterns = [
     path('admin/products/', include('products.urls')),
     path('admin/providers/', include('eproviders.urls')),  
     path('admin/clients/', include('eclients.urls')),  
+    path('admin/sales/', include('sales.urls')),  
+
+
+
 ]
 
