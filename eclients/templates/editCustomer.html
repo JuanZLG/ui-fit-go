@@ -49,48 +49,46 @@
                 <option value="0" {% if cliente.id_estado == 0 %} selected {% endif %}>Inactivo</option>
             </select>
         </div>
-       <!-- Agregar esta parte al formulario para cargar la lista de departamentos -->
-<!-- Campo Departamento -->
-<!-- Campo Departamento -->
+        
+        <!-- Campo Departamento -->
+        <div class="form-group">
+            <label for="departamento">Departamento *</label>
+            <select class="form-control" id="departamento" name="nombre_departamento">
+                <option value="{{ cliente.id_municipio.id_departamento.nombre_departamento }}" selected>{{ cliente.id_municipio.id_departamento.nombre_departamento }}</option>
+            </select>
+        </div>
 
+        <!-- Campo Municipio -->
+        <div class="form-group">
+            <label for="municipio">Municipio *</label>
+            <select class="form-control" id="municipio" name="nombre_municipio">
+                <option value="{{ cliente.id_municipio.id_municipio }}" selected>{{ cliente.id_municipio.nombre_municipio }}</option>
+            </select>
+            <div class="error-message" id="nombre_municipio-error"></div>
+        </div>
 
-<div class="form-group">
-    <label for="departamento">Departamento *</label>
-    <select class="form-control" id="departamento" name="nombre_departamento">
-        <option value="{{ departamento_registrado }}" selected>{{ departamento_registrado }}</option>
-    </select>
-</div>
-
-<div class="form-group">
-    <label for="municipio">Municipio *</label>
-    <select class="form-control" id="municipio" name="nombre_municipio">
-        <option value="{{ municipio_registrado }}" selected>{{ municipio_registrado }}</option>
-    </select>
-</div>
-
-
-<button class="btn btn-primary" type="submit">Modificar Cliente</button>
-</form>
+        <button class="btn btn-primary" type="submit">Modificar Cliente</button>
+    </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        const isEditing = "{{ cliente.id_cliente }}"; // Verifica si estás editando un cliente
-
         // Obtener la lista de departamentos al cargar la página
         obtenerDepartamentos();
 
+        // Cargar el valor actual del campo Departamento
+        const departamentoActual = "{{ cliente.id_municipio.id_departamento.nombre_departamento }}";
+        $('#departamento').val(departamentoActual);
+
+        // Obtener y cargar los municipios basados en el departamento actual
+        cargarMunicipios(departamentoActual);
+
         // Manejar cambios en el departamento seleccionado
         $("#departamento").change(function () {
-            cargarMunicipios();
+            const departamentoSeleccionado = $(this).val();
+            cargarMunicipios(departamentoSeleccionado);
         });
-
-        // Cargar el valor actual del campo Departamento solo si estás editando
-        if (isEditing) {
-            const departamentoActual = "{{ cliente.id_municipio.id_departamento.id_departamento }}";
-            $('#departamento').val(departamentoActual);
-        }
 
         $('#cliente-form').submit(function (event) {
             event.preventDefault();
@@ -103,13 +101,11 @@
             const celular = $('#iCelular').val();
             const barrio = $('#iBarrio').val();
             const direccion = $('#iDireccion').val();
+            const municipio = $('#municipio').val(); // Agregado: Obtener el valor del municipio
 
-            // Validación del campo de documento
+            // Validación del campo de documento (ejemplo)
             if (!documento) {
                 mostrarError('#iDocumento', 'Este campo es obligatorio.');
-                errors = true;
-            } else if (!/^[0-9]{8}([0-9]{2})?$/.test(documento)) { // Validación de 8 o 10 dígitos positivos
-                mostrarError('#iDocumento', 'Número de documento inválido.');
                 errors = true;
             } else {
                 ocultarError('#iDocumento');
@@ -167,8 +163,7 @@
         }
 
         // Función para cargar los municipios basados en el departamento seleccionado
-        function cargarMunicipios() {
-            const departamentoSeleccionado = $("#departamento").val();
+        function cargarMunicipios(departamentoSeleccionado) {
             obtenerMunicipios(departamentoSeleccionado).done(function (data) {
                 const municipioSelect = $("#municipio");
                 municipioSelect.empty(); // Limpiar opciones anteriores
@@ -181,21 +176,18 @@
             });
         }
 
-        // Manejar cambios en los campos de entrada
-        $('#iDocumento, #iNombres, #iApellidos, #iCelular, #iBarrio, #iDireccion').on('input', function () {
-            ocultarError('#' + $(this).attr('id'));
-        });
-
         // Función para mostrar errores
-        function mostrarError(selector, mensaje) {
-            $(selector).addClass('is-invalid');
-            $(selector + '-error').text(mensaje);
+        function mostrarError(elementId, errorMessage) {
+            const errorElement = $(`${elementId}-error`);
+            errorElement.text(errorMessage);
+            errorElement.show();
         }
 
         // Función para ocultar errores
-        function ocultarError(selector) {
-            $(selector).removeClass('is-invalid');
-            $(selector + '-error').text('');
+        function ocultarError(elementId) {
+            const errorElement = $(`${elementId}-error`);
+            errorElement.text('');
+            errorElement.hide();
         }
     });
 </script>
