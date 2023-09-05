@@ -18,10 +18,25 @@ def crear_venta(request):
 
 
 
+# def buscar_documentos(request):
+#     q = request.GET.get('q', '')
+#     documentos = Clientes.objects.filter(documento__contains=q).values_list('documento', flat=True)
+#     return JsonResponse({'documentos': list(documentos)})
+
+
+
 def buscar_documentos(request):
     q = request.GET.get('q', '')
     documentos = Clientes.objects.filter(documento__contains=q).values_list('documento', flat=True)
-    return JsonResponse({'documentos': list(documentos)})
+    
+    nombre_cliente = ""
+    if documentos:
+        primer_documento = documentos[0]
+        cliente = Clientes.objects.filter(documento=primer_documento).first()
+        if cliente:
+            nombre_cliente = f"{cliente.nombres} {cliente.apellidos}" 
+    
+    return JsonResponse({'documentos': list(documentos), 'nombre_cliente': nombre_cliente})
 
 
 def buscar_productos(request):
@@ -32,7 +47,20 @@ def buscar_productos(request):
 
 
 
-def obtener_precio_producto(request):
+def obtener_precio(request):
+    nombre_producto = request.GET.get('nombre_producto', None)  # Obtiene el valor de 'nombre_producto' de la solicitud GET
+    if nombre_producto is not None:
+        try:
+            producto = Productos.objects.get(nombre_producto=nombre_producto)
+            precio = producto.precio  
+            return JsonResponse({'precio': precio})
+        except Productos.DoesNotExist:
+            return JsonResponse({'error': 'Producto no encontrado'}, status=404)
+    else:
+        return JsonResponse({'error': 'Parámetro "nombre_producto" no proporcionado en la solicitud'}, status=400)
+
+
+def obtener_nombre(request):
     nombre_producto = request.GET.get('nombre_producto', None)  # Obtiene el valor de 'nombre_producto' de la solicitud GET
     if nombre_producto is not None:
         try:

@@ -74,6 +74,8 @@ class Productos(models.Model):
     tamaño = models.CharField(max_length=45)
     estado = models.IntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=3)
+    precio = models.PositiveIntegerField()
+
 
     class Meta:
         managed = False
