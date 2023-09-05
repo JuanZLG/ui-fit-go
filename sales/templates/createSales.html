@@ -20,47 +20,49 @@
                         <span class="error-message" id="documento-error"></span>
                     </div>
                 </div>
-                <hr>
-                <div class="row ">
-                    <div class="col-md-3 ">
-                        <label class="mb-2">Nombre del Producto *</label>
-                        <input type="text" class="form-control" id="producto" name="producto" autocomplete="off"
-                            placeholder="Producto">
-                        <div class="d-flex p-2">
-                            <label class="text-secondary me-2" id="mess-sugges-prod">Sugerencias:</label>
+                <div id="cont-dom" class="mb-5">
+                    <hr>
+                    <div class="row ">
+                        <div class="col-md-3 ">
+                            <label class="mb-2">Nombre del Producto *</label>
+                            <input type="text" class="form-control" id="producto" name="producto" autocomplete="off"
+                                placeholder="Producto">
+                            <div class="d-flex p-2">
+                                <label class="text-secondary me-2" id="mess-sugges-prod">Sugerencias:</label>
+                            </div>
+                            <span class="error-message" id="producto-error"></span>
                         </div>
-                        <span class="error-message" id="producto-error"></span>
-                    </div>
-                    <div class="col-md-2 ">
-                        <div class="form-group">
-                            <label class="mb-2">Precio Unitario</label>
-                            <input type="text" class="form-control" id="precioUnidad" name="precioUnidad" readonly>
-                            <span class="error-message" id="precioU-error"></span>
+                        <div class="col-md-2 ">
+                            <div class="form-group">
+                                <label class="mb-2">Precio Unitario</label>
+                                <input type="text" class="form-control" id="precioUnidad" name="precioUnidad" readonly>
+                                <span class="error-message" id="precioU-error"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-2 ">
-                        <div class="form-group">
-                            <label class="mb-2">Cantidades *</label>
-                            <input type="number" class="form-control" id="cantidad" name="cantidad" autocomplete="off"
-                                min="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                placeholder="Cantidad">
+                        <div class="col-md-2 ">
+                            <div class="form-group">
+                                <label class="mb-2">Cantidades *</label>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad"
+                                    autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                    placeholder="Cantidad">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-2 d-flex justify-content-center align-items-center">
-                        <button class="btn btn-success" id="calcularTotal" type="button">Calcular Total =</button>
-                    </div>
-                    <div class="col-md-2 ">
-                        <div class="form-group">
-                            <label class="mb-2">TOTAL</label>
-                            <input type="text" class="form-control" id="precioTotal" name="precioTotal" readonly>
-                            <span class="error-message" id="total-error"></span>
+                        <div class="col-md-2 d-flex justify-content-center align-items-center">
+                            <button class="btn btn-success" id="calcularTotal" type="button">Calcular Total =</button>
                         </div>
-
+                        <div class="col-md-2 ">
+                            <div class="form-group">
+                                <label class="mb-2">TOTAL</label>
+                                <input type="text" class="form-control" id="precioTotal" name="precioTotal" readonly>
+                                <span class="error-message" id="total-error"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row justify-content-end mt-3">
-                    <button class="btn btn-secondary col-md-3" type="button">+ Agregar producto</button>
-                </div>
+        </div>
+        <div class="row justify-content-end mt-3">
+            <button class="btn btn-secondary" style="width: 200px;" id="agregarProducto" type="button">+ Agregar
+                producto</button>
         </div>
     </div>
 
@@ -134,7 +136,7 @@
         });
 
 
-    /********** PRODUCTO ***********/
+        /********** PRODUCTO ***********/
 
         $("#mess-sugges-prod").after('<div id="producto-suggestions"></div>');
         $("#producto").on("input", function () {
@@ -176,9 +178,9 @@
             $('#precioU-error').empty();
         });
 
-        
 
-    /********** PRECIOS ***********/
+
+        /********** PRECIOS ***********/
 
         var timer;
         var isSearching = false;
@@ -210,7 +212,6 @@
                 },
                 success: function (data) {
                     isSearching = false;
-
                     if ('precio' in data) {
                         $('#precioUnidad').val(data.precio);
                     } else {
@@ -225,7 +226,7 @@
             });
         }
 
-        
+
         $("#calcularTotal").on("click", function () {
             var precioUnidad = parseFloat($("#precioUnidad").val());
             var cantidad = parseFloat($("#cantidad").val());
@@ -236,12 +237,14 @@
                 precioTotal.addClass("is-invalid");
                 error.text("Favor de llenar campos anteriores.").css('color', 'red');
                 precioTotal.val("");
-            } else {
-                var total = precioUnidad * cantidad;
-                precioTotal.val(total.toFixed(3));
-                error.empty(); // Limpia el mensaje de error
-                precioTotal.removeClass('is-invalid'); // Elimina la clase de error
             }
+            else {
+                var total = precioUnidad * cantidad;
+                var totalFormateado = total.toLocaleString(undefined, { minimumFractionDigits: 3 });
+                precioTotal.val(totalFormateado);
+                error.empty(); 
+                precioTotal.removeClass('is-invalid');
+        }
         });
 
         $(document).ready(function () {
@@ -251,6 +254,23 @@
 
 
 
+     
+
+        document.getElementById("agregarProducto").addEventListener("click", function () {
+    var clon = $("#cont-dom").clone(); // Clonar el elemento
+    clon.find('input[type="text"]').val(""); // Establecer los campos de texto a vacío
+    clon.find('input[type="number"]').val(""); // Establecer los campos de número a vacío
+
+    // Generar un nuevo ID para los elementos clonados
+    clon.find('input').each(function () {
+        var oldId = $(this).attr('id');
+        var newId = oldId + "-clon";
+        $(this).attr('id', newId);
+    });
+
+    // Agregar el elemento clonado al formulario
+    $("#venta-form").append(clon);
+});
 
 
 
