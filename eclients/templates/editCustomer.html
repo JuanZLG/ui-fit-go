@@ -1,21 +1,203 @@
+{% extends "baseInterface.html" %}
+
+{% block body %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">Modificar Cliente</h1>
+    <br>
+
+    <form id="cliente-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="cliente_id" value="{{ cliente.id_cliente }}">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="iDocumento">Documento *</label>
+                <input type="number" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento" value="{{ cliente.documento }}">
+                <div class="error-message" id="iDocumento-error"></div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="iNombres">Nombres *</label>
+                <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres" value="{{ cliente.nombres }}">
+                <div class="error-message" id="iNombres-error"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="iApellidos">Apellidos *</label>
+            <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos" value="{{ cliente.apellidos }}">
+            <div class="error-message" id="iApellidos-error"></div>
+        </div>
+        <div class="form-group">
+            <label for="iCelular">Celular *</label>
+            <input type="tel" class="form-control" id="iCelular" name="iCelular" placeholder="Celular" value="{{ cliente.celular }}" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <div class="error-message" id="iCelular-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="iBarrio">Barrio *</label>
+            <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio" value="{{ cliente.barrio }}">
+            <div class="error-message" id="iBarrio-error"></div>
+        </div>
+        <div class="form-group">
+            <label for="iDireccion">Dirección *</label>
+            <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección" value="{{ cliente.direccion }}">
+            <div class="error-message" id="iDireccion-error"></div>
+        </div>
+        <div class="form-group">
+            <label for="id_estado">Estado *</label>
+            <select class="form-control" id="id_estado" name="id_estado">
+                <option value="1" {% if cliente.id_estado == 1 %} selected {% endif %}>Activo</option>
+                <option value="0" {% if cliente.id_estado == 0 %} selected {% endif %}>Inactivo</option>
+            </select>
+        </div>
+       <!-- Agregar esta parte al formulario para cargar la lista de departamentos -->
+<!-- Campo Departamento -->
+<!-- Campo Departamento -->
+
+
 <div class="form-group">
-  <label for="departamento">Departamento *</label>
-  <select class="form-control" id="departamento" name="nombre_departamento">
-      {% for departamento in departamentos %}
-          <option value="{{ departamento.id_departamento }}" {% if departamento.id_departamento == cliente.id_municipio.id_departamento.id_departamento %} selected {% endif %}>
-              {{ departamento.nombre_departamento }}
-          </option>
-      {% endfor %}
-  </select>
+    <label for="departamento">Departamento *</label>
+    <select class="form-control" id="departamento" name="nombre_departamento">
+        <option value="{{ departamento_registrado }}" selected>{{ departamento_registrado }}</option>
+    </select>
 </div>
+
 <div class="form-group">
-  <label for="municipio">Municipio *</label>
-  <select class="form-control" id="municipio" name="nombre_municipio">
-      {% for municipio in municipios %}
-          <option value="{{ municipio.id_municipio }}" {% if municipio.id_municipio == cliente.id_municipio.id_municipio %} selected {% endif %}>
-              {{ municipio.nombre_municipio }}
-          </option>
-      {% endfor %}
-  </select>
+    <label for="municipio">Municipio *</label>
+    <select class="form-control" id="municipio" name="nombre_municipio">
+        <option value="{{ municipio_registrado }}" selected>{{ municipio_registrado }}</option>
+    </select>
 </div>
+
+
+<button class="btn btn-primary" type="submit">Modificar Cliente</button>
+</form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const isEditing = "{{ cliente.id_cliente }}"; // Verifica si estás editando un cliente
+
+        // Obtener la lista de departamentos al cargar la página
+        obtenerDepartamentos();
+
+        // Manejar cambios en el departamento seleccionado
+        $("#departamento").change(function () {
+            cargarMunicipios();
+        });
+
+        // Cargar el valor actual del campo Departamento solo si estás editando
+        if (isEditing) {
+            const departamentoActual = "{{ cliente.id_municipio.id_departamento.id_departamento }}";
+            $('#departamento').val(departamentoActual);
+        }
+
+        $('#cliente-form').submit(function (event) {
+            event.preventDefault();
+            let errors = false;
+
+            // Validaciones en el lado del cliente
+            const documento = $('#iDocumento').val();
+            const nombres = $('#iNombres').val();
+            const apellidos = $('#iApellidos').val();
+            const celular = $('#iCelular').val();
+            const barrio = $('#iBarrio').val();
+            const direccion = $('#iDireccion').val();
+
+            // Validación del campo de documento
+            if (!documento) {
+                mostrarError('#iDocumento', 'Este campo es obligatorio.');
+                errors = true;
+            } else if (!/^[0-9]{8}([0-9]{2})?$/.test(documento)) { // Validación de 8 o 10 dígitos positivos
+                mostrarError('#iDocumento', 'Número de documento inválido.');
+                errors = true;
+            } else {
+                ocultarError('#iDocumento');
+            }
+
+            // Resto de validaciones...
+
+            // Envía el formulario si no hay errores
+            if (!errors) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'editarCliente' cliente.id_cliente %}",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            // Éxito: redirige o realiza acciones adicionales
+                            alert('Cliente editado con éxito.');
+                            window.location.href = "{% url 'lista_clientes' %}";
+                        }
+                    }
+                });
+            }
+        });
+
+        // Función para obtener la lista de departamentos
+        function obtenerDepartamentos() {
+            $.ajax({
+                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+                type: "GET",
+                data: {
+                    "$limit": 5000,
+                }
+            }).done(function (data) {
+                const departamentos = [...new Set(data.map(item => item.departamento))];
+                const departamentoSelect = $("#departamento");
+                departamentos.forEach(function (depto) {
+                    departamentoSelect.append($("<option>", {
+                        value: depto,
+                        text: depto
+                    }));
+                });
+            });
+        }
+
+        // Función para obtener la lista de municipios basados en el departamento seleccionado
+        function obtenerMunicipios(departamentoSeleccionado) {
+            return $.ajax({
+                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+                type: "GET",
+                data: {
+                    "$limit": 5000,
+                    "departamento": departamentoSeleccionado
+                }
+            });
+        }
+
+        // Función para cargar los municipios basados en el departamento seleccionado
+        function cargarMunicipios() {
+            const departamentoSeleccionado = $("#departamento").val();
+            obtenerMunicipios(departamentoSeleccionado).done(function (data) {
+                const municipioSelect = $("#municipio");
+                municipioSelect.empty(); // Limpiar opciones anteriores
+                data.forEach(function (item) {
+                    municipioSelect.append($("<option>", {
+                        value: item.municipio,
+                        text: item.municipio
+                    }));
+                });
+            });
+        }
+
+        // Manejar cambios en los campos de entrada
+        $('#iDocumento, #iNombres, #iApellidos, #iCelular, #iBarrio, #iDireccion').on('input', function () {
+            ocultarError('#' + $(this).attr('id'));
+        });
+
+        // Función para mostrar errores
+        function mostrarError(selector, mensaje) {
+            $(selector).addClass('is-invalid');
+            $(selector + '-error').text(mensaje);
+        }
+
+        // Función para ocultar errores
+        function ocultarError(selector) {
+            $(selector).removeClass('is-invalid');
+            $(selector + '-error').text('');
+        }
+    });
+</script>
+</div>
+{% endblock %}

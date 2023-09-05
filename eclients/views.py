@@ -76,6 +76,13 @@ def redirigirEditar(request, cliente_id):
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import Clientes, Municipios, Departamentos
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from .models import Clientes, Municipios, Departamentos
+
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from .models import Clientes, Municipios
 
 def editarCliente(request, cliente_id):
     # Obtener el cliente existente o mostrar un error 404 si no se encuentra
@@ -96,21 +103,8 @@ def editarCliente(request, cliente_id):
             # Devuelve un JSON con un mensaje de error
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
-        # Intenta obtener el departamento existente o el primero con el mismo nombre
-        departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
-
-        if not departamento:
-            # Si no existe, crea uno nuevo
-            departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
-
-        # Verifica si el municipio ya existe en la base de datos o créalo si no existe
-        municipio, created = Municipios.objects.get_or_create(
-            nombre_municipio=municipio_nombre,
-            id_departamento=departamento
-        )
-
         # Actualiza los campos del cliente existente con los valores recibidos
-        cliente.id_municipio = municipio
+        cliente.id_municipio = municipio_nombre
         cliente.documento = documento
         cliente.nombres = nombres
         cliente.apellidos = apellidos
@@ -123,8 +117,9 @@ def editarCliente(request, cliente_id):
         # Devuelve un JSON con éxito
         return JsonResponse({'success': True, 'message': 'Cliente actualizado con éxito'})
 
-    municipios = Municipios.objects.all()
-    return render(request, 'editCustomer.html', {'cliente': cliente, 'municipios': municipios})
+    return render(request, 'editCustomer.html', {'cliente': cliente, 'departamento_registrado': cliente.id_municipio.id_departamento.nombre_departamento, 'municipio_registrado': cliente.id_municipio.nombre_municipio})
+
+
 
 
 
