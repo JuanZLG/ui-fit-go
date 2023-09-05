@@ -10,7 +10,7 @@ class Productos(models.Model):
     fechaven = models.DateField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
-    precio = models.PositiveIntegerField()
+    precio = models.DecimalField(max_digits=10, decimal_places=3)
     estado = models.PositiveIntegerField(default=True)
 
     class Meta:

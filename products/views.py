@@ -31,3 +31,6 @@ def createProduct(request):
         Productos.objects.create(id_categoria=c.id_categoria, id_marca=m.id_marca, nombre_categoria=nombre, descripcion=descripcion, cantidad=cantidad, fechaven=fechavencimiento, sabor=sabor, presentacion=tamano, precio=precio)
         return JsonResponse({'success': True})
     return render(request, 'createProducts.html', {"marcas":marcas,"categorias":categorias})
+
+# def editProduct(request):
+    

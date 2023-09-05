@@ -33,7 +33,7 @@
             <option value="{{ m.nombre_marca }}">{{ m.nombre_marca }}</option>
             {% endfor %}
           </select>
-          <div class="valid-  feedback">Looks good!</div>
+          <div class="valid-feedback">Looks good!</div>
         </div>
         <div class="col-md-4 mb-3">
           <label>Nombre del Producto</label>
@@ -41,17 +41,10 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="col-md-6 mb-3">
-          <label for="validationServer03">City</label>
-          <input
-            type="text"
-            class="form-control is-invalid"
-            id="validationServer03"
-            placeholder="City"
-            required
-          />
-          <div class="invalid-feedback">Please provide a valid city.</div>
-        </div>
+        <div class="col-md-3 mb-3">
+          <label for="descripcion">Descripción</label>
+          <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Escribe aquí tu descripción"></textarea>
+          <div class="invalid-feedback">Please provide a valid city</div>
         <div class="col-md-3 mb-3">
           <label for="validationServer04">State</label>
           <input
@@ -70,7 +63,6 @@
             class="form-control is-invalid"
             id="validationServer05"
             placeholder="Zip"
-            required
           />
           <div class="invalid-feedback">Please provide a valid zip.</div>
         </div>

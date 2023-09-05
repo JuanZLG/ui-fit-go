@@ -10,7 +10,7 @@ urlpatterns = [
     path('admin', include('dashboard.urls')),
     path('admin/products/', include('products.urls')),
     path('admin/providers/', include('eproviders.urls')),  
-    path('admin/clients/', include('eclients.urls')),  
+    path('admin/clients/', include('customers.urls')),  
     path('admin/sales/', include('sales.urls')),  
 ]
 

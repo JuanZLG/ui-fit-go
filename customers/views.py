@@ -29,7 +29,7 @@ def agregarCliente(request):
 
 from django.http import JsonResponse
 from django.shortcuts import render
-from eclients.models import Clientes, Municipios, Departamentos
+from customers.models import Clientes, Municipios, Departamentos
 
 def agregarClientePost(request):
     if request.method == 'POST':

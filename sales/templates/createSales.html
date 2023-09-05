@@ -2,28 +2,30 @@
 {% block title %} Agregar Proveedor {% endblock %}
 {% block body %}
 
-<h1 class="h1 mx-5 text-gray-800">Crear venta</h1>
-<br>
+<div class="row">
+    <div class="col-md-5 mb-3">
+        <h1 class="h1 mx-5 text-gray-800">Crear venta</h1>
+    </div>
+    <div class="col-md-7 mb-3 justify-content-end">
+        <label class="mb-2">Documento del Cliente *</label>
+        <input type="text" class="form-control" id="documento" name="documento" autocomplete="off"
+            placeholder="Documento">
+        <div class="d-flex p-2">
+            <label class="text-secondary me-2" id="mess-sugges-doc">Sugerencias:</label>
+        </div>
+        <span class="error-message" id="documento-error"></span>
+    </div>
+</div>
+
 <div class="container">
     <div class="card shadow mb-4">
         <div class="card-header py-4">
             <form id="venta-form" method="post">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-5 mb-3">
-                        <label class="mb-2">Documento del Cliente *</label>
-                        <input type="text" class="form-control" id="documento" name="documento" autocomplete="off"
-                            placeholder="Documento">
-                        <div class="d-flex p-2">
-                            <label class="text-secondary me-2" id="mess-sugges-doc">Sugerencias:</label>
-                        </div>
-                        <span class="error-message" id="documento-error"></span>
-                    </div>
-                </div>
                 <div id="cont-dom" class="mb-5">
-                    <hr>
-                    <div class="row ">
-                        <div class="col-md-3 ">
+                    <div class="row">
+                        <div class="col-md-6 ">
                             <label class="mb-2">Nombre del Producto *</label>
                             <input type="text" class="form-control" id="producto" name="producto" autocomplete="off"
                                 placeholder="Producto">
@@ -32,31 +34,34 @@
                             </div>
                             <span class="error-message" id="producto-error"></span>
                         </div>
-                        <div class="col-md-2 ">
-                            <div class="form-group">
-                                <label class="mb-2">Precio Unitario</label>
-                                <input type="text" class="form-control" id="precioUnidad" name="precioUnidad" readonly>
-                                <span class="error-message" id="precioU-error"></span>
+                        <div class="row">
+                            <div class="col-md-3 ">
+                                <div class="form-group">
+                                    <label class="mb-2">Precio Unitario</label>
+                                    <input type="text" class="form-control" id="precioUnidad" name="precioUnidad" readonly>
+                                    <span class="error-message" id="precioU-error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 ">
+                                <div class="form-group">
+                                    <label class="mb-2">Cantidades *</label>
+                                    <input type="number" class="form-control" id="cantidad" name="cantidad"
+                                        autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                        placeholder="Cantidad">
+                                </div>
+                            </div>
+                            {% comment %} <div class="col-md-4 d-flex justify-content-center align-items-center">
+                                <button class="btn btn-success" id="calcularTotal" type="button">Calcular Total =</button>
+                            </div> {% endcomment %}
+                            <div class="col-md-5 ">
+                                <div class="form-group">
+                                    <label class="mb-2">TOTAL</label>
+                                    <input type="text" class="form-control" id="precioTotal" name="precioTotal" readonly>
+                                    <span class="error-message" id="total-error"></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-2 ">
-                            <div class="form-group">
-                                <label class="mb-2">Cantidades *</label>
-                                <input type="number" class="form-control" id="cantidad" name="cantidad"
-                                    autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                    placeholder="Cantidad">
-                            </div>
-                        </div>
-                        <div class="col-md-2 d-flex justify-content-center align-items-center">
-                            <button class="btn btn-success" id="calcularTotal" type="button">Calcular Total =</button>
-                        </div>
-                        <div class="col-md-2 ">
-                            <div class="form-group">
-                                <label class="mb-2">TOTAL</label>
-                                <input type="text" class="form-control" id="precioTotal" name="precioTotal" readonly>
-                                <span class="error-message" id="total-error"></span>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
         </div>
@@ -73,6 +78,8 @@
 </div>
 
 <style>
+    #cont-dom {
+    }
     .sugerencia {
         display: flex;
         flex-direction: column;

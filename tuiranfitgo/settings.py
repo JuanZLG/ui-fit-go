@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products',
     'eproviders',
-    'eclients',
+    'customers',
     'sales',
     'dashboard'
 ]
@@ -50,7 +50,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'products', 'templates'),
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
-                 os.path.join(BASE_DIR, 'eclients', 'templates'),
+                 os.path.join(BASE_DIR, 'customers', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  os.path.join(BASE_DIR, 'sales', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
@@ -75,8 +75,8 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
-        'PORT': '3306'
+        'PASSWORD': 'monitoc10',
+        'PORT': '1010'
     }
 }
 
@@ -115,7 +115,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'tuiranfitgo','static')]
 
 # Default primary key field typeF
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
