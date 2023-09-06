@@ -1,7 +1,6 @@
 {% extends "baseInterface.html" %}
 
 {% block body %}
-<!-- Begin Page Content -->
 <div class="container-fluid">
     <h1 class="h3 mb-2 text-gray-800">Modificar Cliente</h1>
     <br>
@@ -50,7 +49,6 @@
             </select>
         </div>
         
-        <!-- Campo Departamento -->
         <div class="form-group">
             <label for="departamento">Departamento *</label>
             <select class="form-control" id="departamento" name="nombre_departamento">
@@ -58,7 +56,6 @@
             </select>
         </div>
 
-        <!-- Campo Municipio -->
         <div class="form-group">
             <label for="municipio">Municipio *</label>
             <select class="form-control" id="municipio" name="nombre_municipio">
@@ -74,17 +71,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Obtener la lista de departamentos al cargar la página
         obtenerDepartamentos();
 
-        // Cargar el valor actual del campo Departamento
         const departamentoActual = "{{ cliente.id_municipio.id_departamento.nombre_departamento }}";
         $('#departamento').val(departamentoActual);
 
-        // Obtener y cargar los municipios basados en el departamento actual
         cargarMunicipios(departamentoActual);
 
-        // Manejar cambios en el departamento seleccionado
         $("#departamento").change(function () {
             const departamentoSeleccionado = $(this).val();
             cargarMunicipios(departamentoSeleccionado);
@@ -101,9 +94,8 @@
             const celular = $('#iCelular').val();
             const barrio = $('#iBarrio').val();
             const direccion = $('#iDireccion').val();
-            const municipio = $('#municipio').val(); // Agregado: Obtener el valor del municipio
+            const municipio = $('#municipio').val();
 
-            // Validación del campo de documento (ejemplo)
             if (!documento) {
                 mostrarError('#iDocumento', 'Este campo es obligatorio.');
                 errors = true;
@@ -111,9 +103,7 @@
                 ocultarError('#iDocumento');
             }
 
-            // Resto de validaciones...
 
-            // Envía el formulario si no hay errores
             if (!errors) {
                 $.ajax({
                     type: 'POST',
@@ -121,7 +111,6 @@
                     data: $(this).serialize(),
                     success: function (response) {
                         if (response.success) {
-                            // Éxito: redirige o realiza acciones adicionales
                             alert('Cliente editado con éxito.');
                             window.location.href = "{% url 'lista_clientes' %}";
                         }
@@ -150,31 +139,58 @@
             });
         }
 
-        // Función para obtener la lista de municipios basados en el departamento seleccionado
-        function obtenerMunicipios(departamentoSeleccionado) {
-            return $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                    "departamento": departamentoSeleccionado
-                }
-            });
-        }
+        // Función para obtener la lista de municipios basados en el departamento seleccionado y seleccionar el municipio registrado
+function obtenerMunicipios(departamentoSeleccionado, municipioRegistrado) {
+    return $.ajax({
+        url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+        type: "GET",
+        data: {
+            "$limit": 5000,
+            "departamento": departamentoSeleccionado
+        },
+        success: function (data) {
+            const municipioSelect = $("#municipio");
+            municipioSelect.empty(); 
 
-        // Función para cargar los municipios basados en el departamento seleccionado
-        function cargarMunicipios(departamentoSeleccionado) {
-            obtenerMunicipios(departamentoSeleccionado).done(function (data) {
-                const municipioSelect = $("#municipio");
-                municipioSelect.empty(); // Limpiar opciones anteriores
-                data.forEach(function (item) {
-                    municipioSelect.append($("<option>", {
-                        value: item.municipio,
-                        text: item.municipio
-                    }));
-                });
+            data.forEach(function (item) {
+                municipioSelect.append($("<option>", {
+                    value: item.municipio,
+                    text: item.municipio
+                }));
             });
+
+     
+            if (municipioRegistrado) {
+                municipioSelect.val(municipioRegistrado);
+            }
         }
+    });
+}
+
+
+
+ // Función para cargar los municipios basados en el departamento seleccionado
+function cargarMunicipios(departamentoSeleccionado, municipioRegistrado) {
+    obtenerMunicipios(departamentoSeleccionado).done(function (data) {
+        const municipioSelect = $("#municipio");
+        municipioSelect.empty(); 
+        data.forEach(function (item) {
+            municipioSelect.append($("<option>", {
+                value: item.municipio,
+                text: item.municipio
+            }));
+        });
+
+   
+        if (municipioRegistrado) {
+            municipioSelect.val(municipioRegistrado);
+        }
+    });
+}
+
+// Obtener y cargar los municipios basados en el departamento actual y el municipio registrado
+cargarMunicipios(departamentoActual, "{{ cliente.id_municipio.nombre_municipio }}");
+
 
         // Función para mostrar errores
         function mostrarError(elementId, errorMessage) {
