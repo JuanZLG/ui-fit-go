@@ -90,7 +90,6 @@ def redirigirEditar(request, cliente_id):
     cliente = Clientes.objects.get(id_cliente=cliente_id)
     municipios = Municipios.objects.all()  
     return render(request, 'editCustomer.html', {'cliente': cliente, 'municipios': municipios})
-
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Clientes, Departamentos, Municipios
@@ -113,12 +112,13 @@ def editarCliente(request, cliente_id):
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
         try:
-            # Intenta obtener el objeto de municipio correspondiente al nombre
-            municipio = Municipios.objects.get(nombre_municipio=municipio_nombre, id_departamento__nombre_departamento=departamento_nombre)
-        except Municipios.DoesNotExist:
-            # Si no existe el municipio, créalo
-            departamento = Departamentos.objects.get(nombre_departamento=departamento_nombre)
-            municipio = Municipios.objects.create(nombre_municipio=municipio_nombre, id_departamento=departamento)
+            # Intenta obtener el objeto de departamento correspondiente al nombre
+            departamento, created = Departamentos.objects.get_or_create(nombre_departamento=departamento_nombre)
+
+            # Intenta obtener el objeto de municipio correspondiente al nombre y al departamento
+            municipio, created = Municipios.objects.get_or_create(nombre_municipio=municipio_nombre, id_departamento=departamento)
+        except:
+            return JsonResponse({'success': False, 'message': 'Error al crear departamento o municipio'})
 
         # Actualiza los campos del cliente existente con los valores recibidos
         cliente.id_municipio = municipio
@@ -135,6 +135,9 @@ def editarCliente(request, cliente_id):
 
     # Renderiza la plantilla con los datos existentes del cliente y los valores de departamento y municipio registrados
     return render(request, 'editCustomer.html', {'cliente': cliente, 'departamento_registrado': cliente.id_municipio.id_departamento.nombre_departamento, 'municipio_registrado': cliente.id_municipio.nombre_municipio})
+
+
+
 
 
 
