@@ -11,7 +11,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'createProv' %}" class="btn btn-success btn-icon-split ">
+            <a href="{% url 'crear_proveedor' %}" class="btn btn-success btn-icon-split ">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-plus"></i>
                 </span>
@@ -46,7 +46,7 @@
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>
                         <td>
-                            <a href="{% url 'edit' proveedor.id_proveedor %}" class="btn btn-sm btn-primary">Editar <i class="fa-solid fa-pen-to-square"></i></i></a></td>
+                            <a href="{% url 'editar_proveedor' proveedor.id_proveedor %}" class="btn btn-sm btn-primary">Editar <i class="fa-solid fa-pen-to-square"></i></i></a></td>
                         <td>
                             <button class="btn cambiar-estado {% if proveedor.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ proveedor.id_proveedor }}" data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if proveedor.estado == 1 %}

@@ -76,10 +76,10 @@
                             Agregar producto</button>
                     </div>
                 </div>
+                <button class="btn btn-primary" type="submit">Crear Venta</button>
             </form>
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Crear Venta</button>
 </div>
 
 <style>
@@ -291,5 +291,92 @@
     });
 
 </script>
+<script>
+    $(document).ready(function () {
+        function validarCamposLlenos() {
+            let camposLlenos = true;
+            const documentoValue = $('#documento').val();
+            const productoValue = $('.producto').val(); // Cambia esto para seleccionar todos los campos de producto
+            const cantidadValue = $('.cantidad').val(); // Cambia esto para seleccionar todos los campos de cantidad
 
+            
+            if (!documentoValue) {
+                mostrarError('#documento');
+                camposLlenos = false;
+            }
+            if (!productoValue) {
+                mostrarError('.producto'); 
+                camposLlenos = false;
+            }
+            if (!cantidadValue) {
+                mostrarError('.cantidad'); 
+                camposLlenos = false;
+            }
+
+            return camposLlenos;
+        }
+
+        $('#documento, .producto, .cantidad').on('input', function () {
+            const campo = $(this);
+            const campoValue = campo.val();
+
+            if (campoValue) {
+                campo.removeClass('is-invalid');
+            }
+        });
+
+        function mostrarError(selector) {
+            $(selector).addClass('is-invalid');
+        }
+
+        $('#venta-form').submit(function (event) {
+            event.preventDefault();
+
+            if (!validarCamposLlenos()) {
+                return;
+            }
+
+
+            // // Crear un arreglo de productos
+            // const productos = [];
+
+            // // Recorrer las filas de la tabla de productos
+            // $('.producto-row').each(function () {
+            //     const productoRow = $(this);
+            //     const producto = productoRow.find('.producto').val();
+            //     const precioUnidad = productoRow.find('.precioUnidad').val();
+            //     const cantidad = productoRow.find('.cantidad').val();
+            //     const precioTotal = productoRow.find('.precioTotal').val();
+
+            //     // Agregar el producto al arreglo
+            //     productos.push({
+            //         producto: producto,
+            //         precioUnidad: precioUnidad,
+            //         cantidad: cantidad,
+            //         precioTotal: precioTotal
+            //     });
+            // }); 
+
+            // // Crear un objeto que incluye el documento y los productos
+            // const dataToSend = {
+            //     documento: documentoValue,
+            //     productos: productos
+            // };
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'crear_venta' %}",
+                // data: JSON.stringify(dataToSend),
+                data: $(this).serialize(),
+                // contentType: 'application/json',
+                success: function (response) {
+                    if (response.success) {
+                        alert('Venta creada con éxito.');
+                        window.location.href = "{% url 'ventas' %}";
+                    }
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

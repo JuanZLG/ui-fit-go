@@ -103,11 +103,10 @@
         // Continuar con el envío del formulario si todos los campos están llenos
         $.ajax({
             type: 'POST',
-            url: "{% url 'createProv' %}",
+            url: "{% url 'crear_proveedor' %}",
             data: $(this).serialize(),
             success: function (response) {
                 if (response.success) {
-                    // Éxito: redirige o realiza acciones adicionales
                     alert('Proveedor creado con éxito.');
                     window.location.href = "{% url 'proveedores' %}";
                 }

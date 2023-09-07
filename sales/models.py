@@ -71,9 +71,9 @@ class Productos(models.Model):
     descripcion = models.CharField(max_length=400)
     cantidad = models.IntegerField()
     sabor = models.CharField(max_length=50)
-    tamaño = models.CharField(max_length=45)
+    presentacion = models.CharField(max_length=45)
     estado = models.IntegerField()
-    precio = models.DecimalField(max_digits=10, decimal_places=3)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
 
 
     class Meta:
