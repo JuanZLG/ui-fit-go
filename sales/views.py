@@ -1,60 +1,86 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
-
 
 def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-
-from django.http import JsonResponse
-import json
-from django.views.decorators.csrf import csrf_exempt
-
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
+# @csrf_exempt
 # def crear_venta(request):
 #     if request.method == 'POST':
 #         data = json.loads(request.body)
-#         # Imprimir los datos en la consola del servidor
-#         print(data)
+#         documento = data.get('documento', '')
+#         productos = data.get('productos', '')
         
-#         # Ahora, 'data' contendrá el JSON enviado desde AJAX
-#         # Puedes acceder a los datos como un diccionario de Python
-#         # Por ejemplo, data['campo'] para acceder a un campo específico
-#         return JsonResponse({'success': True})
-    
-#     # Manejar solicitudes GET u otros métodos HTTP según sea necesario
-#     return render(request, "createSales.html")
+#         # Buscar al cliente por su documento
+#         cliente = Clientes.objects.filter(documento=documento).first()
+        
+#         if cliente:
+#             # Crear una venta con el cliente encontrado
+#             venta = Ventas.objects.create(id_cliente=cliente)
+            
+#             # Crear detalles de venta para cada producto
+#             for producto_datos in productos:
+#                 producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
+#                 if producto:
+#                     detalle = Detalleventa.objects.create(
+#                         id_producto=producto,
+#                         id_venta=venta,
+#                         cantidad=producto_datos['cantidad'],
+#                         precio_uni=producto_datos['precioUnidad'],
+#                         precio_tot=producto_datos['precioTotal']
+#                     )
+#                 else:
+#                     # Manejar el caso donde el producto no existe
+#                     # Puedes mostrar un mensaje de error o tomar otra acción apropiada.
+#                     pass
+
+#             response_data = {'success': True}
+#         else:
+#             # Manejar el caso donde el cliente no existe
+#             # Puedes mostrar un mensaje de error o tomar otra acción apropiada.
+#             response_data = {'success': False, 'message': 'Cliente no encontrado'}
+
+#         return JsonResponse(response_data)
+
+#     return render(request, 'createSales.html')
 
 
+@csrf_exempt
 def crear_venta(request):
     if request.method == 'POST':
-        documento = request.POST.get('documento')
-        producto = request.POST.get('producto')
-        precioUnidad = request.POST.get('precioUnidad')
-        cantidad = request.POST.get('cantidad')
-        precioTotal = request.POST.get('precioTotal')
+        data = json.loads(request.body)
+        documento = data.get('documento', '')
+        productos = data.get('productos', [])
+        print(documento)
+        cliente = Clientes.objects.filter(documento=documento).first()
+        print(cliente)
 
-        # Imprime los datos en la consola del servidor
-        print(f'Documento del Cliente: {documento}')
-        print(f'Producto: {producto}')
-        print(f'Precio Unitario: {precioUnidad}')
-        print(f'Cantidad: {cantidad}')
-        print(f'Total: {precioTotal}')
+        venta = Ventas.objects.create(id_cliente=cliente)
+        for producto_datos in productos:
+            producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
+            detalle = Detalleventa.objects.create(
+                id_producto=producto,
+                id_venta=venta,
+                cantidad=producto_datos['cantidad'],
+                precio_uni=producto_datos['precioUnidad'],
+                precio_tot=producto_datos['precioTotal']
+            )
 
-        # Retorna una respuesta JSON con un mensaje de éxito
-        response_data = {
-            'success': True,
-            'message': 'Venta creada con éxito.',
-            # Puedes agregar más datos procesados aquí si es necesario
-        }
+        response_data = {'success': True}  
         return JsonResponse(response_data)
 
     return render(request, 'createSales.html')
+    
+
+
+
+
+
+
 
 
 def buscar_documentos(request):
