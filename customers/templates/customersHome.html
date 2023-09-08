@@ -4,21 +4,20 @@
 {% block body %}
 
 
-<h3 class="mb-2 text-gray-900">Clientes</h1>
-<p class="mb-4">Este es el entorno de Clientes, aquí puedes gestionar los registros de tus Clientes.</p>
-
+<center><h1 class="modtitles">Entorno de Clientes</h1></center>
+<br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split ">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-                <span class="text">Agregar</span>
+            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split " id="am">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Cliente</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger" id="of">Ir a Dashboard</button>
         </span>
     </div>
 </div>
@@ -27,16 +26,16 @@
     <div class="card-header py-4">
         <div class="table-responsive">
             <table class="table table-bordered m-auto" id="dataTable" width="80%" cellspacing="0">
-                <thead>
+                <thead class="theads">
                     <tr>
-                        <th style="color:black">ID Cliente</th>
-                        <th style="color:black">Municipio</th>
-                        <th style="color:black">Documento</th>
-                        <th style="color:black">Nombres</th>
-                        <th style="color:black">Apellidos</th>
-                        <th style="color:black">Celular</th>
-                        <th style="color:black">Estado</th>
-                        <th style="color:black">Acciones</th>
+                        <th>ID</th>
+                        <th>Municipio</th>
+                        <th>Documento</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Celular</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,11 +48,11 @@
                         <td>{{ cliente.nombres }}</td>
                         <td>{{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
-                        <td>
+                        <td id="statuscell">
                             {% if cliente.estado == 1 %}
-                                <button class="btn btn-danger cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="0">Inactivar</button>
+                                <button class="btn btn-danger cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="0">Activar</button>
                             {% else %}
-                                <button class="btn btn-success cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="1">Activar</button>
+                                <button class="btn btn-success cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="1">Desactivar</button>
                             {% endif %}
                         </td>
                         
@@ -84,11 +83,11 @@
                                                 },
                                                 method: "GET",
                                                 success: function(response) {
-                                                    // Actualiza la página o la sección relevante según sea necesario
+                                                    
                                                     location.reload();
                                                 },
                                                 error: function(error) {
-                                                    // Maneja el error si es necesario
+                                                
                                                 }
                                             });
                                         }
@@ -96,16 +95,9 @@
                                 });
                             });
                         </script>
-                        
-                        
                         <td>
-                           
-                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-primary {% if cliente.estado == 0 %}disabled{% endif %}">Editar</a>
+                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-primary {% if cliente.estado == 0 %}disabled{% endif %} btn-icon-split">Editar <i class="fa-solid fa-pen-to-square"></i></a>
                        </td>
-                        
-                        
-                      
-                        
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -113,8 +105,5 @@
         </div>
     </div>
 </div>
-
-
-
 
 {%endblock%}

@@ -5,30 +5,29 @@
 {% block body %}
 
 
-<h3 class="mb-2 text-gray-900">Ventas</h1>
-<p class="mb-4">Este es el entorno de ventas, aquí puedes gestionar registros de tus ventas.</p>
-
+<center><h1 class="modtitles">Entorno de Ventas</h1></center>
+<br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split ">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-                <span class="text">Agregar</span>
+            <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split " id="am">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Ventas</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger">Ir a Dashboard</button>
+            <button class="btn btn-danger" id="of">Ir a Dashboard</button>
         </span>
     </div>
 </div>
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <!-- Tabla de Clientes -->
         <div class="table-responsive">
+            <table class="table table-bordered mx-auto" id="dataTable" width="90%" cellspacing="3">
+                <thead class="theads">
             <table class="table table-bordered mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
                 <thead>
                     <tr>
@@ -49,7 +48,7 @@
                                 {% if venta.estado == 1 %}
                                 Activo
                                 {% else %}
-                                Inhabilitado
+                                Inactivo
                                 {% endif %}
                             </button>
                         </td> 
