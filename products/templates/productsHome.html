@@ -35,8 +35,7 @@
                         <th>Producto</th>
                         <th>Stock</th>
                         <th>Precio</th>
-                        <th>Estado</th>
-                        <th>Modificar</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,8 +47,13 @@
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
                         <td>{{p.precio}}</td>
-                        <td id="statuscell"><a href="#" class="btn btn-primary">Estado</a></td>
-                        <td><button type="button" class="btn btn-dark">Editar</button></td>
+                        {% comment %} <td id="statuscell"></td> {% endcomment %}
+                        <td id="actionscell">
+                            <a href="#" class="btn btn-sm btn-success" id="statusbutton"></a>
+                            <a href="#" class="btn btn-sm btn-primary" id="editbutton">
+                                <i class="fa-solid fa-pen-to-square" style="color:black" ></i></a>
+                                <a href="#" class="btn btn-sm btn-primary " id="editbutton">
+                                <i class="fa-solid fa-eye" style="color: #000000;"></i></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

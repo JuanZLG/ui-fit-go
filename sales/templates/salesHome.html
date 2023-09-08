@@ -32,10 +32,11 @@
     <div class="card-header py-4">
         <div class="table-responsive">
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
-                <thead>
+                <thead class="theads">
                     <tr>
+                        <th>ID</th>
                         <th>Cliente</th>
-                        <th>Fecha de registro</th>
+                        <th>Fecha de Registro</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -82,11 +83,10 @@
                                                 },
                                                 method: "GET",
                                                 success: function (response) {
-                                                    // Actualiza la página o la sección relevante según sea necesario
                                                     location.reload();
                                                 },
                                                 error: function (error) {
-                                                    // Maneja el error si es necesario
+                                
                                                 }
                                             });
                                         }

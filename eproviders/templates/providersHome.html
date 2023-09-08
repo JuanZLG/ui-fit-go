@@ -48,9 +48,9 @@
                         <td id="statuscell">
                             <button class="btn cambiar-estado {% if proveedor.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ proveedor.id_proveedor }}" data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if proveedor.estado == 1 %}
-                                Activar
+                                Activo
                                 {% else %}
-                                Desactivar
+                                Inactivo
                                 {% endif %}
                             </button>
                         <td>

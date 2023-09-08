@@ -244,15 +244,12 @@
                             currentRow.find('.precioUnidad').val(parseFloat(data.precio).toLocaleString(undefined, {
                                 minimumFractionDigits: 0,
                             }));
-
-
-
                         } else {
                             currentRow.find('.precioUnidad').addClass('is-invalid');
                         }
                     },
                     error: function () {
-                        currentRow.find('.precioUnidad').val("...");
+                        currentRow.find('.precioUnidad').val("no");
                         currentRow.find('.cantidad, .precioTotal').val("");
                     }
                 });
