@@ -94,8 +94,6 @@
                 const barrio = $('#iBarrio').val();
                 const direccion = $('#iDireccion').val();
 
-                // Validación del campo de documento
-
                 if (!documento) {
                     mostrarError('#iDocumento', 'Este campo es obligatorio.');
                     errors = true;
@@ -105,7 +103,6 @@
                 } else {
                     ocultarError('#iDocumento');
                 }
-
 
                 if (!nombres) {
                     mostrarError('#iNombres', 'Este campo es obligatorio.');
