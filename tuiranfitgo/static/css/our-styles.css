@@ -1,0 +1,79 @@
+
+#am{
+    padding:0;
+    width:auto;
+    block-size: 6vh;
+    background-color:black;
+    color:white;
+    display:flex;
+    align-items: center;
+    #addicon{
+        color: #ffffff;
+    };
+}
+
+#am:hover {
+    background-color: rgb(59, 155, 193);
+}
+
+#of:hover{
+    background-color: rgb(113, 8, 8);
+    color:white;
+}
+
+.theads{
+    color:white; 
+    background-color:black
+}
+
+#statuscell{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* rgb(0, 142, 213); */
+/* .modtitles{
+    color: rgb(0, 0, 0);
+    font-weight:bold;
+} */
+
+.modtitles{
+        font-size: 2.5em;
+        background-image: linear-gradient(45deg,rgb(0, 0, 0),rgb(0, 4, 253),rgb(255, 0, 0));
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 9s linear infinite;
+        font-weight:bold;
+    }
+    
+@keyframes animarGradiente {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+        }
+    75%{
+        background-position: 50% 50%;
+    }
+    100%{
+        background-position: 0% 50%;
+    }
+    }
+
+
+/* .selected-page{
+    background-color: black !important;
+    color: white;
+}
+
+#dataTable .paginate_button:not(.active) {
+    background-color: white;
+    color: black;
+} */

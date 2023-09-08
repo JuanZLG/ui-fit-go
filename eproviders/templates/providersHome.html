@@ -5,22 +5,20 @@
 {% block body %}
 
 
-<h3 class="mb-2 text-gray-900">Proveedores</h1>
-<p class="mb-4">Este es el entorno de Proveedores, aquí puedes gestionar registros de tus Proveedores.</p>
-
+<center><h1 class="modtitles">Entorno de Proveedores</h1></center>
+<br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'crear_proveedor' %}" class="btn btn-success btn-icon-split ">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-                <span class="text">Agregar</span>
+            <a href="{% url 'crear_proveedor' %}" class="btn btn-success btn-icon-split " id="am">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Proveedor</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger">Ir a Dashboard</button>
+            <button class="btn btn-danger" id="of">Ir a Dashboard</button>
         </span>
     </div>
 </div>
@@ -30,32 +28,35 @@
         <!-- Tabla de Clientes -->
         <div class="table-responsive">
             <table class="table table-bordered mx-auto" id="dataTable" width="90%" cellspacing="3">
-                <thead>
+                <thead class="theads">
                     <tr>
-                        <th>Nombre del proveedor</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
-                        <th>Modificar</th>
                         <th>Estado</th>
+                        <th>Modificar</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for proveedor in proveedores %}
                     <tr class="{% if proveedor.estado == 0 %}table-secondary{% endif %}">
+                        <td>{{ proveedor.id_proveedor }}</td>
                         <td>{{ proveedor.nombre_proveedor }}</td>
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>
-                        <td>
-                            <a href="{% url 'editar_proveedor' proveedor.id_proveedor %}" class="btn btn-sm btn-primary">Editar <i class="fa-solid fa-pen-to-square"></i></i></a></td>
-                        <td>
+                        <td id="statuscell">
                             <button class="btn cambiar-estado {% if proveedor.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ proveedor.id_proveedor }}" data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if proveedor.estado == 1 %}
-                                Activo
+                                Activar
                                 {% else %}
-                                Inhabilitado
+                                Desactivar
                                 {% endif %}
                             </button>
+                        <td>
+                            <a href="{% url 'editar_proveedor' proveedor.id_proveedor %}" class="btn btn-sm btn-primary">Editar <i class="fa-solid fa-pen-to-square"></i></a></td>
                         </td> 
+
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                         <script>
@@ -83,11 +84,10 @@
                                                 },
                                                 method: "GET",
                                                 success: function (response) {
-                                                    // Actualiza la página o la sección relevante según sea necesario
                                                     location.reload();
                                                 },
                                                 error: function (error) {
-                                                    // Maneja el error si es necesario
+                            
                                                 }
                                             });
                                         }
