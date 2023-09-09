@@ -21,6 +21,20 @@ def lista_clientes(request):
     return render(request, 'customersHome.html', context)
 
 
+def ver_cliente(request, cliente_id):
+    cliente = get_object_or_404(Clientes, id_cliente=cliente_id)
+    cliente_data = {
+        'documento': cliente.documento,
+        'nombres': cliente.nombres,
+        'apellidos': cliente.apellidos,
+        'celular': cliente.celular,
+        # Otros campos del cliente aquí
+    }
+    return JsonResponse({'cliente': cliente_data})
+
+
+
+
 def agregarCliente(request):
     municipios = Municipios.objects.all()  
     return render(request, 'createCustomer.html', {'municipios': municipios})

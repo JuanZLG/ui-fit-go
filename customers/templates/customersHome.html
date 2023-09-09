@@ -1,11 +1,44 @@
 {% extends "baseInterface.html" %}
 
-
 {% block body %}
 
 
 
+<!-- Botón para abrir el modal -->
 
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Hola</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <h5>Detalles del Cliente</h5>
+            <div id="cliente-details">
+               <!-- detalleCliente.html -->
+               <div class="modal-body">
+                <h5>Detalles del Cliente</h5>
+                <p><strong>Documento:</strong> <span id="cliente-documento"></span></p>
+                <p><strong>Nombres:</strong> <span id="cliente-nombres"></span></p>
+                <p><strong>Apellidos:</strong> <span id="cliente-apellidos"></span></p>
+                <p><strong>Celular:</strong> <span id="cliente-celular"></span></p>
+                <!-- Otros detalles del cliente aquí -->
+            </div>
+            
+
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <center>
     <h1 class="modtitles">Entorno de Clientes</h1>
 </center>
@@ -15,8 +48,9 @@
         <span>
             <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split btn-add" id="em">
                 <span class="icon">
-                    <i class="fa-solid fa-plus addicon" id="addicon"></i>
-                    <span class="text">Agregar Cliente</span>
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                </span>
+                <span class="text">Agregar Cliente</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
@@ -25,382 +59,57 @@
         </span>
     </div>
 </div>
-<div class="container-fluid">
-
-    <div class="modal fade " id="clienteModal" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="clienteModalLabel">Agregar Cliente</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="cliente-form" method="post">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="iDocumento">Documento *</label>
-                                <input type="number" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento">
-                                <div class="error-message" id="iDocumento-error"></div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="iNombres">Nombres *</label>
-                                <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
-                                <div class="error-message" id="iNombres-error"></div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="iApellidos">Apellidos *</label>
-                            <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos">
-                            <div class="error-message" id="iApellidos-error"></div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="iCelular">Celular *</label>
-                            <input type="tel" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                            <div class="error-message" id="iCelular-error"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="iBarrio">Barrio *</label>
-                            <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
-                            <div class="error-message" id="iBarrio-error"></div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="iDireccion">Dirección *</label>
-                            <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección">
-                            <div class="error-message" id="iDireccion-error"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="departamento">Departamento *</label>
-                            <select class="form-control" id="departamento" name="nombre_departamento">
-                
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="municipio">Municipio *</label>
-                            <select class="form-control" id="municipio" name="nombre_municipio">
-                
-                            </select>
-                        </div>
-                    </div>
-
-                    <style>
-                        .modal-content {
-                            border-radius: 10px; 
-                            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2); 
-                        }
-
-                        .modal-header {
-                            background-color: black; 
-                            color: white; 
-                            border-bottom: none; 
-                        }
-
-                        .modal-footer {
-                            border-top: none; 
-                        }
-
-                        
-                        .btn-secondary {
-                            background-color: #6c757d; 
-                        }
-
-                        .btn-secondary:hover {
-                            background-color: black; 
-
-                        }
-                       
-
-                        .btn-agregar {
-                            background-color: black;
-                            color: white;
-                        }
-
-                        .btn-agregar:hover {
-                            background-color: #333;
-                            color: white;
-
-                        }
-
-                        .form-control {
-                            border-radius: 5px; 
-                        }
-
-                        .modal-xl {
-                            max-width: 40%;
-                        }
-
-                        .modal-dialog-scrollable {
-                            max-height: 60vh;
-                        }
-
-                    </style>
-                    </form>
-                
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" form="cliente-form" class="btn btn-agregar" >Agregar Cliente</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Obtener la lista de departamentos al cargar la página
-            obtenerDepartamentos();
-
-            // Manejar cambios en el departamento seleccionado
-            $("#departamento").change(function () {
-                cargarMunicipios();
-            });
-
-            $('#cliente-form').submit(function (event) {
-                event.preventDefault();
-                let errors = false;
-
-                // Validaciones en el lado del cliente
-                const documento = $('#iDocumento').val();
-                const nombres = $('#iNombres').val();
-                const apellidos = $('#iApellidos').val();
-                const celular = $('#iCelular').val();
-                const barrio = $('#iBarrio').val();
-                const direccion = $('#iDireccion').val();
-
-                // Validación del campo de documento
-
-                if (!documento) {
-                    mostrarError('#iDocumento', 'Este campo es obligatorio.');
-                    errors = true;
-                } else if (!/^[0-9]{8}([0-9]{2})?$/.test(documento)) { // Validación de 8 o 10 dígitos positivos
-                    mostrarError('#iDocumento', 'Número de documento inválido.');
-                    errors = true;
-                } else {
-                    ocultarError('#iDocumento');
-                }
-
-
-                if (!nombres) {
-                    mostrarError('#iNombres', 'Este campo es obligatorio.');
-                    errors = true;
-                } else {
-                    ocultarError('#iNombres');
-                }
-
-                if (!apellidos) {
-                    mostrarError('#iApellidos', 'Este campo es obligatorio.');
-                    errors = true;
-                } else {
-                    ocultarError('#iApellidos');
-                }
-
-                if (!celular) {
-                    mostrarError('#iCelular', 'Este campo es obligatorio.');
-                    errors = true;
-                } else if (!/^\d{10}$/.test(celular)) { // Validación de 10 dígitos
-                    mostrarError('#iCelular', 'Número inválido.');
-                    errors = true;
-                } else {
-                    ocultarError('#iCelular');
-                }
-
-                if (!barrio) {
-                    mostrarError('#iBarrio', 'Este campo es obligatorio.');
-                    errors = true;
-                } else {
-                    ocultarError('#iBarrio');
-                }
-
-                if (!direccion) {
-                    mostrarError('#iDireccion', 'Este campo es obligatorio.');
-                    errors = true;
-                } else {
-                    ocultarError('#iDireccion');
-                }
-
-                // Envía el formulario si no hay errores
-                
-                if (!errors) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "{% url 'agregarClientes' %}",
-                        data: $(this).serialize(),
-                        success: function (response) {
-                            if (response.success) {
-                                // Éxito: redirige o realiza acciones adicionales
-                                alert('Cliente creado con éxito.');
-                                window.location.href = "{% url 'lista_clientes' %}";
-                            }
-                        }
-                    });
-                }
-            });
-
-            // Función para obtener la lista de departamentos
-            function obtenerDepartamentos() {
-                $.ajax({
-                    url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                    type: "GET",
-                    data: {
-                        "$limit": 5000,
-                    }
-                }).done(function (data) {
-                    const departamentos = [...new Set(data.map(item => item.departamento))];
-                    const departamentoSelect = $("#departamento");
-                    departamentos.forEach(function (depto) {
-                        departamentoSelect.append($("<option>", {
-                            value: depto,
-                            text: depto
-                        }));
-                    });
-                });
-            }
-
-            // Función para obtener la lista de municipios basados en el departamento seleccionado
-            function obtenerMunicipios(departamentoSeleccionado) {
-                return $.ajax({
-                    url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                    type: "GET",
-                    data: {
-                        "$limit": 5000,
-                        "departamento": departamentoSeleccionado
-                    }
-                });
-            }
-
-            // Función para cargar los municipios basados en el departamento seleccionado
-            function cargarMunicipios() {
-                const departamentoSeleccionado = $("#departamento").val();
-                obtenerMunicipios(departamentoSeleccionado).done(function (data) {
-                    const municipioSelect = $("#municipio");
-                    municipioSelect.empty(); // Limpiar opciones anteriores
-                    data.forEach(function (item) {
-                        municipioSelect.append($("<option>", {
-                            value: item.municipio,
-                            text: item.municipio
-                        }));
-                    });
-                });
-            }
-            // Manejar cambios en los campos de entrada
-            $('#iDocumento, #iNombres, #iApellidos, #iCelular, #iBarrio, #iDireccion').on('input', function () {
-                ocultarError('#' + $(this).attr('id'));
-            });
-
-
-            // Función para mostrar errores
-            function mostrarError(selector, mensaje) {
-                $(selector).addClass('is-invalid');
-                $(selector + '-error').text(mensaje);
-            }
-
-            // Función para ocultar errores
-            function ocultarError(selector) {
-                $(selector).removeClass('is-invalid');
-                $(selector + '-error').text('');
-            }
-        });
-    </script>
-
-
-
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <div class="table-responsive">"
-            <table class="table table-bordered rounded m-auto" id="dataTable"  cellspacing="0">
+        <div class="table-responsive">
+            <table class="table table-bordered rounded m-auto" id="dataTable" cellspacing="0">
                 <thead class="theads">
                     <tr>
                         <th>ID</th>
                         <th>Documento</th>
-                        <th>Nombre completo</th>
+                       
+                        
+                        <th>Nombre Completo</th>
+                        
+                        
                         <th>Celular</th>
-                        <th>Municipio</th>
+                        <th>Lugar de residencia</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="tbody">
                     {% for cliente in clientes %}
-                    <tr>
+                    <tr class="{% if cliente.estado == 1 %}inactivo{% endif %}">
                         <td>{{ cliente.id_cliente }}</td>
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
+
+
+                        <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
+                    
                         <td>
-                            {% if cliente.estado == 1 %}
-                                <button class="btn btn-danger cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="0">Inactivar</button>
-                            {% else %}
-                                <button class="btn btn-success cambiar-estado" data-cliente-id="{{ cliente.id_cliente }}" data-nuevo-estado="1">Activar</button>
-                            {% endif %}
+                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 1 %}inactive-status{% else %}active-status{% endif %}"
+                                data-cliente-id="{{ cliente.id_cliente }}"
+                                data-nuevo-estado="{% if cliente.estado == 1 %}0{% else %}1{% endif %}">
+                                {% if cliente.estado == 1 %}
+                                Inactivo
+                                {% else %}
+                                Activo
+                                {% endif %}
+                            </button>
                         </td>
-
-                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script>
-                            $(document).ready(function () {
-                                $(".cambiar-estado").click(function () {
-                                    var clienteId = $(this).data("cliente-id");
-                                    var nuevoEstado = $(this).data("nuevo-estado");
-
-                                    Swal.fire({
-                                        title: 'Confirmar',
-                                        text: '¿Estás seguro de que deseas cambiar el estado?',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Confirmar',
-                                        cancelButtonText: 'Cancelar'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            $.ajax({
-                                                url: "{% url 'cambiarEstado'  %}",
-                                                data: {
-                                                    cliente_id: clienteId,
-                                                    nuevo_estado: nuevoEstado
-                                                },
-                                                method: "GET",
-                                                success: function (response) {
-
-                                                    location.reload();
-                                                },
-                                                error: function (error) {
-
-                                                }
-                                            });
-                                        }
-                                    });
-                                });
-                            });
-                        </script>
-                        
-                        
-                        <td>
-                           
-                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-primary {% if cliente.estado == 0 %}disabled{% endif %}">Editar</a>
-                       </td>
-                        
-                        
-                      
-                        
+                        <td class="cell-actions">
+                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
+                                id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="{% url 'verCliente' cliente.id_cliente %}" class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                
+                                
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -408,8 +117,164 @@
         </div>
     </div>
 </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".cambiar-estado").click(function() {
+            var clienteId = $(this).data("cliente-id");
+            var nuevoEstado = $(this).data("nuevo-estado");
 
+            Swal.fire({
+                title: 'Confirmar',
+                text: '¿Estás seguro de que deseas cambiar el estado?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{% url 'cambiarEstado'  %}",
+                        data: {
+                            cliente_id: clienteId,
+                            nuevo_estado: nuevoEstado
+                        },
+                        method: "GET",
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function(error) {
+                            // Manejar el error si es necesario
+                        }
+                    });
+                }
+            });
+        });
+    });
 
+    // JavaScript para cargar los detalles del cliente cuando se hace clic en "Details"
+    $(".detailsbutton").click(function() {
+        var clienteId = $(this).data("cliente-id");
 
-{%endblock%}
+        // Realiza una solicitud AJAX para cargar los detalles del cliente
+        $.ajax({
+            url: "{% url 'verCliente' 0 %}".replace('0', clienteId), // URL de la vista de verCliente
+            method: "GET",
+            success: function(response) {
+                // Actualiza los elementos HTML con los detalles del cliente
+                $("#cliente-documento").text(response.cliente.documento);
+                $("#cliente-nombres").text(response.cliente.nombres);
+                $("#cliente-apellidos").text(response.cliente.apellidos);
+                $("#cliente-celular").text(response.cliente.celular);
+                // Otros campos del cliente se pueden actualizar de manera similar aquí
+
+                // Muestra el modal con los detalles del cliente
+                $("#exampleModal").modal("show");
+            },
+            error: function(error) {
+                // Manejar el error si es necesario
+            }
+        });
+    });
+</script>
+
+<style>
+
+    .table {
+        width: 80%;
+    }
+    table thead.theads {
+        text-align: center;
+        color:white; 
+        background-color:#222222;
+    }
+    table tbody.tbody {
+        text-align: center;
+    }
+    
+    .modtitles{
+            font-size: 2em;
+            background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: animarGradiente 3s linear infinite;
+            font-weight:bold;
+        }
+    
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add, .btn-dash {
+        color:#000;
+        font-weight: 600;
+    }
+    .btn-add:hover, .btn-dash:hover {
+        color:#000;
+    }
+    .btn-add{
+        padding:0;
+        width:auto;
+        block-size: 6vh;
+        background-color:#b8f9b8;
+        display:flex;
+        align-items: center;
+    }
+    .btn-add:hover {
+        background-color:#85da85;
+    }
+    .btn-dash {
+        background-color: #ec8080;
+    }.btn-dash:hover {
+        background-color:#c55c5c;
+    }
+    
+    tr.inactivo {
+        background-color: #ccc; /* Cambia el fondo a un tono más claro */
+        color: #676666;
+    }
+    .statusbutton{
+        width: 5rem;
+        border-radius:3px;
+        border: none;
+    } .statusbutton:hover {
+        opacity: 0.9;
+    }
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+    
+    }
+    #detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        /* background-color: #1e3799; */
+        border: none;
+        transition: transform 0.5s;
+    }
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+    </style>
+
+{% endblock %}
