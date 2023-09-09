@@ -1,5 +1,5 @@
 
-#am{
+/* #em{
     padding:0;
     width:auto;
     block-size: 6vh;
@@ -12,39 +12,30 @@
     };
 }
 
-#am:hover {
+#em:hover {
     background-color: rgb(59, 155, 193);
 }
 
 #of:hover{
     background-color: rgb(113, 8, 8);
     color:white;
-}
+} */
 
-.theads{
+/* .theads{
     color:white; 
     background-color:black
-}
-
-#statusbutton{
-    width: 2.1em;
-    height: 2.2em;
-    border-radius:3px;
-}
+} */
 
 
-#actionscell{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-}
+
+
 
 /* rgb(0, 142, 213); */
 /* .modtitles{
     color: rgb(0, 0, 0);
     font-weight:bold;
 } */
-
+/* 
 .modtitles{
         font-size: 2em;
         background-image: linear-gradient(45deg,rgb(0, 0, 0),rgb(255, 0, 0),rgb(0, 0, 0));
@@ -54,7 +45,8 @@
         color: transparent;
         animation: animarGradiente 3s linear infinite;
         font-weight:bold;
-    }
+    } */
+    
     
 @keyframes animarGradiente {
     0% {

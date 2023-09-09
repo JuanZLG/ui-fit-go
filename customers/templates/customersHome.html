@@ -4,68 +4,169 @@
 {% block body %}
 
 
-<center><h1 class="modtitles">Entorno de Clientes</h1></center>
+<center>
+    <h1 class="modtitles">Entorno de Clientes</h1>
+</center>
 <br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split " id="am">
+            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split btn-add" id="em">
                 <span class="icon">
-                    <i class="fa-solid fa-plus" id="addicon"></i>
-                <span class="text">Agregar Cliente</span>
+                    <i class="fa-solid fa-plus addicon" id="addicon"></i>
+                    <span class="text">Agregar Cliente</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger" id="of">Ir a Dashboard</button>
+            <button class="btn btn-danger btn-dash">Ir a Dashboard</button>
         </span>
     </div>
 </div>
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <div class="table-responsive">
-            <table class="table table-bordered m-auto" id="dataTable" width="80%" cellspacing="0">
+        <div class="table-responsive">"
+            <table class="table table-bordered rounded m-auto" id="dataTable"  cellspacing="0">
                 <thead class="theads">
                     <tr>
                         <th>ID</th>
-                        <th>Municipio</th>
                         <th>Documento</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
+                        <th>Nombre completo</th>
                         <th>Celular</th>
+                        <th>Municipio</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                   
+                <tbody class="tbody">
                     {% for cliente in clientes %}
-                    <tr class="{% if cliente.estado == 1 %}table-secondary{% endif %}">
+                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
                         <td>{{ cliente.id_cliente }}</td>
-                        <td>{{ cliente.id_municipio.nombre_municipio }}</td>
                         <td>{{ cliente.documento }}</td>
-                        <td>{{ cliente.nombres }}</td>
-                        <td>{{ cliente.apellidos }}</td>
+                        <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
-                        <td id="statuscell">
+                        <td>Departamento / {{ cliente.id_municipio.nombre_municipio }}</td>
+                        <td><button
+                                class=" cambiar-estado statusbutton mx-3 {% if cliente.estado == 1 %}active-status{%else%}inactive-status{% endif %}"
+                                data-cliente-id="{{ cliente.id_cliente }}"
+                                data-nuevo-estado="{% if cliente.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if cliente.estado == 1 %}
-                                <a href="#" class="btn btn-sm cambiar-estado" style="background-color:red"  data-cliente-id="{{ cliente.id_cliente }}" id="statusbutton"  data-nuevo-estado="0"></a>
-                            {% else %}
-                                <a href="#" class="btn btn-sm cambiar-estado" style="background-color:green" data-cliente-id="{{ cliente.id_cliente }}" id="statusbutton"  data-nuevo-estado="1"></a>
-                            {% endif %}
-                                <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm btn-primary" id="editbutton">
-                                    <i class="fa-solid fa-pen-to-square" style="color:black" ></i></a>
-                                    <a href="#" class="btn btn-sm btn-primary " id="editbutton">
-                                    <i class="fa-solid fa-eye" style="color: #000000;"></i></a></td>
-                        
+                                Activo
+                                {% else %}
+                                Inactivo
+                                {% endif %}
+                            </button></td>
+                        <td class="cell-actions">
+                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
+                                id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#" class="btn btn-sm btn-primary " id="detailsbutton">
+                                <i class="fa-solid fa-eye"></i></a>
+                            
+
+<style>
+
+.table {
+    width: 80%;
+}
+table thead.theads {
+    text-align: center;
+    color:white; 
+    background-color:#222222;
+}
+table tbody.tbody {
+    text-align: center;
+}
+
+.modtitles{
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight:bold;
+    }
+    
+/* Toco repetir codigo para cambiar el blanco */
+.btn-add, .btn-dash {
+    color:#000;
+    font-weight: 600;
+}
+.btn-add:hover, .btn-dash:hover {
+    color:#000;
+}
+.btn-add{
+    padding:0;
+    width:auto;
+    block-size: 6vh;
+    background-color:#b8f9b8;
+    display:flex;
+    align-items: center;
+}
+.btn-add:hover {
+    background-color:#85da85;
+}
+.btn-dash {
+    background-color: #ec8080;
+}.btn-dash:hover {
+    background-color:#c55c5c;
+}
+
+tr.inactivo {
+    background-color: #ccc; /* Cambia el fondo a un tono más claro */
+    color: #676666;
+}
+.statusbutton{
+    width: 5rem;
+    border-radius:3px;
+    border: none;
+} .statusbutton:hover {
+    opacity: 0.9;
+}
+#editbutton {
+    background-color: #FFFF99;
+    color: #000;
+    /* background-color: #3498db; */
+    border: none;
+    transition: transform 0.5s;
+
+}
+#detailsbutton {
+    background-color: #419edd;
+    color: #000;
+    /* background-color: #1e3799; */
+    border: none;
+    transition: transform 0.5s;
+}
+#editbutton:hover,
+#detailsbutton:hover {
+    transform: scale(1.1);
+}
+.cell-actions {
+    display: flex;
+    justify-content: space-around;
+}
+.active-status {
+    background-color: #95eea5;
+    color: #09711c;
+}
+.inactive-status {
+    background-color: #ec8080;
+    color: #8a0404;
+}
+</style>
+                        </td>
+
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                         <script>
-                            $(document).ready(function() {
-                                $(".cambiar-estado").click(function() {
+                            $(document).ready(function () {
+                                $(".cambiar-estado").click(function () {
                                     var clienteId = $(this).data("cliente-id");
                                     var nuevoEstado = $(this).data("nuevo-estado");
-                        
+
                                     Swal.fire({
                                         title: 'Confirmar',
                                         text: '¿Estás seguro de que deseas cambiar el estado?',
@@ -84,12 +185,12 @@
                                                     nuevo_estado: nuevoEstado
                                                 },
                                                 method: "GET",
-                                                success: function(response) {
-                                                    
+                                                success: function (response) {
+
                                                     location.reload();
                                                 },
-                                                error: function(error) {
-                                                
+                                                error: function (error) {
+
                                                 }
                                             });
                                         }

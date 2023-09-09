@@ -34,7 +34,6 @@
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Cliente</th>
                         <th>Fecha de Registro</th>
                         <th>Acciones</th>
@@ -45,15 +44,10 @@
                     <tr class="{% if venta.estado == 0 %}table-secondary{% endif %} ">
                         <td class="d-flex ">{{ venta.id_cliente.nombres }}  {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
-                        <td>
+                        <td class="cell-actions">
                             <a href="#" class="btn btn-sm btn-primary m-1">  <i class="fa-solid fa-circle-info"></i></a> 
                             <a href="#" class="btn btn-sm btn-primary m-1"> <i class="fa-solid fa-pen-to-square"></i></a>  
-                            <button class="btn cambiar-estado {% if venta.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ venta.id_proveedor }}" data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
-                                {% if venta.estado == 1 %}
-                                Activo
-                                {% else %}
-                                Inactivo
-                                {% endif %}
+                            <button class="btn cambiar-estado statusbutton {% if venta.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ venta.id_proveedor }}" data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
                             </button>
                         </td> 
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

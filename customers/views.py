@@ -16,9 +16,10 @@ from django.http import JsonResponse
 
 
 def lista_clientes(request):
-    clientes = Clientes.objects.all().order_by('-estado')  
+    clientes = Clientes.objects.all()
     context = {'clientes': clientes}  
     return render(request, 'customersHome.html', context)
+
 
 def agregarCliente(request):
     municipios = Municipios.objects.all()  
