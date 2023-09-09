@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
+from django.utils import timezone
 
 
 
@@ -96,9 +96,10 @@ class Detalleventa(models.Model):
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateTimeField()
-    estado = models.IntegerField()
-
+    fechareg = models.DateTimeField(default=timezone.now)
+    estado = models.IntegerField(default=True)
+     
     class Meta:
         managed = False
         db_table = 'ventas'
+        

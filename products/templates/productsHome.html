@@ -5,22 +5,20 @@
 {% block body %}
 
 
-<h1 class="h1 mb-2 text-gray-800">Módulo de Productos</h1>
-<p class="mb-4">Este es el entorno de Productos, aquí puedes gestionar los registros de tus Productos.</p>
-
+<center><h1 class="modtitles">Entorno de Productos</h1></center>
+<br>
         <div class="card shadow mb-4">
-            <div class="card-header py-3" style="display: flex; justify-content: space-between; align-items: flex-center;">
+            <div class="card-header py-3 d-flex justify-content-between">
                 <span>
-                    <a href="{% url 'agregarProducto' %}" class="m-0 btn btn-success btn-icon-split" style="padding:2px">
-                        <span class="icon text-white-50">
-                            <i class="fa-solid fa-plus"></i>
-                        </span>
-                        <span class="text">Agregar</span>
+                    <a href="{% url 'agregarProducto' %}" class="btn btn-success btn-icon-split " id="am">
+                        <span class="icon">
+                            <i class="fa-solid fa-plus" id="addicon"></i>
+                        <span class="text">Agregar Producto</span>
                     </a>
                 </span>
-                <span style="display: flex; align-items: flex-end;">
-                    <h6 style="margin-bottom: 1; color: black; font-weight: bold; margin-right: 10px;">Informes:</h6>
-                    <button class="m-0 btn btn-danger">Ir a Dashboard</button>
+                <span class="d-flex align-items-end">
+                    <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+                    <button class="btn btn-danger" id="of">Ir a Dashboard</button>
                 </span>
             </div>
         </div>
@@ -29,16 +27,15 @@
             <div class="card-header py-4">
                 <div class="table-responsive">
             <table class="table table-bordered m-auto" id="dataTable" width="80%" cellspacing="0">
-                <thead>
+                <thead class="theads">
                     <tr>
-                        <th style="color:black">ID</th>
-                        <th style="color:black">Categoría</th>
-                        <th style="color:black">Marca</th>
-                        <th style="color:black">Producto</th>
-                        <th style="color:black">Stock</th>
-                        <th style="color:black">Precio</th>
-                        <th style="color:black">Modificar</th>
-                        <th style="color:black">Estado</th>
+                        <th>ID</th>
+                        <th>Categoría</th>
+                        <th>Marca</th>
+                        <th>Producto</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,8 +47,13 @@
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
                         <td>{{p.precio}}</td>
-                        <td><button type="button" class="btn btn-warning">Editar</button></td>
-                        <td><button type="button" class="btn btn-dark">Estado</button></td>
+                        {% comment %} <td id="statuscell"></td> {% endcomment %}
+                        <td id="actionscell">
+                            <a href="#" class="btn btn-sm btn-success" id="statusbutton"></a>
+                            <a href="#" class="btn btn-sm btn-primary" id="editbutton">
+                                <i class="fa-solid fa-pen-to-square" style="color:black" ></i></a>
+                                <a href="#" class="btn btn-sm btn-primary " id="editbutton">
+                                <i class="fa-solid fa-eye" style="color: #000000;"></i></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

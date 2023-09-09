@@ -5,21 +5,35 @@
 <div class="row">
     <div class="col-md-5 mb-3">
         <h1 class="h2 mx-5">Crear ventas</h1>
+        <div class="col-md-8 d-flex justify-content-center mt-5">
+            <div class="mb-3 col-md-6">
+                <label class="mb-2">IVA (%)</label>
+                <input type="text" class="form-control" id="iva" name="iva" autocomplete="off" placeholder="IVA">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="mb-2">Descuento (%)</label>
+                <input type="text" class="form-control" id="descuento" name="descuento" autocomplete="off"
+                    placeholder="Descuento">
+            </div>
+        </div>
     </div>
     <div class="col-md-7 mb-3">
         <div class="row justify-content-end">
-            <div class="col-md-7 me-4">
-                <label class="mb-2">Documento del Cliente *</label>
-                <input type="text" class="form-control " id="documento" name="documento" autocomplete="off"
-                    placeholder="Documento">
+            <div class="col-md-7">
+                <label class="mb-2">Obtener Cliente *</label>
+                <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+                    placeholder="Ingrese el documento para buscar al cliente"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                 <div class="d-flex p-2">
-                    <label class="text-secondary me-2 " id="mess-sugges-doc">Sugerencias:</label>
+                    <label class="text-secondary me-2" id="mess-sugges-doc">Sugerencias:</label>
                 </div>
-                <span class="error-message" id="documento-error"></span>
+                <input type="text" id="documento" hidden>
             </div>
         </div>
     </div>
 </div>
+
+
 
 <div class="container">
     <div class="card shadow mb-4">
@@ -39,24 +53,23 @@
                         <tbody>
                             <tr class="producto-row">
                                 <td>
-                                    <input type="text" class="form-control producto" name="producto" autocomplete="off"
-                                        placeholder="Nombre del producto">
-                                    <div class="d-flex p-2">
+                                    <input type="text" class="form-control producto" name="producto" id="producto"
+                                        autocomplete="off" placeholder="Nombre del producto">
+                                    <div class="d-flex p-2 cont-sugerencias">
                                         <label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>
                                     </div>
-                                    <!-- <div class="producto-suggestions"></div> Agrega esta línea para las sugerencias -->
                                     <span class="error-message producto-error"></span>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control precioUnidad" name="precioUnidad"
-                                            readonly>
+                                        <input type="text" class="form-control precioUnidad" id="precioUnidad"
+                                            name="precioUnidad" readonly>
                                         <span class="error-message" id="precioU-error"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="number" class="form-control cantidad" name="cantidad"
+                                        <input type="number" class="form-control cantidad" id="cantidad" name="cantidad"
                                             autocomplete="off" min="1"
                                             oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                             placeholder="Cantidad">
@@ -64,7 +77,8 @@
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control precioTotal" name="precioTotal" readonly>
+                                        <input type="text" class="form-control precioTotal" id="precioTotal"
+                                            name="precioTotal" readonly>
                                         <span class="error-message" id="total-error"></span>
                                     </div>
                                 </td>
@@ -95,21 +109,21 @@
         text-align: center
     }
 
-    .sugerencia {
+    .documento-suggestions {
         display: flex;
-        flex-direction: column;
-        gap: 3px;
-        width: 100%;
-        color: #000;
-        cursor: pointer;
+        gap: 5px;
     }
-
-    .select {
+    .documento-suggestions,
+    .producto-suggestions {
+        padding: 0 10px;
         color: rgb(37, 37, 227);
+        text-align: center;
     }
-
-    .select:hover {
+    .documento-suggestions:hover,
+    .producto-suggestions:hover {
+        cursor: pointer;
         color: rgb(17, 17, 120);
+        opacity: 0.9;
     }
 </style>
 
@@ -121,20 +135,20 @@
     $(document).ready(function () {
 
         $(document).ready(function () {
-            $("#mess-sugges-doc").after('<div id="documento-suggestions"></div>');
-            $("#documento").on("input", function () {
+            $("#mess-sugges-doc").after('<div id="documento-suggestions" class="documento-suggestions"></div>');
+            $("#nombreCliente").on("input", function () {
                 var input = $(this).val();
                 if (input.length >= 7) {
                     $.ajax({
                         url: "{% url 'buscar_documentos' %}?q=" + input,
                         type: "GET",
                         success: function (data) {
-                            var suggestions = $("#documento-suggestions");
+                            let suggestions = $("#documento-suggestions");
                             suggestions.empty();
-                            var documentSimilar = data.documentos[0];
-                            var nombreCliente = data.nombre_cliente;
+                            let documento = data.documentos[0];
+                            let nomClienteDato = data.nombre_cliente;
                             if (data.documentos.length > 0) {
-                                suggestions.html("<span class='select'>" + documentSimilar + " / " + nombreCliente + "</span>");
+                                suggestions.html("<p class='nombreCliente' id='nomClienteDato'>" + nomClienteDato + "</p><p class='text-secondary mx-2' id='documentoDato' class='documento'>" + documento + "</p>");
                                 suggestions.addClass("sugerencia").show();
                             } else {
                                 suggestions.hide();
@@ -155,8 +169,9 @@
                 }
             });
 
-            $("#documento-suggestions").on("click", "span", function () {
-                $("#documento").val($(this).text());
+            $("#documento-suggestions").on("click", function () {
+                $("#nombreCliente").val($('#nomClienteDato').text());
+                $('#documento').val($('#documentoDato').text());
                 $("#documento-suggestions").empty().hide();
             });
 
@@ -187,7 +202,7 @@
                     });
                 } else {
                     $(this).closest("tr").find(".producto-suggestions").empty().hide();
-                   
+
                 }
             });
 
@@ -203,7 +218,6 @@
                 currentRow.find(".producto").val($(this).text());
                 currentRow.find(".producto-suggestions").empty().hide();
                 currentRow.find('.precioUnidad').removeClass('is-invalid');
-                currentRow.find('.precioU-error').empty();
             });
 
             /********** PRECIOS ***********/
@@ -212,7 +226,10 @@
                 var nombreProducto = $(this).val();
                 if (nombreProducto.length >= 3) {
                     obtenerPrecioProducto(currentRow, nombreProducto);
-                } 
+                }
+                else {
+                    currentRow.find('.cantidad, .precioTotal').val("");
+                }
             });
 
             function obtenerPrecioProducto(currentRow, nombreProducto) {
@@ -224,14 +241,15 @@
                     },
                     success: function (data) {
                         if ('precio' in data) {
-                            currentRow.find('.precioUnidad').val(data.precio);
+                            currentRow.find('.precioUnidad').val(parseFloat(data.precio).toLocaleString(undefined, {
+                                minimumFractionDigits: 0,
+                            }));
                         } else {
                             currentRow.find('.precioUnidad').addClass('is-invalid');
-                            currentRow.find('.precioU-error').text("Por favor, asegúrate de ingresar un producto válido o verifica que esté registrado correctamente.").css('color', 'red');
                         }
                     },
                     error: function () {
-                        currentRow.find('.precioUnidad').val("...");
+                        currentRow.find('.precioUnidad').val("no");
                         currentRow.find('.cantidad, .precioTotal').val("");
                     }
                 });
@@ -296,79 +314,73 @@
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $('#documento').val();
-            const productoValue = $('.producto').val(); // Cambia esto para seleccionar todos los campos de producto
-            const cantidadValue = $('.cantidad').val(); // Cambia esto para seleccionar todos los campos de cantidad
+            const nombreCliente = $('#nombreCliente').val();
+            // const documentoSeparado = documentoValue.split('/')[0].trim();
 
-            
-            if (!documentoValue) {
-                mostrarError('#documento');
-                camposLlenos = false;
-            }
-            if (!productoValue) {
-                mostrarError('.producto'); 
-                camposLlenos = false;
-            }
-            if (!cantidadValue) {
-                mostrarError('.cantidad'); 
-                camposLlenos = false;
-            }
+            const productos = [];
 
-            return camposLlenos;
+
+            $('.producto-row').each(function (index) {
+                const row = $(this);
+                const productoInput = row.find('.producto');
+                const cantidadInput = row.find('.cantidad');
+                const precioUnidadInput = row.find('.precioUnidad');
+                const precioTotalInput = row.find('.precioTotal');
+
+                const productoValue = productoInput.val();
+                const precioUnidadValue = parseFloat(precioUnidadInput.val());
+                const precioTotalValue = parseFloat(precioTotalInput.val());
+                const cantidadValue = parseFloat(cantidadInput.val());
+
+
+                if (!nombreCliente) {
+                    mostrarError("#nombreCliente");
+                    camposLlenos = false;
+                }
+                if (!productoValue) {
+                    mostrarError(productoInput);
+                    camposLlenos = false;
+                }
+                if (!cantidadValue) {
+                    mostrarError(cantidadInput);
+                    camposLlenos = false;
+                }
+                else {
+                    productos.push({
+                        nombre: productoValue,
+                        precioUnidad: precioUnidadValue,
+                        precioTotal: precioTotalValue,
+                        cantidad: cantidadValue
+                    });
+                }
+            });
+
+            return camposLlenos ? { documento: documentoValue, productos: productos } : null;
         }
-
-        $('#documento, .producto, .cantidad').on('input', function () {
-            const campo = $(this);
-            const campoValue = campo.val();
-
-            if (campoValue) {
-                campo.removeClass('is-invalid');
-            }
-        });
 
         function mostrarError(selector) {
             $(selector).addClass('is-invalid');
+
+            $('#nombreCliente, .producto, .cantidad').on('input', function () {
+                const campo = $(this);
+                if (campo.val()) {
+                    campo.removeClass('is-invalid');
+                }
+            });
         }
 
         $('#venta-form').submit(function (event) {
             event.preventDefault();
 
-            if (!validarCamposLlenos()) {
+            const data = validarCamposLlenos();
+            if (!data) {
                 return;
             }
-
-
-            // // Crear un arreglo de productos
-            // const productos = [];
-
-            // // Recorrer las filas de la tabla de productos
-            // $('.producto-row').each(function () {
-            //     const productoRow = $(this);
-            //     const producto = productoRow.find('.producto').val();
-            //     const precioUnidad = productoRow.find('.precioUnidad').val();
-            //     const cantidad = productoRow.find('.cantidad').val();
-            //     const precioTotal = productoRow.find('.precioTotal').val();
-
-            //     // Agregar el producto al arreglo
-            //     productos.push({
-            //         producto: producto,
-            //         precioUnidad: precioUnidad,
-            //         cantidad: cantidad,
-            //         precioTotal: precioTotal
-            //     });
-            // }); 
-
-            // // Crear un objeto que incluye el documento y los productos
-            // const dataToSend = {
-            //     documento: documentoValue,
-            //     productos: productos
-            // };
-
             $.ajax({
                 type: 'POST',
                 url: "{% url 'crear_venta' %}",
-                // data: JSON.stringify(dataToSend),
-                data: $(this).serialize(),
-                // contentType: 'application/json',
+                data: JSON.stringify(data), // convertir a json
+                contentType: 'application/json',
                 success: function (response) {
                     if (response.success) {
                         alert('Venta creada con éxito.');

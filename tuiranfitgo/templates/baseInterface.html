@@ -12,12 +12,9 @@
     <title>{% block title %} Dashboard {% endblock %}</title>
 
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlz15t4z7OT27bNA6N6Fh6fN7z5xiMP7v2Ku8r/W6Cl5BnaXT4F5F5F5F5F5F5F5F5" crossorigin="anonymous">
-
-    <link
-        href="{% static 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i' %}"
-        rel="stylesheet">
+    <link href="{% static 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i' %}" rel="stylesheet">
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{%static 'css/our-styles.css' %}" rel="stylesheet">
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
    
 
@@ -422,40 +419,36 @@
                         .container-fluid{
                             height:100vh;   
                         }
-                    
+                        
                     </style>
                     {% block body %}
 
                     {% endblock %}
                 </div>
                 <!-- /.container-fluid -->
-
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span> &copy; TuiranFit - 2023</span>
+                        </div>
+                    </div>
+                </footer>
             </div>
             <!-- Fin del Contenido Principal... -->
         </div>
     </div>
     <!-- End of Page Wrapper -->
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; TuiranFit - 2023</span>
-            </div>
-        </div>
-    </footer>
-
     </div>
     <!-- End of Content Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
-
     <!-- Botón para volver hacia arriba de la página -->
+
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
+    <!-- Modal de Cerrar Sesión -->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -475,44 +468,42 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
+    <!-- Núcleo de Bootstrap para JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-    <!-- Core plugin JavaScript-->
+    <!-- Plugin Núcleo de JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
-    <!-- Custom scripts for all pages-->
+    <!-- Scripts Personalizados para todas las Páginas -->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-    <script>
-        $(document).ready(function () {
-            $('#dataTable').DataTable({
-                "language": {
-                    "search": "Buscar:",
-                    "searchPlaceholder": "Buscar registro",
-                    "paginate": {
-                        "previous": "Anterior",
-                        "next": "Siguiente"
-                    },
-                    "lengthMenu": "Mostrar _MENU_ registros por página",
-                    "info": "Mostrando _START_ al _END_ de _TOTAL_ registros",
-                    "infoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
-                }
-            });
+    <script>$(document).ready(function () {
+        $('#dataTable').DataTable({
+            "language": {
+                "search": "Buscar:",
+                "searchPlaceholder": "Buscar registro",
+                "paginate": {
+                    "previous": "Anterior",
+                    "next": "Siguiente"
+                },
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "info": "Mostrando _START_ al _END_ de _TOTAL_ registros",
+                "infoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+            },
         });
+    });
+</script>
 
-    </script>
-
-
+    {% comment %} Ajax {% endcomment %}
     <script src="{% static 'tuiranfitgo/static/prov/ajax.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5" crossorigin="anonymous"></script>
 
 
-    <!-- Page level plugins -->
+    <!-- Scripts de Nivel de Página -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
-    <!-- Page level custom scripts -->
+    <!-- Scripts Personalizados de Nivel de Página -->
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
@@ -521,7 +512,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
-
 </body>
 
 </html>

@@ -5,56 +5,50 @@
 {% block body %}
 
 
-<h3 class="mb-2 text-gray-900">Ventas</h1>
-<p class="mb-4">Este es el entorno de ventas, aquí puedes gestionar registros de tus ventas.</p>
-
+<center><h1 class="modtitles">Entorno de Ventas</h1></center>
+<br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split ">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-                <span class="text">Agregar</span>
+            <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split " id="am">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Ventas</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger">Ir a Dashboard</button>
+            <button class="btn btn-danger" id="of">Ir a Dashboard</button>
         </span>
     </div>
 </div>
 
+<style>
+    .table{
+        width: 70%;
+    }
+</style>
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <!-- Tabla de Clientes -->
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto" id="dataTable" width="90%" cellspacing="3">
-                <thead>
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
+                <thead class="theads">
                     <tr>
                         <th>Cliente</th>
-                        <th>Fecha de registro</th>
-                        <th>Estado</th>
-                        <th colspan="2">Acciones</th>
+                        <th>Fecha de Registro</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for venta in ventas %}
-                    <tr class="{% if venta.estado == 0 %}table-secondary{% endif %}">
-                        <td> <span class="text-secondary">Julanito</span><span> - 1002580286</span></td>
+                    <tr class="{% if venta.estado == 0 %}table-secondary{% endif %} ">
+                        <td class="d-flex ">{{ venta.id_cliente.nombres }}  {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
-                        <td> 
-                            <button class="btn cambiar-estado {% if venta.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ venta.id_proveedor }}" data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
-                                {% if venta.estado == 1 %}
-                                Activo
-                                {% else %}
-                                Inhabilitado
-                                {% endif %}
+                        <td class="cell-actions">
+                            <a href="#" class="btn btn-sm btn-primary m-1">  <i class="fa-solid fa-circle-info"></i></a> 
+                            <a href="#" class="btn btn-sm btn-primary m-1"> <i class="fa-solid fa-pen-to-square"></i></a>  
+                            <button class="btn cambiar-estado statusbutton {% if venta.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ venta.id_proveedor }}" data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
                             </button>
-                        </td> 
-                        <td>
-                            <a href="#" class="btn btn-sm btn-primary m-1">Detalles  <i class="fa-solid fa-circle-info"></i></i></i></a> |
-                            <a href="#" class="btn btn-sm btn-primary m-1">Editar <i class="fa-solid fa-pen-to-square"></i></i></a>
                         </td> 
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -83,11 +77,10 @@
                                                 },
                                                 method: "GET",
                                                 success: function (response) {
-                                                    // Actualiza la página o la sección relevante según sea necesario
                                                     location.reload();
                                                 },
                                                 error: function (error) {
-                                                    // Maneja el error si es necesario
+                                
                                                 }
                                             });
                                         }
@@ -102,6 +95,5 @@
         </div>
     </div>
 </div>
-
 
 {% endblock %}
