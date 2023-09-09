@@ -8,7 +8,6 @@ urlpatterns = [
     path('agregarClientes/', views.agregarClientePost, name='agregarClientes'),
     path('editarCliente/<int:cliente_id>/', views.editarCliente, name='editarCliente'),
 
-    path('redirigirEditar/<int:cliente_id>/', views.redirigirEditar, name='redirigirEditar'),
     path('cambiarEstado/', views.cambiarEstado, name='cambiarEstado'),
 
 
