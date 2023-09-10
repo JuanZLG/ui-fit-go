@@ -39,6 +39,7 @@
     </div>
   </div>
   
+
 <center>
     <h1 class="modtitles">Entorno de Clientes</h1>
 </center>
@@ -81,7 +82,7 @@
                 </thead>
                 <tbody class="tbody">
                     {% for cliente in clientes %}
-                    <tr class="{% if cliente.estado == 1 %}inactivo{% endif %}">
+                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
                         <td>{{ cliente.id_cliente }}</td>
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
@@ -91,13 +92,13 @@
                         <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
                     
                         <td>
-                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 1 %}inactive-status{% else %}active-status{% endif %}"
+                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-cliente-id="{{ cliente.id_cliente }}"
                                 data-nuevo-estado="{% if cliente.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if cliente.estado == 1 %}
-                                Inactivo
-                                {% else %}
                                 Activo
+                                {% else %}
+                                activo
                                 {% endif %}
                             </button>
                         </td>
@@ -220,17 +221,17 @@
         padding:0;
         width:auto;
         block-size: 6vh;
-        background-color:#b8f9b8;
+        background-color:#85da85;
         display:flex;
         align-items: center;
     }
     .btn-add:hover {
-        background-color:#85da85;
+        background-color:#72d072;
     }
     .btn-dash {
-        background-color: #ec8080;
+        background-color: #c55c5c;
     }.btn-dash:hover {
-        background-color:#c55c5c;
+        background-color:#ba4d4d;
     }
     
     tr.inactivo {

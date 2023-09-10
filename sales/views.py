@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
@@ -8,57 +8,14 @@ def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-# @csrf_exempt
-# def crear_venta(request):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         documento = data.get('documento', '')
-#         productos = data.get('productos', '')
-        
-#         # Buscar al cliente por su documento
-#         cliente = Clientes.objects.filter(documento=documento).first()
-        
-#         if cliente:
-#             # Crear una venta con el cliente encontrado
-#             venta = Ventas.objects.create(id_cliente=cliente)
-            
-#             # Crear detalles de venta para cada producto
-#             for producto_datos in productos:
-#                 producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
-#                 if producto:
-#                     detalle = Detalleventa.objects.create(
-#                         id_producto=producto,
-#                         id_venta=venta,
-#                         cantidad=producto_datos['cantidad'],
-#                         precio_uni=producto_datos['precioUnidad'],
-#                         precio_tot=producto_datos['precioTotal']
-#                     )
-#                 else:
-#                     # Manejar el caso donde el producto no existe
-#                     # Puedes mostrar un mensaje de error o tomar otra acción apropiada.
-#                     pass
-
-#             response_data = {'success': True}
-#         else:
-#             # Manejar el caso donde el cliente no existe
-#             # Puedes mostrar un mensaje de error o tomar otra acción apropiada.
-#             response_data = {'success': False, 'message': 'Cliente no encontrado'}
-
-#         return JsonResponse(response_data)
-
-#     return render(request, 'createSales.html')
-
-
 @csrf_exempt
 def crear_venta(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         documento = data.get('documento', '')
         productos = data.get('productos', [])
-        print(documento)
-        cliente = Clientes.objects.filter(documento=documento).first()
-        print(cliente)
 
+        cliente = Clientes.objects.filter(documento=documento).first()
         venta = Ventas.objects.create(id_cliente=cliente)
         for producto_datos in productos:
             producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
@@ -142,12 +99,43 @@ def obtener_nombre(request):
         )
 
 
-# def obtener_precio_producto(request, nombreProducto):
-#     try:
-#         producto = Productos.objects.get(nombre_producto=nombreProducto)
-#         precio = producto.precio
-#         return JsonResponse({'precio': precio})
-#     except Productos.DoesNotExist:
-#         return JsonResponse({'error': 'Producto no encontrado'}, status=404)
-#     else:
-#         return JsonResponse({'error': 'Parámetro "nombre_producto" no proporcionado en la solicitud'}, status=400)
+def detalles_venta(request, venta_id):
+    detalles = Detalleventa.objects.filter(id_venta=venta_id)
+    detalles_data = []
+
+    for detalle in detalles:
+        # Cambia detalle.id_producto por detalle.id_producto_id si es un ForeignKey
+        producto = Productos.objects.get(id_producto=detalle.id_producto)
+        detalle_data = {
+            'producto': producto.nombre_producto,
+            'cantidad': detalle.cantidad,
+            'precio_uni': detalle.precio_uni,
+            'precio_tot': detalle.precio_tot,
+        }
+
+        detalles_data.append(detalle_data)
+
+    return JsonResponse({'detalleventa': detalles_data})
+
+
+def cambiarEstado(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        venta_id = request.GET.get('venta_id')
+        nuevo_estado = request.GET.get('nuevo_estado')
+        
+        try:
+            venta = Ventas.objects.get(id_venta=venta_id)
+            venta.estado = int(nuevo_estado)
+            venta.save()
+            
+            return JsonResponse({'status': 'success'})
+        except Clientes.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
+        
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
+
+
+
