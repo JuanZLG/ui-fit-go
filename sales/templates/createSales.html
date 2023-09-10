@@ -158,38 +158,40 @@
     $(document).ready(function () {
 
         $("#nombreCliente").on("input", function () {
-    let input = $(this).val();
-    let resultadoDocu = $("#cont-docu");
+            let input = $(this).val();
+            let resultadoDocu = $("#cont-docu");
 
-    if (input.length >= 8 && input.length <= 10) {
-        $.ajax({
-            url: "{% url 'buscar_documentos' %}?q=" + input,
-            type: "GET",
-            success: function (data) {
-                let documento = data.documentos[0];
-                let nomClienteDato = data.nombre_cliente;
+            if (input.length == 8 || input.length == 10) {
+                $.ajax({
+                    url: "{% url 'buscar_documentos' %}?q=" + input,
+                    type: "GET",
+                    success: function (data) {
+                        let documento = data.documentos[0];
+                        let nomClienteDato = data.nombre_cliente;
 
-                if (data.documentos.length > 0) {
-                    validarCliente(documento).then(function (existe) {
-                        if (existe) {
-                            resultadoDocu.html("<p id='nomClienteDato'>" + nomClienteDato + "</p><span>Doc:</span><p id='documentoDato'>" + documento + "</p>");
+                        if (data.documentos.length > 0) {
+                            validarCliente(documento).then(function (existe) {
+                                if (existe && documento === input) {
+                                    resultadoDocu.html("<p id='nomClienteDato'>" + nomClienteDato + "</p><span>Doc:</span><p id='documentoDato'>" + documento + "</p>");
+                                    $("#nombreCliente").addClass("is-valid");
+                                }
+                                else {
+                                    resultadoDocu.empty();
+                                }
+                            });
                         } else {
-                            resultadoDocu.empty();
+                            resultadoDocu.hide();
                         }
-                    });
-                } else {
-                    resultadoDocu.hide();
-                }
-            },
-            error: function () {
-                $("#nombreCliente").addClass("is-invalid");
+                    },
+                    error: function () {
+                        $("#nombreCliente").addClass("is-invalid");
+                    }
+                });
+            } else {
+                resultadoDocu.empty().hide(); // Limpiar y ocultar cont-docu
+                $("#nombreCliente").removeClass("is-valid is-invalid"); // Remover clases de validación
             }
         });
-    } else {
-        resultadoDocu.empty().hide(); 
-        $("#nombreCliente").removeClass("is-valid is-invalid"); 
-    }
-});
 
 
         function validarCliente(documentoDato) {
@@ -202,9 +204,9 @@
                     },
                     success: function (data) {
                         if (data.existe) {
-                            resolve(true); 
+                            resolve(true);
                         } else {
-                            resolve(false); 
+                            resolve(false);
                         }
                     },
                     error: function () {
@@ -281,8 +283,9 @@
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).val();
-            currentRow.find(".error-produ").text(""); 
+            currentRow.find(".error-produ").text(""); // Limpiar mensaje de error
             if (nombreProducto.length >= 3) {
+                // Validar el producto antes de obtener el precio
                 validarProducto(currentRow, nombreProducto);
             } else {
                 currentRow.find('.cantidad, .precioTotal, .precioUnidad').val("");
@@ -431,24 +434,17 @@
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $('#documentoDato').text();
+            const nombreClienteValue = $('#nombreCliente').val();
             const productos = [];
 
-            if (!documentoValue) {
+            if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
-                $('#error-docu').text("Por favor, selecciona un cliente para completar el registro.");
+                $('#error-docu').text("El campo del documento no puede estar vacío. Por favor, ingrésalo correctamente.");
                 camposLlenos = false;
-            } else {
-                validarCliente(documentoValue).then(function (existe) {
-                    if (existe) {
-                        camposLlenos = true;
-                    } else {
-                        $('#error-docu').text("Por favor, selecciona un cliente para completar el registro.");
-                        camposLlenos = false;
-
-                    }
-                }).catch(function (error) {
-                    console.error("Error al validar el cliente:", error);
-                });
+            } else if (!documentoValue) {
+                mostrarError("#nombreCliente");
+                $('#error-docu').text("El documento debe estar correctamente escrito. Por favor, verifica y vuelve a intentar.");
+                camposLlenos = false;
             }
 
             $('.producto-row').each(function (index) {
@@ -466,7 +462,7 @@
 
                 if (!precioUnidadValue) {
                     productoInput.addClass('is-invalid');
-                    row.find(".error-produ").text("'Por favor, selecciona un producto para completar el registro.'")
+                    row.find(".error-produ").text("Por favor, selecciona un producto válido para completar el registro.")
                     camposLlenos = false;
                 }
 
@@ -514,7 +510,7 @@
             $.ajax({
                 type: 'POST',
                 url: "{% url 'crear_venta' %}",
-                data: JSON.stringify(data),
+                data: JSON.stringify(data), // convertir a json
                 contentType: 'application/json',
                 success: function (response) {
                     if (response.success) {
