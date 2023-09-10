@@ -5,58 +5,99 @@
 {% block body %}
 
 
-<center><h1 class="modtitles">Entorno de Ventas</h1></center>
+
+
+<center>
+    <h1 class="modtitles">Entorno de Ventas</h1>
+</center>
 <br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split " id="am">
+            <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split btn-add" id="am">
                 <span class="icon">
                     <i class="fa-solid fa-plus" id="addicon"></i>
-                <span class="text">Agregar Ventas</span>
+                    <span class="text">Agregar Ventas</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger" id="of">Ir a Dashboard</button>
+            <button class="btn btn-danger btn-dash" id="of">Ir a Dashboard</button>
         </span>
     </div>
 </div>
 
 <style>
-    .table{
+    .table {
         width: 70%;
     }
 </style>
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%"
+                cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Cliente</th>
                         <th>Fecha de Registro</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for venta in ventas %}
-                    <tr class="{% if venta.estado == 0 %}table-secondary{% endif %} ">
-                        <td class="d-flex ">{{ venta.id_cliente.nombres }}  {{ venta.id_cliente.apellidos }}</td>
+                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
+                        <td class="d-flex ">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
-                        <td class="cell-actions">
-                            <a href="#" class="btn btn-sm btn-primary m-1">  <i class="fa-solid fa-circle-info"></i></a> 
-                            <a href="#" class="btn btn-sm btn-primary m-1"> <i class="fa-solid fa-pen-to-square"></i></a>  
-                            <button class="btn cambiar-estado statusbutton {% if venta.estado == 1 %}btn-success{% else %}btn-danger{% endif %}" data-prov-id="{{ venta.id_proveedor }}" data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
+                        <td>
+                            <button
+                                class="btn cambiar-estado statusbutton {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                                data-venta-id="{{ venta.id_venta}}"
+                                data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
+                                {% if venta.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
-                        </td> 
+                        </td>
+                        <td class="cell-actions">
+                            <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'verVenta' venta.id_venta %}" class="btn btn-sm btn-primary"
+                                id="detailsbutton" data-bs-toggle="modal" data-bs-target="#DetallesModalVenta"
+                                data-venta-id="{{ venta.id_venta }}">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                        </td>
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                         <script>
                             $(document).ready(function () {
+
+                                // Adjunta el evento de clic al botón de detalles usando delegación de eventos
+                                $(document).on("click", ".detailsbutton", function () {
+                                    var ventaId = $(this).data("venta-id");
+                                    $.ajax({
+                                        url: "{% url 'verVenta' 0 %}".replace('0', ventaId),
+                                        method: "GET",
+                                        success: function (response) {
+                                            $("#productos-list").empty();
+
+                                            for (var i = 0; i < response.detalleventa.length; i++) {
+                                                var producto = response.detalleventa[i];
+                                                var row = "<tr><td>" + producto.producto + "</td><td>" + producto.cantidad + "</td><td>" + producto.precio_uni + "</td><td>" + producto.precio_tot + "</td></tr>";
+                                                $("#productos-list").append(row);
+                                            }
+
+                                            // Abre el modal
+                                            $("#DetallesModalVenta").modal("show");
+                                        },
+                                        error: function (error) {
+                                            // Manejar el error si es necesario
+                                        }
+                                    });
+                                });
                                 $(".cambiar-estado").click(function () {
-                                    var provId = $(this).data("prov-id");
-                                    var nuevoEstado = $(this).data("nuevo-estado");
+                                    let ventaId = $(this).data("venta-id");
+                                    let nuevoEstado = $(this).data("nuevo-estado");
 
                                     Swal.fire({
                                         title: 'Confirmar',
@@ -70,9 +111,9 @@
                                     }).then((result) => {
                                         if (result.isConfirmed) {
                                             $.ajax({
-                                                url: "#",
+                                                url: "{% url 'cambiarEstado'  %}",
                                                 data: {
-                                                    proveedor_id: provId,
+                                                    venta_id: ventaId,
                                                     nuevo_estado: nuevoEstado
                                                 },
                                                 method: "GET",
@@ -80,18 +121,162 @@
                                                     location.reload();
                                                 },
                                                 error: function (error) {
-                                
                                                 }
                                             });
                                         }
                                     });
                                 });
                             });
+
                         </script>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .table {
+        width: 80%;
+    }
+
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+    tr.inactivo {
+        background-color: #ccc;
+        /* Cambia el fondo a un tono más claro */
+        color: #676666;
+    }
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        /* background-color: #1e3799; */
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+
+
+
+<!-- En tu modal -->
+<div class="modal fade" id="DetallesModalVenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Detalles de la Venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí muestra los detalles de la venta -->
+                <div id="venta-details">
+                    <h5>Productos Vendidos:</h5>
+                    <ul id="productos-list">
+                        <!-- La lista de productos se construirá aquí -->
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
