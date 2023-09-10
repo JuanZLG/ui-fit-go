@@ -66,6 +66,17 @@ def buscar_productos(request):
     return JsonResponse({"productos": list(productos)})
 
 
+def validar_producto(request):
+    nombre_producto = request.GET.get("nombre_producto", "")
+    producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
+    return JsonResponse({"existe": producto_existe})
+
+
+def validar_cliente(request):
+    documentoDato = request.GET.get("documentoDato", "")
+    cliente_existe = Clientes.objects.filter(documento=documentoDato).exists()
+    return JsonResponse({"existe": cliente_existe})
+
 def obtener_precio(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
