@@ -27,10 +27,11 @@ def createProduct(request):
         
         m = Marcas.objects.filter(nombre_marca=marca)
         c = Categorias.objects.filter(id_categoria=categoria)
+        product = Productos.objects.all()
 
         Productos.objects.create(id_categoria=c.id_categoria, id_marca=m.id_marca, nombre_categoria=nombre, descripcion=descripcion, cantidad=cantidad, fechaven=fechavencimiento, sabor=sabor, presentacion=tamano, precio=precio)
         return JsonResponse({'success': True})
-    return render(request, 'addAProduct', {"marcas":marcas,"categorias":categorias})
+    return render(request, 'productsHome.html', {"marcas":marcas,"categorias":categorias, "Products":product})
 
 # def editProduct(request):
     
