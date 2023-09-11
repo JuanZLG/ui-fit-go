@@ -54,9 +54,9 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
                  os.path.join(BASE_DIR, 'customers', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
-                 os.path.join(BASE_DIR, 'purchases', 'templates'),
-
                  os.path.join(BASE_DIR, 'sales', 'templates'),
+
+                 os.path.join(BASE_DIR, 'purchases', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  ],
         'APP_DIRS': True,
@@ -125,3 +125,4 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'tuiranfitgo','static')]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
