@@ -1,0 +1,217 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Compras {% endblock %}
+
+{% block body %}
+
+<center>
+    <h1 class="modtitles">Entorno de Compras</h1>
+</center>
+<br>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <span>
+            <a href="{% url 'crear_compra' %}" class="btn btn-success btn-icon-split btn-add" id="am">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                    <span class="text">Agregar Compra</span>
+            </a>
+        </span>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger btn-dash" id="of">Ir a Dashboard</button>
+        </span>
+    </div>
+</div>
+
+<style>
+    .table {
+        width: 70%;
+    }
+</style>
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%"
+                cellspacing="3">
+                <thead class="theads">
+                    <tr>
+                        <th>Proveedor</th>
+                        <th>Fecha de Registro</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for compra in compras %}
+                    <tr class="{% if compra.estado == 0 %}inactivo{% endif %}">
+                        <td class="d-flex ">{{ compra.id_proveedor.nombre_proveedor }}</td>
+                        <td>{{ compra.fechareg }}</td>
+                        <td>
+                            <button
+                                class="btn cambiar-estado statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                                data-compra-id="{{ compra.id_compra}}"
+                                data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
+                                {% if compra.estado == 1 %}Activo{% else %}Inactivo{% endif %}
+                            </button>
+                        </td>
+                        <td class="cell-actions">
+                            <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'verCompra' compra.id_compra %}" class="btn btn-sm btn-primary"
+                                id="detailsbutton" data-bs-toggle="modal" data-bs-target="#DetallesModalCompra"
+                                data-compra-id="{{ compra.id_compra }}">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table {
+        width: 80%;
+    }
+
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+    tr.inactivo {
+        background-color: #ccc;
+        /* Cambia el fondo a un tono más claro */
+        color: #676666;
+    }
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        /* background-color: #1e3799; */
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+<!-- En tu modal -->
+<div class="modal fade" id="DetallesModalCompra" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Detalles de la Compra</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí muestra los detalles de la compra -->
+                <div id="compra-details">
+                    <h5>Productos Comprados:</h5>
+                    <div id="productos-list">
+                        <!-- La lista de productos se construirá aquí -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+

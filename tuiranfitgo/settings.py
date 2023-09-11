@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'products',
     'eproviders',
     'customers',
+    'purchases',
+
     'sales',
     'dashboard'
 ]
@@ -52,6 +54,8 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'eproviders', 'templates'),
                  os.path.join(BASE_DIR, 'customers', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
+                 os.path.join(BASE_DIR, 'purchases', 'templates'),
+
                  os.path.join(BASE_DIR, 'sales', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  ],
