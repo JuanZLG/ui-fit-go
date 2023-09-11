@@ -5,11 +5,6 @@
 <div class="row">
     <div class="col-md-5 mb-3">
         <h1 class="h2 mx-5">Crear ventas</h1>
-        <div class="my-5 col-md-6">
-            <label class="mb-2">Descuento (%)</label>
-            <input type="text" class="form-control" id="descuento" name="descuento" autocomplete="off"
-                placeholder="Aplicar descuento a la venta">
-        </div>
     </div>
     <div class="col-md-7 mb-3">
         <div class="row justify-content-end">
@@ -29,11 +24,11 @@
 
 <div class="container">
     <div class="card shadow mb-4">
-        <div class="card-header py-4">
+        <div class="card-header ">
             <form id="venta-form" method="post">
                 {% csrf_token %}
-                <div id="cont-dom" class="mb-5">
-                    <table class="table table-bordered">
+                <div class="cont-dom" class="mb-5">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th style="width: 40%;">Producto</th>
@@ -44,7 +39,7 @@
                         </thead>
                         <tbody>
                             <tr class="producto-row">
-                                <td>
+                                <td class="p-2">
                                     <input type="text" class="form-control producto" name="producto" id="producto"
                                         autocomplete="off" placeholder="Nombre del producto">
                                     <span class="error-message text-danger error-produ"></span>
@@ -75,28 +70,135 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="text-right mt-3">
-                        <div class="form-group row justify-content-end">
-                            <label for="totalVenta" class="mt-2 font-weight-bold" style="font-size: 1.2rem;">Total de la
+                    <div class="cont-total-venta">
+                        <div class="form-group">
+                            <label for="totalVenta">Total de la
                                 venta</label>
                             <input type="text" class="form-control" style="width: 200px;" id="totalVenta" readonly>
                         </div>
-                    </div>
-                    <div class="row justify-content-end mt-3 ">
-                        <button class="btn btn-secondary" style="width: 200px;" id="agregar-producto" type="button">+
-                            Agregar producto</button>
+                        <div>
+                            <button class="btn btn-agregar" id="agregar-producto" type="button">+
+                                Agregar producto</button>
+                        </div>
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Crear Venta</button>
+                <div class="row cont-crear-venta">
+                    <button class="btn btn-crear" type="submit">Crear Venta</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
+<style>
+    .table{
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+    }
 
+    .table thead {
+        color: #26272d;
+        text-align: center;
+    }
+
+    .producto-row {
+        border-radius: 19px 19px 7px 7px;
+    }
+
+    .table td {
+        padding-top: 30px !important;
+    }
+
+    .cont-total-venta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding: 20px;
+        background-color: #F2f2f2;
+    }
+
+    .cont-total-venta label {
+        color: #1c3067;
+        font-size: 1.2rem;
+        margin-top: 2;
+        font-weight: bold;
+    }
+
+    .btn-agregar {
+        width: fit-content;
+        min-width: 100px;
+        height: 45px;
+        padding: 8px;
+        border-radius: 5px;
+        border: 2.5px solid rgb(6, 14, 66);
+        box-shadow: 0px 0px 20px -20px;
+        cursor: pointer;
+        color: #fff;
+        background-color: #2c3e71;
+        transition: all 0.2s ease-in-out 0ms;
+        user-select: none;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-agregar:hover {
+        background-color: #1c3067;
+        color: #fff;
+        box-shadow: 0px 0px 20px -18px;
+    }
+
+    .btn-agregar:active {
+        transform: scale(0.95);
+    }
+
+    .eliminar-producto {
+        position: relative;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .eliminar-producto .icono-eliminar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 25px;
+        background-color: #26272d;
+        border-radius: 100%;
+        color: #ffff;
+    }
+
+    .eliminar-producto:hover .icono-eliminar {
+        animation: sacudir 0.3s ease-in 1;
+        transform: translate(0);
+    }
+
+    @keyframes sacudir {
+        0% {
+            transform: translate(-2px, 2px);
+        }
+
+        100% {
+            transform: translate(0);
+        }
+    }
+
+    .cont-crear-venta {
+        margin-top: 10px;
+        height: 50px;
+        background-color: #1c3067;
+    }
+
+    .btn-crear {
+        color: #fff;
+        width: 300px;
+    }
+
+    .btn-crear:hover {
+        color: #fff;
+        background-color: #0f1b3b;
+    }
+</style>
 <style>
     .eliminar-producto:hover {
         cursor: pointer;
-        background-color: #f2f2f2;
     }
 
     .fa-trash-can {
@@ -113,17 +215,14 @@
         -webkit-box-sizing: border-box;
     }
 
-    .documento-suggestions,
     .producto-suggestions {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
         padding: 0 10px;
-        color: rgb(37, 37, 227);
         text-align: center;
     }
 
-    .documento-suggestions:hover,
     .resultado-sugerencia:hover {
         cursor: pointer;
         opacity: 0.9;
@@ -134,7 +233,7 @@
         margin-right: 5px;
         padding: 2px 1rem;
         color: #f2f2f2;
-        background-color: #6974d7;
+        background-color: #0f1b3b;
         border-radius: 5px;
         font-size: 0.8rem;
     }
@@ -151,45 +250,46 @@
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     /********** DOCUMENTO ***********/
 
     $(document).ready(function () {
 
         $("#nombreCliente").on("input", function () {
-    let input = $(this).val();
-    let resultadoDocu = $("#cont-docu");
+            let input = $(this).val();
+            let resultadoDocu = $("#cont-docu");
 
-    if (input.length >= 8 && input.length <= 10) {
-        $.ajax({
-            url: "{% url 'buscar_documentos' %}?q=" + input,
-            type: "GET",
-            success: function (data) {
-                let documento = data.documentos[0];
-                let nomClienteDato = data.nombre_cliente;
+            if (input.length == 8 || input.length == 10) {
+                $.ajax({
+                    url: "{% url 'buscar_documentos' %}?q=" + input,
+                    type: "GET",
+                    success: function (data) {
+                        let documento = data.documentos[0];
+                        let nomClienteDato = data.nombre_cliente;
 
-                if (data.documentos.length > 0) {
-                    validarCliente(documento).then(function (existe) {
-                        if (existe) {
-                            resultadoDocu.html("<p id='nomClienteDato'>" + nomClienteDato + "</p><span>Doc:</span><p id='documentoDato'>" + documento + "</p>");
+                        if (data.documentos.length > 0) {
+                            validarCliente(documento).then(function (existe) {
+                                if (existe && documento === input) {
+                                    resultadoDocu.html("<p id='nomClienteDato'>" + nomClienteDato + "</p><span>Doc:</span><p id='documentoDato'>" + documento + "</p>");
+                                    $("#nombreCliente").addClass("is-valid");
+                                }
+                                else {
+                                    resultadoDocu.empty();
+                                }
+                            });
                         } else {
-                            resultadoDocu.empty();
+                            resultadoDocu.hide();
                         }
-                    });
-                } else {
-                    resultadoDocu.hide();
-                }
-            },
-            error: function () {
-                $("#nombreCliente").addClass("is-invalid");
+                    },
+                    error: function () {
+                        $("#nombreCliente").addClass("is-invalid");
+                    }
+                });
+            } else {
+                resultadoDocu.empty().hide(); // Limpiar y ocultar cont-docu
+                $("#nombreCliente").removeClass("is-valid is-invalid"); // Remover clases de validación
             }
         });
-    } else {
-        resultadoDocu.empty().hide(); 
-        $("#nombreCliente").removeClass("is-valid is-invalid"); 
-    }
-});
 
 
         function validarCliente(documentoDato) {
@@ -202,9 +302,9 @@
                     },
                     success: function (data) {
                         if (data.existe) {
-                            resolve(true); 
+                            resolve(true);
                         } else {
-                            resolve(false); 
+                            resolve(false);
                         }
                     },
                     error: function () {
@@ -281,8 +381,9 @@
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).val();
-            currentRow.find(".error-produ").text(""); 
+            currentRow.find(".error-produ").text(""); // Limpiar mensaje de error
             if (nombreProducto.length >= 3) {
+                // Validar el producto antes de obtener el precio
                 validarProducto(currentRow, nombreProducto);
             } else {
                 currentRow.find('.cantidad, .precioTotal, .precioUnidad').val("");
@@ -390,11 +491,11 @@
                 '<input type="text" class="form-control precioTotal" id="precioTotal" name="precioTotal" readonly>' +
                 '<span class="error-message" id="total-error"></span>' +
                 '</div>' +
-                '<td class="eliminar-producto"><i class="fa-solid fa-trash-can"></i></td>' +
+                '<td class="eliminar-producto"><span class="icono-eliminar">X</span></td>' +
                 '</td>';
             +
                 '</tr>';
-
+            // <i class="fa-x fa-xl icono-eliminar"></i>
             let filaAgregada = $(nuevaFila);
             $("tbody").append(filaAgregada);
 
@@ -431,24 +532,17 @@
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $('#documentoDato').text();
+            const nombreClienteValue = $('#nombreCliente').val();
             const productos = [];
 
-            if (!documentoValue) {
+            if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
-                $('#error-docu').text("Por favor, selecciona un cliente para completar el registro.");
+                $('#error-docu').text("El campo del documento no puede estar vacío. Por favor, ingrésalo correctamente.");
                 camposLlenos = false;
-            } else {
-                validarCliente(documentoValue).then(function (existe) {
-                    if (existe) {
-                        camposLlenos = true;
-                    } else {
-                        $('#error-docu').text("Por favor, selecciona un cliente para completar el registro.");
-                        camposLlenos = false;
-
-                    }
-                }).catch(function (error) {
-                    console.error("Error al validar el cliente:", error);
-                });
+            } else if (!documentoValue) {
+                mostrarError("#nombreCliente");
+                $('#error-docu').text("El documento debe estar correctamente escrito. Por favor, verifica y vuelve a intentar.");
+                camposLlenos = false;
             }
 
             $('.producto-row').each(function (index) {
@@ -466,7 +560,7 @@
 
                 if (!precioUnidadValue) {
                     productoInput.addClass('is-invalid');
-                    row.find(".error-produ").text("'Por favor, selecciona un producto para completar el registro.'")
+                    row.find(".error-produ").text("Por favor, selecciona un producto válido para completar el registro.")
                     camposLlenos = false;
                 }
 
@@ -514,7 +608,7 @@
             $.ajax({
                 type: 'POST',
                 url: "{% url 'crear_venta' %}",
-                data: JSON.stringify(data),
+                data: JSON.stringify(data), // convertir a json
                 contentType: 'application/json',
                 success: function (response) {
                     if (response.success) {

@@ -144,9 +144,3 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
-
-
-
-
-
