@@ -22,15 +22,15 @@ def createProduct(request):
         sabor = request.POST['sabor']
         tamano = request.POST['presentacion']
         precio = request.POST['precio']   
-        categoria=request.POST['categoria']
+        categoria = request.POST['categoria']
         marca=request.POST['marca']
         
         m = Marcas.objects.filter(nombre_marca=marca)
-        c = Categorias.objects.filter(nombre_categoria=categoria)
+        c = Categorias.objects.filter(id_categoria=categoria)
 
         Productos.objects.create(id_categoria=c.id_categoria, id_marca=m.id_marca, nombre_categoria=nombre, descripcion=descripcion, cantidad=cantidad, fechaven=fechavencimiento, sabor=sabor, presentacion=tamano, precio=precio)
         return JsonResponse({'success': True})
-    return render(request, 'createProducts.html', {"marcas":marcas,"categorias":categorias})
+    return render(request, 'addAProduct', {"marcas":marcas,"categorias":categorias})
 
 # def editProduct(request):
     

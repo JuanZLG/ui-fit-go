@@ -15,17 +15,17 @@
       align-items: flex-center;
     ">
 
-    <form class="" method="POST">
+    <form class="form-control" method="POST" action="addAProduct">
       {% csrf_token %}
       <div class="form-row ">
-        <div class="col-md-4 mb-3">
+        {% comment %} <div class="col-md-4 mb-3">
           <label>Categoría</label>
           <select class="form-select" aria-label="Default select example" name="categoria">
             {% for c in categorias %}
             <option value="{{ c.nombre_categoria }}">{{ c.nombre_categoria }}</option>
             {% endfor %}
           </select>
-        </div>
+        </div> {% endcomment %}
         <div class="col-md-4 mb-3">
           <label>Marcas</label>
           <select class="form-select" aria-label="Default select example" name="categoria">

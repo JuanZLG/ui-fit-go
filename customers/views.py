@@ -32,9 +32,6 @@ def ver_cliente(request, cliente_id):
     }
     return JsonResponse({'cliente': cliente_data})
 
-
-
-
 def agregarCliente(request):
     municipios = Municipios.objects.all()  
     return render(request, 'createCustomer.html', {'municipios': municipios})

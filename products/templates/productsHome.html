@@ -5,12 +5,12 @@
 {% block body %}
 
 
-<center><h1 class="modtitles">Entorno de Productos</h1></center>
+<center><h1 class="modtitles">Gestión de Productos</h1></center>
 <br>
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between">
                 <span>
-                    <a href="{% url 'agregarProducto' %}" class="btn btn-success btn-icon-split " id="am">
+                    <a class="btn btn-success btn-icon-split " id="am" data-toggle="modal" data-target="#addAProduct">
                         <span class="icon">
                             <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Producto</span>
@@ -61,5 +61,123 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addAProduct">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Encabezado del Modal -->
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar Producto</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Inserta tu formulario Django aquí -->
+          <div class="container mb-3">
+          <form class="form" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+            <div class="col-md-4 mb-3">
+              <label for="categoria">Categoría</label>
+              <select class="form-select" aria-label="Default" name="categoria" id="categoria">
+                {% for c in categorias %}
+                <option value="{{ c.id_categoria }}">{{ c.nombre_categoria }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Marca</label>
+              <select class="form-select" aria-label="Default select example" name="marca" id="marca">
+                {% for m in marcas %}
+                <option value="{{ m.id_marca }}">{{ m.nombre_marca }}</option>
+                {% endfor %}
+              </select>
+            </div>
+        </div>
+
+            <div class="form-group">
+              <label>Nombre del Producto</label>
+              <input type="text" class="form-control" id="nombreproducto" name="nombreproducto" placeholder="Ingrese el nombre del producto"/>
+            </div>
+
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha de Vencimiento</label>
+                <input type="date" class="form-control" id="vendate" name="vendate"/>
+              </div>
+
+            <div class="form-row">
+              <div class="col-md-4 mb-3">
+                <label for="cant">Cantidad</label>
+                <input
+                  type="numeric"
+                  class="form-control"
+                  id="cant" name="cant"
+                  placeholder="Cantidad"
+                />
+                <div class="invalid-feedback">Please provide a valid cantidad.</div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="flavor">Sabor</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="flavor" name="flavor"
+                  placeholder="Sabor"
+                />
+                <div class="invalid-feedback">Please provide a valid zip.</div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="services">Servicios</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="services" name="services"
+                  placeholder="Servicios"
+                />
+                <div class="invalid-feedback">Please provide a valid zip.</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="price">Precio del Producto</label>
+              <input
+                type="numeric"
+                class="form-control"
+                id="price" name="price"
+                placeholder="Ingrese un precio"
+              />
+              <div class="invalid-feedback">Please provide a valid zip.</div>
+            </div>
+            {% comment %} <div class="form-group">
+              <div class="form-check">
+                <input
+                  class="form-check-input is-invalid"
+                  type="checkbox"
+                  value=""
+                  id="invalidCheck3"
+                  required
+                />
+                <label class="form-check-label" for="invalidCheck3">
+                  Agree to terms and conditions
+                </label>
+                <div class="invalid-feedback">You must agree before submitting.</div>
+              </div>
+            </div> {% endcomment %}
+        
+          </form>
+        </div>
+        <!-- Pie del Modal -->
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 {% endblock %}
