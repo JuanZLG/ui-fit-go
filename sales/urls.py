@@ -11,6 +11,6 @@ urlpatterns = [
 
     path('obtener_precio/', views.obtener_precio, name='obtener_precio_producto'),
     path('verVenta/<int:venta_id>/', views.detalles_venta, name='verVenta'),
-    path('cambiarEstado/', views.cambiarEstado, name='cambiarEstado'),
+    path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoVentas'),
 
 ]

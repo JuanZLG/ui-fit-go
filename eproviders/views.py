@@ -33,7 +33,9 @@ def editar_proveedor(request, id_proveedor):
     proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
     return render(request, 'editProvider.html', {"proveedor":proveedor}) 
 
-def estado_ajax(request):
+
+
+def cambiarEstadoProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')
         nuevo_estado = request.GET.get('nuevo_estado')

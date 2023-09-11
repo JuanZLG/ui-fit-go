@@ -8,7 +8,7 @@
 
 
 <center>
-    <h1 class="modtitles">Entorno de Ventas</h1>
+    <h1 class="modtitles">Gestion de Ventas</h1>
 </center>
 <br>
 <div class="card shadow mb-4">
@@ -16,8 +16,9 @@
         <span>
             <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split btn-add" id="am">
                 <span class="icon">
-                    <i class="fa-solid fa-plus" id="addicon"></i>
+                    <i class="fa-solid fa-plus"></i>
                     <span class="text">Agregar Ventas</span>
+                </span>
             </a>
         </span>
         <span class="d-flex align-items-end">
@@ -27,16 +28,11 @@
     </div>
 </div>
 
-<style>
-    .table {
-        width: 70%;
-    }
-</style>
+
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%"
-                cellspacing="3">
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Cliente</th>
@@ -52,7 +48,7 @@
                         <td>{{ venta.fechareg }}</td>
                         <td>
                             <button
-                                class="btn cambiar-estado statusbutton {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                                class="cambiar-estado statusbutton {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-venta-id="{{ venta.id_venta}}"
                                 data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if venta.estado == 1 %}Activo{% else %}Inactivo{% endif %}
@@ -71,30 +67,6 @@
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                         <script>
                             $(document).ready(function () {
-
-                                // Adjunta el evento de clic al botón de detalles usando delegación de eventos
-                                $(document).on("click", ".detailsbutton", function () {
-                                    var ventaId = $(this).data("venta-id");
-                                    $.ajax({
-                                        url: "{% url 'verVenta' 0 %}".replace('0', ventaId),
-                                        method: "GET",
-                                        success: function (response) {
-                                            $("#productos-list").empty();
-
-                                            for (var i = 0; i < response.detalleventa.length; i++) {
-                                                var producto = response.detalleventa[i];
-                                                var row = "<tr><td>" + producto.producto + "</td><td>" + producto.cantidad + "</td><td>" + producto.precio_uni + "</td><td>" + producto.precio_tot + "</td></tr>";
-                                                $("#productos-list").append(row);
-                                            }
-
-                                            // Abre el modal
-                                            $("#DetallesModalVenta").modal("show");
-                                        },
-                                        error: function (error) {
-                                            // Manejar el error si es necesario
-                                        }
-                                    });
-                                });
                                 $(".cambiar-estado").click(function () {
                                     let ventaId = $(this).data("venta-id");
                                     let nuevoEstado = $(this).data("nuevo-estado");
@@ -111,7 +83,7 @@
                                     }).then((result) => {
                                         if (result.isConfirmed) {
                                             $.ajax({
-                                                url: "{% url 'cambiarEstado'  %}",
+                                                url: "{% url 'cambiarEstadoVentas'  %}",
                                                 data: {
                                                     venta_id: ventaId,
                                                     nuevo_estado: nuevoEstado
@@ -136,7 +108,6 @@
         </div>
     </div>
 </div>
-
 
 <style>
     .table {
@@ -251,31 +222,5 @@
     }
 </style>
 
-<!-- En tu modal -->
-<div class="modal fade" id="DetallesModalVenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Detalles de la Venta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Aquí muestra los detalles de la venta -->
-                <div id="venta-details">
-                    <h5>Productos Vendidos:</h5>
-                    <div id="productos-list">
-                        <!-- La lista de productos se construirá aquí -->
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 {% endblock %}

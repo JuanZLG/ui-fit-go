@@ -2,6 +2,9 @@
 {% block title %} Agregar Proveedor {% endblock %}
 {% block body %}
 
+<head>
+    {% load static %}
+</head>
 <div class="row">
     <div class="col-md-5 mb-3">
         <center>
@@ -25,17 +28,17 @@
 </div>
 
 <div class="container">
-    <div class="card shadow mb-4">
-        <div class="card-header">
-            <form id="venta-form" method="post" {% csrf_token %} <div class="cont-dom" class="mb-5">
+    <form id="venta-form" method="post" {% csrf_token %}>
+        <div class="card shadow mb-4">
+            <div class="card-header">
                 <table class="table">
-                    <thead>
+                    <thead class="theads">
                         <tr>
                             <th style="width: 40%;">Producto</th>
-                            <th style="width: 20%;">Precio Unitario</th>
-                            <th style="width: 20%;">Cantidad</th>
-                            <th style="width: 20%;">Total del producto</th>
-                            <th></th>
+                            <th style="width: 15%;">Precio Unitario</th>
+                            <th style="width: 10%;">Cantidad</th>
+                            <th style="width: 30%;">Total del producto</th>
+                            <th style="width: 5%;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,12 +58,9 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
-                                    <input type="number" class="form-control cantidad" id="cantidad" name="cantidad"
-                                        autocomplete="off" min="1"
-                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                        placeholder="Cantidad">
-                                </div>
+                                <input type="number" class="form-control cantidad p-0 text-center" id="cantidad"
+                                    name="cantidad" autocomplete="off" min="1" step="1"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="cantidad">
                             </td>
                             <td>
                                 <div class="form-group">
@@ -73,21 +73,25 @@
                 </table>
                 <div class="cont-total-venta">
                     <div>
+                        <input type="text" class="form-control" style="width: 200px;" id="totalVenta" readonly
+                            placeholder="Total de Venta">
+                    </div>
+                    <div>
                         <button class="btn btn-agregar" id="agregar-producto" type="button">+
                             Agregar producto</button>
                     </div>
                 </div>
+            </div>
         </div>
         <div class="row cont-crear-venta">
             <button class="btn btn-crear" type="submit">Crear Venta</button>
-            <input type="text" class="form-control" style="width: 200px;" id="totalVenta" readonly placeholder="Total de Venta">
         </div>
-        </form>
-    </div>
+    </form>
 </div>
-</div>
+
 <style>
-     .modtitles {
+
+    .modtitles {
         font-size: 2em;
         background-image: linear-gradient(45deg, #000000, #3c3636, #000);
         background-size: 200% 200%;
@@ -97,20 +101,21 @@
         animation: animarGradiente 3s linear infinite;
         font-weight: bold;
     }
+
     .table,
     .cont-cliente {
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
     }
 
-    .table thead {
-        color: #fff;
+    table thead.theads {
         text-align: center;
-        background-color: #26272d;
+        color: white;
+        background-color: #222222;
     }
 
     .table tbody td input,
     .cont-cliente input {
-        border: 3px solid #26272d;
+        box-shadow: 3px 3px 20px #ccc;
     }
 
     .producto-row {
@@ -123,15 +128,11 @@
 
     .cont-total-venta {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         margin-top: 10px;
         padding: 20px;
         background-color: #F2f2f2;
     }
-
-
-
-
 
     .eliminar-producto {
         position: relative;
@@ -144,7 +145,7 @@
         top: 0;
         right: 0;
         width: 25px;
-        background-color: #26272d;
+        background-color: #ba4d4d;
         border-radius: 100%;
         color: #ffff;
     }
@@ -167,41 +168,50 @@
     .cont-cliente {
         padding: 15px;
         border-radius: 2px;
-        border: 3px solid #0f1b3b;
     }
 
     .cont-crear-venta {
         display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-        height: 50px;
+        justify-content: flex-end;
+        margin-top: 50px;
+        padding: 0 20px;
+        background: transparent;
     }
 
-    .btn-crear,
-    .btn-agregar {
-        color: #fff;
+    .btn-crear {
         width: 300px;
-        border: 2.5px solid #fff;
+        color: #fff;
+        font-weight: bold;
         background-color: #26272d;
+    }
+
+    .btn-crear:hover {
+        color: #fff;
+        opacity: 0.9;
     }
 
     .btn-agregar {
         width: 200px;
+        border: 1px solid #3c3636;
+        color: #09711c;
+        font-weight: bold;
+        background-color: #95eea5;
+    }
+
+    .btn-agregar:hover {
+        color: #09711c;
+        opacity: 0.9;
     }
 
     #totalVenta {
-        margin: auto 0;
-        height: 100%;
-        border: 2.5px solid #26272d;
-        background-color: #f2f2f2;
+        background-color: #ccc;
         font-weight: bold;
+    } #totalVenta:focus {
+        outline: 0 !important;
+
     }
 
-    .btn-crear:hover,
-    .btn-agregar:hover {
-        color: #fff;
-        background-color: #0f1b3b;
-    }
+
 
     .btn-agregar:active,
     .btn-agregar:active {
@@ -245,18 +255,18 @@
         margin-right: 5px;
         padding: 2px 1rem;
         color: #f2f2f2;
-        background-color: #0f1b3b;
+        background-color: #09711c;
         border-radius: 5px;
         font-size: 0.8rem;
     }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="{% static 'js/create-sales.js'%}"></script> -->
 <script>
     /********** DOCUMENTO ***********/
 
     $(document).ready(function () {
-
         $("#nombreCliente").on("input", function () {
             let input = $(this).val();
             let resultadoDocu = $("#cont-docu");
@@ -272,10 +282,15 @@
                         if (data.documentos.length > 0) {
                             validarCliente(documento).then(function (existe) {
                                 if (existe && documento === input) {
-                                    resultadoDocu.html("<p id='nomClienteDato'>" + nomClienteDato + "</p><span>Doc:</span><p id='documentoDato'>" + documento + "</p>");
+                                    resultadoDocu.html(
+                                        "<p id='nomClienteDato'>" +
+                                        nomClienteDato +
+                                        "</p><span>Doc:</span><p id='documentoDato'>" +
+                                        documento +
+                                        "</p>"
+                                    );
                                     $("#nombreCliente").addClass("is-valid");
-                                }
-                                else {
+                                } else {
                                     resultadoDocu.empty();
                                 }
                             });
@@ -285,7 +300,7 @@
                     },
                     error: function () {
                         $("#nombreCliente").addClass("is-invalid");
-                    }
+                    },
                 });
             } else {
                 resultadoDocu.empty().hide(); // Limpiar y ocultar cont-docu
@@ -293,14 +308,13 @@
             }
         });
 
-
         function validarCliente(documentoDato) {
             return new Promise(function (resolve, reject) {
                 $.ajax({
                     url: "{% url 'validar_cliente' %}",
-                    type: 'GET',
+                    type: "GET",
                     data: {
-                        documentoDato: documentoDato
+                        documentoDato: documentoDato,
                     },
                     success: function (data) {
                         if (data.existe) {
@@ -328,16 +342,29 @@
                     success: function (data) {
                         let suggestions = currentRow.find(".producto-suggestions");
                         suggestions.empty();
-                        data.productos = data.productos.map(producto => producto.toUpperCase());
+                        data.productos = data.productos.map((producto) =>
+                            producto.toUpperCase()
+                        );
                         if (data.productos.length > 0) {
                             let producSimilar1 = data.productos[0];
                             let producSimilar2 = data.productos[1];
                             let producSimilar3 = data.productos[2];
-                            suggestions.html("<span class='resultado-sugerencia'>" + producSimilar1);
+                            suggestions.html(
+                                "<span class='resultado-sugerencia'>" + producSimilar1
+                            );
                             if (data.productos.length > 1) {
-                                suggestions.append("</span><span class='resultado-sugerencia'>" + producSimilar2 + "</span>")
-                            } if (data.productos.length > 2) {
-                                suggestions.append("</span><span class='resultado-sugerencia'>" + producSimilar3 + "</span>")
+                                suggestions.append(
+                                    "</span><span class='resultado-sugerencia'>" +
+                                    producSimilar2 +
+                                    "</span>"
+                                );
+                            }
+                            if (data.productos.length > 2) {
+                                suggestions.append(
+                                    "</span><span class='resultado-sugerencia'>" +
+                                    producSimilar3 +
+                                    "</span>"
+                                );
                             }
 
                             suggestions.addClass("sugerencia").show();
@@ -347,36 +374,46 @@
                     },
                     error: function () {
                         currentRow.find(".producto-suggestions").empty().hide();
-                    }
+                    },
                 });
             } else {
                 $(this).closest("tr").find(".producto-suggestions").empty().hide();
-
             }
         });
 
         $(document).on("click", function (event) {
-            if (!$(event.target).closest(".producto").length && !$(event.target).closest(".producto-suggestions").length) {
+            if (
+                !$(event.target).closest(".producto").length &&
+                !$(event.target).closest(".producto-suggestions").length
+            ) {
                 $(".producto-suggestions").empty().hide();
             }
         });
 
-        $(document).on("click", ".producto-suggestions span.resultado-sugerencia", function () {
-            let currentRow = $(this).closest("tr");
-            let nombreProducto = $(this).text();
-            nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
-            currentRow.find(".producto").val(nombreProducto);
+        $(document).on(
+            "click",
+            ".producto-suggestions span.resultado-sugerencia",
+            function () {
+                let currentRow = $(this).closest("tr");
+                let nombreProducto = $(this).text();
+                nombreProducto =
+                    nombreProducto.charAt(0).toUpperCase() +
+                    nombreProducto.slice(1).toLowerCase();
+                currentRow.find(".producto").val(nombreProducto);
 
-            validarProducto(currentRow, nombreProducto);
-        });
+                validarProducto(currentRow, nombreProducto);
+            }
+        );
 
         $(document).on("click", ".producto-suggestions span", function () {
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).text();
-            nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
+            nombreProducto =
+                nombreProducto.charAt(0).toUpperCase() +
+                nombreProducto.slice(1).toLowerCase();
             currentRow.find(".producto").val(nombreProducto);
             currentRow.find(".producto-suggestions").empty().hide();
-            currentRow.find('.precioUnidad').removeClass('is-invalid');
+            currentRow.find(".precioUnidad").removeClass("is-invalid");
         });
 
         /********** PRECIOS ***********/
@@ -388,7 +425,7 @@
                 // Validar el producto antes de obtener el precio
                 validarProducto(currentRow, nombreProducto);
             } else {
-                currentRow.find('.cantidad, .precioTotal, .precioUnidad').val("");
+                currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
                 calcularTotalVenta();
             }
         });
@@ -396,42 +433,44 @@
         function validarProducto(currentRow, nombreProducto) {
             $.ajax({
                 url: "{% url 'validar_producto' %}",
-                type: 'GET',
+                type: "GET",
                 data: {
-                    nombre_producto: nombreProducto
+                    nombre_producto: nombreProducto,
                 },
                 success: function (data) {
                     if (data.existe) {
                         obtenerPrecioProducto(currentRow, nombreProducto);
                     } else {
-                        currentRow.find('.cantidad, .precioTotal, .precioUnidad').val("");
+                        currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
                     }
                 },
                 error: function () {
-                    currentRow.find('.cantidad, .precioTotal').val("");
-                }
+                    currentRow.find(".cantidad, .precioTotal").val("");
+                },
             });
         }
 
         function obtenerPrecioProducto(currentRow, nombreProducto) {
             $.ajax({
                 url: "{% url 'obtener_precio_producto' %}",
-                type: 'GET',
+                type: "GET",
                 data: {
-                    nombre_producto: nombreProducto
+                    nombre_producto: nombreProducto,
                 },
                 success: function (data) {
-                    if ('precio' in data) {
-                        let precioU = currentRow.find('.precioUnidad').val(parseFloat(data.precio).toLocaleString(undefined, {
-                            minimumFractionDigits: 0,
-                        }));
+                    if ("precio" in data) {
+                        let precioU = currentRow.find(".precioUnidad").val(
+                            parseFloat(data.precio).toLocaleString(undefined, {
+                                minimumFractionDigits: 0,
+                            })
+                        );
                     } else {
-                        currentRow.find('.precioUnidad').addClass('is-invalid');
+                        currentRow.find(".precioUnidad").addClass("is-invalid");
                     }
                 },
                 error: function () {
-                    currentRow.find('.cantidad, .precioTotal').val("");
-                }
+                    currentRow.find(".cantidad, .precioTotal").val("");
+                },
             });
         }
         $(document).ready(function () {
@@ -445,22 +484,21 @@
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = parseFloat(currentRow.find('.precioUnidad').val());
+            let precioUnidad = parseFloat(currentRow.find(".precioUnidad").val());
             let cantidad = parseFloat(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
                 let totalProductoFormateado = total.toLocaleString(undefined, {
-                    minimumFractionDigits: 3
+                    minimumFractionDigits: 3,
                 });
-                currentRow.find('.precioTotal').val(totalProductoFormateado);
+                currentRow.find(".precioTotal").val(totalProductoFormateado);
                 calcularTotalVenta();
             } else {
-                currentRow.find('.precioTotal').val("");
+                currentRow.find(".precioTotal").val("");
                 calcularTotalVenta();
             }
-        };
-
+        }
 
         $(document).on("click", ".eliminar-producto", function () {
             currentRow = $(this).closest("tr.producto-row").remove();
@@ -468,36 +506,35 @@
         });
 
         $("#agregar-producto").on("click", function () {
-            let nuevaFila = '<tr class="producto-row">' +
-                '<td>' +
+            let nuevaFila =
+                '<tr class="producto-row">' +
+                "<td>" +
                 '<input type="text" class="form-control producto" name="producto" id="producto" autocomplete="off" placeholder="Nombre del producto">' +
                 '<span class="error-message text-danger error-produ" ></span>' +
                 '<div class="p-2">' +
                 '<label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>' +
-                '</div>' +
+                "</div>" +
                 '<span class="error-message producto-error"></span>' +
-                '</td>' +
-                '<td>' +
+                "</td>" +
+                "<td>" +
                 '<div class="form-group">' +
                 '<input type="text" class="form-control precioUnidad" id="precioUnidad" name="precioUnidad" readonly>' +
                 '<span class="error-message" id="precioU-error"></span>' +
-                '</div>' +
-                '</td>' +
-                '<td>' +
+                "</div>" +
+                "</td>" +
+                "<td>" +
                 '<div class="form-group">' +
                 '<input type="number" class="form-control cantidad" id="cantidad" name="cantidad" autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');" placeholder="Cantidad">' +
-                '</div>' +
-                '</td>' +
-                '<td>' +
+                "</div>" +
+                "</td>" +
+                "<td>" +
                 '<div class="form-group">' +
                 '<input type="text" class="form-control precioTotal" id="precioTotal" name="precioTotal" readonly>' +
                 '<span class="error-message" id="total-error"></span>' +
-                '</div>' +
+                "</div>" +
                 '<td class="eliminar-producto"><span class="icono-eliminar">X</span></td>' +
-                '</td>';
-            +
-                '</tr>';
-            // <i class="fa-x fa-xl icono-eliminar"></i>
+                "</td>";
+            +"</tr>";
             let filaAgregada = $(nuevaFila);
             $("tbody").append(filaAgregada);
 
@@ -505,55 +542,58 @@
             inicializarSugerenciasEnFila(filaAgregada);
         });
 
-
         function inicializarSugerenciasEnFila(fila) {
-            fila.find(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
+            fila
+                .find(".mess-sugges-prod")
+                .after('<div class="producto-suggestions"></div>');
         }
 
         function calcularTotalVenta() {
             let totalVenta = 0;
 
             $(".producto-row").each(function () {
-                let precioTotal = parseFloat($(this).find('.precioTotal').val().replace(',', ''));
+                let precioTotal = parseFloat(
+                    $(this).find(".precioTotal").val().replace(",", "")
+                );
 
                 if (!isNaN(precioTotal)) {
                     totalVenta += precioTotal;
                 }
             });
             let totalVentaFormateado = totalVenta.toLocaleString(undefined, {
-                minimumFractionDigits: 3
+                minimumFractionDigits: 3,
             });
 
-            $('#totalVenta').val('$ ' + totalVentaFormateado);
+            $("#totalVenta").val("$ " + totalVentaFormateado);
         }
-    });
 
-</script>
-<script>
-    $(document).ready(function () {
         function validarCamposLlenos() {
             let camposLlenos = true;
-            const documentoValue = $('#documentoDato').text();
-            const nombreClienteValue = $('#nombreCliente').val();
+            const documentoValue = $("#documentoDato").text();
+            const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
 
             if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
-                $('#error-docu').text("El campo del documento no puede estar vacío. Por favor, ingrésalo correctamente.");
+                $("#error-docu").text(
+                    "El campo del documento no puede estar vacío. Por favor, ingrésalo correctamente."
+                );
                 camposLlenos = false;
             } else if (!documentoValue) {
                 mostrarError("#nombreCliente");
-                $('#error-docu').text("El documento debe estar correctamente escrito. Por favor, verifica y vuelve a intentar.");
+                $("#error-docu").text(
+                    "El documento debe estar correctamente escrito. Por favor, verifica y vuelve a intentar."
+                );
                 camposLlenos = false;
             }
 
-            $('.producto-row').each(function (index) {
+            $(".producto-row").each(function (index) {
                 const row = $(this);
-                const productoInput = row.find('.producto');
-                const cantidadInput = row.find('.cantidad');
-                const precioUnidad = row.find('.precioUnidad').val();
-                const precioUnidadInput = row.find('.precioUnidad');
-                const precioTotalInput = row.find('.precioTotal');
+                const productoInput = row.find(".producto");
+                const cantidadInput = row.find(".cantidad");
+                const precioUnidad = row.find(".precioUnidad").val();
+                const precioUnidadInput = row.find(".precioUnidad");
+                const precioTotalInput = row.find(".precioTotal");
 
                 const productoValue = productoInput.val();
                 const precioUnidadValue = parseFloat(precioUnidadInput.val());
@@ -561,8 +601,12 @@
                 const cantidadValue = parseFloat(cantidadInput.val());
 
                 if (!precioUnidadValue) {
-                    productoInput.addClass('is-invalid');
-                    row.find(".error-produ").text("Por favor, selecciona un producto válido para completar el registro.")
+                    productoInput.addClass("is-invalid");
+                    row
+                        .find(".error-produ")
+                        .text(
+                            "Por favor, selecciona un producto válido para completar el registro."
+                        );
                     camposLlenos = false;
                 }
 
@@ -574,33 +618,34 @@
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
-                }
-                else {
+                } else {
                     productos.push({
                         nombre: productoValue,
                         precioUnidad: precioUnidadValue,
                         precioTotal: precioTotalValue,
-                        cantidad: cantidadValue
+                        cantidad: cantidadValue,
                     });
                 }
             });
 
-            return camposLlenos ? { documento: documentoValue, productos: productos } : null;
+            return camposLlenos
+                ? { documento: documentoValue, productos: productos }
+                : null;
         }
 
         function mostrarError(selector) {
-            $(selector).addClass('is-invalid');
+            $(selector).addClass("is-invalid");
 
-            $('#nombreCliente, .producto, .cantidad').on('input', function () {
+            $("#nombreCliente, .producto, .cantidad").on("input", function () {
                 const campo = $(this);
                 $("#error-docu").text("");
                 if (campo.val()) {
-                    campo.removeClass('is-invalid');
+                    campo.removeClass("is-invalid");
                 }
             });
         }
 
-        $('#venta-form').submit(function (event) {
+        $("#venta-form").submit(function (event) {
             event.preventDefault();
 
             const data = validarCamposLlenos();
@@ -608,18 +653,20 @@
                 return;
             }
             $.ajax({
-                type: 'POST',
+                type: "POST",
                 url: "{% url 'crear_venta' %}",
                 data: JSON.stringify(data), // convertir a json
-                contentType: 'application/json',
+                contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        alert('Venta creada con éxito.');
+                        alert("Venta creada con éxito.");
                         window.location.href = "{% url 'ventas' %}";
                     }
-                }
+                },
             });
         });
     });
+
 </script>
+
 {% endblock %}
