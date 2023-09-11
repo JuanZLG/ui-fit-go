@@ -44,10 +44,11 @@
         <div class="form-group">
             <label for="id_estado">Estado *</label>
             <select class="form-control" id="id_estado" name="id_estado">
-                <option value="1" {% if cliente.estado == 1 %} selected {% endif %}>Inactivo</option>
-                <option value="0" {% if cliente.estado == 0 %} selected {% endif %}>Activo</option>
+                <option value="1" {% if cliente.estado == 0 %} selected {% endif %}>Inactivo</option>
+                <option value="0" {% if cliente.estado == 1 %} selected {% endif %}>Activo</option>
             </select>
         </div>
+
         
         
 
@@ -80,77 +81,39 @@
     $(document).ready(function () {
 
 
-        $("#id_estado").change(function () {
-            var nuevoEstado = $(this).val();
-            var clienteId = "{{ cliente.id_cliente }}"; // Asegúrate de obtener el ID del cliente de alguna manera en tu plantilla
+        $(document).ready(function () {
+        // Función para cambiar el estado del cliente
+        $("#cambiar-estado-btn").click(function () {
+            var nuevoEstado = $("#id_estado").val();
+            var clienteId = "{{ cliente.id_cliente }}";
 
             $.ajax({
-                url: "{% url 'cambiarEstado'  %}",
+                url: "{% url 'cambiarEstado' %}",
                 data: {
                     cliente_id: clienteId,
                     nuevo_estado: nuevoEstado
                 },
                 method: "GET",
                 success: function (response) {
-                    // Actualiza el estado del cliente en la página sin recargar
-                    if (nuevoEstado == 0) {
-                        $(".estado-cliente").text("Activo");
+                    if (response.status === "success") {
+                        // Cambia el texto del estado en la página sin recargar
+                        if (nuevoEstado == 1) {
+                            $("#id_estado option:selected").text("Inactivo");
+                        } else {
+                            $("#id_estado option:selected").text("Activo");
+                        }
                     } else {
-                        $(".estado-cliente").text("Inactivo");
+                        // Maneja el error si es necesario
+                        alert("Error al cambiar el estado del cliente");
                     }
                 },
                 error: function (error) {
-                    // Manejar el error si es necesario
+                    // Maneja el error si es necesario
+                    alert("Error al cambiar el estado del cliente");
                 }
             });
         });
-        obtenerDepartamentos();
-
-        const departamentoActual = "{{ cliente.id_municipio.id_departamento.nombre_departamento }}";
-        $('#departamento').val(departamentoActual);
-
-        cargarMunicipios(departamentoActual);
-
-        $("#departamento").change(function () {
-            const departamentoSeleccionado = $(this).val();
-            cargarMunicipios(departamentoSeleccionado);
-        });
-
-        $('#cliente-form').submit(function (event) {
-            event.preventDefault();
-            let errors = false;
-
-            // Validaciones en el lado del cliente
-            const documento = $('#iDocumento').val();
-            const nombres = $('#iNombres').val();
-            const apellidos = $('#iApellidos').val();
-            const celular = $('#iCelular').val();
-            const barrio = $('#iBarrio').val();
-            const direccion = $('#iDireccion').val();
-            const municipio = $('#municipio').val();
-
-            if (!documento) {
-                mostrarError('#iDocumento', 'Este campo es obligatorio.');
-                errors = true;
-            } else {
-                ocultarError('#iDocumento');
-            }
-
-
-            if (!errors) {
-                $.ajax({
-                    type: 'POST',
-                    url: "{% url 'editarCliente' cliente.id_cliente %}",
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        if (response.success) {
-                            alert('Cliente editado con éxito.');
-                            window.location.href = "{% url 'lista_clientes' %}";
-                        }
-                    }
-                });
-            }
-        });
+    });
 
         // Función para obtener la lista de departamentos
         function obtenerDepartamentos() {

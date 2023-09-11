@@ -54,7 +54,6 @@ def agregarClientePost(request):
         celular = request.POST.get('iCelular')
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
-        estado = request.POST.get('id_estado')
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
@@ -79,7 +78,7 @@ def agregarClientePost(request):
             celular=celular,
             barrio=barrio,
             direccion=direccion,
-            estado=estado,
+            estado= 1,
         )
         cliente.save()
 

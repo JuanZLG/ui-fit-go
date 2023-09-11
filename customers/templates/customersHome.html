@@ -39,7 +39,6 @@
     </div>
   </div>
   
-
 <center>
     <h1 class="modtitles">Entorno de Clientes</h1>
 </center>
@@ -90,25 +89,26 @@
 
 
                         <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
-                    
                         <td>
-                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
                                 data-cliente-id="{{ cliente.id_cliente }}"
-                                data-nuevo-estado="{% if cliente.estado == 1 %}0{% else %}1{% endif %}">
-                                {% if cliente.estado == 1 %}
-                                Activo
+                                data-nuevo-estado="{% if cliente.estado == 0 %}1{% else %}0{% endif %}">
+                                {% if cliente.estado == 0 %}
+                                Inactivo
                                 {% else %}
-                                activo
+                                Activo
                                 {% endif %}
                             </button>
                         </td>
+                        
+                        
                         <td class="cell-actions">
                             <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
                                 id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                                 <a href="{% url 'verCliente' cliente.id_cliente %}" class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                                
+    <i class="fa-solid fa-eye"></i>
+</a>
+
                                 
                         </td>
                     </tr>
@@ -124,7 +124,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $(".cambiar-estado").click(function() {
+        $(document).ready(function() {
+            $(".cambiar-estado").click(function() {
             var clienteId = $(this).data("cliente-id");
             var nuevoEstado = $(this).data("nuevo-estado");
 
@@ -157,6 +158,13 @@
             });
         });
     });
+});
+
+
+
+
+
+
 
     // JavaScript para cargar los detalles del cliente cuando se hace clic en "Details"
     $(".detailsbutton").click(function() {
@@ -221,17 +229,17 @@
         padding:0;
         width:auto;
         block-size: 6vh;
-        background-color:#85da85;
+        background-color:#b8f9b8;
         display:flex;
         align-items: center;
     }
     .btn-add:hover {
-        background-color:#72d072;
+        background-color:#85da85;
     }
     .btn-dash {
-        background-color: #c55c5c;
+        background-color: #ec8080;
     }.btn-dash:hover {
-        background-color:#ba4d4d;
+        background-color:#c55c5c;
     }
     
     tr.inactivo {
