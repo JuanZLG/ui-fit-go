@@ -54,6 +54,7 @@ def agregarClientePost(request):
         celular = request.POST.get('iCelular')
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
+        estado = request.POST.get('id_estado')
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
@@ -78,7 +79,7 @@ def agregarClientePost(request):
             celular=celular,
             barrio=barrio,
             direccion=direccion,
-            estado= 1,
+            estado=estado,
         )
         cliente.save()
 
@@ -170,9 +171,3 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': 'Cliente no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
-
-
-
-
-

@@ -9,7 +9,7 @@ class Clientes(models.Model):
     celular = models.CharField(max_length=10)
     barrio = models.CharField(max_length=40)
     direccion = models.CharField(max_length=50)
-    estado = models.IntegerField()
+    estado = models.IntegerField(default=True)
 
 
     def __str__(self):
@@ -36,4 +36,3 @@ class Municipios(models.Model):
     class Meta:
         managed = False
         db_table = 'municipios'
-
