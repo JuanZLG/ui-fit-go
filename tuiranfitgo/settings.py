@@ -76,6 +76,7 @@ DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'_tuiranfit',
+        'NAME':'_tuiranfit',
         'USER': 'root',
         'PASSWORD': '1234',
         'PORT': '3306'

@@ -90,7 +90,6 @@
 </div>
 
 <style>
-
     .modtitles {
         font-size: 2em;
         background-image: linear-gradient(45deg, #000000, #3c3636, #000);
@@ -206,7 +205,9 @@
     #totalVenta {
         background-color: #ccc;
         font-weight: bold;
-    } #totalVenta:focus {
+    }
+
+    #totalVenta:focus {
         outline: 0 !important;
 
     }
@@ -596,8 +597,9 @@
                 const precioTotalInput = row.find(".precioTotal");
 
                 const productoValue = productoInput.val();
-                const precioUnidadValue = parseFloat(precioUnidadInput.val());
-                const precioTotalValue = parseFloat(precioTotalInput.val());
+                const precioUnidadValue = parseInt(precioUnidadInput.val());
+                const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
+
                 const cantidadValue = parseFloat(cantidadInput.val());
 
                 if (!precioUnidadValue) {
