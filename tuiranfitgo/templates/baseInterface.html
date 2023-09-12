@@ -93,10 +93,11 @@
                 <div id="collapseCompras" class="collapse" aria-labelledby="collapseTwo"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Gestión de Compras</a>
+                        <a class="collapse-item" href="{% url 'purchases' %}">Gestión de Compras</a>
                     </div>
                 </div>
             </li>
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
                     aria-expanded="true" aria-controls="collapseUtilities">
@@ -119,7 +120,7 @@
                 <div id="collapseCustomers" class="collapse" aria-labelledby="headingTwo"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'lista_clientes' %}">Gestión de Clientes</a>
+                        <a class="collapse-item" href="{% url 'Clientes' %}">Gestión de Clientes</a>
                     </div>
                 </div>
             </li>

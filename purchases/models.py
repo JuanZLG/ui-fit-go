@@ -33,15 +33,19 @@ class Clientes(models.Model):
         db_table = 'clientes'
 
 
+
+
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
-    fechareg = models.DateField()
-    estado = models.IntegerField()
+    fechareg = models.DateTimeField(auto_now_add=True)
+    estado = models.IntegerField(default=1)  # Cambio el tipo de campo a IntegerField y establezco el valor predeterminado
 
     class Meta:
         managed = False
         db_table = 'compras'
+
+
 
 
 class Departamentos(models.Model):

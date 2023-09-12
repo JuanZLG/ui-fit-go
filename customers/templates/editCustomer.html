@@ -85,7 +85,7 @@
             var clienteId = "{{ cliente.id_cliente }}"; // Asegúrate de obtener el ID del cliente de alguna manera en tu plantilla
 
             $.ajax({
-                url: "{% url 'cambiarEstado'  %}",
+                url: "{% url 'cambiarEstadoClientes'  %}",
                 data: {
                     cliente_id: clienteId,
                     nuevo_estado: nuevoEstado
@@ -145,7 +145,7 @@
                     success: function (response) {
                         if (response.success) {
                             alert('Cliente editado con éxito.');
-                            window.location.href = "{% url 'lista_clientes' %}";
+                            window.location.href = "{% url 'Clientes' %}";
                         }
                     }
                 });

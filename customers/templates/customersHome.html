@@ -81,7 +81,7 @@
                 </thead>
                 <tbody class="tbody">
                     {% for cliente in clientes %}
-                    <tr class="{% if cliente.estado == 1 %}inactivo{% endif %}">
+                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
                         <td>{{ cliente.id_cliente }}</td>
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
@@ -91,10 +91,10 @@
                         <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
                     
                         <td>
-                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 1 %}inactive-status{% else %}active-status{% endif %}"
+                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
                                 data-cliente-id="{{ cliente.id_cliente }}"
-                                data-nuevo-estado="{% if cliente.estado == 1 %}0{% else %}1{% endif %}">
-                                {% if cliente.estado == 1 %}
+                                data-nuevo-estado="{% if cliente.estado == 0 %}1{% else %}0{% endif %}">
+                                {% if cliente.estado == 0 %}
                                 Inactivo
                                 {% else %}
                                 Activo

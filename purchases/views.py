@@ -11,22 +11,29 @@ def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
+
 @csrf_exempt
 def crear_compra(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             logger.debug("Datos JSON recibidos: %s", data)  # Registra los datos JSON recibidos
-            proveedor_id = data.get('proveedor_id', '')
+            proveedor_nombre = data.get('proveedor', '')
             productos = data.get('productos', [])
 
             # Validar los datos aquí según tus requisitos
-            if not proveedor_id or not productos:
+            if not proveedor_nombre or not productos:
                 return JsonResponse({'error': 'Datos no válidos'}, status=400)
 
-            proveedor = Proveedores.objects.filter(id_proveedor=proveedor_id).first()
+            # Buscar al proveedor por nombre_proveedor
+            proveedor = Proveedores.objects.filter(nombre_proveedor=proveedor_nombre).first()
+
+            # Si no se encuentra el proveedor, puedes crear uno nuevo aquí o manejar el error según tus necesidades.
+            if not proveedor:
+                return JsonResponse({'error': 'Proveedor no encontrado'}, status=400)
+
             compra = Compras.objects.create(id_proveedor=proveedor)
-            
+
             for producto_datos in productos:
                 producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
                 detalle = Detallecompra.objects.create(
@@ -42,9 +49,10 @@ def crear_compra(request):
 
         except json.JSONDecodeError:
             logger.error("Error al decodificar datos JSON: %s", request.body)  # Registra el error de datos JSON no válidos
-            return JsonResponse({f'error': 'Datos JSON no válidos {request.body}'}, status=400 )
+            return JsonResponse({'error': f'Datos JSON no válidos {request.body}'}, status=400 )
 
     return render(request, 'createPurchases.html')
+
 
 
 def buscar_proveedores(request):
@@ -54,6 +62,13 @@ def buscar_proveedores(request):
     )
     return JsonResponse({"proveedores": list(proveedores)})
 
+
+def buscar_productos(request):
+    q = request.GET.get("q", "")
+    productos = Productos.objects.filter(nombre_producto__icontains=q).values_list(
+        "nombre_producto", flat=True
+    )
+    return JsonResponse({"productos": list(productos)})
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()

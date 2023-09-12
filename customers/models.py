@@ -9,7 +9,7 @@ class Clientes(models.Model):
     celular = models.CharField(max_length=10)
     barrio = models.CharField(max_length=40)
     direccion = models.CharField(max_length=50)
-    estado = models.IntegerField(default=True)
+    estado = models.IntegerField(default=1)
 
 
     def __str__(self):

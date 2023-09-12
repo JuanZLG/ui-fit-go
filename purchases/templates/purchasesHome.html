@@ -32,8 +32,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%"
-                cellspacing="3">
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Proveedor</th>
@@ -45,24 +44,23 @@
                 <tbody>
                     {% for compra in compras %}
                     <tr class="{% if compra.estado == 0 %}inactivo{% endif %}">
-                        <td class="d-flex ">{{ compra.id_proveedor.nombre_proveedor }}</td>
+                        <td class="d-flex">{{ compra.id_proveedor.nombre_proveedor }}</td>
                         <td>{{ compra.fechareg }}</td>
                         <td>
                             <button
-                                class="btn cambiar-estado statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
-                                data-compra-id="{{ compra.id_compra}}"
+                                class="cambiar-estado-compra btn statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                                data-compra-id="{{ compra.id_compra }}"
                                 data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if compra.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
                         </td>
                         <td class="cell-actions">
                             <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="{% url 'verCompra' compra.id_compra %}" class="btn btn-sm btn-primary"
+                            <a href="#" class="btn btn-sm btn-primary"
                                 id="detailsbutton" data-bs-toggle="modal" data-bs-target="#DetallesModalCompra"
                                 data-compra-id="{{ compra.id_compra }}">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-
                         </td>
                     </tr>
                     {% endfor %}
@@ -70,6 +68,47 @@
             </table>
         </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".cambiar-estado-compra").click(function () {
+            let compraId = $(this).data("compra-id");
+            let nuevoEstado = $(this).data("nuevo-estado");
+
+            Swal.fire({
+                title: 'Confirmar',
+                text: '¿Estás seguro de que deseas cambiar el estado?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{% url 'cambiarEstadoCompra' %}",
+                        data: {
+                            compra_id: compraId,
+                            nuevo_estado: nuevoEstado
+                        },
+                        method: "GET",
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (error) {
+                            // Handle error if needed
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
 </div>
 
 <style>
