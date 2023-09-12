@@ -144,3 +144,48 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
+def editar_venta(request, id_venta):
+    if request.method == 'POST':
+        nombre = request.POST['nombre_proveedor']
+        telefono = request.POST['telefono']
+        correo = request.POST['correo']
+        estado = request.POST['estado']
+        Ventas.objects.filter(id_venta=id_venta).update(
+            nombre_proveedor=nombre,
+            telefono=telefono,
+            correo=correo,
+            estado=estado
+        )
+        response_data = {'success': True}
+        return JsonResponse(response_data)    
+    venta = Ventas.objects.get(id_venta=id_venta)
+    return render(request, 'editSales.html', {"venta":venta}) 
+
+
+@csrf_exempt
+def editar_venta(request, id_venta):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        documento = data.get('documento', '')
+        productos = data.get('productos', [])
+
+        cliente = Clientes.objects.filter(documento=documento).first()
+        venta = Ventas.objects.update(id_cliente=cliente)
+        for producto_datos in productos:
+            producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
+            detalle = Detalleventa.objects.update(
+                id_producto=producto,
+                id_venta=venta,
+                cantidad=producto_datos['cantidad'],
+                precio_uni=producto_datos['precioUnidad'],
+                precio_tot=producto_datos['precioTotal']
+            )
+
+        response_data = {'success': True}  
+        return JsonResponse(response_data)
+
+    return render(request, 'editSales.html')
+    
