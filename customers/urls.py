@@ -10,7 +10,7 @@ urlpatterns = [
     path('verCliente/<int:cliente_id>/', views.ver_cliente, name='verCliente'),
 
 
-    path('cambiarEstado/', views.cambiarEstado, name='cambiarEstado'),
+    path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoClientes'),
 
 
 

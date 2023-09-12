@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'eproviders',
     'customers',
     'purchases',
-
     'sales',
     'dashboard'
 ]
@@ -55,7 +54,6 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'customers', 'templates'),
                  os.path.join(BASE_DIR, 'tuiranfitgo', 'templates'),
                  os.path.join(BASE_DIR, 'sales', 'templates'),
-
                  os.path.join(BASE_DIR, 'purchases', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  ],
@@ -79,8 +77,8 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'_tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
-        'PORT': '3306'
+        'PASSWORD': 'monitoc10',
+        'PORT': '1010'
     }
 }
 
@@ -119,7 +117,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'tuiranfitgo','static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'tuiranfitgo', 'static'), 
+    os.path.join(BASE_DIR, 'sales', 'static'),     
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Default primary key field typeF
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

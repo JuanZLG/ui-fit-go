@@ -3,8 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.Home, name='proveedores'), 
-    path('create/', views.crear_proveedor, name='crear_proveedor'), 
-    path('edit/<int:id_proveedor>', views.editar_proveedor, name='editar_proveedor'),
-    path('status/', views.estado_ajax, name='estado_ajax'),
+    path('Crear/', views.crear_proveedor, name='crear_proveedor'), 
+    path('Editar/<int:id_proveedor>', views.editar_proveedor, name='editarProveedor'),
+    path('Estado/', views.cambiarEstadoProveedor, name='cambiarEstadoProveedor'),
 
 ]
