@@ -12,13 +12,12 @@
 <div class="card shadow mb-4">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
         <span>
-            <a href="{%url 'crear_proveedor'%}" class="m-0 btn btn-success btn-icon-split btn-add">
-                <span class="icon ">
-                    <i class="fa-solid fa-plus" ></i>
+            <button type="button" id="crearProveedor" class="m-0 btn btn-success btn-icon-split btn-add">
+                <span class="icon">
+                    <i class="fa-solid fa-plus"></i>
                     <span class="text">Agregar</span>
                 </span>
-
-            </a>
+            </button>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
@@ -58,11 +57,12 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editarProveedor' proveedor.id_proveedor %}" class="btn btn-sm"
+                            <a href="{% url 'editar_proveedor' proveedor.id_proveedor %}" class="btn btn-sm"
                                 id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="" class="btn btn-sm btn-primary">
+                            <button type="button" class="btn btn-sm btn-primary verProveedor"
+                                data-prov-id="{{ proveedor.id_proveedor }}">
                                 <i class="fa-solid fa-eye"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -211,8 +211,6 @@
         justify-content: space-around;
     }
 
-    .cambiar-estado {}
-
     .active-status {
         background-color: #95eea5;
         color: #09711c;
@@ -223,6 +221,245 @@
         color: #8a0404;
     }
 </style>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+<dialog id="verDetallesDialog" class="proveedorDialog">
+    <form method="dialog">
+        <div class="modal-container-header">
+            <h2>Información del Proveedor</h2>
+            <button class="cerrar-proveedor" type="button" id="cerrarDetallesProveedor">
+                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+        <section>
+            <p>Nombre del Proveedor: <span id="nombreProveedor"></span></p>
+            <p>Teléfono: <span id="telefonoProveedor"></span></p>
+            <p>Correo: <span id="correoProveedor"></span></p>
+        </section>
+    </form>
+</dialog>
+
+<style>
+    .proveedorDialog {
+        max-width: 70%;
+        width: 30%;
+        min-height: 10vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+    }
+
+    .proveedorDialog .modal-container-header {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .proveedorDialog h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        gap: 8px;
+    }
+
+    .cerrar-proveedor {
+        padding: 0;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.15s ease;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .proveedorDialog section {
+        padding: 20px;
+    }
+
+    .proveedorDialog section p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #222222;
+    }
+
+    .proveedorDialog section p span {
+        color: rgb(99, 99, 99);
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $(".verProveedor").click(function () {
+            var proveedorId = $(this).data("prov-id");
+            $.ajax({
+                url: "{% url 'verDetallesProveedor' %}",
+                data: {
+                    proveedor_id: proveedorId
+                },
+                method: "GET",
+                success: function (response) {
+                    var proveedor = response.success;
+                    $("#nombreProveedor").text(proveedor.nombre_proveedor);
+                    $("#telefonoProveedor").text(proveedor.telefono);
+                    $("#correoProveedor").text(proveedor.correo);
+                    document.getElementById("verDetallesDialog").showModal();
+                },
+            });
+        });
+        $("#cerrarDetallesProveedor").click(function () {
+            document.getElementById("verDetallesDialog").close();
+        });
+    });
+
+</script>
+
+
+<dialog id="crearProveedorDialog" class="proveedorDialog">
+    <div class="modal-container-header">
+        <h2>Crear del Proveedor</h2>
+        <button class="cerrar-proveedor" type="button" id="cerrarCrearProveedor">
+            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h24v24H0z" fill="none"></path>
+                <path
+                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                    fill="currentColor"></path>
+            </svg>
+        </button>
+    </div>
+    <div class="card shadow p-4">
+        <form id="proveedor-form" method="post">
+            {% csrf_token %}
+            <div class="form-row mb-3">
+                <label for="nombre_proveedor">Nombre del proveedor *</label>
+                <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
+                    placeholder="Nombre">
+                <span class="error-message" id="nombre_proveedor-error"></span>
+            </div>
+            <div class="form-row mb-3">
+                <label for="telefono">Número de contacto *</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <span class="error-message" id="telefono-error"></span>
+            </div>
+            <div class="form-row mb-3">
+                <label for="correo">Correo Electrónico *</label>
+                <input type="text" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico">
+                <span class="error-message" id="correo-error"></span>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-secondary " type="submit">Crear Proveedor</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</dialog>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    const crearProveedorButton = document.getElementById('crearProveedor');
+    const proveedorModal = document.getElementById('crearProveedorDialog');
+
+    crearProveedorButton.addEventListener('click', () => {
+        proveedorModal.showModal();
+    });
+
+    const cerrarProveedorButton = document.getElementById('cerrarCrearProveedor');
+    cerrarProveedorButton.addEventListener('click', () => {
+        proveedorModal.close();
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Función para validar que todos los campos estén llenos
+        function validarCamposLlenos() {
+            let camposLlenos = true;
+            const nombreValue = $('#nombre_proveedor').val();
+            const telefonoValue = $('#telefono').val();
+            const correoValue = $('#correo').val();
+
+            if (!nombreValue) {
+                mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            }
+            if (!telefonoValue) {
+                mostrarError('#telefono', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!/^\d{10}$/.test(telefonoValue)) {
+                mostrarError('#telefono', 'Número inválido.');
+                camposLlenos = false;
+            }
+            if (!correoValue) {
+                mostrarError('#correo', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarFormatoCorreo(correoValue)) {
+                mostrarError('#correo', 'El formato del correo electrónico no es válido.');
+                camposLlenos = false;
+            }
+            return camposLlenos;
+        }
+
+        // Validación de campos al escribir
+        $('#nombre_proveedor, #telefono, #correo').on('input', function () {
+            const campo = $(this);
+            const campoValue = campo.val();
+
+            if (campoValue) {
+                campo.removeClass('is-invalid');
+                $(`#${campo.attr('id')}-error`).text('');
+            }
+        });
+
+        function mostrarError(selector, mensaje) {
+            $(selector).addClass('is-invalid');
+            $(`${selector}-error`).text(mensaje).css('color', 'red');
+        }
+
+        function validarFormatoCorreo(correo) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailRegex.test(correo);
+        }
+
+        $('#proveedor-form').submit(function (event) {
+            event.preventDefault();
+
+            // Validar que todos los campos estén llenos
+            if (!validarCamposLlenos()) {
+                return;
+            }
+            // Continuar con el envío del formulario si todos los campos están llenos
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'crear_proveedor' %}",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        document.getElementById("crearProveedorDialog").close();
+                        alert('Proveedor creado con éxito.');
+                    }
+                }
+            });
+        });
+    });
+
+</script>
 
 
 {% endblock %}

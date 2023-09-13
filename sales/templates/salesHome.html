@@ -43,7 +43,7 @@
                 </thead>
                 <tbody>
                     {% for venta in ventas %}
-                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
+                    <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
                         <td class="d-flex ">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
                         <td>
