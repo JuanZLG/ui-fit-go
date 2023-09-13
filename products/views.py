@@ -35,3 +35,18 @@ def createProduct(request):
 
 # def editProduct(request):
     
+def cambiarEstadoProducto(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        productoID = request.GET.get('productoId')
+        new_status = request.GET.get('nuevo_estado')
+        
+        try:
+            producto = Productos.objects.get(id_producto=productoID)
+            producto.estado = int(new_status)
+            producto.save()
+            
+            return JsonResponse({'status': 'success'})
+        except Productos.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'})
+        
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
