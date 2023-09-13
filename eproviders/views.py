@@ -14,7 +14,8 @@ def crear_proveedor(request):
         correo = request.POST['correo']
         proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo)
         return JsonResponse({'success': True})
-    return render(request, 'createProvider.html')
+
+
 
 def editar_proveedor(request, id_proveedor):
     if request.method == 'POST':
@@ -48,4 +49,43 @@ def cambiarEstadoProveedor(request):
             return JsonResponse({'status': 'error', 'message': 'Proveedor no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
+def verDetallesProveedor(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        id_proveedor = request.GET.get('proveedor_id')
+        
+        if id_proveedor:
+            try:
+                proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
+                # Si el proveedor se encuentra, puedes devolver sus detalles en formato JSON
+                data = {
+                    'nombre_proveedor': proveedor.nombre_proveedor,
+                    'telefono': proveedor.telefono,
+                    'correo': proveedor.correo,
+                    'estado': proveedor.estado,
+                }
+                return JsonResponse({'success': data})
+            except Proveedores.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Proveedor no encontrado'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'ID de proveedor no proporcionado'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
+# def verDetallesProveedor(request):
+#     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+#         id_proveedor = request.GET.get('proveedor_id')
+#         try:
+#             proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
+#             return JsonResponse({'success': proveedor})
+#         except Proveedores.DoesNotExist:
+#             return JsonResponse({'status': 'error', 'message': 'Proveedor no encontrado'})
+        
+#     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
 

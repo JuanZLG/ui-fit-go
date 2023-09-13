@@ -43,7 +43,7 @@
                 </thead>
                 <tbody>
                     {% for venta in ventas %}
-                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
+                    <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
                         <td class="d-flex ">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
                         <td>
@@ -55,7 +55,7 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a href="{% url 'verVenta' venta.id_venta %}" class="btn btn-sm btn-primary"
                                 id="detailsbutton" data-bs-toggle="modal" data-bs-target="#DetallesModalVenta"
                                 data-venta-id="{{ venta.id_venta }}">

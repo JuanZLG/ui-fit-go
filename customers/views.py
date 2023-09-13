@@ -37,8 +37,6 @@ def agregarCliente(request):
     return render(request, 'createCustomer.html', {'municipios': municipios})
 
 
-
-
 from django.http import JsonResponse
 from django.shortcuts import render
 from customers.models import Clientes, Municipios, Departamentos
@@ -79,23 +77,10 @@ def agregarClientePost(request):
         )
         cliente.save()
 
-        # Devuelve un JSON con éxito
         return JsonResponse({'success': True, 'message': 'Cliente creado con éxito'})
 
     municipios = Municipios.objects.all()
     return render(request, 'createCustomer.html', {'municipios': municipios})
-
-
-
-
-
-
-
-
-
-
-
-
 
 def redirigirEditar(request, cliente_id):
     cliente = Clientes.objects.get(id_cliente=cliente_id)
@@ -144,13 +129,7 @@ def editarCliente(request, cliente_id):
 
         return JsonResponse({'success': True, 'message': 'Cliente actualizado con éxito'})
 
-    # Renderiza la plantilla con los datos existentes del cliente y los valores de departamento y municipio registrados
     return render(request, 'editCustomer.html', {'cliente': cliente, 'departamento_registrado': cliente.id_municipio.id_departamento.nombre_departamento, 'municipio_registrado': cliente.id_municipio.nombre_municipio})
-
-
-
-
-
 
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

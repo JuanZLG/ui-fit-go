@@ -10,31 +10,32 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between">
                 <span>
-                    <a class="btn btn-success btn-icon-split " id="am" data-toggle="modal" data-target="#addAProduct">
+                    <a class="btn btn-success btn-icon-split btn-add" id="am" data-toggle="modal" data-target="#addAProduct">
                         <span class="icon">
                             <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Producto</span>
                     </a>
                 </span>
                 <span class="d-flex align-items-end">
-                    <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-                    <button class="btn btn-danger" id="of">Ir a Dashboard</button>
-                </span>
+                  <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+                  <button class="btn btn-danger btn-dash">Ir a Dashboard</button>
+              </span>
             </div>
         </div>
 
         <div class="card shadow mb-4">
             <div class="card-header py-4">
                 <div class="table-responsive">
-            <table class="table table-bordered m-auto" id="dataTable" width="80%" cellspacing="0">
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="80%" cellspacing="0">
                 <thead class="theads">
                     <tr>
                         <th>ID</th>
                         <th>Categoría</th>
                         <th>Marca</th>
                         <th>Producto</th>
-                        <th>Stock</th>
+                        <th>Existencias</th>
                         <th>Precio</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -47,19 +48,31 @@
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
                         <td>{{p.precio}}</td>
-                        {% comment %} <td id="statuscell"></td> {% endcomment %}
-                        <td id="actionscell">
-                            <a href="#" class="btn btn-sm btn-success" id="statusbutton"></a>
-                            <a href="#" class="btn btn-sm btn-primary" id="editbutton">
-                                <i class="fa-solid fa-pen-to-square" style="color:black" ></i></a>
-                                <a href="#" class="btn btn-sm btn-primary " id="editbutton">
-                                <i class="fa-solid fa-eye" style="color: #000000;"></i></a></td>
+                        <td>
+                          <button class="cambio-estado statusbutton mx-3 {% if producto.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
+                              data-product-id="{{ producto.id_producto }}"
+                              data-nuevo-estado="{% if producto.estado == 0 %}1{% else %}0{% endif %}">
+                              {% if producto.estado == 0 %}
+                              Inactivo
+                              {% else %}
+                              Activo
+                              {% endif %}
+                          </button>
+                        </td>
+                        <td class="cell-actions">
+                          <a class="btn btn-sm"
+                              id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                              <a class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
+                              <i class="fa-solid fa-eye"></i>
+                          </a>
+                      </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 </div>
 
 <div class="modal fade" id="addAProduct">
@@ -179,4 +192,157 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+      $(document).ready(function() {
+          $(".cambiar-estado").click(function() {
+              var producto_id = $(this).data("productoId");
+              var nuevoEstado = $(this).data("nuevo-estado");
+  
+              Swal.fire({
+                  title: 'Confirmar',
+                  text: '¿Estás seguro de que deseas cambiar el estado?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Confirmar',
+                  cancelButtonText: 'Cancelar'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      $.ajax({
+                          url: "{% url 'cambiarEstadoProductos'  %}",
+                          data: {
+                              productoId: productoId,
+                              nuevo_estado: nuevoEstado
+                          },
+                          method: "GET",
+                          success: function(response) {
+                              location.reload();
+                          },
+                          error: function(error) {
+                              // Manejar el error si es necesario
+                          }
+                      });
+                  }
+              });
+          });
+      });
+    </script>
+
+  <style>
+  .table {
+            width: 80%;
+        }
+    
+        table thead.theads {
+            text-align: center;
+            color: white;
+            background-color: #222222;
+        }
+    
+        table tbody.tbody {
+            text-align: center;
+        }
+    
+        .modtitles {
+            font-size: 2em;
+            background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: animarGradiente 3s linear infinite;
+            font-weight: bold;
+        }
+
+        /* Toco repetir codigo para cambiar el blanco */
+        .btn-add,
+        .btn-dash {
+            color: #000;
+            font-weight: 600;
+        }
+    
+        .btn-add:hover,
+        .btn-dash:hover {
+            color: #000;
+        }
+    
+        .btn-add {
+            padding: 0;
+            width: auto;
+            block-size: 6vh;
+            background-color: #85da85;
+            display: flex;
+            align-items: center;
+        }
+    
+        .btn-add:hover {
+            background-color: #72d072;
+        }
+    
+        .btn-dash {
+            background-color: #c55c5c;
+        }
+    
+        .btn-dash:hover {
+            background-color: #ba4d4d;
+        }
+    
+        tr.inactivo {
+            background-color: #ccc;
+            /* Cambia el fondo a un tono más claro */
+            color: #676666;
+        }
+    
+        .statusbutton {
+            width: 5rem;
+            border-radius: 3px;
+            border: none;
+        }
+    
+        .statusbutton:hover {
+            opacity: 0.9;
+        }
+    
+        #editbutton {
+            background-color: #FFFF99;
+            color: #000;
+            /* background-color: #3498db; */
+            border: none;
+            transition: transform 0.5s;
+    
+        }
+    
+        #detailsbutton {
+            background-color: #419edd;
+            color: #000;
+            /* background-color: #1e3799; */
+            border: none;
+            transition: transform 0.5s;
+        }
+    
+        #editbutton:hover,
+        #detailsbutton:hover {
+            transform: scale(1.1);
+        }
+    
+        .cell-actions {
+            display: flex;
+            justify-content: space-around;
+        }
+    
+        .active-status {
+            background-color: #95eea5;
+            color: #09711c;
+        }
+    
+        .inactive-status {
+            background-color: #ec8080;
+            color: #8a0404;
+        }
+        </style>
+      
 {% endblock %}

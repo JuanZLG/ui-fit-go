@@ -68,13 +68,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Documento</th>
-                       
-                        
-                        <th>Nombre Completo</th>
-                        
-                        
+                        <th>Nombre</th>
                         <th>Celular</th>
-                        <th>Lugar de residencia</th>
+                        <th>Residencia</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -86,10 +82,7 @@
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
-
-
                         <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
-                    
                         <td>
                             <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
                                 data-cliente-id="{{ cliente.id_cliente }}"
@@ -105,10 +98,8 @@
                             <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
                                 id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                                 <a href="{% url 'verCliente' cliente.id_cliente %}" class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                                
-                                
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}

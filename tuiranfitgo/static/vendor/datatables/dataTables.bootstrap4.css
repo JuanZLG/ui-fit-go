@@ -7,6 +7,12 @@ table.dataTable {
   border-collapse: separate !important;
   border-spacing: 0;
 }
+
+.paginate_button.page-item.active {
+  background-color: black !important;
+  color: white !important;
+}
+
 table.dataTable td,
 table.dataTable th {
   -webkit-box-sizing: content-box;
@@ -208,3 +214,4 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:first
 div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-child {
   padding-right: 0;
 }
+
