@@ -88,6 +88,10 @@
     color: white;
 }
 
+.paginate_button .page-item.active{
+    background-color:black !important
+  }
+
 .container-fluid{
     height:100vh;   
 }
@@ -101,12 +105,12 @@
     background-color: rgb(158, 153, 153);
 }
 
-/* .selected-page{
+.selected-page{
     background-color: black !important;
     color: white;
 }
 
-#dataTable .paginate_button:not(.active) {
+/* #dataTable .paginate_button:not(.active) {
     background-color: white;
     color: black;
 } */
