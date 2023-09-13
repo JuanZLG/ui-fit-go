@@ -64,6 +64,7 @@ def verDetallesProveedor(request):
                     'nombre_proveedor': proveedor.nombre_proveedor,
                     'telefono': proveedor.telefono,
                     'correo': proveedor.correo,
+                    'estado': proveedor.estado,
                 }
                 return JsonResponse({'success': data})
             except Proveedores.DoesNotExist:
