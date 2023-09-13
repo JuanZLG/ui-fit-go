@@ -1,0 +1,36 @@
+body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    animation: fadeOut 2s forwards;
+}
+
+h1 {
+    font-size:150px;
+    font-weight: bold;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 10px rgb(255, 255, 255); /* Sombra blanca */
+    animation: titilar 2s infinite alternate;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes titilar {
+    0% {
+        text-shadow: 0 0 10px rgb(255, 255, 255);
+    }
+    100% {
+        text-shadow: 0 0 30px rgb(255, 255, 255); /* Aumentar el brillo */
+    }
+}

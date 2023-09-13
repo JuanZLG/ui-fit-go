@@ -141,3 +141,40 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': 'Registro de compra no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+ # Asegúrate de importar tu modelo correctamente
+
+def obtener_detalles_compra(request, compra_id):
+    # Obtén la compra por su ID
+    detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
+
+    # Prepara los detalles de la compra en un formato adecuado
+    detalles = [
+        {
+            'producto': detalle.id_producto.nombre_producto,
+            'precioUnitario': str(detalle.precio_uni),
+            'totalProducto': str(detalle.precio_tot),
+            'cantidad': detalle.cantidad
+            
+        }
+        for detalle in detalles_compra
+    ]
+
+    # Prepara los datos generales de la compra
+    compra = detalles_compra.first().id_compra  # Suponemos que todos los detalles pertenecen a la misma compra
+    datos_generales = {
+        'proveedor': compra.id_proveedor.nombre_proveedor,
+        'fechaRegistro': compra.fechareg,
+        'estado': 'Activo' if compra.estado == 1 else 'Inactivo',
+    }
+
+    # Crea un diccionario con los datos generales y los detalles de la compra
+    respuesta = {
+        'proveedor': datos_generales['proveedor'],
+        'fechaRegistro': str(datos_generales['fechaRegistro']),
+        'estado': datos_generales['estado'],
+        'detalles': detalles,
+    }
+
+    # Devuelve la respuesta como JSON
+    return JsonResponse(respuesta)
