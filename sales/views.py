@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos

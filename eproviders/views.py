@@ -15,24 +15,23 @@ def crear_proveedor(request):
         proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo)
         return JsonResponse({'success': True})
 
+from django.views.decorators.csrf import csrf_exempt
 
 
-def editar_proveedor(request, id_proveedor):
+@csrf_exempt
+def editar_proveedor(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre_proveedor']
+        id_proveedor = request.POST['proveedor_id']
+        nombre_proveedor = request.POST['nombre_proveedor']
         telefono = request.POST['telefono']
         correo = request.POST['correo']
-        estado = request.POST['estado']
         Proveedores.objects.filter(id_proveedor=id_proveedor).update(
-            nombre_proveedor=nombre,
+            nombre_proveedor=nombre_proveedor,
             telefono=telefono,
             correo=correo,
-            estado=estado
         )
         response_data = {'success': True}
         return JsonResponse(response_data)    
-    proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
-    return render(request, 'editProvider.html', {"proveedor":proveedor}) 
 
 
 
