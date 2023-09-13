@@ -6,7 +6,7 @@ from django.views.generic import RedirectView
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='/admin/', permanent=False)),
-    path('admin/', TemplateView.as_view(template_name='dashboard.html'), name='dashboard'),
+    path('admin/', TemplateView.as_view(template_name='tgoEntrance.html'), name='dashboard'),
     path('admin', include('dashboard.urls')),
     path('admin/products/', include('products.urls')),
     path('admin/providers/', include('eproviders.urls')),  
