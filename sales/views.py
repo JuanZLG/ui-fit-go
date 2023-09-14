@@ -13,30 +13,34 @@ def crear_venta(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         documento = data.get('documento', '')
+        totalVenta = data.get('totalVenta', '')
         productos = data.get('productos', [])
 
         cliente = Clientes.objects.filter(documento=documento).first()
-        venta = Ventas.objects.create(id_cliente=cliente)
+        venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
         for producto_datos in productos:
-            producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
+            nombre_producto = producto_datos['nombre']
+            cantidad_vendida = producto_datos['cantidad']
+
+            producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+
+            if producto:
+                producto.cantidad -= cantidad_vendida
+                producto.save()
+
+            # Crear un registro en Detalleventa
             detalle = Detalleventa.objects.create(
                 id_producto=producto,
                 id_venta=venta,
-                cantidad=producto_datos['cantidad'],
+                cantidad=cantidad_vendida,
                 precio_uni=producto_datos['precioUnidad'],
                 precio_tot=producto_datos['precioTotal']
             )
-
         response_data = {'success': True}  
         return JsonResponse(response_data)
 
     return render(request, 'createSales.html')
     
-
-
-
-
-
 
 
 
@@ -147,6 +151,12 @@ def cambiarEstado(request):
 
 
 
+#  1. ENLACE URL CON ID DE LA VENTA
+#  2. IDENTIFICAR VENTA MEDIANTE EL ID - TOMAR FECHA Y TOTAL DE VENTA
+#  3. IDENTIFICAR DETALLEVENTA MEDIANTE ID DE VENTA O FORANEA - TOMAR DATOS RESTANTE DE COMPRA
+#  4. ENVIAR INFORMACION POR RENDER, TOMAR EN HTML Y MOSTRAR VALORES INICIALES
+#  5. METODO POST, UPDATE - APLICAR RESTAR, SUMAR EN PRODUCTOS
+
 def editar_venta(request, id_venta):
     if request.method == 'POST':
         nombre = request.POST['nombre_proveedor']
@@ -165,27 +175,3 @@ def editar_venta(request, id_venta):
     return render(request, 'editSales.html', {"venta":venta}) 
 
 
-@csrf_exempt
-def editar_venta(request, id_venta):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        documento = data.get('documento', '')
-        productos = data.get('productos', [])
-
-        cliente = Clientes.objects.filter(documento=documento).first()
-        venta = Ventas.objects.update(id_cliente=cliente)
-        for producto_datos in productos:
-            producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
-            detalle = Detalleventa.objects.update(
-                id_producto=producto,
-                id_venta=venta,
-                cantidad=producto_datos['cantidad'],
-                precio_uni=producto_datos['precioUnidad'],
-                precio_tot=producto_datos['precioTotal']
-            )
-
-        response_data = {'success': True}  
-        return JsonResponse(response_data)
-
-    return render(request, 'editSales.html')
-    

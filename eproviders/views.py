@@ -25,20 +25,20 @@ def editar_proveedor(request):
     if request.method == 'POST':
         proveedor_id = request.POST.get('proveedor_id')
         form_data = request.POST.get('formData')
-        form_data_dict = parse_qs(form_data)
 
-        nombre_proveedor = form_data_dict.get('nombre_proveedor', [''])[0]
-        telefono = form_data_dict.get('telefono', [''])[0]
-        correo = form_data_dict.get('correo', [''])[0]
+        print("nombre_proveedor:", form_data.nombre_proveedor)
+        print("telefono:",form_data.telefono)
+        print("correo:", form_data.correo)
 
         Proveedores.objects.filter(id_proveedor=proveedor_id).update(
-            nombre_proveedor=nombre_proveedor,
-            telefono=telefono,
-            correo=correo,
+            nombre_proveedor=form_data.nombre_proveedor,
+            telefono=form_data.telefono,
+            correo=form_data.correo,
         )
 
         response_data = {'success': True}
         return JsonResponse(response_data)
+
 
 
 
