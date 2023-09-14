@@ -31,16 +31,18 @@
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable">
                 <thead class="theads">
                     <tr>
+                        <th>ID</th>
                         <th>Nombre del proveedor</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
-                        <th>Modificar</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for proveedor in proveedores %}
                     <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
+                        <td>{{ proveedor.id_proveedor }}</td>
                         <td>{{ proveedor.nombre_proveedor }}</td>
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>
@@ -82,8 +84,8 @@
             var nuevoEstado = $(this).data("nuevo-estado");
 
             Swal.fire({
-                title: 'Cambiar estado',
-                text: '¿Estás seguro de que deseas cambiar el estado?',
+                title: 'Estado',
+                text: '¿Desea cambiar el estado de este registro?',
                 showCancelButton: true,
                 confirmButtonColor: '#419edd',
                 cancelButtonColor: '#ba4d4d',
@@ -338,7 +340,7 @@
 
 <dialog id="proveedorDialogCrear" class="proveedorDialog">
     <div class="modal-container-header">
-        <h2>Crear del Proveedor</h2>
+        <h2>Agregar Proveedor</h2>
         <button class="cerrar-proveedor" type="button" id="cerrarCrearProveedor">
             <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"></path>
@@ -358,7 +360,7 @@
                 <span class="error-message nombre_proveedor-error"></span>
             </div>
             <div class="form-row mb-3">
-                <label for="telefono">Número de contacto *</label>
+                <label for="telefono">Número de Contacto *</label>
                 <input type="text" class="form-control telefono" name="telefono" placeholder="Número"
                     oninput="this.value = this.value.replace(/[^0-9]/g, '');" data-error-class="telefono-error">
                 <span class="error-message telefono-error"></span>
@@ -370,7 +372,7 @@
                 <span class="error-message correo-error"></span>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-secondary" type="submit">Crear Proveedor</button>
+                <button class="btn btn-secondary" type="submit">Guardar</button>
             </div>
         </form>
     </div>
@@ -494,7 +496,7 @@
             if (response) {
                 setTimeout(function () {
                     alert('Datos actualizados con éxito.');
-                }, 500); // Puedes ajustar el tiempo en milisegundos según tus necesidades
+                }, 500); 
             }
         }, 300);
     }
@@ -503,7 +505,6 @@
 
 <script>
     $(document).ready(function () {
-        // Función para validar que todos los campos estén llenos
         function validarCamposLlenos() {
             let camposLlenos = true;
             const nombreValue = $('.nombre_proveedor').val();

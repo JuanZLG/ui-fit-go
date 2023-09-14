@@ -5,5 +5,6 @@ from . import views
 urlpatterns=[
     path('', views.Home, name='productos'), 
     path('addproduct/', views.createProduct, name="agregarProducto"),
-    path('productChangeState/', views.cambiarEstadoProducto, name='cambiarEstadoProductos')
+    # path('Editar/', views.editar_proveedor, name='editarProveedor'),
+    path('Estado/', views.cambiarEstadoDeProducto, name='cambiarEstadoDeProducto'),
 ]

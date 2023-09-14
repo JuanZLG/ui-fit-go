@@ -33,7 +33,6 @@ class Productos(models.Model):
     estado = models.IntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=3)
 
-
     class Meta:
         managed = False
         db_table = 'productos'

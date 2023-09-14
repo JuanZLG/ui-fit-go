@@ -119,8 +119,8 @@
             var nuevoEstado = $(this).data("nuevo-estado");
 
             Swal.fire({
-                title: 'Confirmar',
-                text: '¿Estás seguro de que deseas cambiar el estado?',
+                title: 'Estado',
+                text: '¿Desea cambiar el estado de este registro?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -140,7 +140,6 @@
                             location.reload();
                         },
                         error: function(error) {
-                            // Manejar el error si es necesario
                         }
                     });
                 }

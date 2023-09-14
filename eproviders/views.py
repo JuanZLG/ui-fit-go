@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from urllib.parse import parse_qs
+from django.views.decorators.http import require_POST
 from .models import Proveedores
 
 
@@ -15,13 +19,6 @@ def crear_proveedor(request):
         proveedor = Proveedores.objects.create(nombre_proveedor=nombre, telefono=telefono, correo=correo)
         return JsonResponse({'success': True})
 
-from django.views.decorators.csrf import csrf_exempt
-
-import json
-from urllib.parse import parse_qs
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from .models import Proveedores
 
 @csrf_exempt
 def editar_proveedor(request):
