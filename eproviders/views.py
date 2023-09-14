@@ -29,8 +29,6 @@ def editar_proveedor(request):
         proveedor_id = request.POST.get('proveedor_id')
         form_data = request.POST.get('formData')
 
-      
-
         print("nombre_proveedor:", form_data.nombre_proveedor)
         print("telefono:",form_data.telefono)
         print("correo:", form_data.correo)

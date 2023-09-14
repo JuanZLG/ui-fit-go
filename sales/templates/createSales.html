@@ -113,12 +113,6 @@
         border-radius: 20px !important;
     }
 
-    .table tbody td input,
-    .cont-cliente input {
-        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
-
-    }
-
     .producto-row {
         border-radius: 19px 19px 7px 7px;
     }
@@ -373,6 +367,7 @@
                             suggestions.addClass("sugerencia").show();
                         } else {
                             suggestions.hide();
+                            calcularTotalVenta()
                         }
                     },
                     error: function () {
@@ -412,8 +407,8 @@
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).text();
             nombreProducto =
-                nombreProducto.charAt(0).toUpperCase() +
-                nombreProducto.slice(1).toLowerCase();
+            nombreProducto.charAt(0).toUpperCase() +
+            nombreProducto.slice(1).toLowerCase();
             currentRow.find(".producto").val(nombreProducto);
             currentRow.find(".producto-suggestions").empty().hide();
             currentRow.find(".precioUnidad").removeClass("is-invalid");
@@ -423,7 +418,7 @@
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).val();
-            currentRow.find(".error-produ").text(""); // Limpiar mensaje de error
+            currentRow.find(".error-produ").text(""); 
             if (nombreProducto.length >= 3) {
                 // Validar el producto antes de obtener el precio
                 validarProducto(currentRow, nombreProducto);
@@ -445,10 +440,12 @@
                         obtenerPrecioProducto(currentRow, nombreProducto);
                     } else {
                         currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
+                        calcularTotalVenta();
                     }
                 },
                 error: function () {
                     currentRow.find(".cantidad, .precioTotal").val("");
+                    calcularTotalVenta();
                 },
             });
         }
@@ -462,7 +459,10 @@
                 },
                 success: function (data) {
                     if ("precio" in data) {
-                        let precioU = currentRow.find(".precioUnidad").val(parseFloat(data.precio).toLocaleString())
+                        let precioUValue = parseInt(data.precio).toLocaleString();
+                        let precioTotalFormatted = "$ " + precioUValue;
+                        let precioU = currentRow.find(".precioUnidad").val(precioTotalFormatted);
+
                     } else {
                         currentRow.find(".precioUnidad").addClass("is-invalid");
                     }
@@ -483,13 +483,13 @@
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = currentRow.find(".precioUnidad").val().replace(",", "");
+            let precioUnidad = currentRow.find(".precioUnidad").val().replace(/[^\d.-]/g, '');
             let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
                 let totalProductoFormateado = total.toLocaleString();
-                currentRow.find(".precioTotal").val(totalProductoFormateado);
+                currentRow.find(".precioTotal").val("$ " + totalProductoFormateado);
                 calcularTotalVenta();
             } else {
                 currentRow.find(".precioTotal").val("");
@@ -548,16 +548,14 @@
             let totalVenta = 0; // Inicializa como número
 
             $(".producto-row").each(function () {
-                let precioTotal = parseFloat(
-                    $(this).find(".precioTotal").val().replace(",", "")
-                );
+                let precioTotal = parseInt($(this).find(".precioTotal").val().replace(/[^\d.-]/g, ''));
+
                 if (!isNaN(precioTotal)) {
                     totalVenta += precioTotal;
                 }
             });
 
             let totalVentaFormateado = "$ " + totalVenta.toLocaleString();
-
             $("#totalVenta").val(totalVentaFormateado);
         }
 
@@ -566,6 +564,8 @@
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $("#documentoDato").text();
+            const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[^\d.-]/g, ''));
+
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
 
@@ -590,6 +590,7 @@
                 const precioUnidad = row.find(".precioUnidad").val();
                 const precioUnidadInput = row.find(".precioUnidad");
                 const precioTotalInput = row.find(".precioTotal");
+
 
                 const productoValue = productoInput.val();
                 const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
@@ -620,13 +621,13 @@
                         nombre: productoValue,
                         precioUnidad: precioUnidadValue,
                         precioTotal: precioTotalValue,
-                        cantidad: cantidadValue,
+                        cantidad: cantidadValue
                     });
                 }
             });
 
             return camposLlenos
-                ? { documento: documentoValue, productos: productos }
+                ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
                 : null;
         }
 

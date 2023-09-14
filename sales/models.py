@@ -98,7 +98,7 @@ class Ventas(models.Model):
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
     fechareg = models.DateTimeField(default=timezone.now)
     estado = models.IntegerField(default=True)
-     
+    totalVenta = models.IntegerField()
     class Meta:
         managed = False
         db_table = 'ventas'
