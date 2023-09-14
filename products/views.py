@@ -13,6 +13,7 @@ def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
 
+
 def createProduct(request):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -34,7 +35,7 @@ def createProduct(request):
 
         Productos.objects.create(id_categoria=c.id_categoria, id_marca=m.id_marca, nombre_categoria=nombre, descripcion=descripcion, cantidad=cantidad, fechaven=fechavencimiento, sabor=sabor, presentacion=tamano, precio=precio)
         return JsonResponse({'success': True})
-    return render(request, 'productsHome.html', {"marcas":marcas,"categorias":categorias, "Products":product})
+    return render(request, 'createProducts.html', {"marcas":marcas,"categorias":categorias})
 
 
 @csrf_exempt

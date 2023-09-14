@@ -3,87 +3,106 @@
 {% block title %} Agregar Producto {%endblock %} 
 
 {% block body %}
+<style>
+  #producto-form-create {
+  
+    overflow-y: hidden; /* Habilita el scrollbar vertical solo si el contenido del formulario es más largo que la ventana */
+  }
+</style>
+<center><h1 class="h3 text-gray-800 mb-4">Agregar Producto</h1></center>
 
-<h1 class="h3 mx-5 text-gray-800">Agregar Producto</h1>
-
-<div class="card shadow mb-4">
-  <div
-    class="card-header py-3"
-    style="
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-center;
-    ">
-
-    <form class="form-control" method="POST" action="addAProduct">
+<div class="card shadow">
+  <div class="container p-3">
+    <form class="form" method="post">
       {% csrf_token %}
-      <div class="form-row ">
-        {% comment %} <div class="col-md-4 mb-3">
-          <label>Categoría</label>
-          <select class="form-select" aria-label="Default select example" name="categoria">
-            {% for c in categorias %}
-            <option value="{{ c.nombre_categoria }}">{{ c.nombre_categoria }}</option>
-            {% endfor %}
-          </select>
-        </div> {% endcomment %}
-        <div class="col-md-4 mb-3">
-          <label>Marcas</label>
-          <select class="form-select" aria-label="Default select example" name="categoria">
-            {% for m in marcas %}
-            <option value="{{ m.nombre_marca }}">{{ m.nombre_marca }}</option>
-            {% endfor %}
-          </select>
-          <div class="valid-feedback">Looks good!</div>
+      
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select class="form-select" aria-label="Default" name="categoria" id="categoria">
+              {% for c in categorias %}
+              <option value="{{ c.id_categoria }}">{{ c.nombre_categoria }}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
-        <div class="col-md-4 mb-3">
-          <label>Nombre del Producto</label>
-          <input type="text" class="form-control" id="nombreproducto" placeholder="Ingrese el nombre del producto"/>
+  
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label>Marca</label>
+            <select class="form-select" aria-label="Default select example" name="marca" id="marca">
+              {% for m in marcas %}
+              <option value="{{ m.id_marca }}">{{ m.nombre_marca }}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
       </div>
+  
+      <div class="form-group">
+        <label>Nombre del Producto</label>
+        <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" placeholder="Ingrese el nombre del producto"/>
+      </div>
+  
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea class="form-control" id="descripcion" name="descripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
+      </div>
+  
       <div class="form-row">
         <div class="col-md-3 mb-3">
-          <label for="descripcion">Descripción</label>
-          <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Escribe aquí tu descripción"></textarea>
-          <div class="invalid-feedback">Please provide a valid city</div>
-        <div class="col-md-3 mb-3">
-          <label for="validationServer04">State</label>
-          <input
-            type="text"
-            class="form-control is-invalid"
-            id="validationServer04"
-            placeholder="State"
-            required
-          />
-          <div class="invalid-feedback">Please provide a valid state.</div>
+          <div class="form-group">
+            <label>Fecha de Vencimiento</label>
+            <input type="date" class="form-control" min="" id="fechaven" name="fechaven"/>
+          </div>
         </div>
+      
+        <div class="col-md-1 mb-3">
+          <div class="form-group">
+            <label for="cant">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad"/>
+            <div class="invalid-feedback">Por favor, digite una cantidad válida.</div>
+          </div>
+        </div>
+      
         <div class="col-md-3 mb-3">
-          <label for="validationServer05">Zip</label>
-          <input
-            type="text"
-            class="form-control is-invalid"
-            id="validationServer05"
-            placeholder="Zip"
-          />
-          <div class="invalid-feedback">Please provide a valid zip.</div>
+          <div class="form-group">
+            <label for="sabor">Sabor</label>
+            <input type="text" class="form-control" id="sabor" name="sabor" placeholder="Sabor"/>
+            <div class="invalid-feedback">Por favor, digite un sabor válido.</div>
+          </div>
+        </div>
+      
+        <div class="col-md-2 mb-3">
+          <div class="form-group">
+            <label for="services">Servicios</label>
+            <input type="text" class="form-control" id="services" name="services" placeholder="Servicios"/>
+            <div class="invalid-feedback">Por favor, proporcione un servicio válido.</div>
+          </div>
         </div>
       </div>
+  
       <div class="form-group">
-        <div class="form-check">
-          <input
-            class="form-check-input is-invalid"
-            type="checkbox"
-            value=""
-            id="invalidCheck3"
-            required
-          />
-          <label class="form-check-label" for="invalidCheck3">
-            Agree to terms and conditions
-          </label>
-          <div class="invalid-feedback">You must agree before submitting.</div>
-        </div>
+        <label for="price">Precio del Producto</label>
+        <input type="number" class="form-control" id="price" name="price" placeholder="Ingrese un precio"/>
+        <div class="invalid-feedback">Por favor, proporcione un precio válido.</div>
       </div>
-      <button class="btn btn-primary" type="submit">Submit form</button>
+  
+      <div class="text-end">
+        <button class="btn btn-success" type="submit">Agregar Producto</button>
+      </div>
+
     </form>
   </div>
 </div>
+
+
+<script>
+  
+  var fechaActual = new Date().toISOString().split("T")[0];
+
+  document.getElementById("fechaven").min = fechaActual;
+</script>
+
 {% endblock %}

@@ -27,7 +27,33 @@
 </head>
 
 <body id="page-top">
-
+<style>
+    body::-webkit-scrollbar {
+        -webkit-appearance: none;
+      }
+      
+      body::-webkit-scrollbar:vertical {
+        width:10px;
+      }
+      
+      body::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+        display: none;
+      } 
+      
+      body::-webkit-scrollbar:horizontal {
+        height: 10px;
+      }
+      
+      body::-webkit-scrollbar-thumb {
+        background-color: lightgray;
+        border-radius: 20px;
+        border: 2px solid #f1f2f3;
+      }
+      
+      body::-webkit-scrollbar-track {
+        border-radius: 10px;  
+      }
+</style>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -406,6 +432,8 @@
                 </div>
                 <!-- /.container-fluid -->
                 <!-- Footer -->
+                <br>
+                <br>
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
