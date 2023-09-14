@@ -245,7 +245,8 @@
         overflow: hidden;
         box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
         animation: fadeIn 0.3s ease-in-out;
-    }
+        cursor: grab;
+    }   
 
     @keyframes fadeIn {
         from {
@@ -394,7 +395,8 @@
             {% csrf_token %}
             <div class="form-row mb-3">
                 <label for="nombre_proveedor">Nombre del proveedor *</label>
-                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre" data-error-class="nombre_proveedor-error">
+                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre"
+                    data-error-class="nombre_proveedor-error">
                 <span class="error-message nombre_proveedor-error"></span>
             </div>
             <div class="form-row mb-3">
@@ -405,7 +407,8 @@
             </div>
             <div class="form-row mb-3">
                 <label for="correo">Correo Electrónico *</label>
-                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico" data-error-class="correo-error">
+                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico"
+                    data-error-class="correo-error">
                 <span class="error-message correo-error"> </span>
             </div>
             <div class="form-row mb-3">
@@ -605,7 +608,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
 <div class="modal-backdrop"></div>
-<dialog id="verDetallesDialog" class="proveedorDialog">
+<dialog id="verDetallesDialog" class="proveedorDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoProveedorCircle {% if proveedor.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
@@ -666,7 +669,6 @@
             }, 300);
         });
     });
-
 
 </script>
 {% endblock %}

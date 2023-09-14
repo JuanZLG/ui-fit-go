@@ -462,11 +462,7 @@
                 },
                 success: function (data) {
                     if ("precio" in data) {
-                        let precioU = currentRow.find(".precioUnidad").val(
-                            parseFloat(data.precio).toLocaleString(undefined, {
-                                minimumFractionDigits: 0,
-                            })
-                        );
+                        let precioU = currentRow.find(".precioUnidad").val(parseFloat(data.precio).toLocaleString())
                     } else {
                         currentRow.find(".precioUnidad").addClass("is-invalid");
                     }
@@ -487,14 +483,12 @@
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = parseFloat(currentRow.find(".precioUnidad").val());
-            let cantidad = parseFloat(inputCantidad.val());
+            let precioUnidad = currentRow.find(".precioUnidad").val().replace(",", "");
+            let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
-                let totalProductoFormateado = total.toLocaleString(undefined, {
-                    minimumFractionDigits: 3,
-                });
+                let totalProductoFormateado = total.toLocaleString();
                 currentRow.find(".precioTotal").val(totalProductoFormateado);
                 calcularTotalVenta();
             } else {
@@ -552,23 +546,23 @@
         }
 
         function calcularTotalVenta() {
-            let totalVenta = 0;
+            let totalVenta = 0; // Inicializa como número
 
             $(".producto-row").each(function () {
                 let precioTotal = parseFloat(
                     $(this).find(".precioTotal").val().replace(",", "")
                 );
-
                 if (!isNaN(precioTotal)) {
                     totalVenta += precioTotal;
                 }
             });
-            let totalVentaFormateado = totalVenta.toLocaleString(undefined, {
-                minimumFractionDigits: 3,
-            });
 
-            $("#totalVenta").val("$ " + totalVentaFormateado);
+            let totalVentaFormateado = "$ " + totalVenta.toLocaleString();
+
+            $("#totalVenta").val(totalVentaFormateado);
         }
+
+
 
         function validarCamposLlenos() {
             let camposLlenos = true;
@@ -599,10 +593,10 @@
                 const precioTotalInput = row.find(".precioTotal");
 
                 const productoValue = productoInput.val();
-                const precioUnidadValue = parseInt(precioUnidadInput.val());
+                const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
                 const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
 
-                const cantidadValue = parseFloat(cantidadInput.val());
+                const cantidadValue = parseInt(cantidadInput.val());
 
                 if (!precioUnidadValue) {
                     productoInput.addClass("is-invalid");
