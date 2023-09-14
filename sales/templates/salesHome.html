@@ -8,7 +8,7 @@
 
 
 <center>
-    <h1 class="modtitles">Gestion de Ventas</h1>
+    <h1 class="modtitles">Gestión de Ventas</h1>
 </center>
 <br>
 <div class="card shadow mb-4">
@@ -35,6 +35,7 @@
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" cellspacing="3">
                 <thead class="theads">
                     <tr>
+                        <th>ID</th>
                         <th>Cliente</th>
                         <th>Fecha de Registro</th>
                         <th>Estado</th>
@@ -44,6 +45,7 @@
                 <tbody>
                     {% for venta in ventas %}
                     <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
+                        <td>{{ venta.id_venta }}</th>
                         <td class="d-flex ">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
                         <td>
