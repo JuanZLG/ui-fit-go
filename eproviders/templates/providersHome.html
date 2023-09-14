@@ -353,18 +353,20 @@
             {% csrf_token %}
             <div class="form-row mb-3">
                 <label for="nombre_proveedor">Nombre del proveedor *</label>
-                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre">
+                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre"
+                    data-error-class="nombre_proveedor-error">
                 <span class="error-message nombre_proveedor-error"></span>
             </div>
             <div class="form-row mb-3">
                 <label for="telefono">Número de contacto *</label>
                 <input type="text" class="form-control telefono" name="telefono" placeholder="Número"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" data-error-class="telefono-error">
                 <span class="error-message telefono-error"></span>
             </div>
             <div class="form-row mb-3">
                 <label for="correo">Correo Electrónico *</label>
-                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico">
+                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico"
+                    data-error-class="correo-error">
                 <span class="error-message correo-error"></span>
             </div>
             <div class="d-flex justify-content-end mt-3">
@@ -392,18 +394,18 @@
             {% csrf_token %}
             <div class="form-row mb-3">
                 <label for="nombre_proveedor">Nombre del proveedor *</label>
-                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre">
+                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre" data-error-class="nombre_proveedor-error">
                 <span class="error-message nombre_proveedor-error"></span>
             </div>
             <div class="form-row mb-3">
                 <label for="telefono">Número de contacto *</label>
                 <input type="text" class="form-control telefono" name="telefono" placeholder="Número"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" data-error-class="telefono-error">
                 <span class="error-message telefono-error"></span>
             </div>
             <div class="form-row mb-3">
                 <label for="correo">Correo Electrónico *</label>
-                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico">
+                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico" data-error-class="correo-error">
                 <span class="error-message correo-error"> </span>
             </div>
             <div class="form-row mb-3">
@@ -442,8 +444,8 @@
             $(".nombre_proveedor").val($(this).closest("tr").find("td:eq(0)").text());
             $(".telefono").val($(this).closest("tr").find("td:eq(1)").text());
             $(".correo").val($(this).closest("tr").find("td:eq(2)").text());
-            $(".estado").val($(this).closest("tr").find("td:eq(3)").text());
-            
+            // $(".estado").val($(this).closest("tr").find("td:eq(3)").text());
+
         });
 
         $("#cerrarCrearProveedor").click(function () {
@@ -529,16 +531,18 @@
             return camposLlenos;
         }
 
-        // Validación de campos al escribir
         $('.nombre_proveedor, .telefono, .correo').on('input', function () {
             const campo = $(this);
+            const errorClass = campo.data('error-class'); // Obtenemos la clase de error personalizada
+
             const campoValue = campo.val();
 
             if (campoValue) {
                 campo.removeClass('is-invalid');
-                $(`.${campo.attr('class')}-error`).text('');
+                $(`.${errorClass}`).text(''); // Borramos el contenido del elemento de error correspondiente
             }
         });
+
 
         function mostrarError(selector, mensaje) {
             $(selector).addClass('is-invalid');
@@ -577,7 +581,6 @@
             }
             let proveedor_id = $(this).data("prov-id");
             let formData = $('#proveedor-form-edit').serialize();
-            console.log(proveedor_id, nombre_proveedor, telefono, correo)
             $.ajax({
                 type: 'POST',
                 url: "{% url 'editarProveedor' %}",

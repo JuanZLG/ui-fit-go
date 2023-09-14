@@ -17,50 +17,61 @@ def crear_proveedor(request):
 
 from django.views.decorators.csrf import csrf_exempt
 
-
-# @csrf_exempt
-# def editar_proveedor(request):
-#     if request.method == 'POST':
-#         id_proveedor = request.POST['proveedor_id']
-#         nombre_proveedor = request.POST['nombre_proveedor']
-#         telefono = request.POST['telefono']
-#         correo = request.POST['correo']
-#         Proveedores.objects.filter(id_proveedor=id_proveedor).update(
-#             nombre_proveedor=nombre_proveedor,
-#             telefono=telefono,
-#             correo=correo,
-#         )
-#         response_data = {'success': True}
-#         return JsonResponse(response_data)    
-
-
+import json
+from urllib.parse import parse_qs
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Proveedores
 
 @csrf_exempt
 def editar_proveedor(request):
     if request.method == 'POST':
-        id_proveedor = request.POST.get('proveedor_id')
-        nombre_proveedor = request.POST.get('nombre_proveedor')
-        telefono = request.POST.get('telefono')
-        correo = request.POST.get('correo')
+        proveedor_id = request.POST.get('proveedor_id')
+        form_data = request.POST.get('formData')
+        form_data_dict = parse_qs(form_data)
 
-        try:
-            proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
-        except Proveedores.DoesNotExist:
-            response_data = {'success': False, 'message': 'Proveedor no encontrado'}
-            return JsonResponse(response_data, status=404)
+        nombre_proveedor = form_data_dict.get('nombre_proveedor', [''])[0]
+        telefono = form_data_dict.get('telefono', [''])[0]
+        correo = form_data_dict.get('correo', [''])[0]
 
-        # Actualiza los datos del proveedor
-        proveedor.nombre_proveedor = nombre_proveedor
-        proveedor.telefono = telefono
-        proveedor.correo = correo
-        proveedor.save()
+        Proveedores.objects.filter(id_proveedor=proveedor_id).update(
+            nombre_proveedor=nombre_proveedor,
+            telefono=telefono,
+            correo=correo,
+        )
 
-        response_data = {'success': True, 'message': 'Proveedor actualizado correctamente'}
+        response_data = {'success': True}
         return JsonResponse(response_data)
 
-    # Manejar otras solicitudes, como GET, si es necesario
-    return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
+
+
+from django.http import JsonResponse
+
+# @csrf_exempt
+# def editar_proveedor(request):
+#     if request.method == 'POST':
+#         id_proveedor = request.POST.get('proveedor_id')
+#         nombre_proveedor = request.POST.get('nombre_proveedor')
+#         telefono = request.POST.get('telefono')
+#         correo = request.POST.get('correo')
+
+#         try:
+#             proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
+#         except Proveedores.DoesNotExist:
+#             response_data = {'success': False, 'message': 'Proveedor no encontrado'}
+#             return JsonResponse(response_data, status=404)
+
+#         # Actualiza los datos del proveedor
+#         proveedor.nombre_proveedor = nombre_proveedor
+#         proveedor.telefono = telefono
+#         proveedor.correo = correo
+#         proveedor.save()
+
+#         response_data = {'success': True, 'message': 'Proveedor actualizado correctamente'}
+#         return JsonResponse(response_data)
+
+#     # Manejar otras solicitudes, como GET, si es necesario
+#     return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
 
 
 
