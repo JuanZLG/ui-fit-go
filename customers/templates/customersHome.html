@@ -62,7 +62,7 @@
                         <td class="cell-actions">
                             <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
                                 id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a  class="btn btn-sm btn-primary verCliente" data-cliente-id="{{ cliente.id_cliente }}">
+                                <a  class="btn btn-sm btn-primary detailsbutton verCliente" data-cliente-id="{{ cliente.id_cliente }}">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                                 
@@ -201,14 +201,14 @@
         opacity: 0.9;
     }
 
-    .verCliente {
+    #editbutton {
         background-color: #FFFF99;
         color: #000;
         border: none;
         transition: transform 0.5s;
     }
 
-    #detailsbutton {
+    .detailsbutton {
         background-color: #419edd;
         color: #000;
         border: none;

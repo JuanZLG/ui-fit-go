@@ -3,10 +3,11 @@
 {% block title %} Agregar Cliente {% endblock %}
 {% block body %}
     <!-- Begin Page Content -->
-    <h1 class="h3 mb-2 text-gray-800">Agregar Cliente</h1>
-    <br>
+    <center><h1 class="h3 text-gray-800 mb-4">Agregar Cliente</h1></center>
 
-    <form id="cliente-form" method="post">
+<div class="card shadow">
+    <div class="container p-4">
+    <form class="form" id="cliente-form" method="post">
         {% csrf_token %}
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -61,10 +62,11 @@
                 <div class="error-message" id="municipio-error"></div>
             </div>
         </div>
-        <div class="col-md-12">
-            <button class="btn mt-2" style="background-color: black; color: white" type="submit" id="submit-button" disabled>Agregar Cliente</button>
+        <div class="text-end">
+            <button class="btn btn-success" type="submit" id="submit-button" disabled>Agregar Cliente</button>
         </div>
     </form>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
