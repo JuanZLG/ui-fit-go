@@ -5,6 +5,7 @@
 <head>
     {% load static %}
 </head>
+
 <div class="row">
     <div class="col-md-5 mb-3">
         <center>
@@ -13,7 +14,7 @@
     </div>
     <div class="col-md-7 mb-3">
         <div class="row justify-content-end">
-            <div class="col-md-7 mx-5 cont-cliente">
+            <div class="col-md-auto mx-5 cont-cliente">
                 <div class="d-flex justify-content-between ">
                     <label class="mb-2">Cliente *</label>
                     <div class='text-secondary d-flex gap-2' id="cont-docu"></div>
@@ -27,8 +28,9 @@
     </div>
 </div>
 
+
 <div class="container">
-    <form id="venta-form" method="post" {% csrf_token %}>
+    <form id="venta-form" method="post"> {% csrf_token %}
         <div class="card shadow mb-4">
             <div class="card-header">
                 <table class="table">
@@ -163,6 +165,7 @@
     .cont-cliente {
         padding: 15px;
         border-radius: 2px;
+        transition: width 1s ease;
     }
 
     .cont-crear-venta {

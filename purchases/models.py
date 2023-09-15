@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
+from django.utils import timezone
 
 class Categorias(models.Model):
     id_categoria = models.AutoField(primary_key=True)
@@ -32,20 +32,15 @@ class Clientes(models.Model):
         managed = False
         db_table = 'clientes'
 
-
-
-
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
-    fechareg = models.DateTimeField(auto_now_add=True)
-    estado = models.IntegerField(default=1)  # Cambio el tipo de campo a IntegerField y establezco el valor predeterminado
+    fechareg = models.DateTimeField(default=timezone.now)
+    estado = models.IntegerField(default=1) 
 
     class Meta:
         managed = False
         db_table = 'compras'
-
-
 
 
 class Departamentos(models.Model):
@@ -173,7 +168,7 @@ class Usuarios(models.Model):
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateTimeField()
+    fechareg = models.DateTimeField(default=timezone.now)
     estado = models.IntegerField(blank=True, null=True)
 
     class Meta:

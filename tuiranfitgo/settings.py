@@ -75,10 +75,10 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'_tuiranfitt',
+        'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
-        'PORT': '3306'
+        'PASSWORD': 'monitoc10',
+        'PORT': '1010'
     }
 }
 
@@ -106,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-co'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
