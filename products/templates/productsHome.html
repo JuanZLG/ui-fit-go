@@ -10,12 +10,12 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between">
                 <span>
-                  <button type="button" id="crearProducto" class="m-0 btn btn-success btn-icon-split btn-add">
+                  <a href="{% url 'createProducts'%}" class="m-0 btn btn-success btn-icon-split btn-add">
                     <span class="icon">
                         <i class="fa-solid fa-plus"></i>
                         <span class="text">Agregar Producto</span>
                     </span>
-                  </button>
+                </a>
                 </span>
                 <span class="d-flex align-items-end">
                   <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
@@ -62,7 +62,7 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                          <a class="btn btn-sm"
+                          <a class="btn btn-sm editarProducto"
                               id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                               <a class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
                               <i class="fa-solid fa-eye"></i>
@@ -335,36 +335,11 @@
             color: rgb(99, 99, 99);
         }
 
-        .productoDialog::-webkit-scrollbar {
-            -webkit-appearance: none;
-        }
-        
-        .productoDialog::-webkit-scrollbar:vertical {
-            width:10px;
-        }
-        
-        .productoDialog::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
-            display: none;
-        } 
-        
-        .productoDialog::-webkit-scrollbar:horizontal {
-            height: 10px;
-        }
-        
-        .productoDialog::-webkit-scrollbar-thumb {
-            background-color: lightgray;
-            border-radius: 20px;
-            border: 2px solid #f1f2f3;
-        }
-        
-        .productoDialog::-webkit-scrollbar-track {
-            border-radius: 10px;  
-        }
-
 
       </style>
       
       <!--Crear Producto -->
+      <div class="modal-backdrop"></div>
       <dialog id="productoDialogCrear" class="productoDialog">
           <div class="modal-container-header">
             {% comment %} <div class="card shadow p-3"> {% endcomment %}
@@ -406,7 +381,7 @@
         
                     <div class="form-group">
                       <label>Nombre del Producto</label>
-                      <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" placeholder="Ingrese el nombre del producto"/>
+                      <input type="text" class="form-control nombre_producto" id="nombre_producto" name="nombre_producto" placeholder="Ingrese el nombre del producto"/>
                     </div>
         
                     <div class="form-group">
@@ -423,7 +398,7 @@
                       <div class="col-md-4 mb-3">
                         <label for="cant">Cantidad</label>
                         <input
-                          type="numeric"
+                          type="number"
                           class="form-control"
                           id="cantidad" name="cantidad"
                           placeholder="Cantidad"
@@ -486,7 +461,7 @@
                   $(".modal-backdrop").show();
                   $(".modal-backdrop").addClass("fadeInBack");
       
-                  $(".nombre_proveedor").val($(this).closest("tr").find("td:eq(0)").text());
+                  $(".nombre_producto").val($(this).closest("tr").find("td:eq(0)").text());
                   $(".telefono").val($(this).closest("tr").find("td:eq(1)").text());
                   $(".correo").val($(this).closest("tr").find("td:eq(2)").text());
                   // $(".estado").val($(this).closest("tr").find("td:eq(3)").text());
