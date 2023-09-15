@@ -146,3 +146,30 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': 'Cliente no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+def verDetallesCliente(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        id_cliente = request.GET.get('cliente_id')
+        
+        if id_cliente:
+            try:
+                cliente = Clientes.objects.get(id_cliente=id_cliente)
+                # Si el cliente se encuentra, puedes devolver sus detalles en formato JSON
+                data = {
+                    'nombres': cliente.nombres,
+                    'apellidos': cliente.apellidos,
+                    'documento': cliente.documento,
+                    'celular': cliente.celular,
+                    'barrio': cliente.barrio,
+                    'direccion': cliente.direccion,
+                    'estado': cliente.estado,
+                    'municipio': cliente.id_municipio.nombre_municipio,
+                    'departamento': cliente.id_municipio.id_departamento.nombre_departamento,
+                }
+                return JsonResponse({'success': data})
+            except Clientes.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Cliente no encontrado'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'ID de cliente no proporcionado'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})

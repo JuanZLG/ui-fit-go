@@ -49,13 +49,6 @@
             </select>
         </div>
         
-        
-
-        
-        
-        
-        
-        
         <div class="form-group">
             <label for="departamento">Departamento *</label>
             <select class="form-control" id="departamento" name="nombre_departamento">
@@ -78,6 +71,15 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+
+        $("#edit-client-dialog-button").click(function () {
+            $("#edit-client-dialog").show();
+        });
+
+        // Función para cerrar el diálogo de edición
+        $("#close-edit-dialog").click(function () {
+            $("#edit-client-dialog").hide();
+        });
 
 
         $("#id_estado").change(function () {

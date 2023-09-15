@@ -3,41 +3,6 @@
 {% block body %}
 
 
-
-<!-- Botón para abrir el modal -->
-
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Hola</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-            <h5>Detalles del Cliente</h5>
-            <div id="cliente-details">
-               <!-- detalleCliente.html -->
-               <div class="modal-body">
-                <h5>Detalles del Cliente</h5>
-                <p><strong>Documento:</strong> <span id="cliente-documento"></span></p>
-                <p><strong>Nombres:</strong> <span id="cliente-nombres"></span></p>
-                <p><strong>Apellidos:</strong> <span id="cliente-apellidos"></span></p>
-                <p><strong>Celular:</strong> <span id="cliente-celular"></span></p>
-                <!-- Otros detalles del cliente aquí -->
-            </div>
-            
-
-            </div>
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
   
 <center>
     <h1 class="modtitles">Gestión de Clientes</h1>
@@ -97,9 +62,13 @@
                         <td class="cell-actions">
                             <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
                                 id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="{% url 'verCliente' cliente.id_cliente %}" class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
+                                <a  class="btn btn-sm btn-primary verCliente" data-cliente-id="{{ cliente.id_cliente }}">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                
+                                
+                                
+                                
                         </td>
                     </tr>
                     {% endfor %}
@@ -109,6 +78,11 @@
     </div>
 </div>
 </div>
+
+
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -148,34 +122,13 @@
     });
 
     // JavaScript para cargar los detalles del cliente cuando se hace clic en "Details"
-    $(".detailsbutton").click(function() {
-        var clienteId = $(this).data("cliente-id");
-
-        // Realiza una solicitud AJAX para cargar los detalles del cliente
-        $.ajax({
-            url: "{% url 'verCliente' 0 %}".replace('0', clienteId), // URL de la vista de verCliente
-            method: "GET",
-            success: function(response) {
-                // Actualiza los elementos HTML con los detalles del cliente
-                $("#cliente-documento").text(response.cliente.documento);
-                $("#cliente-nombres").text(response.cliente.nombres);
-                $("#cliente-apellidos").text(response.cliente.apellidos);
-                $("#cliente-celular").text(response.cliente.celular);
-                // Otros campos del cliente se pueden actualizar de manera similar aquí
-
-                // Muestra el modal con los detalles del cliente
-                $("#exampleModal").modal("show");
-            },
-            error: function(error) {
-                // Manejar el error si es necesario
-            }
-        });
-    });
+    
 </script>
 
-<style>
 
-.table {
+
+<style>
+    .table {
         width: 80%;
     }
 
@@ -235,7 +188,6 @@
 
     tr.inactivo {
         background-color: #ccc;
-        /* Cambia el fondo a un tono más claro */
         color: #676666;
     }
 
@@ -249,19 +201,16 @@
         opacity: 0.9;
     }
 
-    #editbutton {
+    .verCliente {
         background-color: #FFFF99;
         color: #000;
-        /* background-color: #3498db; */
         border: none;
         transition: transform 0.5s;
-
     }
 
     #detailsbutton {
         background-color: #419edd;
         color: #000;
-        /* background-color: #1e3799; */
         border: none;
         transition: transform 0.5s;
     }
@@ -285,6 +234,196 @@
         background-color: #ec8080;
         color: #8a0404;
     }
-    </style>
+</style>
+
+<style>
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.833);
+        z-index: 100;
+        display: none;
+        animation: fadeInBack 0.3s ease-in-out;
+    }
+
+    .clienteDialog {
+        max-width: 70%;
+        width: 30%;
+        min-height: 10vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fadeInBack {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fadeOut {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .clienteDialog .modal-container-header {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .clienteDialog h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        gap: 8px;
+    }
+
+    .cerrar-cliente {
+        padding: 0;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.15s ease;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .estadoClienteCircle {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+    }
+
+    .estadoClienteCircle.activo {
+        background-color: #72d072;
+        /* Color para estado activo */
+    }
+
+    .estadoClienteCircle.inactivo {
+        background-color: #ba4d4d;
+        /* Color para estado inactivo */
+    }
+
+    .clienteDialog section {
+        padding: 20px;
+    }
+
+    .clienteDialog section p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #222222;
+    }
+
+    .clienteDialog section p span {
+        color: rgb(99, 99, 99);
+    }
+</style>
+
+<dialog id="verDetallesClienteDialog" class="clienteDialog dragHandle">
+    <form method="dialog">
+        <div class="modal-container-header">
+            <div class="estadoClienteCircle {% if cliente.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <h2>Detalles del Cliente</h2>
+            <button class="cerrar-cliente" type="button" id="cerrarDetallesCliente">
+                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+        <section>
+            <p>Nombre del Cliente: <span id="nombreCliente"></span></p>
+            <p>Documento: <span id="documentoCliente"></span></p>
+            <p>Celular: <span id="celularCliente"></span></p>
+            <p>Barrio: <span id="barrioCliente"></span></p>
+            <p>Dirección: <span id="direccionCliente"></span></p>
+            <p>Estado: <span id="estadoCliente"></span></p>
+            <p>Departamento: <span id="departamentoCliente"></span></p>
+            <p>Municipio: <span id="municipioCliente"></span></p>
+        </section>
+    </form>
+</dialog>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".verCliente").click(function () {
+            var clienteId = $(this).data("cliente-id");
+            $.ajax({
+                url: "{% url 'ver_detalles_cliente' %}",
+                data: {
+                    cliente_id: clienteId
+                },
+                method: "GET",
+                success: function (response) {
+                    var cliente = response.success;
+                    $("#nombreCliente").text(cliente.nombres + ' ' + cliente.apellidos);
+                    $("#documentoCliente").text(cliente.documento);
+                    $("#celularCliente").text(cliente.celular);
+                    $("#barrioCliente").text(cliente.barrio);
+                    $("#direccionCliente").text(cliente.direccion);
+                    $("#estadoCliente").text(cliente.estado == 1 ? 'Activo' : 'Inactivo');
+                    $("#departamentoCliente").text(cliente.departamento);
+                    $("#municipioCliente").text(cliente.municipio);
+
+                    if (cliente.estado == 1) {
+                        $(".estadoClienteCircle").addClass("activo").removeClass("inactivo");
+                    } else {
+                        $(".estadoClienteCircle").addClass("inactivo").removeClass("activo");
+                    }
+                    document.getElementById("verDetallesClienteDialog").showModal();
+                    $(".clienteDialog").addClass("fadeIn");
+                    $(".modal-backdrop").show();
+                    $(".modal-backdrop").addClass("fadeInBack");
+                },
+            });
+        });
+
+        $("#cerrarDetallesCliente").click(function () {
+            $(".clienteDialog").addClass("fadeOut");
+            $(".modal-backdrop").addClass("fadeOut");
+            setTimeout(function () {
+                document.getElementById("verDetallesClienteDialog").close();
+                $(".clienteDialog").removeClass("fadeOut");
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").removeClass("fadeOut");
+            }, 300);
+        });
+    });
+
+</script>
+
 
 {% endblock %}
