@@ -3,17 +3,17 @@
 {% block title %} Agregar Producto {%endblock %} 
 
 {% block body %}
-<style>
+{% comment %} <style>
   #producto-form-create {
   
     overflow-y: hidden; /* Habilita el scrollbar vertical solo si el contenido del formulario es más largo que la ventana */
   }
-</style>
+</style> {% endcomment %}
 <center><h1 class="h3 text-gray-800 mb-4">Agregar Producto</h1></center>
 
 <div class="card shadow">
-  <div class="container p-3">
-    <form class="form" method="post">
+  <div class="container p-4">
+    <form class="form" id="producto-form" method="post">
       {% csrf_token %}
       
       <div class="form-row">
@@ -41,13 +41,15 @@
       </div>
   
       <div class="form-group">
-        <label>Nombre del Producto</label>
+        <label>Nombre</label>
         <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" placeholder="Ingrese el nombre del producto"/>
+        <div class="error-message" id="nombre_producto-error"></div>
       </div>
   
       <div class="form-group">
         <label for="descripcion">Descripción</label>
         <textarea class="form-control" id="descripcion" name="descripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
+        <div class="error-message" id="descripcion-error"></div>
       </div>
   
       <div class="form-row">
@@ -55,14 +57,15 @@
           <div class="form-group">
             <label>Fecha de Vencimiento</label>
             <input type="date" class="form-control" min="" id="fechaven" name="fechaven"/>
+            <div class="error-message" id="fechaven-error"></div>
           </div>
         </div>
       
-        <div class="col-md-1 mb-3">
+        <div class="col-md-2 mb-3">
           <div class="form-group">
             <label for="cant">Cantidad</label>
             <input type="number" class="form-control" id="cantidad" name="cantidad"/>
-            <div class="invalid-feedback">Por favor, digite una cantidad válida.</div>
+            <div class="error-message" id="cantidad-error"></div>
           </div>
         </div>
       
@@ -70,7 +73,7 @@
           <div class="form-group">
             <label for="sabor">Sabor</label>
             <input type="text" class="form-control" id="sabor" name="sabor" placeholder="Sabor"/>
-            <div class="invalid-feedback">Por favor, digite un sabor válido.</div>
+            <div class="error-message" id="sabor-error"></div>
           </div>
         </div>
       
@@ -78,31 +81,122 @@
           <div class="form-group">
             <label for="services">Servicios</label>
             <input type="text" class="form-control" id="services" name="services" placeholder="Servicios"/>
-            <div class="invalid-feedback">Por favor, proporcione un servicio válido.</div>
+            <div class="error-message" id="services-error"></div>
           </div>
         </div>
       </div>
-  
+      
       <div class="form-group">
         <label for="price">Precio del Producto</label>
         <input type="number" class="form-control" id="price" name="price" placeholder="Ingrese un precio"/>
-        <div class="invalid-feedback">Por favor, proporcione un precio válido.</div>
+        <div class="error-message" id="price-error"></div>
       </div>
   
       <div class="text-end">
-        <button class="btn btn-success" type="submit">Agregar Producto</button>
+        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
       </div>
 
     </form>
   </div>
 </div>
 
-
 <script>
-  
   var fechaActual = new Date().toISOString().split("T")[0];
-
   document.getElementById("fechaven").min = fechaActual;
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+<script>
+function mostrarError($campo, mensaje) {
+    $campo.addClass('is-invalid');
+    $campo.siblings('.error-message').text(mensaje);
+}
+
+function ocultarError($campo) {
+    $campo.removeClass('is-invalid');
+    $campo.siblings('.error-message').text('');
+}
+
+function mostrarInfo($campo, mensaje) {
+    $campo.siblings('.info-message').text(mensaje);
+}
+
+function ocultarInfo($campo) {
+    $campo.siblings('.info-message').text('');
+}
+
+$(document).ready(function () {
+    // Cambiado el evento a 'change' para los otros campos
+
+
+    $('#producto-form').submit(function (event) {
+        event.preventDefault();
+        let errors = false;
+
+        // Validaciones en el lado del producto para los campos que no han sido validados en tiempo real
+        validarCampo($('#categoria'));
+        validarCampo($('#marca'));
+        validarCampo($('#nombre_producto'));
+        validarCampo($('#descripcion'));
+        validarCampo($('#fechaven'));
+        validarCampo($('#cantidad'));
+        validarCampo($('#sabor'));
+        validarCampo($('#services'));
+        validarCampo($('#price'));
+
+        // Envía el formulario si no hay errores
+        if ($('.error-message').text() === '') {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'createProducts' %}",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // Éxito: redirige o realiza acciones adicionales
+                        alert('Producto agregado con éxito.');
+                        window.location.href = "{% url 'productos' %}";
+                    }
+                }
+            });
+        }
+
+        function validarCampo($campo) {
+            const valor = $campo.val();
+            if (!valor) {
+                mostrarError($campo, 'Este campo es obligatorio.');
+            } else {
+                ocultarError($campo);
+            }
+        }
+
+        function habilitarBoton() {
+            const category = $('#categoria').val();
+            const brand = $('#marca').val();
+            const name = $('#nombre_producto').val();
+            const desc = $('#descripcion').val();
+            const neighborhood = $('#fechaven').val();
+            const cant = $('#cantidad').val();
+            const flavor = $('#sabor').val();
+            const serv = $('#services').val();
+            const productPrice = $('#price').val();
+
+            const camposCompletos = (category && brand && name && desc && neighborhood && cant && flavor && serv && productPrice);
+
+            if (camposCompletos) {
+                $('#submit-button').prop('disabled', false);
+            } else {
+                $('#submit-button').prop('disabled', true);
+            }
+        }
+    });
+
+    $('#categoria, #marca, #nombre_producto, #descripcion, #fechaven, #cantidad, #sabor, #services, #price').on('change', function () {
+      validarCampo($(this));
+      habilitarBoton();
+  });
+});
+
 </script>
 
 {% endblock %}

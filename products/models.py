@@ -30,8 +30,8 @@ class Productos(models.Model):
     fechaven = models.DateField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
-    estado = models.IntegerField()
-    precio = models.DecimalField(max_digits=10, decimal_places=3)
+    estado = models.IntegerField(default=1)
+    precio = models.IntegerField()
 
     class Meta:
         managed = False

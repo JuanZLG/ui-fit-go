@@ -4,7 +4,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -15,7 +14,6 @@ SECRET_KEY = 'django-insecure-p-q-5)!3*c#&12)htxwxd_5kbk89m52#n14a=sniyklxz4!qw7
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -31,7 +29,8 @@ INSTALLED_APPS = [
     'customers',
     'purchases',
     'sales',
-    'dashboard'
+    'users',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +55,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'sales', 'templates'),
                  os.path.join(BASE_DIR, 'purchases', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
+                 os.path.join(BASE_DIR, 'users', 'templates'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,7 +78,7 @@ DATABASES = {
         'NAME':'tuiranfit',
         'USER': 'root',
         'PASSWORD': 'monitoc10',
-        'PORT': '1010'
+        'PORT': '3306'
     }
 }
 

@@ -24,8 +24,8 @@ def createProduct(request):
         cantidad = request.POST['cantidad']
         fechavencimiento = request.POST['fechaven']
         sabor = request.POST['sabor']
-        tamano = request.POST['presentacion']
-        precio = request.POST['precio']   
+        tamano = request.POST['services']
+        precio = request.POST['price']   
         categoria = request.POST['categoria']
         marca=request.POST['marca']
         
