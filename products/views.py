@@ -19,21 +19,21 @@ def createProduct(request):
     categorias = Categorias.objects.all()
     
     if request.method == 'POST':
-        nombre = request.POST['nombre_producto']
-        descripcion = request.POST['descripcion']
-        cantidad = request.POST['cantidad']
-        fechavencimiento = request.POST['fechaven']
-        sabor = request.POST['sabor']
-        tamano = request.POST['services']
-        precio = request.POST['price']   
-        categoria = request.POST['categoria']
-        marca=request.POST['marca']
+        nombre = request.POST['iNombre']
+        descripcion = request.POST['iDescripcion']
+        cantidad = request.POST['iCantidad']
+        fechavencimiento = request.POST['iFechaven']
+        sabor = request.POST['iSabor']
+        tamano = request.POST['iServices']
+        precio = request.POST['iPrice']   
+        categoria = request.POST['iCategoria']
+        marca=request.POST['iMarca']
         
-        m = Marcas.objects.filter(nombre_marca=marca)
-        c = Categorias.objects.filter(id_categoria=categoria)
+        m = Marcas.objects.get(id_marca=marca)
+        c = Categorias.objects.get(id_categoria=categoria)
         product = Productos.objects.all()
 
-        Productos.objects.create(id_categoria=c.id_categoria, id_marca=m.id_marca, nombre_categoria=nombre, descripcion=descripcion, cantidad=cantidad, fechaven=fechavencimiento, sabor=sabor, presentacion=tamano, precio=precio)
+        Productos.objects.create(id_categoria=c,id_marca=m, nombre_producto=nombre, descripcion=descripcion, cantidad=cantidad, fechaven=fechavencimiento, sabor=sabor, presentacion=tamano, precio=precio)
         return JsonResponse({'success': True})
     return render(request, 'createProducts.html', {"marcas":marcas,"categorias":categorias})
 
