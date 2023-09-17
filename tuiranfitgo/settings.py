@@ -78,7 +78,7 @@ DATABASES = {
         'NAME':'tuiranfit',
         'USER': 'root',
         'PASSWORD': 'monitoc10',
-        'PORT': '1010'
+        'PORT': '3306'
     }
 }
 

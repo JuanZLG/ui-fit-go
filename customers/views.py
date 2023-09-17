@@ -82,6 +82,7 @@ def agregarClientePost(request):
     municipios = Municipios.objects.all()
     return render(request, 'createCustomer.html', {'municipios': municipios})
 
+
 def redirigirEditar(request, cliente_id):
     cliente = Clientes.objects.get(id_cliente=cliente_id)
     municipios = Municipios.objects.all()  

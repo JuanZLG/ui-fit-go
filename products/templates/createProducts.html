@@ -20,76 +20,82 @@
         <div class="col-md-6 mb-3">
           <div class="form-group">
             <label for="categoria">Categoría</label>
-            <select class="form-select" aria-label="Default" name="categoria" id="categoria">
+            <select class="form-select" aria-label="Default" name="iCategoria" id="categoria">
               {% for c in categorias %}
               <option value="{{ c.id_categoria }}">{{ c.nombre_categoria }}</option>
               {% endfor %}
             </select>
+            <div class="error-message" id="iCategoria-error"></div>
           </div>
         </div>
   
         <div class="col-md-6 mb-3">
           <div class="form-group">
             <label>Marca</label>
-            <select class="form-select" aria-label="Default select example" name="marca" id="marca">
+            <select class="form-select" aria-label="Default select example" name="iMarca" id="marca">
               {% for m in marcas %}
               <option value="{{ m.id_marca }}">{{ m.nombre_marca }}</option>
               {% endfor %}
             </select>
+            <div class="error-message" id="iMarca-error"></div>
           </div>
         </div>
       </div>
   
       <div class="form-group">
         <label>Nombre</label>
-        <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" placeholder="Ingrese el nombre del producto"/>
-        <div class="error-message" id="nombre_producto-error"></div>
+        <input type="text" class="form-control" id="nombre_producto" name="iNombre" placeholder="Ingrese el nombre del producto"/>
+        <div class="error-message" id="iNombre-error"></div>
       </div>
   
       <div class="form-group">
         <label for="descripcion">Descripción</label>
-        <textarea class="form-control" id="descripcion" name="descripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
-        <div class="error-message" id="descripcion-error"></div>
+        <textarea class="form-control" id="descripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
+        <div class="error-message" id="iDescripcion-error"></div>
       </div>
   
       <div class="form-row">
         <div class="col-md-3 mb-3">
-          <div class="form-group">
-            <label>Fecha de Vencimiento</label>
-            <input type="date" class="form-control" min="" id="fechaven" name="fechaven"/>
-            <div class="error-message" id="fechaven-error"></div>
-          </div>
+            <div class="form-group">
+                <label>Fecha de Vencimiento</label>
+                <input type="text" class="form-control" id="fechaven" name="iFechaven" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
+                <div class="error-message" id="iFechaven-error"></div>
+            </div>
         </div>
       
         <div class="col-md-2 mb-3">
           <div class="form-group">
             <label for="cant">Cantidad</label>
-            <input type="number" class="form-control" id="cantidad" name="cantidad"/>
-            <div class="error-message" id="cantidad-error"></div>
+            <input type="number" class="form-control" id="cantidad" name="iCantidad"/>
+            <div class="error-message" id="iCantidad-error"></div>
+            <div class="info-message" id="iCantidad-info"></div>
           </div>
         </div>
       
         <div class="col-md-3 mb-3">
           <div class="form-group">
             <label for="sabor">Sabor</label>
-            <input type="text" class="form-control" id="sabor" name="sabor" placeholder="Sabor"/>
-            <div class="error-message" id="sabor-error"></div>
+            <input type="text" class="form-control" id="sabor" name="iSabor" placeholder="Sabor"/>
+            <div class="error-message" id="iSabor-error"></div>
+            <div class="info-message" id="iSabor-info"></div>
           </div>
         </div>
       
         <div class="col-md-2 mb-3">
           <div class="form-group">
             <label for="services">Servicios</label>
-            <input type="text" class="form-control" id="services" name="services" placeholder="Servicios"/>
-            <div class="error-message" id="services-error"></div>
+            <input type="text" class="form-control" id="services" name="iServices" placeholder="Servicios"/>
+            <div class="error-message" style="color:red;" id="iServices-error"></div>
+            <div class="info-message" id="iServices-info"></div>
           </div>
         </div>
       </div>
       
       <div class="form-group">
         <label for="price">Precio del Producto</label>
-        <input type="number" class="form-control" id="price" name="price" placeholder="Ingrese un precio"/>
-        <div class="error-message" id="price-error"></div>
+        <input type="number" class="form-control" id="price" name="iPrice" placeholder="Ingrese un precio"/>
+        <div class="error-message" id="iPrice-error"></div>
+        <div class="info-message" id="iPrice-info"></div>
       </div>
   
       <div class="text-end">
@@ -108,94 +114,153 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   
 <script>
-function mostrarError($campo, mensaje) {
-    $campo.addClass('is-invalid');
-    $campo.siblings('.error-message').text(mensaje);
-}
-
-function ocultarError($campo) {
-    $campo.removeClass('is-invalid');
-    $campo.siblings('.error-message').text('');
-}
-
-function mostrarInfo($campo, mensaje) {
-    $campo.siblings('.info-message').text(mensaje);
-}
-
-function ocultarInfo($campo) {
-    $campo.siblings('.info-message').text('');
-}
-
-$(document).ready(function () {
-    // Cambiado el evento a 'change' para los otros campos
-
-
-    $('#producto-form').submit(function (event) {
-        event.preventDefault();
-        let errors = false;
-
-        // Validaciones en el lado del producto para los campos que no han sido validados en tiempo real
-        validarCampo($('#categoria'));
-        validarCampo($('#marca'));
-        validarCampo($('#nombre_producto'));
-        validarCampo($('#descripcion'));
-        validarCampo($('#fechaven'));
-        validarCampo($('#cantidad'));
-        validarCampo($('#sabor'));
-        validarCampo($('#services'));
-        validarCampo($('#price'));
-
-        // Envía el formulario si no hay errores
-        if ($('.error-message').text() === '') {
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'createProducts' %}",
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        // Éxito: redirige o realiza acciones adicionales
-                        alert('Producto agregado con éxito.');
-                        window.location.href = "{% url 'productos' %}";
-                    }
-                }
-            });
-        }
-
-        function validarCampo($campo) {
-            const valor = $campo.val();
-            if (!valor) {
-                mostrarError($campo, 'Este campo es obligatorio.');
-            } else {
-                ocultarError($campo);
-            }
-        }
-
-        function habilitarBoton() {
-            const category = $('#categoria').val();
-            const brand = $('#marca').val();
-            const name = $('#nombre_producto').val();
-            const desc = $('#descripcion').val();
-            const neighborhood = $('#fechaven').val();
-            const cant = $('#cantidad').val();
-            const flavor = $('#sabor').val();
-            const serv = $('#services').val();
-            const productPrice = $('#price').val();
-
-            const camposCompletos = (category && brand && name && desc && neighborhood && cant && flavor && serv && productPrice);
-
-            if (camposCompletos) {
-                $('#submit-button').prop('disabled', false);
-            } else {
-                $('#submit-button').prop('disabled', true);
-            }
-        }
-    });
-
-    $('#categoria, #marca, #nombre_producto, #descripcion, #fechaven, #cantidad, #sabor, #services, #price').on('change', function () {
-      validarCampo($(this));
-      habilitarBoton();
-  });
+  $(document).ready(function () {
+  $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad', '#iSabor', 'iServices', 'iPrice').on('change', function () {
+    validarCampo($(this));
+    habilitarBoton();
 });
+
+$('#producto-form').submit(function (event) {
+    event.preventDefault();
+    let errors = false;
+
+    // Validaciones en el lado del cliente para los campos que no han sido validados en tiempo real
+    validarCampo($('#iCategoria'));
+    validarCampo($('#iMarca'));
+    validarCampo($('#iNombre'));
+    validarCampo($('#iDescripcion'));
+    validarCampo($('#iFechaven'));
+    validarCampo($('#iCantidad'));
+    validarCampo($('#iSabor'));
+    validarCampo($('#iServices'));
+    validarCampo($('#iPrice'));
+
+    // Envía el formulario si no hay errores
+    if ($('.error-message').text() === '') {
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'createAProduct' %}",
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.success) {
+                    // Éxito: redirige o realiza acciones adicionales
+                    alert('Producto creado con éxito.');
+                    window.location.href = "{% url 'productos' %}";
+                }
+            }
+        });
+    }
+
+  function mostrarError($campo, mensaje) {
+      $campo.addClass('is-invalid');
+      $campo.siblings('.error-message').text(mensaje);
+  }
+
+  function ocultarError($campo) {
+      $campo.removeClass('is-invalid');
+      $campo.siblings('.error-message').text('');
+  }
+
+  function mostrarInfo($campo, mensaje) {
+      $campo.siblings('.info-message').text(mensaje);
+  }
+
+  function ocultarInfo($campo) {
+      $campo.siblings('.info-message').text('');
+  }
+
+  function validarCantidad() {
+    const stock = $('#iCantidad').val();
+
+    if (isNaN(stock)) {
+        mostrarError($('#iCantidad'), 'Este campo debe ser un número válido.');
+        ocultarInfo($('#iCantidad-info'));
+    } else if (stock < 0) {
+        mostrarError($('#iCantidad'), 'La cantidad no puede ser negativa.');
+        ocultarInfo($('#iCantidad-info'));
+    } else {
+        ocultarError($('#iCantidad'));
+        ocultarInfo($('#iCantidad-info'));
+    }
+}
+
+function validarFecha() {
+  const fecha = $('#iFechaven').val();
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+      mostrarError($('#iFechaven'), 'Fecha no válida. Utiliza el formato YYYY-MM-DD usando los guiones.');
+  } else {
+      ocultarError($('#iFechaven'));
+  }
+}
+
+
+function validarServicios() {
+  const tamano = $('#iServices').val();
+
+  if (isNaN(tamano)) {
+      mostrarError($('#iServices'), 'Este campo debe ser un número válido.');
+      ocultarInfo($('#iServices-info'));
+  } else if (stock < 0) {
+      mostrarError($('#iServices'), 'El número de servicios no puede ser negativo.');
+      ocultarInfo($('#iServices-info'));
+  } else {
+      ocultarError($('#iServices'));
+      ocultarInfo($('#iServices-info'));
+  }
+}
+
+function validarPrecio() {
+  const precio = $('#iServices').val();
+
+  if (isNaN(precio)) {
+      mostrarError($('#iPrice'), 'Este campo debe ser un precio válido.');
+      ocultarInfo($('#iPrice-info'));
+  } else if (stock < 0) {
+      mostrarError($('#iPrice'), 'El precio no puede ser negativo.');
+      ocultarInfo($('#iPrice-info'));
+  } else {
+      ocultarError($('#iPrice'));
+      ocultarInfo($('#iPrice-info'));
+  }
+}
+  
+  function validarCampo($campo) {
+      const valor = $campo.val();
+      if (!valor) {
+          mostrarError($campo, 'Este campo es obligatorio.');
+      } else {
+          ocultarError($campo);
+      }
+  }
+
+  function habilitarBoton() {
+      const cat = $('#iCategoria').val();
+      const brand = $('#iMarca').val();
+      const name = $('#iNombre').val();
+      const description = $('#iDescripcion').val();
+      const vdate = $('#iFechaven').val();
+      const cant = $('#iCantidad').val();
+      const flavor = $('#iSabor').val();
+      const service = $('#iServices').val();
+      const pPrice = $('#iPrice').val();
+
+      const precioValido = (validarPrecio());
+      const cantidadValida = (validarCantidad());
+      const serviciosValido = (validarServicios());
+      const fechaVálida = (validarFecha());
+      const camposCompletos = (cat && brand && name && description && vdate && cant && flavor && service && pPrice);
+
+      if (precioValido && cantidadValida && camposCompletos) {
+          $('#submit-button').prop('disabled', false);
+      } else {
+          $('#submit-button').prop('disabled', true);
+      }
+  }
+});
+
+});
+
 
 </script>
 
