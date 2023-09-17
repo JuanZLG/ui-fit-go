@@ -36,8 +36,7 @@
     <div class="ml-3">
         <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{venta.fechareg|date:'d/m/Y' }}</span></p>
     </div>
-    <form id="venta-form" method="post"> 
-        {% csrf_token %}
+    <form id="venta-form" method="post"> {% csrf_token %}
         <div class="card shadow mb-4">
             <div class="card-header">
                 <table class="table">
@@ -532,7 +531,7 @@
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        alert("Venta Creada con Éxito.");
+                        alert("Datos cambiados.");
                         window.location.href = "{% url 'ventas' %}";
                     }
                 },

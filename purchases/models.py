@@ -35,7 +35,7 @@ class Clientes(models.Model):
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
-    fechareg = models.DateTimeField(default=timezone.now)
+    fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=1) 
 
     class Meta:
@@ -168,9 +168,10 @@ class Usuarios(models.Model):
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateTimeField(default=timezone.now)
-    estado = models.IntegerField(blank=True, null=True)
-
+    fechareg = models.DateField(default=timezone.now)
+    estado = models.IntegerField(default=True)
+    totalVenta = models.IntegerField()
     class Meta:
         managed = False
         db_table = 'ventas'
+        
