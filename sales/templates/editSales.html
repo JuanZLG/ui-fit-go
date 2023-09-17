@@ -34,9 +34,10 @@
 
 <section class="container">
     <div class="ml-3">
-        <p class="font-weight-bold">{{venta.fechareg}}</p>
+        <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{venta.fechareg|date:'d/m/Y' }}</span></p>
     </div>
-    <form id="venta-form" method="post"> {% csrf_token %}
+    <form id="venta-form" method="post"> 
+        {% csrf_token %}
         <div class="card shadow mb-4">
             <div class="card-header">
                 <table class="table">
@@ -99,12 +100,12 @@
         </div>
         <div class="cont-crear-venta">
             <div>
-                <a class="btn btn-omitir" href="{% url 'ventas'%}"><i class="fas fa-arrow-left mr-3"></i>Omitir
+                <a class="btn btn-omitir" href="{% url 'ventas'%}"><i class="fas fa-arrow-left mr-2"></i>Omitir
                     cambios</a>
                 <button class="btn btn-revertir" type="button" onclick="revertirCambios()"><i
-                        class="fas fa-undo mr-3"></i>Revertir cambios</button>
+                        class="fas fa-undo mr-2"></i>Revertir cambios</button>
             </div>
-            <button class="btn btn-crear" type="submit">Guardar cambios<i class="fas fa-check"></i></button>
+            <button class="btn btn-crear" type="submit">Guardar cambios<i class="fas fa-check ml-2"></i></button>
         </div>
     </form>
 </section>
@@ -112,13 +113,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+    //EDIT
     function revertirCambios() {
         window.location.reload();
     }
-
+    //EDIT
     $(document).ready(function () {
         let resultadoDocu = $("#cont-docu");
-        resultadoDocu.html("<p id='nomClienteDato'>{{venta.id_cliente.nombres}}</p><span>Doc:</span><p id='documentoDato'>{{venta.id_cliente.documento}}</p>"
+        resultadoDocu.html("<p id='nomClienteDato'>{{venta.id_cliente.nombres}}{{venta.id_cliente.apellidos}}</p><span>Doc:</span><p id='documentoDato'>{{venta.id_cliente.documento}}</p>"
         );
         $("#nombreCliente").addClass("is-valid");
     });
@@ -278,6 +280,8 @@
         });
 
         /********** PRECIOS ***********/
+    //EDIT
+
         function unidadPrecio(currentRow) {
             let nombreProducto = currentRow.find(".producto").val();
             if (nombreProducto.length >= 3) {
@@ -287,12 +291,14 @@
                 calcularTotalVenta();
             }
         }
+    //EDIT
 
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
             currentRow.find(".error-produ").text("");
             unidadPrecio(currentRow);
         });
+    //EDIT
 
         $(".producto").each(function () {
             let currentRow = $(this).closest("tr");
@@ -430,7 +436,6 @@
         }
 
 
-
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $("#documentoDato").text();
@@ -497,7 +502,7 @@
             });
 
             return camposLlenos
-                ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
+                ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos}
                 : null;
         }
 

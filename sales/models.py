@@ -97,7 +97,7 @@ class Detalleventa(models.Model):
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateTimeField(default=timezone.now)
+    fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=True)
     totalVenta = models.IntegerField()
     class Meta:

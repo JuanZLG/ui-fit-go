@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render,  get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
@@ -157,38 +157,85 @@ def cambiarEstado(request):
 #  4. ENVIAR INFORMACION POR RENDER, TOMAR EN HTML Y MOSTRAR VALORES INICIALES
 #  5. METODO POST, UPDATE - APLICAR RESTAR, SUMAR EN PRODUCTOS
 
+# def editar_venta(request, id_venta):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         documento = data.get('documento', '')
+#         totalVenta = data.get('totalVenta', '')
+#         productos = data.get('productos', [])
+
+#         cliente = Clientes.objects.filter(documento=documento).first()
+#         Ventas.objects.filter(pk=id_venta).update(id_cliente=cliente, totalVenta=totalVenta)
+
+#         for producto_datos in productos:
+#             nombre_producto = producto_datos['nombre']
+#             cantidad_vendida = producto_datos['cantidad']
+
+#             producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+#             if producto:
+#                 producto.cantidad -= cantidad_vendida
+#                 producto.save()
+
+#             # Crear un registro en Detalleventa
+#             detalle = Detalleventa.objects.update(
+#                 id_producto=producto,
+#                 id_venta=venta,
+#                 cantidad=cantidad_vendida,
+#                 precio_uni=producto_datos['precioUnidad'],
+#                 precio_tot=producto_datos['precioTotal']
+#             )
+#         response_data = {'success': True}  
+        
+#     detalles = Detalleventa.objects.filter(id_venta=id_venta)
+#     venta = Ventas.objects.get(id_venta=id_venta)  
+#     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
+
+
+# from django.views.decorators.csrf import csrf_protect
+
+# @csrf_protect
+@csrf_exempt
 def editar_venta(request, id_venta):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        documento = data.get('documento', '')
-        totalVenta = data.get('totalVenta', '')
-        productos = data.get('productos', [])
+        try:
+            data = json.loads(request.body)
+            documento = data.get('documento', '')
+            totalVenta = data.get('totalVenta', 0)
+            productos = data.get('productos', [])
+            # Validar que la venta exista
+            venta = get_object_or_404(Ventas, pk=id_venta)
 
-        cliente = Clientes.objects.filter(documento=documento).first()
-        venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
-        for producto_datos in productos:
-            nombre_producto = producto_datos['nombre']
-            cantidad_vendida = producto_datos['cantidad']
+            # Actualizar cliente y total de venta
+            if documento:
+                cliente, _ = Clientes.objects.get_or_create(documento=documento)
+                venta.id_cliente = cliente
+            venta.totalVenta = totalVenta
+            venta.save()
 
-            producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+            for producto_datos in productos:
+                nombre_producto = producto_datos.get('nombre', '')
+                cantidad_vendida = producto_datos.get('cantidad', 0)
 
-            if producto:
-                producto.cantidad -= cantidad_vendida
-                producto.save()
+                if nombre_producto and cantidad_vendida > 0:
+                    # Validar que el producto exista
+                    producto, _ = Productos.objects.get_or_create(nombre_producto=nombre_producto)
 
-            # Crear un registro en Detalleventa
-            detalle = Detalleventa.objects.update(
-                id_producto=producto,
-                id_venta=venta,
-                cantidad=cantidad_vendida,
-                precio_uni=producto_datos['precioUnidad'],
-                precio_tot=producto_datos['precioTotal']
-            )
-        response_data = {'success': True}  
-    
+                    # Actualizar cantidad de producto
+                    producto.cantidad -= cantidad_vendida
+                    producto.save()
+
+                    # Crear o actualizar un registro en Detalleventa
+                    detalle, _ = Detalleventa.objects.get_or_create(id_producto=producto, id_venta=venta)
+                    detalle.cantidad = cantidad_vendida
+                    detalle.precio_uni = producto_datos.get('precioUnidad', 0)
+                    detalle.precio_tot = producto_datos.get('precioTotal', 0)
+                    detalle.save()
+
+            response_data = {'success': True}
+        except Exception as e:
+            response_data = {'success': False, 'error_message': str(e)}
+        return JsonResponse(response_data)
+
     detalles = Detalleventa.objects.filter(id_venta=id_venta)
-    venta = Ventas.objects.get(id_venta=id_venta)  
-
+    venta = get_object_or_404(Ventas, pk=id_venta)
     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
-
-
