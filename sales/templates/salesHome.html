@@ -4,7 +4,11 @@
 
 {% block body %}
 
-
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/HomeVentas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+</head>
 
 
 <center>
@@ -57,7 +61,8 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm" id="editbutton"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
                             <a href="{% url 'verVenta' venta.id_venta %}" class="btn btn-sm btn-primary"
                                 id="detailsbutton" data-bs-toggle="modal" data-bs-target="#DetallesModalVenta"
                                 data-venta-id="{{ venta.id_venta }}">
@@ -74,12 +79,11 @@
                                     let nuevoEstado = $(this).data("nuevo-estado");
 
                                     Swal.fire({
-                                        title: 'Confirmar',
-                                        text: '¿Estás seguro de que deseas cambiar el estado?',
-                                        icon: 'warning',
+                                        title: 'Estado',
+                                        text: '¿Desea cambiar el estado de este registro?',
                                         showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
+                                        confirmButtonColor: '#419edd',
+                                        cancelButtonColor: '#ba4d4d',
                                         confirmButtonText: 'Confirmar',
                                         cancelButtonText: 'Cancelar'
                                     }).then((result) => {
@@ -111,118 +115,6 @@
     </div>
 </div>
 
-<style>
-    .table {
-        width: 80%;
-    }
-
-    table thead.theads {
-        text-align: center;
-        color: white;
-        background-color: #222222;
-    }
-
-    table tbody.tbody {
-        text-align: center;
-    }
-
-    .modtitles {
-        font-size: 2em;
-        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: animarGradiente 3s linear infinite;
-        font-weight: bold;
-    }
-
-    /* Toco repetir codigo para cambiar el blanco */
-    .btn-add,
-    .btn-dash {
-        color: #000;
-        font-weight: 600;
-    }
-
-    .btn-add:hover,
-    .btn-dash:hover {
-        color: #000;
-    }
-
-    .btn-add {
-        padding: 0;
-        width: auto;
-        block-size: 6vh;
-        background-color: #85da85;
-        display: flex;
-        align-items: center;
-    }
-
-    .btn-add:hover {
-        background-color: #72d072;
-    }
-
-    .btn-dash {
-        background-color: #c55c5c;
-    }
-
-    .btn-dash:hover {
-        background-color: #ba4d4d;
-    }
-
-    tr.inactivo {
-        background-color: #ccc;
-        /* Cambia el fondo a un tono más claro */
-        color: #676666;
-    }
-
-    .statusbutton {
-        width: 5rem;
-        border-radius: 3px;
-        border: none;
-    }
-
-    .statusbutton:hover {
-        opacity: 0.9;
-    }
-
-    #editbutton {
-        background-color: #FFFF99;
-        color: #000;
-        /* background-color: #3498db; */
-        border: none;
-        transition: transform 0.5s;
-
-    }
-
-    #detailsbutton {
-        background-color: #419edd;
-        color: #000;
-        /* background-color: #1e3799; */
-        border: none;
-        transition: transform 0.5s;
-    }
-
-    #editbutton:hover,
-    #detailsbutton:hover {
-        transform: scale(1.1);
-    }
-
-    .cell-actions {
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .active-status {
-        background-color: #95eea5;
-        color: #09711c;
-    }
-
-    .inactive-status {
-        background-color: #ec8080;
-        color: #8a0404;
-    }
-</style>
 
 
 {% endblock %}

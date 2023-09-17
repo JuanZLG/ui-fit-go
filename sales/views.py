@@ -159,19 +159,36 @@ def cambiarEstado(request):
 
 def editar_venta(request, id_venta):
     if request.method == 'POST':
-        nombre = request.POST['nombre_proveedor']
-        telefono = request.POST['telefono']
-        correo = request.POST['correo']
-        estado = request.POST['estado']
-        Ventas.objects.filter(id_venta=id_venta).update(
-            nombre_proveedor=nombre,
-            telefono=telefono,
-            correo=correo,
-            estado=estado
-        )
-        response_data = {'success': True}
-        return JsonResponse(response_data)    
-    venta = Ventas.objects.get(id_venta=id_venta)
-    return render(request, 'editSales.html', {"venta":venta}) 
+        data = json.loads(request.body)
+        documento = data.get('documento', '')
+        totalVenta = data.get('totalVenta', '')
+        productos = data.get('productos', [])
+
+        cliente = Clientes.objects.filter(documento=documento).first()
+        venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
+        for producto_datos in productos:
+            nombre_producto = producto_datos['nombre']
+            cantidad_vendida = producto_datos['cantidad']
+
+            producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+
+            if producto:
+                producto.cantidad -= cantidad_vendida
+                producto.save()
+
+            # Crear un registro en Detalleventa
+            detalle = Detalleventa.objects.update(
+                id_producto=producto,
+                id_venta=venta,
+                cantidad=cantidad_vendida,
+                precio_uni=producto_datos['precioUnidad'],
+                precio_tot=producto_datos['precioTotal']
+            )
+        response_data = {'success': True}  
+    
+    detalles = Detalleventa.objects.filter(id_venta=id_venta)
+    venta = Ventas.objects.get(id_venta=id_venta)  
+
+    return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
 
 

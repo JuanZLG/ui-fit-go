@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+.modtitles {
+    font-size: 2em;
+    background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: animarGradiente 3s linear infinite;
+    font-weight: bold;
+}
+
+table thead.theads {
+    text-align: center;
+    color: #fff;
+    background-color: #222222;
+}
+
+.table thead tr th {
+    border: none;
+}

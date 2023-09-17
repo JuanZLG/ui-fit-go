@@ -1,0 +1,159 @@
+.table,
+.cont-cliente {
+    box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+}
+
+
+.producto-row {
+    border-radius: 19px 19px 7px 7px;
+}
+
+.table td {
+    padding-top: 30px !important;
+}
+
+.cont-total-venta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 20px;
+    background-color: #F2f2f2;
+}
+
+.eliminar-producto {
+    position: relative;
+    padding: 10px;
+    text-align: center;
+}
+
+.eliminar-producto .icono-eliminar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25px;
+    background-color: #ba4d4d;
+    border-radius: 100%;
+    color: #ffff;
+}
+
+.eliminar-producto:hover .icono-eliminar {
+    animation: sacudir 0.3s ease-in 1;
+    transform: translate(0);
+}
+
+@keyframes sacudir {
+    0% {
+        transform: translate(-2px, 2px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+.cont-cliente {
+    width: auto;
+    margin-right: 30px;
+    min-width: 400px;
+    padding: 20px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.cont-error-docu {
+    width: 330px;
+}
+
+.cont-crear-venta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding: 0 20px;
+    background: transparent;
+}
+
+.btn-crear {
+    width: 300px;
+    color: #fff;
+    font-weight: bold;
+    background-color: #26272d;
+}
+
+.btn-crear:hover, .btn-omitir:hover, .btn-revertir:hover {
+    color: #fff;
+    opacity: 0.9;
+}
+
+.btn-omitir {
+    background-color: #111424;
+    color: #fff;
+    font-weight: bold;
+}
+.btn-revertir {
+    background-color: #48484b;
+    color: #fff;
+    font-weight: bold;
+}
+.btn-agregar {
+    width: 200px;
+    border: 1px solid #3c3636;
+    color: #09711c;
+    font-weight: bold;
+    background-color: #95eea5;
+}
+
+.btn-agregar:hover {
+    color: #09711c;
+    opacity: 0.9;
+}
+
+#totalVenta {
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+#totalVenta:focus {
+    outline: 0 !important;
+
+}
+
+
+
+.btn-agregar:active,
+.btn-agregar:active {
+    transform: scale(0.95);
+}
+
+
+.eliminar-producto:hover {
+    cursor: pointer;
+}
+
+.fa-trash-can {
+    color: #a60202;
+    font-size: 24px;
+    display: block;
+    text-align: center
+}
+
+.producto-suggestions {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 10px;
+}
+
+.resultado-sugerencia {
+    display: inline-block;
+    float: none;
+    margin-right: 5px;
+    padding: 2px 1rem;
+    color: #f2f2f2;
+    background-color: #48484b;
+    border-radius: 5px;
+    font-size: 0.8rem;
+}
+
+.resultado-sugerencia:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}

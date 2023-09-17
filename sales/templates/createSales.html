@@ -4,32 +4,34 @@
 
 <head>
     {% load static %}
+        <link rel="stylesheet" href="{% static 'css/CreateEditVentas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 
-<div class="row">
-    <div class="col-md-5 mb-3">
-        <center>
-            <h1 class="modtitles">Crear Ventas</h1>
-        </center>
+<section class="row">
+    <div class="col-md-5 mb-3 d-flex align-items-center justify-content-center">
+        <h1 class="modtitles">Crear Ventas</h1>
     </div>
     <div class="col-md-7 mb-3">
         <div class="row justify-content-end">
-            <div class="col-md-auto mx-5 cont-cliente">
-                <div class="d-flex justify-content-between ">
-                    <label class="mb-2">Cliente *</label>
+            <div class="cont-cliente">
+                <div class="d-flex gap-4 justify-content-between ">
+                    <label class="mb-2 font-weight-bold">Cliente *</label>
                     <div class='text-secondary d-flex gap-2' id="cont-docu"></div>
                 </div>
                 <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
                     placeholder="Ingrese el documento para buscar al cliente"
                     oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10">
-                <span class="error-message text-danger" id="error-docu"></span>
+                <div class="cont-error-docu">
+                    <span class="error-message text-danger" id="error-docu"></span>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 
-<div class="container">
+<section class="container">
     <form id="venta-form" method="post"> {% csrf_token %}
         <div class="card shadow mb-4">
             <div class="card-header">
@@ -89,180 +91,12 @@
             <button class="btn btn-crear" type="submit">Crear Venta</button>
         </div>
     </form>
-</div>
+</section>
 
-<style>
-    .modtitles {
-        font-size: 2em;
-        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: animarGradiente 3s linear infinite;
-        font-weight: bold;
-    }
-
-    .table,
-    .cont-cliente {
-        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
-    }
-
-    table thead.theads {
-        text-align: center;
-        color: white;
-        background-color: #222222;
-        border-radius: 20px !important;
-    }
-
-    .producto-row {
-        border-radius: 19px 19px 7px 7px;
-    }
-
-    .table td {
-        padding-top: 30px !important;
-    }
-
-    .cont-total-venta {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-        padding: 20px;
-        background-color: #F2f2f2;
-    }
-
-    .eliminar-producto {
-        position: relative;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .eliminar-producto .icono-eliminar {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 25px;
-        background-color: #ba4d4d;
-        border-radius: 100%;
-        color: #ffff;
-    }
-
-    .eliminar-producto:hover .icono-eliminar {
-        animation: sacudir 0.3s ease-in 1;
-        transform: translate(0);
-    }
-
-    @keyframes sacudir {
-        0% {
-            transform: translate(-2px, 2px);
-        }
-
-        100% {
-            transform: translate(0);
-        }
-    }
-
-    .cont-cliente {
-        padding: 15px;
-        border-radius: 2px;
-        transition: width 1s ease;
-    }
-
-    .cont-crear-venta {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 50px;
-        padding: 0 20px;
-        background: transparent;
-    }
-
-    .btn-crear {
-        width: 300px;
-        color: #fff;
-        font-weight: bold;
-        background-color: #26272d;
-    }
-
-    .btn-crear:hover {
-        color: #fff;
-        opacity: 0.9;
-    }
-
-    .btn-agregar {
-        width: 200px;
-        border: 1px solid #3c3636;
-        color: #09711c;
-        font-weight: bold;
-        background-color: #95eea5;
-    }
-
-    .btn-agregar:hover {
-        color: #09711c;
-        opacity: 0.9;
-    }
-
-    #totalVenta {
-        background-color: #ccc;
-        font-weight: bold;
-    }
-
-    #totalVenta:focus {
-        outline: 0 !important;
-
-    }
-
-
-
-    .btn-agregar:active,
-    .btn-agregar:active {
-        transform: scale(0.95);
-    }
-</style>
-<style>
-    .eliminar-producto:hover {
-        cursor: pointer;
-    }
-
-    .fa-trash-can {
-        color: #a60202;
-        font-size: 24px;
-        display: block;
-        text-align: center
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-    }
-
-    .producto-suggestions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        padding: 0 10px;
-        text-align: center;
-    }
-
-    .resultado-sugerencia:hover {
-        cursor: pointer;
-        opacity: 0.9;
-    }
-
-
-    .resultado-sugerencia {
-        margin-right: 5px;
-        padding: 2px 1rem;
-        color: #f2f2f2;
-        background-color: #09711c;
-        border-radius: 5px;
-        font-size: 0.8rem;
-    }
-</style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- <script src="{% static 'js/create-sales.js'%}"></script> -->
+<!-- <script src="{% static 'js/crearVentas.js'%}"></script> -->
+
 <script>
     /********** DOCUMENTO ***********/
 
@@ -354,14 +188,14 @@
                             );
                             if (data.productos.length > 1) {
                                 suggestions.append(
-                                    "</span><span class='resultado-sugerencia'>" +
+                                    "<span class='resultado-sugerencia'>" +
                                     producSimilar2 +
                                     "</span>"
                                 );
                             }
                             if (data.productos.length > 2) {
                                 suggestions.append(
-                                    "</span><span class='resultado-sugerencia'>" +
+                                    "<span class='resultado-sugerencia'>" +
                                     producSimilar3 +
                                     "</span>"
                                 );
@@ -410,8 +244,8 @@
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).text();
             nombreProducto =
-            nombreProducto.charAt(0).toUpperCase() +
-            nombreProducto.slice(1).toLowerCase();
+                nombreProducto.charAt(0).toUpperCase() +
+                nombreProducto.slice(1).toLowerCase();
             currentRow.find(".producto").val(nombreProducto);
             currentRow.find(".producto-suggestions").empty().hide();
             currentRow.find(".precioUnidad").removeClass("is-invalid");
@@ -421,7 +255,7 @@
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).val();
-            currentRow.find(".error-produ").text(""); 
+            currentRow.find(".error-produ").text("");
             if (nombreProducto.length >= 3) {
                 // Validar el producto antes de obtener el precio
                 validarProducto(currentRow, nombreProducto);

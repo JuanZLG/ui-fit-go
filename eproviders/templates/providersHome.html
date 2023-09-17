@@ -11,13 +11,13 @@
 <br>
 <div class="card shadow mb-4">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
-        <span>
-            <button type="button" id="crearProveedor" class="m-0 btn btn-success btn-icon-split btn-add">
-                <span class="icon">
+        <span> 
+            <a href="{%url 'crearProveedor'%}" class="m-0 btn btn-success btn-icon-split btn-add">
+                <span class="icon ">
                     <i class="fa-solid fa-plus"></i>
-                    <span class="text">Agregar Proveedor</span>
+                    <span class="text">Agregar</span>
                 </span>
-            </button>
+            </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
@@ -28,10 +28,9 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable">
+            <table class="table table-bordered mx-auto text-center" id="dataTable">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Nombre del proveedor</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
@@ -42,7 +41,6 @@
                 <tbody>
                     {% for proveedor in proveedores %}
                     <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
-                        <td>{{ proveedor.id_proveedor }}</td>
                         <td>{{ proveedor.nombre_proveedor }}</td>
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>
@@ -59,9 +57,8 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <button type="button" class="btn btn-sm editarProveedor"><i
-                                    class="fa-solid fa-pen-to-square"
-                                    data-prov-id="{{ proveedor.id_proveedor }}"></i></button>
+                            <a href="{% url 'editarProveedor' proveedor.id_proveedor %}" class="btn btn-sm"
+                                id="editarProveedor"><i class="fa-solid fa-pen-to-square"></i></a>
                             <button type="button" class="btn btn-sm btn-primary verProveedor"
                                 data-prov-id="{{ proveedor.id_proveedor }}">
                                 <i class="fa-solid fa-eye"></i>
@@ -170,7 +167,7 @@
     }
 
     tr.inactivo {
-        background-color: #ccc;
+        background-color: #67666629;
         color: #676666;
     }
 
@@ -184,7 +181,7 @@
         opacity: 0.9;
     }
 
-    .editarProveedor {
+    #editarProveedor {
         background-color: #FFFF99;
         color: #000;
         /* background-color: #3498db; */
@@ -247,7 +244,7 @@
         overflow: hidden;
         box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
         animation: fadeIn 0.3s ease-in-out;
-    }   
+    }
 
     @keyframes fadeIn {
         from {
@@ -337,276 +334,9 @@
     }
 </style>
 
-
-<dialog id="proveedorDialogCrear" class="proveedorDialog">
-    <div class="modal-container-header">
-        <h2>Agregar Proveedor</h2>
-        <button class="cerrar-proveedor" type="button" id="cerrarCrearProveedor">
-            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0h24v24H0z" fill="none"></path>
-                <path
-                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                    fill="currentColor"></path>
-            </svg>
-        </button>
-    </div>
-    <div class="card shadow p-4">
-        <form id="proveedor-form-create" method="post">
-            {% csrf_token %}
-            <div class="form-row mb-3">
-                <label for="nombre_proveedor">Nombre del proveedor *</label>
-                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre"
-                    data-error-class="nombre_proveedor-error">
-                <span class="error-message nombre_proveedor-error"></span>
-            </div>
-            <div class="form-row mb-3">
-                <label for="telefono">Número de Contacto *</label>
-                <input type="text" class="form-control telefono" name="telefono" placeholder="Número"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" data-error-class="telefono-error">
-                <span class="error-message telefono-error"></span>
-            </div>
-            <div class="form-row mb-3">
-                <label for="correo">Correo Electrónico *</label>
-                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico"
-                    data-error-class="correo-error">
-                <span class="error-message correo-error"></span>
-            </div>
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-secondary" type="submit">Guardar</button>
-            </div>
-        </form>
-    </div>
-</dialog>
-
-<!-- proveedorDialogEditar -->
-<dialog id="proveedorDialogEditar" class="proveedorDialog">
-    <div class="modal-container-header">
-        <h2>Editar del Proveedor</h2>
-        <button class="cerrar-proveedor" type="button" id="cerrarEditarProveedor">
-            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0h24v24H0z" fill="none"></path>
-                <path
-                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                    fill="currentColor"></path>
-            </svg>
-        </button>
-    </div>
-    <div class="card shadow p-4">
-        <form id="proveedor-form-edit" method="post">
-            {% csrf_token %}
-            <div class="form-row mb-3">
-                <label for="nombre_proveedor">Nombre del proveedor *</label>
-                <input type="text" class="form-control nombre_proveedor" name="nombre_proveedor" placeholder="Nombre"
-                    data-error-class="nombre_proveedor-error">
-                <span class="error-message nombre_proveedor-error"></span>
-            </div>
-            <div class="form-row mb-3">
-                <label for="telefono">Número de contacto *</label>
-                <input type="text" class="form-control telefono" name="telefono" placeholder="Número"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" data-error-class="telefono-error">
-                <span class="error-message telefono-error"></span>
-            </div>
-            <div class="form-row mb-3">
-                <label for="correo">Correo Electrónico *</label>
-                <input type="text" class="form-control correo" name="correo" placeholder="Correo Electrónico"
-                    data-error-class="correo-error">
-                <span class="error-message correo-error"> </span>
-            </div>
-            <div class="form-row mb-3">
-                <label for="#">Estado</label>
-                <select class="form-control estado" name="estado">
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                </select>
-            </div>
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-secondary " type="submit">Guardar cambios</button>
-            </div>
-        </form>
-    </div>
-</dialog>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let createProveedorResponse = null;
-
-        $("#crearProveedor").click(function () {
-            document.getElementById("proveedorDialogCrear").showModal();
-            $(".proveedorDialog").addClass("fadeIn");
-            $(".modal-backdrop").show();
-            $(".modal-backdrop").addClass("fadeInBack");
-        });
-
-        $(".editarProveedor").click(function () {
-            document.getElementById("proveedorDialogEditar").showModal();
-            $(".proveedorDialog").addClass("fadeIn");
-            $(".modal-backdrop").show();
-            $(".modal-backdrop").addClass("fadeInBack");
-
-            $(".nombre_proveedor").val($(this).closest("tr").find("td:eq(0)").text());
-            $(".telefono").val($(this).closest("tr").find("td:eq(1)").text());
-            $(".correo").val($(this).closest("tr").find("td:eq(2)").text());
-            // $(".estado").val($(this).closest("tr").find("td:eq(3)").text());
-
-        });
-
-        $("#cerrarCrearProveedor").click(function () {
-            limpiarModal()
-            cerrarModalCrear(createProveedorResponse)
-        });
-        $("#cerrarEditarProveedor").click(function () {
-            limpiarModal()
-            cerrarModalEditar(createProveedorResponse)
-        });
-
-    });
-    function limpiarModal() {
-        $('.nombre_proveedor').val('');
-        $('.telefono').val('');
-        $('.correo').val('');
-
-        $('.nombre_proveedor, .telefono, .correo').removeClass('is-invalid');
-        $('.error-message').text('');
-    }
-    function cerrarModalCrear(response) {
-        $(".proveedorDialog").addClass("fadeOut");
-        $(".modal-backdrop").addClass("fadeOut");
-        setTimeout(function () {
-            var proveedorModal = document.getElementById("proveedorDialogCrear");
-            proveedorModal.close();
-            $(".proveedorDialog").removeClass("fadeOut");
-            $(".modal-backdrop").hide();
-            $(".modal-backdrop").removeClass("fadeOut");
-            if (response) {
-                setTimeout(function () {
-                    alert('Proveedor creado con éxito.');
-                }, 500); // Puedes ajustar el tiempo en milisegundos según tus necesidades
-            }
-        }, 300);
-    }
-    function cerrarModalEditar(response) {
-        $(".proveedorDialog").addClass("fadeOut");
-        $(".modal-backdrop").addClass("fadeOut");
-        setTimeout(function () {
-            var proveedorModal = document.getElementById("proveedorDialogEditar");
-            proveedorModal.close();
-            $(".proveedorDialog").removeClass("fadeOut");
-            $(".modal-backdrop").hide();
-            $(".modal-backdrop").removeClass("fadeOut");
-            if (response) {
-                setTimeout(function () {
-                    alert('Datos actualizados con éxito.');
-                }, 500); 
-            }
-        }, 300);
-    }
-
-</script>
-
-<script>
-    $(document).ready(function () {
-        function validarCamposLlenos() {
-            let camposLlenos = true;
-            const nombreValue = $('.nombre_proveedor').val();
-            const telefonoValue = $('.telefono').val();
-            const correoValue = $('.correo').val();
-
-            if (!nombreValue) {
-                mostrarError('.nombre_proveedor', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            }
-            if (!telefonoValue) {
-                mostrarError('.telefono', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!/^\d{10}$/.test(telefonoValue)) {
-                mostrarError('.telefono', 'Número inválido.');
-                camposLlenos = false;
-            }
-            if (!correoValue) {
-                mostrarError('.correo', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarFormatoCorreo(correoValue)) {
-                mostrarError('.correo', 'El formato del correo electrónico no es válido.');
-                camposLlenos = false;
-            }
-            return camposLlenos;
-        }
-
-        $('.nombre_proveedor, .telefono, .correo').on('input', function () {
-            const campo = $(this);
-            const errorClass = campo.data('error-class'); // Obtenemos la clase de error personalizada
-
-            const campoValue = campo.val();
-
-            if (campoValue) {
-                campo.removeClass('is-invalid');
-                $(`.${errorClass}`).text(''); // Borramos el contenido del elemento de error correspondiente
-            }
-        });
-
-
-        function mostrarError(selector, mensaje) {
-            $(selector).addClass('is-invalid');
-            $(`${selector}-error`).text(mensaje).css('color', 'red');
-        }
-
-        function validarFormatoCorreo(correo) {
-            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            return emailRegex.test(correo);
-        }
-
-        $('#proveedor-form-create').submit(function (event) {
-            event.preventDefault();
-            if (!validarCamposLlenos()) {
-                return;
-            }
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'crear_proveedor' %}",
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        createProveedorResponse = response;
-                        limpiarModal()
-                        cerrarModalCrear(createProveedorResponse);
-                    }
-                }
-            });
-        });
-
-        $('#proveedor-form-edit').submit(function (event) {
-            event.preventDefault();
-
-            if (!validarCamposLlenos()) {
-                return;
-            }
-            let proveedor_id = $(this).data("prov-id");
-            let formData = $('#proveedor-form-edit').serialize();
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'editarProveedor' %}",
-                data: {
-                    proveedor_id: proveedor_id,
-                    formData: $(this).serialize()
-                },
-                success: function (response) {
-                    if (response.success) {
-                        createProveedorResponse = response;
-                        limpiarModal()
-                        cerrarModalEditar(createProveedorResponse);
-                    }
-                }
-            });
-        });
-    });
-
-
-</script>
-
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
+
 <div class="modal-backdrop"></div>
 
 <dialog id="verDetallesDialog" class="proveedorDialog dragHandle">
