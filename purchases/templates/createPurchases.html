@@ -443,7 +443,7 @@ function validarProveedor(nombreProveedor) {
                 },
                 success: function (data) {
                     if ('precio' in data) {
-                        let precioU = currentRow.find('.precioUnidad').val(parseFloat(data.precio).toLocaleString(undefined, {
+                        let precioU = currentRow.find('.precioUnidad').val(parseInt(data.precio).toLocaleString(undefined, {
                             minimumFractionDigits: 0,
                         }));
                     } else {
@@ -466,8 +466,8 @@ function validarProveedor(nombreProveedor) {
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = parseFloat(currentRow.find('.precioUnidad').val());
-            let cantidad = parseFloat(inputCantidad.val());
+            let precioUnidad = currentRow.find(".precioUnidad").val().replace(/[^\d.-]/g, '');
+            let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
@@ -535,7 +535,7 @@ function validarProveedor(nombreProveedor) {
     let totalCompra = 0;
 
     $(".producto-row").each(function () {
-        let precioTotal = parseFloat($(this).find('.precioTotal').val().replace(',', ''));
+        let precioTotal = parseInt($(this).find('.precioTotal').val().replace(',', ''));
 
         if (!isNaN(precioTotal)) {
             totalCompra += precioTotal;
@@ -571,9 +571,9 @@ function validarProveedor(nombreProveedor) {
         const precioTotalInput = row.find('.precioTotal');
 
         const productoValue = productoInput.val();
-        const precioUnidadValue = parseInt(precioUnidadInput.val());
+        const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
         const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
-        const cantidadValue = parseFloat(cantidadInput.val());
+        const cantidadValue = parseInt(cantidadInput.val());
 
         if (!precioUnidadValue || isNaN(precioUnidadValue)) {
             productoInput.addClass('is-invalid');

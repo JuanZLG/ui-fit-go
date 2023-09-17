@@ -17,18 +17,15 @@ def crear_compra(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            logger.debug("Datos JSON recibidos: %s", data)  # Registra los datos JSON recibidos
+            logger.debug("Datos JSON recibidos: %s", data)      
             proveedor_nombre = data.get('proveedor', '')
             productos = data.get('productos', [])
 
-            # Validar los datos aquí según tus requisitos
             if not proveedor_nombre or not productos:
                 return JsonResponse({'error': 'Datos no válidos'}, status=400)
 
-            # Buscar al proveedor por nombre_proveedor
             proveedor = Proveedores.objects.filter(nombre_proveedor=proveedor_nombre).first()
 
-            # Si no se encuentra el proveedor, puedes crear uno nuevo aquí o manejar el error según tus necesidades.
             if not proveedor:
                 return JsonResponse({'error': 'Proveedor no encontrado'}, status=400)
 
@@ -142,13 +139,10 @@ def cambiarEstado(request):
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
- # Asegúrate de importar tu modelo correctamente
 
 def obtener_detalles_compra(request, compra_id):
-    # Obtén la compra por su ID
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
 
-    # Prepara los detalles de la compra en un formato adecuado
     detalles = [
         {
             'producto': detalle.id_producto.nombre_producto,
@@ -160,15 +154,13 @@ def obtener_detalles_compra(request, compra_id):
         for detalle in detalles_compra
     ]
 
-    # Prepara los datos generales de la compra
-    compra = detalles_compra.first().id_compra  # Suponemos que todos los detalles pertenecen a la misma compra
+    compra = detalles_compra.first().id_compra 
     datos_generales = {
         'proveedor': compra.id_proveedor.nombre_proveedor,
         'fechaRegistro': compra.fechareg,
         'estado': 'Activo' if compra.estado == 1 else 'Inactivo',
     }
 
-    # Crea un diccionario con los datos generales y los detalles de la compra
     respuesta = {
         'proveedor': datos_generales['proveedor'],
         'fechaRegistro': str(datos_generales['fechaRegistro']),
@@ -176,5 +168,4 @@ def obtener_detalles_compra(request, compra_id):
         'detalles': detalles,
     }
 
-    # Devuelve la respuesta como JSON
     return JsonResponse(respuesta)
