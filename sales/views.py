@@ -150,49 +150,6 @@ def cambiarEstado(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
-
-#  1. ENLACE URL CON ID DE LA VENTA
-#  2. IDENTIFICAR VENTA MEDIANTE EL ID - TOMAR FECHA Y TOTAL DE VENTA
-#  3. IDENTIFICAR DETALLEVENTA MEDIANTE ID DE VENTA O FORANEA - TOMAR DATOS RESTANTE DE COMPRA
-#  4. ENVIAR INFORMACION POR RENDER, TOMAR EN HTML Y MOSTRAR VALORES INICIALES
-#  5. METODO POST, UPDATE - APLICAR RESTAR, SUMAR EN PRODUCTOS
-
-# def editar_venta(request, id_venta):
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         documento = data.get('documento', '')
-#         totalVenta = data.get('totalVenta', '')
-#         productos = data.get('productos', [])
-
-#         cliente = Clientes.objects.filter(documento=documento).first()
-#         Ventas.objects.filter(pk=id_venta).update(id_cliente=cliente, totalVenta=totalVenta)
-
-#         for producto_datos in productos:
-#             nombre_producto = producto_datos['nombre']
-#             cantidad_vendida = producto_datos['cantidad']
-
-#             producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
-#             if producto:
-#                 producto.cantidad -= cantidad_vendida
-#                 producto.save()
-
-#             # Crear un registro en Detalleventa
-#             detalle = Detalleventa.objects.update(
-#                 id_producto=producto,
-#                 id_venta=venta,
-#                 cantidad=cantidad_vendida,
-#                 precio_uni=producto_datos['precioUnidad'],
-#                 precio_tot=producto_datos['precioTotal']
-#             )
-#         response_data = {'success': True}  
-        
-#     detalles = Detalleventa.objects.filter(id_venta=id_venta)
-#     venta = Ventas.objects.get(id_venta=id_venta)  
-#     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
-
-
-# from django.views.decorators.csrf import csrf_protect
-
 # @csrf_protect
 @csrf_exempt
 def editar_venta(request, id_venta):
