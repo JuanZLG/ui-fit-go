@@ -1,0 +1,106 @@
+{% extends "baseInterface.html" %} 
+
+{% block title %} Agregar Usuario {% endblock %} 
+
+{% block body %}
+<center><h1 class="h3 text-gray-800 mb-4">Agregar Usuario</h1></center>
+
+<div class="card shadow">
+  <div class="container p-4">
+    <form class="form" id="usuario-form" method="post">
+      {% csrf_token %}
+      
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label for="rol">Rol</label>
+            <select class="form-select" aria-label="Default" name="rol" id="rol">
+              {% for r in roles %}
+              <option value="{{ r.id_rol }}">{{ c.nombre_rol }}</option>
+              {% endfor %}
+            </select>
+            <div class="error-message" id="rol-error"></div>
+          </div>
+        </div>
+  
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label>Correo</label>
+            <input type="email" class="form-control" id="Correo" name="Correo" placeholder="Correo electronico"/>
+            <div class="error-message" id="Correo-error"></div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="text" class="form-control" id="contrasena" name="contrasena" placeholder="Ingrese la contraseña"/>
+        <div class="error-message" id="contrasena-error"></div>
+      </div>
+  
+      <div class="text-end">
+        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  var fechaActual = new Date().toISOString().split("T")[0];
+  document.getElementById("iFechaven").min = fechaActual;
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+<script>
+  $(document).ready(function () {
+      $('#rol, #Correo, #contrase').on('change', function () {
+          validarCampo($(this));
+      });
+
+      $('#usuario-form').submit(function (event) {
+          event.preventDefault();
+          let errors = false;
+
+          validarCampo($('#rol'));
+          validarCampo($('#Correo'));
+          validarCampo($('#contrase'));
+
+          if ($('.error-message').text() === '') {
+              $.ajax({
+                  type: 'POST',
+                  url: "{% url 'createUser' %}",
+                  data: $(this).serialize(),
+                  success: function (response) {
+                      if (response.success) {
+                          alert('Usuario creado con éxito.');
+                          window.location.href = "{% url 'usuarios' %}";
+                      }
+                  }
+              });
+          }
+      });
+
+      function mostrarError($campo, mensaje) {
+          $campo.addClass('is-invalid');
+          $campo.siblings('.error-message').text(mensaje);
+      }
+
+      function ocultarError($campo) {
+          $campo.removeClass('is-invalid');
+          $campo.siblings('.error-message').text('');
+      }
+
+      function validarCampo($campo) {
+          const valor = $campo.val();
+          if (!valor) {
+              mostrarError($campo, 'Este campo es obligatorio.');
+          } else {
+              ocultarError($campo);
+          }
+      }
+  });
+</script>
+
+{% endblock %}

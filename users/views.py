@@ -25,3 +25,20 @@ def cambiarEstadoDeUsuario(request):
         except Usuarios.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Usuario no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+def createUser(request):
+    
+    roles = Roles.objects.all()
+    
+    if request.method == 'POST':
+        rol = request.POST['rol']
+        correo = request.POST['Correo']
+        contrasena = request.POST['contrasena']
+        
+        rl = Roles.objects.get(id_rol=rol)
+        user = Usuarios.objects.all()
+
+        Usuarios.objects.create(id_rol=rl, correo=correo, contrasena=contrasena)
+        return JsonResponse({'success': True})
+    
+    return render(request, 'createUser.html', {"roles":roles})
