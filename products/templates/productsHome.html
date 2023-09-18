@@ -62,8 +62,8 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                          <a class="btn btn-sm editarProducto"
-                              id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm"
+                            id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                               <a class="btn btn-sm btn-primary" id="detailsbutton" data-bs-toggle="modal" data-bs-target="#exampleModal" data-cliente-id="{{ cliente.id_cliente }}">
                               <i class="fa-solid fa-eye"></i>
                           </a>
