@@ -1,16 +1,17 @@
 from django.db import models
 
+from django.db import models
+
 class Clientes(models.Model):
     id_cliente = models.AutoField(primary_key=True)
     id_municipio = models.ForeignKey('Municipios', models.DO_NOTHING, db_column='id_municipio')
-    documento = models.CharField(max_length=25)
+    documento = models.CharField(max_length=25, unique=True)  
     nombres = models.CharField(max_length=60)
     apellidos = models.CharField(max_length=60)
     celular = models.CharField(max_length=10)
     barrio = models.CharField(max_length=40)
     direccion = models.CharField(max_length=50)
     estado = models.IntegerField(default=1)
-
 
     def __str__(self):
         texto = "{0} ({1})"
@@ -19,6 +20,7 @@ class Clientes(models.Model):
     class Meta:
         managed = False
         db_table = 'clientes'
+
 
 class Departamentos(models.Model):
     id_departamento = models.AutoField(primary_key=True)
