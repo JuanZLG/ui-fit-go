@@ -296,7 +296,8 @@
                 },
                 success: function (data) {
                     if ("precio" in data) {
-                        let precioUValue = parseInt(data.precio).toLocaleString();
+                        // let precioUValue = parseInt(data.precio).toLocaleString();
+                        let precioUValue = new Intl.NumberFormat().format(parseInt(data.precio));
                         let precioTotalFormatted = "$ " + precioUValue;
                         let precioU = currentRow.find(".precioUnidad").val(precioTotalFormatted);
 
@@ -325,7 +326,8 @@
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
-                let totalProductoFormateado = total.toLocaleString();
+                // let totalProductoFormateado = total.toLocaleString();
+                let totalProductoFormateado = new Intl.NumberFormat().format(total);
                 currentRow.find(".precioTotal").val("$ " + totalProductoFormateado);
                 calcularTotalVenta();
             } else {
@@ -392,7 +394,8 @@
                 }
             });
 
-            let totalVentaFormateado = "$ " + totalVenta.toLocaleString();
+            // let totalVentaFormateado = "$ " + totalVenta.toLocaleString();
+            let totalVentaFormateado = "$ " + new Intl.NumberFormat().format(totalVenta);
             $("#totalVenta").val(totalVentaFormateado);
         }
 
