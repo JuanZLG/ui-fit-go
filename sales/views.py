@@ -42,7 +42,70 @@ def crear_venta(request):
     return render(request, 'createSales.html')
     
 
+# @csrf_protect
+@csrf_exempt
+def editar_venta(request, id_venta):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            documento = data.get('documento', '')
+            totalVenta = data.get('totalVenta', 0)
+            productos = data.get('productos', [])
+            # Validar que la venta exista
+            venta = Ventas.objects.get(id_venta=id_venta) 
 
+            if documento:
+                cliente = Clientes.objects.get(documento=documento)
+                venta.id_cliente = cliente
+            venta.totalVenta = totalVenta
+            venta.save()
+
+            for producto_datos in productos:
+                nombre_producto = producto_datos.get('nombre', '')
+                cantidad_vendida = producto_datos.get('cantidad', 0)
+
+                if nombre_producto:
+                    # Obtener todos los detalles de venta relacionados con la venta
+                    detalles_venta = Detalleventa.objects.filter(id_venta=venta)
+                    
+                    # Buscar el detalle de venta correspondiente al producto
+                    detalle_existente = None
+                    for detalle in detalles_venta:
+                        print(detalle.id_producto.nombre_producto + str(detalle.precio_uni))
+
+                        if detalle.id_producto.nombre_producto == nombre_producto:
+                            detalle_existente = detalle
+                            detalle_existente.cantidad = cantidad_vendida
+                            detalle_existente.precio_uni = producto_datos.get('precioUnidad', 0)
+                            detalle_existente.precio_tot = producto_datos.get('precioTotal', 0)
+                            detalle_existente.save()
+                        else:
+                            producto = Productos.objects.get(nombre_producto=nombre_producto)
+                            Detalleventa.objects.create(
+                                id_producto=producto,
+                                id_venta=venta,
+                                cantidad=cantidad_vendida,
+                                precio_uni=producto_datos['precioUnidad'],
+                                precio_tot=producto_datos['precioTotal']
+                            )
+
+            response_data = {'success': True}
+        except Exception as e:
+            response_data = {'success': False, 'error_message': str(e)}
+        return JsonResponse(response_data)
+
+    detalles = Detalleventa.objects.filter(id_venta=id_venta)
+    venta = get_object_or_404(Ventas, pk=id_venta)
+    return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
+
+
+                        # El producto no existe en la venta, crear uno nuevo
+                        # producto = Productos.objects.get(nombre_producto=nombre_producto)
+                        # detalle, _ = Detalleventa.objects.get_or_create(id_producto=producto, id_venta=venta)
+                        # detalle.cantidad = cantidad_vendida
+                        # detalle.precio_uni = producto_datos.get('precioUnidad', 0)
+                        # detalle.precio_tot = producto_datos.get('precioTotal', 0)
+                        # detalle.save()
 
 def buscar_documentos(request):
     q = request.GET.get("q", "")
@@ -148,51 +211,3 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
-
-# @csrf_protect
-@csrf_exempt
-def editar_venta(request, id_venta):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            documento = data.get('documento', '')
-            totalVenta = data.get('totalVenta', 0)
-            productos = data.get('productos', [])
-            # Validar que la venta exista
-            venta = get_object_or_404(Ventas, pk=id_venta)
-
-            # Actualizar cliente y total de venta
-            if documento:
-                cliente, _ = Clientes.objects.get_or_create(documento=documento)
-                venta.id_cliente = cliente
-            venta.totalVenta = totalVenta
-            venta.save()
-
-            for producto_datos in productos:
-                nombre_producto = producto_datos.get('nombre', '')
-                cantidad_vendida = producto_datos.get('cantidad', 0)
-
-                if nombre_producto and cantidad_vendida > 0:
-                    # Validar que el producto exista
-                    producto, _ = Productos.objects.get_or_create(nombre_producto=nombre_producto)
-
-                    # Actualizar cantidad de producto
-                    producto.cantidad -= cantidad_vendida
-                    producto.save()
-
-                    # Crear o actualizar un registro en Detalleventa
-                    detalle, _ = Detalleventa.objects.get_or_create(id_producto=producto, id_venta=venta)
-                    detalle.cantidad = cantidad_vendida
-                    detalle.precio_uni = producto_datos.get('precioUnidad', 0)
-                    detalle.precio_tot = producto_datos.get('precioTotal', 0)
-                    detalle.save()
-
-            response_data = {'success': True}
-        except Exception as e:
-            response_data = {'success': False, 'error_message': str(e)}
-        return JsonResponse(response_data)
-
-    detalles = Detalleventa.objects.filter(id_venta=id_venta)
-    venta = get_object_or_404(Ventas, pk=id_venta)
-    return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
