@@ -36,6 +36,7 @@ class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
     fechareg = models.DateField(default=timezone.now)
+    fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=1) 
 
     class Meta:
@@ -57,8 +58,8 @@ class Detallecompra(models.Model):
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
     id_compra = models.ForeignKey(Compras, models.DO_NOTHING, db_column='id_compra')
     cantidad = models.IntegerField()
-    precio_uni = models.DecimalField(max_digits=10, decimal_places=0)
-    precio_tot = models.DecimalField(max_digits=10, decimal_places=0)
+    precio_uni = models.IntegerField()
+    precio_tot = models.IntegerField()
 
     class Meta:
         managed = False
@@ -70,8 +71,8 @@ class Detalleventa(models.Model):
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
     id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
     cantidad = models.IntegerField()
-    precio_uni = models.DecimalField(max_digits=10, decimal_places=0)
-    precio_tot = models.DecimalField(max_digits=10, decimal_places=0)
+    precio_uni = models.IntegerField()
+    precio_tot = models.IntegerField()
 
     class Meta:
         managed = False
@@ -168,9 +169,9 @@ class Usuarios(models.Model):
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateField(default=timezone.now)
-    estado = models.IntegerField(default=True)
-    totalVenta = models.IntegerField()
+    fechareg = models.DateTimeField(default=timezone.now)
+    estado = models.IntegerField(blank=True, null=True)
+
     class Meta:
         managed = False
         db_table = 'ventas'

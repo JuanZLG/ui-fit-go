@@ -22,7 +22,8 @@
                 </div>
                 <input type="text" class="form-control" id="nombreProveedor" autocomplete="off"
                 placeholder="Ingrese el nombre del proveedor" maxlength="100">
-         <span class="error-message text-danger" id="error-docu"></span>
+         <span class="error-message text-danger" id="error-proveedor"></span>
+         
          
 
             </div>
@@ -271,22 +272,17 @@ $(document).ready(function () {
         let input = $(this).val();
         let resultadoDocu = $("#nombreProveedorDato");
 
-        if (input.length >= 3) {
+        if (input) {
             $.ajax({
                 url: "{% url 'buscar_proveedores' %}?q=" + input,
                 type: "GET",
                 success: function (data) {
-                    let nombreProveedorCoincidente = null;
+                    let esCoincidenciaExacta = data.proveedores.includes(input);
 
-                    if (data.proveedores.length > 0) {
-                        nombreProveedorCoincidente = data.proveedores.find(proveedor => proveedor === input);
-                        $("#nombreProveedor").removeClass("is-invalid").addClass("is-valid");
-
-                    }
-
-                    if (nombreProveedorCoincidente !== null) {
-                        resultadoDocu.html(nombreProveedorCoincidente);
+                    if (esCoincidenciaExacta) {
+                        resultadoDocu.html(input);
                         resultadoDocu.show(); // Mostrar el nombre del proveedor
+                        $("#nombreProveedor").removeClass("is-invalid").addClass("is-valid");
                     } else {
                         resultadoDocu.empty().hide(); // Limpiar y ocultar el nombre del proveedor
                         $("#nombreProveedor").removeClass("is-valid is-invalid");
@@ -303,6 +299,7 @@ $(document).ready(function () {
         }
     });
 });
+
 
 
 
@@ -443,7 +440,7 @@ function validarProveedor(nombreProveedor) {
                 },
                 success: function (data) {
                     if ('precio' in data) {
-                        let precioU = currentRow.find('.precioUnidad').val(parseFloat(data.precio).toLocaleString(undefined, {
+                        let precioU = currentRow.find('.precioUnidad').val(parseInt(data.precio).toLocaleString(undefined, {
                             minimumFractionDigits: 0,
                         }));
                     } else {
@@ -466,8 +463,8 @@ function validarProveedor(nombreProveedor) {
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = parseFloat(currentRow.find('.precioUnidad').val());
-            let cantidad = parseFloat(inputCantidad.val());
+            let precioUnidad = currentRow.find(".precioUnidad").val().replace(/[^\d.-]/g, '');
+            let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
@@ -535,18 +532,21 @@ function validarProveedor(nombreProveedor) {
     let totalCompra = 0;
 
     $(".producto-row").each(function () {
-        let precioTotal = parseFloat($(this).find('.precioTotal').val().replace(',', ''));
+        let precioTotal = parseInt($(this).find(".precioTotal").val().replace(/[^\d.-]/g, ''));
 
         if (!isNaN(precioTotal)) {
             totalCompra += precioTotal;
         }
     });
-    let totalCompraFormateado = totalCompra.toLocaleString(undefined, {
-        minimumFractionDigits: 3
-    });
 
-    $('#totalCompra').val('$ ' + totalCompraFormateado);
+    let totalCompraFormateado = "$ " + totalCompra.toLocaleString();
+
+    // Establece el total en un campo de entrada con el id "totalCompra"
+    $("#totalCompra").val(totalCompraFormateado);
 }
+
+
+
 
     
 
@@ -555,11 +555,37 @@ function validarProveedor(nombreProveedor) {
         function validarCamposLlenos() {
     let camposLlenos = true;
     const productos = [];
-    
+
     const proveedorValue = $('#nombreProveedor').val();
     if (!proveedorValue) {
-        mostrarError("#nombreProveedor", "El campo del proveedor no puede estar vacío. Por favor, ingrésalo correctamente.");
+        mostrarError("#nombreProveedor");
+        $("#error-proveedor").text(
+            "El campo del proveedor no puede estar vacío. Por favor, ingréselo correctamente."
+        );
         camposLlenos = false;
+    } else {
+        // Realiza una solicitud AJAX para verificar la existencia del proveedor en tu sistema.
+        $.ajax({
+            url: "{% url 'validar_proveedor' %}?nombreProveedor=" + proveedorValue,
+            type: "GET",
+            async: false,  // Espera la respuesta antes de continuar la ejecución
+            success: function (data) {
+                if (!data.existe) {
+                    mostrarError("#nombreProveedor");
+                    $("#error-proveedor").text(
+                        "El proveedor no coincide o no existe en nuestros registros. Por favor, verifique y vuelva a intentar."
+                    );
+                    camposLlenos = false;
+                }
+            },
+            error: function () {
+                mostrarError("#nombreProveedor");
+                $("#error-proveedor").text(
+                    "Ocurrió un error al validar el proveedor. Por favor, inténtelo nuevamente."
+                );
+                camposLlenos = false;
+            }
+        });
     }
 
     $('.producto-row').each(function (index) {
@@ -571,9 +597,9 @@ function validarProveedor(nombreProveedor) {
         const precioTotalInput = row.find('.precioTotal');
 
         const productoValue = productoInput.val();
-        const precioUnidadValue = parseInt(precioUnidadInput.val());
+        const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
         const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
-        const cantidadValue = parseFloat(cantidadInput.val());
+        const cantidadValue = parseInt(cantidadInput.val());
 
         if (!precioUnidadValue || isNaN(precioUnidadValue)) {
             productoInput.addClass('is-invalid');
@@ -601,6 +627,7 @@ function validarProveedor(nombreProveedor) {
 
     return camposLlenos ? { proveedor: proveedorValue, productos: productos } : null;
 }
+
 
 function mostrarError(selector, mensaje) {
     $(selector).addClass('is-invalid');

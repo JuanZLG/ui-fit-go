@@ -10,6 +10,7 @@ urlpatterns = [
     path('ver_detalles_cliente/', views.verDetallesCliente, name='ver_detalles_cliente'),
 
 
+    path('verificar_documento/', views.verificar_documento, name='verificar_documento'),
 
     path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoClientes'),
 

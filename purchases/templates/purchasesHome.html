@@ -45,8 +45,9 @@
                 <tbody>
                     {% for compra in compras %}
                     <tr class="{% if compra.estado == 0 %}inactivo{% endif %}">
-                        <td>{{compra.id_compra}}<td>
-                        <td class="d-flex">{{ compra.id_proveedor.nombre_proveedor }}</td>
+                        <td>{{compra.id_compra}}</td>
+                        
+                        <td >{{ compra.id_proveedor.nombre_proveedor }}</td>
                         <td>{{ compra.fechareg }}</td>
                         <td>
                             <button
@@ -304,22 +305,23 @@
 
             // Llena la tabla de detalles de la compra
             let detallesCompraHTML = "";
-            for (let detalle of response.detalles) {
-                console.log('Detalle:', detalle);
+for (let detalle of response.detalles) {
+    console.log('Detalle:', detalle);
 
-                // Convierte precioUnitario y totalProducto a números
-                const precioUnitario = parseFloat(detalle.precioUnitario);
-                const totalProducto = parseFloat(detalle.totalProducto);
+    // Convierte precioUnitario y totalProducto a números
+    const precioUnitario = parseFloat(detalle.precioUnitario);
+    const totalProducto = parseFloat(detalle.totalProducto);
 
-                detallesCompraHTML += `
-                    <tr>
-                        <td>${detalle.producto}</td>
-                        <td>${precioUnitario.toFixed(3)}</td> <!-- Mostrar con 2 decimales -->
-                        <td>${detalle.cantidad}</td>
-                        <td>${totalProducto.toFixed(3)}</td> <!-- Mostrar con 2 decimales -->
-                    </tr>
-                `;
-            }
+    detallesCompraHTML += `
+        <tr>
+            <td>${detalle.producto}</td>
+            <td>${precioUnitario.toFixed(2)}</td> <!-- Mostrar con 2 decimales -->
+            <td>${detalle.cantidad}</td>
+            <td>${totalProducto.toFixed(2)}</td> <!-- Mostrar con 2 decimales -->
+        </tr>
+    `;
+}
+
             document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
 
             // Abre el modal

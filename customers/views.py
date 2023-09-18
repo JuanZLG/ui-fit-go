@@ -41,6 +41,12 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from customers.models import Clientes, Municipios, Departamentos
 
+from django.http import JsonResponse
+from .models import Clientes
+
+from django.http import JsonResponse
+from django.db import IntegrityError
+
 def agregarClientePost(request):
     if request.method == 'POST':
         documento = request.POST.get('iDocumento')
@@ -52,18 +58,25 @@ def agregarClientePost(request):
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
+        # Verificar si el documento ya existe en la base de datos
         if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
-        departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
-
-        if not departamento:
+        try:
+            departamento = Departamentos.objects.get(nombre_departamento=departamento_nombre)
+        except Departamentos.DoesNotExist:
             departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
 
-        municipio, created = Municipios.objects.get_or_create(
-            nombre_municipio=municipio_nombre,
-            id_departamento=departamento
-        )
+        try:
+            municipio = Municipios.objects.get(
+                nombre_municipio=municipio_nombre,
+                id_departamento=departamento
+            )
+        except Municipios.DoesNotExist:
+            municipio = Municipios.objects.create(
+                nombre_municipio=municipio_nombre,
+                id_departamento=departamento
+            )
 
         cliente = Clientes(
             id_municipio=municipio,
@@ -75,12 +88,17 @@ def agregarClientePost(request):
             direccion=direccion,
             estado=1,
         )
-        cliente.save()
 
-        return JsonResponse({'success': True, 'message': 'Cliente creado con éxito'})
+        try:
+            cliente.save()
+            return JsonResponse({'success': True, 'message': 'Cliente creado con éxito'})
+        except IntegrityError as e:
+            return JsonResponse({'success': False, 'message': 'Error: El documento ya está registrado en la base de datos.'})
 
     municipios = Municipios.objects.all()
     return render(request, 'createCustomer.html', {'municipios': municipios})
+
+
 
 
 def redirigirEditar(request, cliente_id):
@@ -174,3 +192,19 @@ def verDetallesCliente(request):
             return JsonResponse({'status': 'error', 'message': 'ID de cliente no proporcionado'})
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
+
+def verificar_documento(request):
+    if request.method == 'POST':
+        documento = request.POST.get('iDocumento')
+
+        # Realiza la consulta en la base de datos para verificar si el documento existe
+        documento_existe = Clientes.objects.filter(documento=documento).exists()
+
+        # Devuelve una respuesta JSON con el resultado
+        return JsonResponse({'documento_existe': documento_existe})
+
+    # Manejar otros métodos y errores si es necesario
+
