@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Productos
 from django.urls import reverse
 import json
@@ -38,30 +38,38 @@ def createProduct(request):
     return render(request, 'createProducts.html', {"marcas":marcas,"categorias":categorias})
 
 
-@csrf_exempt
-def modifyProduct(request):
+def editProduct(request, producto_id):
+    producto = get_object_or_404(Productos, id_producto=producto_id)
+    marcas = Marcas.objects.all()
+    categorias = Categorias.objects.all()
+
     if request.method == 'POST':
-        producto_id = request.POST.get('producto_id')
-        form_data = request.POST.get('formData')
-        form_data_dict = parse_qs(form_data)
+        cat = request.POST.get('iCategoria')
+        brand = request.POST.get('iMarca')
+        name = request.POST.get('iNombre')
+        vdate = request.POST.get('iFechaven')
+        cant = request.POST.get('iCantidad')
+        flavor = request.POST.get('iSabor')
+        service = request.POST.get('iServices')
+        pPrice = request.POST.get('iPrice')
 
-        nombre_producto = form_data_dict.get('nombre_producto', [''])[0]
-        descripcion = form_data_dict.get('descripcion', [''])[0]
-        cantidad = form_data_dict.get('cantidad', [''])[0]
-        fechaven = form_data_dict.get('fechaven', [''])[0]
-        sabor = form_data_dict.get('sabor', [''])[0]
-        presentacion = form_data_dict.get('presentacion', [''])[0]
-        precio = form_data_dict.get('precio', [''])[0]
+        if not cat or not brand or not name or not vdate or not cant or not flavor or not service or not pPrice:
+            return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios.'})
 
-        Productos.objects.filter(id_producto=producto_id).update(
-            nombre_producto=nombre_producto,
-            descripcion=descripcion,
-            cantidad=cantidad,
-            fechaven=fechaven,
-            sabor = sabor,
-            presentacion = presentacion,
-            precio=precio
-        )
+        # Actualiza los campos del producto existente con los valores recibidos
+        producto.id_categoria = cat
+        producto.id_marca = brand
+        producto.nombre_producto = name
+        producto.fechaven = vdate
+        producto.cantidad = cant
+        producto.sabor = flavor
+        producto.presentacion = service
+        producto.precio = pPrice
+        producto.save()
+
+        return JsonResponse({'success': True, 'message': 'Producto actualizado con éxito.'})
+
+    return render(request, 'editProducts.html', {'Products': producto, 'marcas':marcas, 'categorias':categorias})
 
 def cambiarEstadoDeProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
