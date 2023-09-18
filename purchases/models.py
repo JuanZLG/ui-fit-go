@@ -66,17 +66,6 @@ class Detallecompra(models.Model):
         db_table = 'detallecompra'
 
 
-class Detalleventa(models.Model):
-    id_detalleventa = models.AutoField(primary_key=True)
-    id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
-    id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
-    cantidad = models.IntegerField()
-    precio_uni = models.IntegerField()
-    precio_tot = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'detalleventa'
 
 
 class Marcas(models.Model):
@@ -98,13 +87,7 @@ class Municipios(models.Model):
         db_table = 'municipios'
 
 
-class Permisos(models.Model):
-    id_permiso = models.AutoField(primary_key=True)
-    nombre_permiso = models.CharField(max_length=37)
 
-    class Meta:
-        managed = False
-        db_table = 'permisos'
 
 
 class Productos(models.Model):
@@ -137,42 +120,5 @@ class Proveedores(models.Model):
         db_table = 'proveedores'
 
 
-class Roles(models.Model):
-    id_rol = models.AutoField(primary_key=True)
-    nombre_rol = models.CharField(max_length=37)
 
-    class Meta:
-        managed = False
-        db_table = 'roles'
-
-
-class Rolespermisos(models.Model):
-    id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol')
-    id_permiso = models.ForeignKey(Permisos, models.DO_NOTHING, db_column='id_permiso')
-
-    class Meta:
-        managed = False
-        db_table = 'rolespermisos'
-
-
-class Usuarios(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
-    id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol')
-    correo = models.CharField(max_length=60)
-    contrasena = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'usuarios'
-
-
-class Ventas(models.Model):
-    id_venta = models.AutoField(primary_key=True)
-    id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateTimeField(default=timezone.now)
-    estado = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'ventas'
         
