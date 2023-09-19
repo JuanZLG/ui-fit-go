@@ -36,7 +36,6 @@ class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
     fechareg = models.DateField(default=timezone.now)
-    fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=1) 
 
     class Meta:
@@ -120,5 +119,39 @@ class Proveedores(models.Model):
         db_table = 'proveedores'
 
 
+class Roles(models.Model):
+    id_rol = models.AutoField(primary_key=True)
+    nombre_rol = models.CharField(max_length=37)
+
+    class Meta:
+        managed = False
+        db_table = 'roles'
+
+
+class Rolespermisos(models.Model):
+    id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol')
+    id_permiso = models.ForeignKey(Permisos, models.DO_NOTHING, db_column='id_permiso')
+
+    class Meta:
+        managed = False
+        db_table = 'rolespermisos'
+
+
+class Usuarios(models.Model):
+    id_usuario = models.AutoField(primary_key=True)
+    id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol')
+    correo = models.CharField(max_length=60)
+    contrasena = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'usuarios'
+
+
+class Ventas(models.Model):
+    id_venta = models.AutoField(primary_key=True)
+    id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
+    fechareg = models.DateField(default=timezone.now)
+    estado = models.IntegerField(blank=True, null=True)
 
         

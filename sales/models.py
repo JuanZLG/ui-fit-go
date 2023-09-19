@@ -65,7 +65,7 @@ class Productos(models.Model):
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField()
-    precio = models.IntegerField()
+    precio = models.FloatField()
 
 
     class Meta:
@@ -78,8 +78,8 @@ class Detalleventa(models.Model):
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
     id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
     cantidad = models.IntegerField()
-    precio_uni = models.IntegerField()
-    precio_tot = models.IntegerField()
+    precio_uni = models.FloatField()
+    precio_tot = models.FloatField()
 
     class Meta:
         managed = False
@@ -90,7 +90,7 @@ class Ventas(models.Model):
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
     fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=True)
-    totalVenta = models.IntegerField()
+    totalVenta = models.FloatField()
     class Meta:
         managed = False
         db_table = 'ventas'

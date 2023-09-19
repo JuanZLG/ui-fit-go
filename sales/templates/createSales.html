@@ -4,7 +4,7 @@
 
 <head>
     {% load static %}
-        <link rel="stylesheet" href="{% static 'css/CreateEditVentas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/CreateEditVentas.css' %}">
     <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 
@@ -287,6 +287,12 @@
             });
         }
 
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$ ' + precioFormateado;
+        }
+
         function obtenerPrecioProducto(currentRow, nombreProducto) {
             $.ajax({
                 url: "{% url 'obtener_precio_producto' %}",
@@ -296,12 +302,11 @@
                 },
                 success: function (data) {
                     if ("precio" in data) {
-                        // let precioUValue = parseInt(data.precio).toLocaleString();
-                        let precioUValue = new Intl.NumberFormat().format(parseInt(data.precio));
-                        let precioTotalFormatted = "$ " + precioUValue;
+                        let precioUValue = parseFloat(data.precio)
+                        let precioTotalFormatted = formatearPrecios(precioUValue);
                         let precioU = currentRow.find(".precioUnidad").val(precioTotalFormatted);
-
-                    } else {
+                    }
+                    else {
                         currentRow.find(".precioUnidad").addClass("is-invalid");
                     }
                 },
@@ -316,19 +321,19 @@
             $("#totalVenta").val("");
         });
 
+
         $(document).on("input", ".cantidad", function () {
             calcularTotalProducto($(this));
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = currentRow.find(".precioUnidad").val().replace(/[^\d.-]/g, '');
+            let precioUnidad = parseFloat($(".precioUnidad").val().replace(/[$,.]/g, ''));
             let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
-                // let totalProductoFormateado = total.toLocaleString();
-                let totalProductoFormateado = new Intl.NumberFormat().format(total);
-                currentRow.find(".precioTotal").val("$ " + totalProductoFormateado);
+                let formateoTotal = formatearPrecios(total)
+                currentRow.find(".precioTotal").val(formateoTotal);
                 calcularTotalVenta();
             } else {
                 currentRow.find(".precioTotal").val("");
@@ -387,16 +392,14 @@
             let totalVenta = 0; // Inicializa como número
 
             $(".producto-row").each(function () {
-                let precioTotal = parseInt($(this).find(".precioTotal").val().replace(/[^\d.-]/g, ''));
-
+                let precioTotal = parseFloat($(this).find(".precioTotal").val().replace(/[$,.]/g, ''));
                 if (!isNaN(precioTotal)) {
                     totalVenta += precioTotal;
                 }
             });
 
-            // let totalVentaFormateado = "$ " + totalVenta.toLocaleString();
-            let totalVentaFormateado = "$ " + new Intl.NumberFormat().format(totalVenta);
-            $("#totalVenta").val(totalVentaFormateado);
+            let formateoTotalVenta = formatearPrecios(totalVenta)
+            $("#totalVenta").val(formateoTotalVenta);
         }
 
 
@@ -404,7 +407,7 @@
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $("#documentoDato").text();
-            const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[^\d.-]/g, ''));
+            const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
 
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
@@ -433,8 +436,8 @@
 
 
                 const productoValue = productoInput.val();
-                const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
-                const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
+                const precioUnidadValue = parseFloat(precioUnidadInput.val().replace(/[$,.]/g, '')).toFixed(2);
+                const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
 
                 const cantidadValue = parseInt(cantidadInput.val());
 
