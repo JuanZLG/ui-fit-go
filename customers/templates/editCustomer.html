@@ -142,7 +142,20 @@
                 errors = true;
             } else {
                 ocultarError('#iDocumento');
+            }if (!nombres) {
+                mostrarError('#iNombres', 'Este campo es obligatorio.');
+                errors = true;
+            } else {
+                ocultarError('#iNombres');
+            }if (!apellidos) {
+                mostrarError('#iDocumento', 'Este campo es obligatorio.');
+                errors = true;
+            } else {
+                ocultarError('#iDocumento');
             }
+            
+
+
 
 
             if (!errors) {

@@ -1,7 +1,5 @@
 from django.db import models
-
 from django.utils import timezone
-
 
 
 class Clientes(models.Model):
@@ -63,7 +61,7 @@ class Productos(models.Model):
     nombre_producto = models.CharField(max_length=75)
     descripcion = models.CharField(max_length=400)
     cantidad = models.IntegerField()
-    fechaven = models.DateField()
+    fechaven = models.DateTimeField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField()
@@ -90,10 +88,9 @@ class Detalleventa(models.Model):
 class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateTimeField(default=timezone.now)
+    fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=True)
     totalVenta = models.IntegerField()
     class Meta:
         managed = False
         db_table = 'ventas'
-        

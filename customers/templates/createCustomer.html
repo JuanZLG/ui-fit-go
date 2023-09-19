@@ -81,6 +81,8 @@
             cargarMunicipios();
         });
 
+        // ... (código anterior)
+
         $('#iDocumento').on('input', function () {
             validarDocumento();
             habilitarBoton();
@@ -91,10 +93,18 @@
             habilitarBoton();
         });
 
-        // Cambiado el evento a 'change' para los otros campos
-        $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('change', function () {
+        // Cambiado el evento a 'input' para los otros campos
+        $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
             validarCampo($(this));
             habilitarBoton();
+
+        });
+        $('#iDocumento, #iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
+            if ($(this).val() === '') {
+                mostrarError($(this), 'Este campo es obligatorio.');
+            } else {
+                ocultarError($(this));
+            }
         });
 
         $('#cliente-form').submit(function (event) {
@@ -125,6 +135,10 @@
                 });
             }
         });
+
+        // ... (código anterior)
+    });
+
 
         // Función para obtener la lista de departamentos
         function obtenerDepartamentos() {
@@ -196,7 +210,7 @@
         }
 
    
-        function validarDocumento() {
+            function validarDocumento() {
                 const documento = $('#iDocumento').val();
                 $.ajax({
                     type: 'POST',
@@ -274,7 +288,7 @@
                 $('#submit-button').prop('disabled', true);
             }
         }
-    });
+    
 </script>
 
 {% endblock %}
