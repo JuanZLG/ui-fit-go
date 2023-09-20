@@ -168,7 +168,7 @@
         $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
         $(document).on("input", ".producto", function () {
             let input = $(this).val();
-            if (input.length >= 4) {
+            if (input.length >= 2) {
                 let currentRow = $(this).closest("tr");
                 $.ajax({
                     url: "{% url 'buscar_productos' %}?q=" + input,
@@ -274,6 +274,7 @@
                 },
                 success: function (data) {
                     if (data.existe) {
+                        // currentRow.find(".error-produ").text("Selecione el producto correctamente.");
                         obtenerPrecioProducto(currentRow, nombreProducto);
                     } else {
                         currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
@@ -327,7 +328,8 @@
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = parseFloat($(".precioUnidad").val().replace(/[$,.]/g, ''));
+            let precioUnidad = parseFloat(currentRow.find(".precioUnidad").val().replace(/[$,.]/g, ''));
+
             let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
@@ -365,7 +367,7 @@
                 "</td>" +
                 "<td>" +
                 '<div class="form-group">' +
-                '<input type="number" class="form-control cantidad" id="cantidad" name="cantidad" autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');" placeholder="Cantidad">' +
+                '<input type="number" class="form-control cantidad p-0 text-center" id="cantidad" name="cantidad" autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');" placeholder="Cantidad">' +
                 "</div>" +
                 "</td>" +
                 "<td>" +
@@ -403,14 +405,13 @@
         }
 
 
-
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $("#documentoDato").text();
             const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
-
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
+            const productoNombres = {}; // Objeto para llevar el registro de nombres de productos
 
             if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
@@ -434,11 +435,9 @@
                 const precioUnidadInput = row.find(".precioUnidad");
                 const precioTotalInput = row.find(".precioTotal");
 
-
-                const productoValue = productoInput.val();
+                const productoValue = productoInput.val().toLowerCase();
                 const precioUnidadValue = parseFloat(precioUnidadInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
-
                 const cantidadValue = parseInt(cantidadInput.val());
 
                 if (!precioUnidadValue) {
@@ -459,20 +458,31 @@
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
+                } 
+
+                /// NEW
+                if (productoNombres[productoValue]) {
+                    productoInput.addClass("is-invalid");
+                    row
+                        .find(".error-produ")
+                        .text("Este producto ya ha sido agregado anteriormente.");
+                    camposLlenos = false;
                 } else {
+                    productoInput.removeClass("is-invalid");
                     productos.push({
                         nombre: productoValue,
                         precioUnidad: precioUnidadValue,
                         precioTotal: precioTotalValue,
                         cantidad: cantidadValue
                     });
+                    productoNombres[productoValue] = true;
                 }
-            });
-
+        });
             return camposLlenos
                 ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
                 : null;
         }
+
 
         function mostrarError(selector) {
             $(selector).addClass("is-invalid");
