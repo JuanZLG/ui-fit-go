@@ -144,11 +144,24 @@ def buscar_productos(request):
     return JsonResponse({"productos": list(productos)})
 
 
+def validar_cantidad(request):
+    cantidad = request.GET.get("cantidad", "")
+    nombre = request.GET.get("nombre", "")
+    producto = Productos.objects.get(nombre_producto__iexact=nombre)
+    if int(cantidad) > producto.cantidad:
+        return JsonResponse({"suficiente": False})
+    return JsonResponse({"suficiente": True})
+
+
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
     return JsonResponse({"existe": producto_existe})
 
+def existencia_producto(request):
+    nombre_producto = request.GET.get("nombre_producto", "")
+    producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
+    return JsonResponse({"existe": producto_existe})
 
 def validar_cliente(request):
     documentoDato = request.GET.get("documentoDato", "")
