@@ -2,7 +2,6 @@
 
 {% block title %} Agregar Proveedor {% endblock %}
 
-
 {% block body %}
 
 <style>
@@ -18,7 +17,7 @@
 <div class="center-content" style="margin-bottom:10px">
 <h1 class="h3 mx-5 text-black-900">Agregar Proveedor</h1>
 <br>
-<div class="card shadow mb-4 w-50 m-auto">
+<div class="card shadow mb-4 w-70">
     <div class="card-header py-4">
         <form id="proveedor-form" method="post">
             {% csrf_token %}
@@ -43,7 +42,9 @@
                     <span class="error-message" id="correo-error"></span>
                 </div>
             </div>
-            <button class="btn btn-primary mx-auto" type="submit">Crear Proveedor</button>
+            <div class="text-end">
+            <button class="btn btn-success mx-auto" type="submit">Guardar</button>
+            </div>
         </form>
     </div>
 </div>
