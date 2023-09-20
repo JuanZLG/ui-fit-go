@@ -19,6 +19,8 @@ def crear_compra(request):
             data = json.loads(request.body)
             logger.debug("Datos JSON recibidos: %s", data)      
             proveedor_nombre = data.get('proveedor', '')
+            totalCompra = data.get('totalCompra', '')
+
             productos = data.get('productos', [])
 
             if not proveedor_nombre or not productos:
@@ -29,7 +31,7 @@ def crear_compra(request):
             if not proveedor:
                 return JsonResponse({'error': 'Proveedor no encontrado'}, status=400)
 
-            compra = Compras.objects.create(id_proveedor=proveedor)
+            compra = Compras.objects.create(id_proveedor=proveedor, totalCompra=totalCompra)
 
             for producto_datos in productos:
                 producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
@@ -70,10 +72,23 @@ def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
     return JsonResponse({"existe": producto_existe})
+
+
+
+
+
 def validar_proveedor(request):
-    proveedor_id = request.GET.get("proveedor_id", "")
-    proveedor_existe = Proveedores.objects.filter(id_proveedor=proveedor_id).exists()
-    return JsonResponse({"existe": proveedor_existe})
+    nombre_proveedor = request.GET.get("nombreProveedor", "")
+    
+    if nombre_proveedor:  # Verifica si nombreProveedor no está vacío
+        proveedor_existe = Proveedores.objects.filter(nombre_proveedor__iexact=nombre_proveedor).exists()
+        return JsonResponse({"existe": proveedor_existe})
+    else:
+        return JsonResponse({"existe": False})
+
+
+
+
 
 def obtener_precio(request):
     nombre_producto = request.GET.get(

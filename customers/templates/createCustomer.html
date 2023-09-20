@@ -212,54 +212,42 @@
         }
 
    
-            function validarDocumento() {
-                const documento = $('#iDocumento').val();
-                $.ajax({
-                    type: 'POST',
-                    url: "{% url 'verificar_documento' %}",
-                    data: {
-                        'iDocumento': documento
-                    },
-                    success: function (response) {
-                        if (response.documento_existe) {
-                            $('#iDocumento-error').html('<span class="text-danger">El documento ya está registrado.</span>');
-                        } else {
-                            $('#iDocumento-error').html(''); // Limpia el mensaje de error si el documento no existe
-                        }
-                    }
-                });
+        function validarDocumento() {
+    const documento = $('#iDocumento').val();
+    const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+    const remainingDocumentoChars = 10 - documento.length;
 
-                const documentoLength = documento.length;
-                const remainingDocumentoChars = (documento.length === 8 || documento.length === 10) ? 0 : (documento.length < 8) ? 8 - documentoLength : documento.length - 10;
-                const documentoError = documentoLength === 0 ? 'Este campo es obligatorio.' :
-                    !/^\d{8}(\d{2})?$/.test(documento) ? 'Número de documento inválido.' : '';
+    $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
+    $('#iDocumento-error').html(documentoError);
+    $('#iDocumento-info').html(remainingDocumentoChars > 0 ? `Faltan ${remainingDocumentoChars} caracteres.` : (remainingDocumentoChars < 0 ? `Excedió ${Math.abs(remainingDocumentoChars)} caracteres.` : ''));
 
-                $('#iDocumento-error').html(documentoError);
-                $('#iDocumento-info').html(remainingDocumentoChars > 0 ? `Faltan ${remainingDocumentoChars} caracteres.` : (remainingDocumentoChars < 0 ? `Excedió ${Math.abs(remainingDocumentoChars)} caracteres.` : ''));
+    if (remainingDocumentoChars === 0 && documentoError === '') {
+        $('#iDocumento-error').html(''); // Limpia el mensaje de error si no hay errores
+        $('#iDocumento-info').html(''); // Limpia el mensaje de información si no hay información
+    }
+}
 
-                if (remainingDocumentoChars === 0 && documentoError === '') {
-                    $('#iDocumento-error').html(''); // Limpia el mensaje de error si no hay errores
-                    $('#iDocumento-info').html(''); // Limpia el mensaje de información si no hay información
-                }
-            }
+function validarCelular() {
+    const celular = $('#iCelular').val();
+    const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
+    const remainingCelularChars = 10 - celular.length;
 
+    $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
+    $('#iCelular-error').html(celularError);
+    $('#iCelular-info').html(remainingCelularChars > 0 ? `Faltan ${remainingCelularChars} caracteres.` : (remainingCelularChars < 0 ? `Excedió ${Math.abs(remainingCelularChars)} caracteres.` : ''));
 
+    if (remainingCelularChars === 0 && celularError === '') {
+        $('#iCelular-error').html(''); // Limpia el mensaje de error si no hay errores
+        $('#iCelular-info').html(''); // Limpia el mensaje de información si no hay información
+    }
+}
 
-        function validarCelular() {
-            const celular = $('#iCelular').val();
-            const celularLength = celular.length;
-            const remainingCelularChars = (celular.length === 10) ? 0 : (celular.length < 10) ? 10 - celularLength : celular.length - 10;
-            const celularError = celularLength === 0 ? 'Este campo es obligatorio.' :
-                !/^\d{10}$/.test(celular) ? 'Número inválido.' : '';
+// Asociar funciones a eventos de cambio en los campos
+$('#iDocumento').on('input', validarDocumento);
+$('#iDocumento').on('keypress', validarDocumento);
+$('#iCelular').on('input', validarCelular);
+$('#iCelular').on('keypress', validarCelular);
 
-            mostrarError($('#iCelular'), celularError);
-            mostrarInfo($('#iCelular-info'), remainingCelularChars > 0 ? `Faltan ${remainingCelularChars} caracteres.` : (remainingCelularChars < 0 ? `Excedió ${Math.abs(remainingCelularChars)} caracteres.` : ''));
-
-            if (remainingCelularChars === 0 && celularError === '') {
-                ocultarError($('#iCelular'));
-                ocultarInfo($('#iCelular-info'));
-            }
-        }
 
         function validarCampo($campo) {
             const valor = $campo.val();
