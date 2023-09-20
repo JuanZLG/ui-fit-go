@@ -94,3 +94,24 @@ def cambiarEstadoDeProducto(request):
             return JsonResponse({'status': 'error', 'message': 'Producto no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+def verDetallesProducto(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        id_producto = request.GET.get('producto_id')
+        
+        if id_producto:
+            try:
+                producto = Productos.objects.get(id_producto=id_producto)
+                # Si el producto se encuentra
+                data = {
+                    'nombre_producto': producto.nombre_producto,
+                    'descripcion': producto.descripcion,
+                    'cantidad': producto.cantidad,
+                    'sabor': producto.sabor,
+                }
+                return JsonResponse({'success': data})
+            except Productos.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'ID de producto no proporcionado'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
