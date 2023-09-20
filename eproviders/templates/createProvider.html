@@ -6,52 +6,59 @@
 {% block body %}
 
 <style>
-.center-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
-}
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+    }
 </style>
 
 <div class="center-content" style="margin-bottom:10px">
-<h1 class="h3 mx-5 text-black-900">Agregar Proveedor</h1>
-<br>
-<div class="card shadow mb-4 w-50 m-auto">
-    <div class="card-header py-4">
-        <form id="proveedor-form" method="post">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="col-md-6 mb-3">
-                    <label for="#">Nombre del Proveedor *</label>
-                    <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
-                        placeholder="Nombre">
-                    <span class="error-message" id="nombre_proveedor-error"></span>
+    <h1 class="h3 mx-5 text-black-900">Agregar Proveedor</h1>
+    <br>
+    <div class="card shadow mb-4 w-50 m-auto">
+        <div class="card-header py-4">
+            <form id="proveedor-form" method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        <label for="#">Nombre del Proveedor *</label>
+                        <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
+                            placeholder="Nombre">
+                        <span class="error-message" id="nombre_proveedor-error"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="#">Número de contacto *</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                        <span class="error-message" id="telefono-error"></span>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="#">Número de contacto *</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                    <span class="error-message" id="telefono-error"></span>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="#">Correo Electrónico *</label>
+                        <input type="text" class="form-control" id="correo" name="correo"
+                            placeholder="Correo Electrónico">
+                        <span class="error-message" id="correo-error"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="col-md-12 mb-3">
-                    <label for="#">Correo Electrónico *</label>
-                    <input type="text" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico">
-                    <span class="error-message" id="correo-error"></span>
-                </div>
-            </div>
-            <button class="btn btn-primary mx-auto" type="submit">Crear Proveedor</button>
-        </form>
+                <button class="btn btn-primary mx-auto" type="submit">Crear Proveedor</button>
+            </form>
+        </div>
     </div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+            $("#nombre_proveedor").val("");
+            $("#telefono").val("");
+            $("#correo").val("");
+        });
+
     $(document).ready(function () {
         // Función para validar que todos los campos estén llenos
         function validarCamposLlenos() {
@@ -92,6 +99,8 @@
             }
         });
 
+
+
         function mostrarError(selector, mensaje) {
             $(selector).addClass('is-invalid');
             $(`${selector}-error`).text(mensaje).css('color', 'red');
@@ -102,6 +111,29 @@
             return emailRegex.test(correo);
         }
 
+
+        function validarProveedor(proveedor) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: "{% url 'proveedor_unico' %}",
+                    type: "GET",
+                    data: {
+                        proveedor: proveedor,
+                    },
+                    success: function (data) {
+                        if (data.existe) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    },
+                    error: function () {
+                        reject(new Error("Error al validar el cliente"));
+                    },
+                });
+            });
+        }
+       
         $('#proveedor-form').submit(function (event) {
             event.preventDefault();
 
@@ -109,11 +141,25 @@
             if (!validarCamposLlenos()) {
                 return;
             }
-            // Continuar con el envío del formulario si todos los campos están llenos
+            prov = $("#nombre_proveedor").val()
+            validarProveedor(prov).then(function (existe) {
+                if (existe) {
+                    console.log("error unico")
+                    $("#nombre_proveedor").addClass("is-invalid");
+                    $("#nombre_proveedor-error").text("El proveedor " + prov + " ya existe").css("color", "red");
+                } else {
+                    $("#nombre_proveedor").removeClass("is-invalid");
+                    $("#nombre_proveedor-error").text("");
+                    enviarDatosProveedor();
+                }
+            });
+        });
+
+        function enviarDatosProveedor() {
             $.ajax({
                 type: 'POST',
                 url: "{% url 'crearProveedor' %}",
-                data: $(this).serialize(),
+                data: $('#proveedor-form').serialize(),
                 success: function (response) {
                     if (response.success) {
                         alert('Proveedor creado con éxito.');
@@ -121,7 +167,8 @@
                     }
                 }
             });
-        });
+        }
+
     });
 </script>
 

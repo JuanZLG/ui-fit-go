@@ -30,8 +30,7 @@ def crear_venta(request):
                 producto.cantidad -= cantidad_vendida
                 producto.save()
 
-            # Crear un registro en Detalleventa
-            detalle = Detalleventa.objects.create(
+            Detalleventa.objects.create(
                 id_producto=producto,
                 id_venta=venta,
                 cantidad=cantidad_vendida,
@@ -46,7 +45,6 @@ def crear_venta(request):
     
 from django.db.models import Q
 
-# @csrf_protect
 @csrf_exempt
 def editar_venta(request, id_venta):
     if request.method == 'POST':
@@ -57,9 +55,6 @@ def editar_venta(request, id_venta):
             productos = data.get('productos', [])
 
             venta = Ventas.objects.get(id_venta=id_venta)
-            ###################
-            print("----------- mostrar datos recibidos")
-            print(f"Tamaño de productos: {len(productos)}")
 
             if documento:
                 cliente = Clientes.objects.get(documento=documento)
@@ -78,9 +73,6 @@ def editar_venta(request, id_venta):
             detalles = Detalleventa.objects.filter(id_venta=venta)
             
             idDetalles_faltantes = [detalle.id_detalleventa for detalle in detalles if detalle.id_detalleventa not in [producto["idDetalle"] for producto in productos]]
-
-            for sss in idDetalles_faltantes:
-                print(f"Falta el producto con idDetalle {sss} en los detalles de la venta")
 
             Detalleventa.objects.filter(id_detalleventa__in=idDetalles_faltantes).delete()
 
@@ -181,7 +173,7 @@ def obtener_precio(request):
 def obtener_nombre(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
-    )  # Obtiene el valor de 'nombre_producto' de la solicitud GET
+    )  
     if nombre_producto is not None:
         try:
             producto = Productos.objects.get(nombre_producto=nombre_producto)

@@ -21,6 +21,12 @@ def crearProveedor(request):
     return render(request, 'createProvider.html')
 
 
+def proveedor_unico(request):
+    proveedor = request.GET.get("proveedor", "")
+    proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
+    return JsonResponse({"existe": proveedor_existe})
+
+
 def editarProveedor(request, id_proveedor):
     if request.method == 'POST':
         nombre = request.POST['nombre_proveedor']
