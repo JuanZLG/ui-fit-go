@@ -19,7 +19,7 @@
               <option value="{{ c.id_categoria }}">{{ c.nombre_categoria }}</option>
               {% endfor %}
             </select>
-            <div class="error-message" id="iCategoria-error"></div>
+            <div class="error-message" style="color:red;" id="iCategoria-error"></div>
           </div>
         </div>
   
@@ -31,7 +31,7 @@
               <option value="{{ m.id_marca }}">{{ m.nombre_marca }}</option>
               {% endfor %}
             </select>
-            <div class="error-message" id="iMarca-error"></div>
+            <div class="error-message" style="color:red;" id="iMarca-error"></div>
           </div>
         </div>
       </div>
@@ -39,13 +39,13 @@
       <div class="form-group">
         <label>Nombre *</label>
         <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
-        <div class="error-message" id="iNombre-error"></div>
+        <div class="error-message" style="color:red;" id="iNombre-error"></div>
       </div>
   
       <div class="form-group">
         <label for="descripcion">Descripción *</label>
         <textarea class="form-control" id="iDescripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
-        <div class="error-message" id="iDescripcion-error"></div>
+        <div class="error-message" style="color:red;" id="iDescripcion-error"></div>
       </div>
   
       <div class="form-row">
@@ -53,7 +53,7 @@
             <div class="form-group">
                 <label>Fecha de Vencimiento *</label>
                 <input type="text" class="form-control" id="iFechaven" name="iFechaven" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
-                <div class="error-message" id="iFechaven-error"></div>
+                <div class="error-message" style="color:red;" id="iFechaven-error"></div>
             </div>
         </div>
       
@@ -61,7 +61,7 @@
           <div class="form-group">
             <label for="cant">Cantidad *</label>
             <input type="number" class="form-control" id="iCantidad" name="iCantidad"/>
-            <div class="error-message" id="iCantidad-error"></div>
+            <div class="error-message" style="color:red;" id="iCantidad-error"></div>
           </div>
         </div>
       
@@ -69,7 +69,7 @@
           <div class="form-group">
             <label for="sabor">Sabor *</label>
             <input type="text" class="form-control" id="iSabor" name="iSabor" placeholder="Sabor"/>
-            <div class="error-message" id="iSabor-error"></div>
+            <div class="error-message" style="color:red;" id="iSabor-error"></div>
           </div>
         </div>
       
@@ -85,7 +85,7 @@
       <div class="form-group">
         <label for="price">Precio del Producto *</label>
         <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"/>
-        <div class="error-message" id="iPrice-error"></div>
+        <div class="error-message" style="color:red;" id="iPrice-error"></div>
       </div>
   
       <div class="text-end">
