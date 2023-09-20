@@ -13,6 +13,13 @@ def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
 
+def catHome(request):
+    categories = Categorias.objects.all()
+    return render(request, 'categoriesHome.html', {"cats":categories}) 
+
+def brandHome(request):
+    brands = Marcas.objects.all()
+    return render(request, 'brandsHome.html', {"pbrands":brands}) 
 
 def createProduct(request):
     marcas = Marcas.objects.all()
@@ -38,38 +45,41 @@ def createProduct(request):
     return render(request, 'createProducts.html', {"marcas":marcas,"categorias":categorias})
 
 
-def editProduct(request, producto_id):
-    producto = get_object_or_404(Productos, id_producto=producto_id)
+def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
-
+    
     if request.method == 'POST':
-        cat = request.POST.get('iCategoria')
-        brand = request.POST.get('iMarca')
-        name = request.POST.get('iNombre')
-        vdate = request.POST.get('iFechaven')
-        cant = request.POST.get('iCantidad')
-        flavor = request.POST.get('iSabor')
-        service = request.POST.get('iServices')
-        pPrice = request.POST.get('iPrice')
-
-        if not cat or not brand or not name or not vdate or not cant or not flavor or not service or not pPrice:
-            return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios.'})
-
-        # Actualiza los campos del producto existente con los valores recibidos
-        producto.id_categoria = cat
-        producto.id_marca = brand
-        producto.nombre_producto = name
-        producto.fechaven = vdate
-        producto.cantidad = cant
-        producto.sabor = flavor
-        producto.presentacion = service
-        producto.precio = pPrice
-        producto.save()
-
-        return JsonResponse({'success': True, 'message': 'Producto actualizado con éxito.'})
-
-    return render(request, 'editProducts.html', {'Products': producto, 'marcas':marcas, 'categorias':categorias})
+        category = request.POST['iCategoria']
+        brand = request.POST['iMarca']
+        name = request.POST['iNombre']
+        desc = request.POST['iDescripcion']
+        vdate = request.POST['iFechaven']
+        cant = request.POST['iCantidad']
+        flavor = request.POST['iSabor']
+        services = request.POST['iServices']
+        pPrice = request.POST['iPrice']
+        
+        m = Marcas.objects.get(id_marca=brand)
+        c = Categorias.objects.get(id_categoria=category)
+        
+        Productos.objects.filter(id_producto=id_producto).update(
+            id_categoria=c,
+            id_marca=m,
+            nombre_producto=name,
+            descripcion=desc,
+            fechaven=vdate,
+            cantidad=cant,
+            sabor=flavor,
+            presentacion=services,
+            precio=pPrice
+        )
+        
+        response_data = {'success': True}
+        return JsonResponse(response_data)    
+    products = Productos.objects.get(id_producto=id_producto)
+    products.precio = int(products.precio)
+    return render(request, 'editProducts.html', {"Product":products, "marcas":marcas,"categorias":categorias}) 
 
 def cambiarEstadoDeProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

@@ -31,7 +31,7 @@ class Productos(models.Model):
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField(default=1)
-    precio = models.IntegerField()
+    precio = models.FloatField()
 
     class Meta:
         managed = False
