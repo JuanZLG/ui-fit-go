@@ -1,3 +1,4 @@
+import math
 from django.http import JsonResponse
 from django.shortcuts import render,  get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -7,6 +8,7 @@ from sales.models import Clientes, Detalleventa, Ventas, Productos
 def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
+
 
 @csrf_exempt
 def crear_venta(request):
@@ -22,7 +24,7 @@ def crear_venta(request):
             nombre_producto = producto_datos['nombre']
             cantidad_vendida = producto_datos['cantidad']
 
-            producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+            producto = Productos.objects.get(nombre_producto=nombre_producto)
 
             if producto:
                 producto.cantidad -= cantidad_vendida
@@ -40,7 +42,10 @@ def crear_venta(request):
         return JsonResponse(response_data)
 
     return render(request, 'createSales.html')
+
     
+from django.db.models import Q
+
 # @csrf_protect
 @csrf_exempt
 def editar_venta(request, id_venta):
@@ -50,8 +55,11 @@ def editar_venta(request, id_venta):
             documento = data.get('documento', '')
             totalVenta = data.get('totalVenta', 0)
             productos = data.get('productos', [])
-            # Validar que la venta exista
-            venta = Ventas.objects.get(id_venta=id_venta) 
+
+            venta = Ventas.objects.get(id_venta=id_venta)
+            ###################
+            print("----------- mostrar datos recibidos")
+            print(f"Tamaño de productos: {len(productos)}")
 
             if documento:
                 cliente = Clientes.objects.get(documento=documento)
@@ -59,23 +67,52 @@ def editar_venta(request, id_venta):
             venta.totalVenta = totalVenta
             venta.save()
 
-            # Eliminar todos los detalles relacionados con esta venta
-            Detalleventa.objects.filter(id_venta=venta).delete()
+            productos_nuevos = []
+            productos_actualizar = []
+            for producto in productos:
+                if producto["idDetalle"] is None or producto["idDetalle"] == "":
+                    productos_nuevos.append(producto)
+                else:
+                    productos_actualizar.append(producto)
+                    
+            detalles = Detalleventa.objects.filter(id_venta=venta)
+            
+            idDetalles_faltantes = [detalle.id_detalleventa for detalle in detalles if detalle.id_detalleventa not in [producto["idDetalle"] for producto in productos]]
 
-            for producto_datos in productos:
-                nombre_producto = producto_datos.get('nombre', '')
-                cantidad_vendida = producto_datos.get('cantidad', 0)
+            for sss in idDetalles_faltantes:
+                print(f"Falta el producto con idDetalle {sss} en los detalles de la venta")
 
-            if nombre_producto:
-                detalle = Detalleventa.objects.filter(id_venta=id_venta, id_producto__nombre_producto=nombre_producto).first()
-                producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
-                Detalleventa.objects.filter(id=detalle.id).update(
+            Detalleventa.objects.filter(id_detalleventa__in=idDetalles_faltantes).delete()
+
+            for productoDatos in productos_actualizar:
+                nombre_producto = productoDatos["nombre"]
+                id_detalle = productoDatos["idDetalle"]
+                detalle = Detalleventa.objects.get(id_detalleventa=id_detalle)
+                producto = Productos.objects.get(nombre_producto=nombre_producto)
+                try:
+                    detalle.id_producto = producto
+                    detalle.cantidad = productoDatos["cantidad"]
+                    detalle.precio_uni = productoDatos["precioUnidad"]
+                    detalle.precio_tot = productoDatos["precioTotal"]
+                    detalle.save()
+                except Exception as e:
+                    print(f"Error al guardar detalle: {str(e)}")
+        
+
+            for productoDatos in productos_nuevos:
+                nombre_producto = productoDatos["nombre"]
+                producto = Productos.objects.get(nombre_producto=nombre_producto)
+                try:
+                    Detalleventa.objects.create(
                     id_producto=producto,
                     id_venta=venta,
-                    cantidad=cantidad_vendida,
-                    precio_uni=producto_datos['precioUnidad'],
-                    precio_tot=producto_datos['precioTotal']
+                    cantidad=productoDatos["cantidad"],
+                    precio_uni=productoDatos["precioUnidad"],
+                    precio_tot=productoDatos["precioTotal"]
                 )
+                except Exception as e:
+                    print(f"Error al guardar detalle: {str(e)}")
+
 
 
             response_data = {'success': True}
@@ -83,7 +120,7 @@ def editar_venta(request, id_venta):
             response_data = {'success': False, 'error_message': str(e)}
         return JsonResponse(response_data)
 
-    venta = Ventas.objects.get(id_venta=id_venta) 
+    venta = Ventas.objects.get(id_venta=id_venta)
     detalles = Detalleventa.objects.filter(id_venta=id_venta)
     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
 
@@ -129,7 +166,7 @@ def validar_cliente(request):
 def obtener_precio(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
-    )  # Obtiene el valor de 'nombre_producto' de la solicitud GET
+    ) 
     if nombre_producto is not None:
         producto = Productos.objects.get(nombre_producto=nombre_producto)
         precio = producto.precio
