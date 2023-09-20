@@ -88,62 +88,64 @@
     <script>
         $(document).ready(function () {
 
-            // Función para cargar la lista de departamentos
             function cargarDepartamentos() {
-                $.ajax({
-                    url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                    type: "GET",
-                    data: {
-                        "$limit": 5000,
-                    },
-                    success: function (data) {
-                        const departamentoSelect = $("#departamento");
-                        const departamentos = [...new Set(data.map(item => item.departamento))];
-                        departamentos.forEach(function (depto) {
-                            departamentoSelect.append($("<option>", {
-                                value: depto,
-                                text: depto
-                            }));
-                        });
-                    }
+            $.ajax({
+                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+                type: "GET",
+                data: {
+                    "$limit": 5000,
+                },
+                success: function (data) {
+                    const departamentoSelect = $("#departamento");
+                    const departamentos = [...new Set(data.map(item => item.departamento))];
+                    departamentos.forEach(function (depto) {
+                        departamentoSelect.append($("<option>", {
+                            value: depto,
+                            text: depto
+                        }));
+                    });
+
+                    // Dispara el evento change en el departamento al cargar la página
+                    departamentoSelect.trigger("change");
+                }
+            });
+        }
+
+        // Función para obtener la lista de municipios basados en el departamento seleccionado
+        function obtenerMunicipios(departamentoSeleccionado) {
+            return $.ajax({
+                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+                type: "GET",
+                data: {
+                    "$limit": 5000,
+                    "departamento": departamentoSeleccionado
+                }
+            });
+        }
+
+        // Función para cargar los municipios basados en el departamento seleccionado
+        function cargarMunicipios(departamentoSeleccionado) {
+            obtenerMunicipios(departamentoSeleccionado).done(function (data) {
+                const municipioSelect = $("#municipio");
+                municipioSelect.empty();
+                data.forEach(function (item) {
+                    municipioSelect.append($("<option>", {
+                        value: item.municipio,
+                        text: item.municipio
+                    }));
                 });
-            }
+            });
+        }
 
-            // Función para cargar los municipios basados en el departamento seleccionado
-            function cargarMunicipios(departamentoSeleccionado, municipioRegistrado) {
-                $.ajax({
-                    url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                    type: "GET",
-                    data: {
-                        "$limit": 5000,
-                        "departamento": departamentoSeleccionado
-                    },
-                    success: function (data) {
-                        const municipioSelect = $("#municipio");
-                        municipioSelect.empty();
+        // Cargar la lista de departamentos
+        cargarDepartamentos();
 
-                        data.forEach(function (item) {
-                            municipioSelect.append($("<option>", {
-                                value: item.municipio,
-                                text: item.municipio
-                            }));
-                        });
-
-                        if (municipioRegistrado) {
-                            municipioSelect.val(municipioRegistrado);
-                        }
-                    }
-                });
-            }
-
-            // Cargar la lista de departamentos y seleccionar el departamento registrado
-            cargarDepartamentos();
-            const departamentoActual = "{{ cliente.id_municipio.id_departamento.nombre_departamento }}";
-            $('#departamento').val(departamentoActual);
-
-            // Cargar los municipios basados en el departamento registrado
-            const municipioRegistrado = "{{ cliente.id_municipio.nombre_municipio }}";
-            cargarMunicipios(departamentoActual, municipioRegistrado);
+        // Evento para cargar los municipios cuando se cambia la selección del departamento
+        $("#departamento").change(function () {
+            const departamentoSeleccionado = $(this).val();
+            cargarMunicipios(departamentoSeleccionado);
+        });
+    
 
             // Validar documento
             $('#iDocumento').on('input', function () {
@@ -177,32 +179,22 @@
             function validarDocumento() {
                 const documento = $('#iDocumento').val();
                 const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
-                const remainingDocumentoChars = 10 - documento.length;
 
                 $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
                 $('#iDocumento-error').html(documentoError);
-                $('#iDocumento-info').html(remainingDocumentoChars > 0 ? `Faltan ${remainingDocumentoChars} caracteres.` : (remainingDocumentoChars < 0 ? `Excedió ${Math.abs(remainingDocumentoChars)} caracteres.` : ''));
 
-                if (remainingDocumentoChars === 0 && documentoError === '') {
-                    $('#iDocumento-error').html(''); // Limpia el mensaje de error si no hay errores
-                    $('#iDocumento-info').html(''); // Limpia el mensaje de información si no hay información
-                }
+               
             }
 
             // Función para validar el celular
             function validarCelular() {
                 const celular = $('#iCelular').val();
                 const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
-                const remainingCelularChars = 10 - celular.length;
 
                 $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
                 $('#iCelular-error').html(celularError);
-                $('#iCelular-info').html(remainingCelularChars > 0 ? `Faltan ${remainingCelularChars} caracteres.` : (remainingCelularChars < 0 ? `Excedió ${Math.abs(remainingCelularChars)} caracteres.` : ''));
 
-                if (remainingCelularChars === 0 && celularError === '') {
-                    $('#iCelular-error').html(''); // Limpia el mensaje de error si no hay errores
-                    $('#iCelular-info').html(''); // Limpia el mensaje de información si no hay información
-                }
+                
             }
 
             // Función para validar campos en tiempo real

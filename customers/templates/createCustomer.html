@@ -65,6 +65,9 @@
                 <div class="error-message" id="municipio-error"></div>
             </div>
         </div>
+        <div class="text-center">
+            <p>(*) campos obligatorios</p>
+        </div>
         <div class="text-end">
             <button class="btn btn-success" type="submit" id="submit-button" disabled>Agregar Cliente</button>
         </div>
@@ -108,6 +111,7 @@
                 ocultarError($(this));
             }
         });
+        
 
         $('#cliente-form').submit(function (event) {
             event.preventDefault();
@@ -212,34 +216,24 @@
         }
 
    
-        function validarDocumento() {
+            function validarDocumento() {
     const documento = $('#iDocumento').val();
     const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
-    const remainingDocumentoChars = 10 - documento.length;
 
     $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
     $('#iDocumento-error').html(documentoError);
-    $('#iDocumento-info').html(remainingDocumentoChars > 0 ? `Faltan ${remainingDocumentoChars} caracteres.` : (remainingDocumentoChars < 0 ? `Excedió ${Math.abs(remainingDocumentoChars)} caracteres.` : ''));
 
-    if (remainingDocumentoChars === 0 && documentoError === '') {
-        $('#iDocumento-error').html(''); // Limpia el mensaje de error si no hay errores
-        $('#iDocumento-info').html(''); // Limpia el mensaje de información si no hay información
-    }
+
 }
 
 function validarCelular() {
     const celular = $('#iCelular').val();
     const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
-    const remainingCelularChars = 10 - celular.length;
 
     $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
     $('#iCelular-error').html(celularError);
-    $('#iCelular-info').html(remainingCelularChars > 0 ? `Faltan ${remainingCelularChars} caracteres.` : (remainingCelularChars < 0 ? `Excedió ${Math.abs(remainingCelularChars)} caracteres.` : ''));
 
-    if (remainingCelularChars === 0 && celularError === '') {
-        $('#iCelular-error').html(''); // Limpia el mensaje de error si no hay errores
-        $('#iCelular-info').html(''); // Limpia el mensaje de información si no hay información
-    }
+
 }
 
 // Asociar funciones a eventos de cambio en los campos
