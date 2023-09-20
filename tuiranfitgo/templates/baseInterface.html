@@ -134,10 +134,10 @@
                         <a class="collapse-item" href="{% url 'productos' %}">Gestión de Productos</a>
                     </div>
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'productos' %}">Categorías</a>
+                        <a class="collapse-item" href="{% url 'categorias' %}">Categorías</a>
                     </div>
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'productos' %}">Marcas</a>
+                        <a class="collapse-item" href="{% url 'marcas' %}">Marcas</a>
                     </div>
                 </div>
             </li>
@@ -425,13 +425,15 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     {% block body %}
-
+                    
                     {% endblock %}
                 </div>
                 <!-- /.container-fluid -->
+
+                <!-- Separador de Contenidos -->
+                <div style="margin-top:150px"></div>
+                
                 <!-- Footer -->
-                <br>
-                <br>
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">

@@ -34,7 +34,7 @@
 
 <section class="container">
     <div class="ml-3">
-        <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{venta.fechareg|date:'d/m/Y' }}</span></p>
+        <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{venta.fechareg|date:'d/m/Y'}}</span></p>
     </div>
     <form id="venta-form" method="post"> {% csrf_token %}
         <div class="card shadow mb-4">
@@ -51,7 +51,7 @@
                     </thead>
                     <tbody>
                         {% for producto in detalles %}
-                        <tr class="producto-row">
+                        <tr class="producto-row" data-id-detalle="{{ producto.id_detalleventa }}">
                             <td class="p-2">
                                 <input type="text" class="form-control producto" name="producto" id="producto"
                                     autocomplete="off" placeholder="Nombre del producto"
@@ -64,7 +64,7 @@
                             <td>
                                 <div class="form-group">
                                     <input type="text" class="form-control precioUnidad" id="precioUnidad"
-                                        name="precioUnidad" readonly value="{{producto.precio_uni}}">
+                                        name="precioUnidad" readonly value="{{ producto.precio_uni|floatformat:'-2' }}">
                                 </div>
                             </td>
                             <td>
@@ -76,7 +76,7 @@
                             <td>
                                 <div class="form-group">
                                     <input type="text" class="form-control precioTotal" id="precioTotal"
-                                        name="precioTotal" readonly value="{{producto.precio_tot}}">
+                                        name="precioTotal" readonly value="{{producto.precio_tot|floatformat:'-2'}}">
                                 </div>
                                 {% if forloop.counter > 1 %}
                             <td class="eliminar-producto"><span class="icono-eliminar">X</span></td>
@@ -279,25 +279,26 @@
         });
 
         /********** PRECIOS ***********/
-    //EDIT
+        //EDIT
 
         function unidadPrecio(currentRow) {
             let nombreProducto = currentRow.find(".producto").val();
-            if (nombreProducto.length >= 3) {
+            if (nombreProducto.length >= 2) {
                 validarProducto(currentRow, nombreProducto);
             } else {
                 currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
                 calcularTotalVenta();
             }
         }
-    //EDIT
+        //EDIT
 
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
+            currentRow.find(".error-produ").removeClass("is-invalid")
             currentRow.find(".error-produ").text("");
             unidadPrecio(currentRow);
         });
-    //EDIT
+        //EDIT
 
         $(".producto").each(function () {
             let currentRow = $(this).closest("tr");
@@ -326,6 +327,12 @@
             });
         }
 
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$ ' + precioFormateado;
+        }
+
         function obtenerPrecioProducto(currentRow, nombreProducto) {
             $.ajax({
                 url: "{% url 'obtener_precio_producto' %}",
@@ -335,8 +342,8 @@
                 },
                 success: function (data) {
                     if ("precio" in data) {
-                        let precioUValue = parseInt(data.precio);
-                        let precioTotalFormatted = "$ " + precioUValue;
+                        let precioUValue = parseFloat(data.precio)
+                        let precioTotalFormatted = formatearPrecios(precioUValue);
                         let precioU = currentRow.find(".precioUnidad").val(precioTotalFormatted);
 
                     } else {
@@ -358,12 +365,13 @@
         });
         function calcularTotalProducto(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = currentRow.find(".precioUnidad").val().replace(/[^\d.-]/g, '');
+            let precioUnidad = parseFloat(currentRow.find(".precioUnidad").val().replace(/[$,.]/g, ''));
             let cantidad = parseInt(inputCantidad.val());
 
             if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
                 let total = precioUnidad * cantidad;
-                currentRow.find(".precioTotal").val("$ " + total);
+                let formateoTotal = formatearPrecios(total)
+                currentRow.find(".precioTotal").val(formateoTotal);
                 calcularTotalVenta();
             } else {
                 currentRow.find(".precioTotal").val("");
@@ -395,7 +403,7 @@
                 "</td>" +
                 "<td>" +
                 '<div class="form-group">' +
-                '<input type="number" class="form-control cantidad" id="cantidad" name="cantidad" autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');" placeholder="Cantidad">' +
+                '<input type="number" class="form-control cantidad p-0 text-center" id="cantidad" name="cantidad" autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');" placeholder="Cantidad">' +
                 "</div>" +
                 "</td>" +
                 "<td>" +
@@ -417,30 +425,28 @@
                 .find(".mess-sugges-prod")
                 .after('<div class="producto-suggestions"></div>');
         }
-
         function calcularTotalVenta() {
-            let totalVenta = 0;
+            let totalVenta = 0; // Inicializa como número
 
             $(".producto-row").each(function () {
-                let precioTotal = parseInt($(this).find(".precioTotal").val().replace(/[^\d.-]/g, ''));
-
+                let precioTotal = parseFloat($(this).find(".precioTotal").val().replace(/[$,.]/g, ''));
                 if (!isNaN(precioTotal)) {
                     totalVenta += precioTotal;
                 }
             });
 
-            let totalVentaFormateado = "$ " + totalVenta;
-            $("#totalVenta").val(totalVentaFormateado);
+            let formateoTotalVenta = formatearPrecios(totalVenta)
+            $("#totalVenta").val(formateoTotalVenta);
         }
 
 
         function validarCamposLlenos() {
             let camposLlenos = true;
             const documentoValue = $("#documentoDato").text();
-            const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[^\d.-]/g, ''));
-
+            const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
+            const productoNombres = {}; // Objeto para llevar el registro de nombres de productos
 
             if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
@@ -463,12 +469,11 @@
                 const precioUnidad = row.find(".precioUnidad").val();
                 const precioUnidadInput = row.find(".precioUnidad");
                 const precioTotalInput = row.find(".precioTotal");
+                const idDetalle = parseInt(row.data("id-detalle"));
 
-
-                const productoValue = productoInput.val();
-                const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
-                const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
-
+                const productoValue = productoInput.val().toLowerCase();
+                const precioUnidadValue = parseFloat(precioUnidadInput.val().replace(/[$,.]/g, '')).toFixed(2);
+                const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const cantidadValue = parseInt(cantidadInput.val());
 
                 if (!precioUnidadValue) {
@@ -489,18 +494,29 @@
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
+                }
+                /// NEW
+                if (productoNombres[productoValue]) {
+                    productoInput.addClass("is-invalid");
+                    row
+                        .find(".error-produ")
+                        .text("Este producto ya ha sido agregado anteriormente.");
+                    camposLlenos = false;
                 } else {
+                    productoInput.removeClass("is-invalid");
                     productos.push({
+                        idDetalle: idDetalle,
                         nombre: productoValue,
                         precioUnidad: precioUnidadValue,
                         precioTotal: precioTotalValue,
                         cantidad: cantidadValue
                     });
+                    productoNombres[productoValue] = true;
                 }
             });
 
             return camposLlenos
-                ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos}
+                ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
                 : null;
         }
 

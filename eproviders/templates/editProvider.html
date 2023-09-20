@@ -1,8 +1,18 @@
 {% extends "baseInterface.html" %}
 {% block title %} Editar Proveedor {% endblock %}
 {% block body %}
-
-<h1 class="h3 mx-5 text-gray-800">Editar Proveedor - <span class="text-dark">{{proveedor.nombre_proveedor}}</span> </h1>
+<style>
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+    }
+</style>
+    
+<div class="center-content" style="margin-bottom:10px">
+<h1 class="h3 mx-5 text-black-800">Editar Proveedor - <span class="text-gray-800">{{proveedor.nombre_proveedor}}</span> </h1>
 <br>
 <div class="container">
     <div class="card shadow w-50 m-auto">
@@ -11,7 +21,7 @@
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
-                        <label for="#">Nombre del proveedor *</label>
+                        <label for="#">Nombre del Proveedor *</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
                             placeholder="Nombre" value="{{proveedor.nombre_proveedor}}">
                         <span class="error-message" id="nombre_proveedor-error"></span>
@@ -38,11 +48,15 @@
                         </select>
                     </div>
                 </div>
-                <button  class="btn btn-primary"  type="submit">Editar Proveedor</button>
+                <div class="text-end">
+                <button  class="btn btn-success"  type="submit">Guardar</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
