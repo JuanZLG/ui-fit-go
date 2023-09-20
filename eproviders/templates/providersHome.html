@@ -15,7 +15,7 @@
             <a href="{%url 'crearProveedor'%}" class="m-0 btn btn-success btn-icon-split btn-add">
                 <span class="icon ">
                     <i class="fa-solid fa-plus"></i>
-                    <span class="text">Agregar</span>
+                    <span class="text">Agregar Proveedor</span>
                 </span>
             </a>
         </span>
@@ -31,6 +31,7 @@
             <table class="table table-bordered mx-auto text-center" id="dataTable">
                 <thead class="theads">
                     <tr>
+                        <th>ID</th> <!-- parce Julian no lo elimines hasta que no terminemos jaja o_O ya lo he cambiado 7800 veces -->
                         <th>Nombre del proveedor</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
@@ -41,6 +42,7 @@
                 <tbody>
                     {% for proveedor in proveedores %}
                     <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
+                        <td>{{ proveedor.id_proveedor }}</td>
                         <td>{{ proveedor.nombre_proveedor }}</td>
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>

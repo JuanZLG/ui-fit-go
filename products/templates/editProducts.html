@@ -3,9 +3,9 @@
 {% block title %} Editar Producto {% endblock %} 
 
 {% block body %}
-<center><h1 class="h3 text-gray-800 mb-4">Editar Producto</h1></center>
+<center><h1 class="h3 text-black-800 mb-4">Editar Producto</h1></center>
 
-<div class="card shadow">
+<div class="card shadow mb-5" style="margin-bottom:7rem">
   <div class="container p-4">
     <form class="form" id="producto-form" method="post">
       {% csrf_token %}
@@ -16,10 +16,13 @@
             <label for="categoria">Categoría</label>
             <select class="form-select" aria-label="Default" name="iCategoria" id="iCategoria">
               {% for c in categorias %}
-              <option value="{{ producto.id_categoria }}">{{ producto.nombre_categoria }}</option>
+              <option value="{{ c.id_categoria }}"
+                {% if c.id_categoria == Product.id_categoria.id_categoria %} selected {% endif %}>
+                {{ c.nombre_categoria }}
+              </option>
               {% endfor %}
             </select>
-            <div class="error-message" id="iCategoria-error"></div>
+            <div class="error-message" id="iCategoria-error" style="color:red;"></div>
           </div>
         </div>
   
@@ -28,65 +31,74 @@
             <label>Marca</label>
             <select class="form-select" aria-label="Default select example" name="iMarca" id="iMarca">
               {% for m in marcas %}
-              <option value="{{ producto.id_marca }}">{{ producto.nombre_marca }}</option>
+              <option value="{{ m.id_marca }}"
+                {% if m.id_marca == Product.id_marca.id_marca %} selected {% endif %}>
+                {{ m.nombre_marca }}
+              </option>
               {% endfor %}
             </select>
-            <div class="error-message" id="iMarca-error"></div>
+            <div class="error-message" id="iMarca-error" style="color:red;"></div>
           </div>
         </div>
       </div>
   
       <div class="form-group">
         <label>Nombre *</label>
-        <input type="text" value="{{ producto.nombre_producto }}" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
-        <div class="error-message" id="iNombre-error"></div>
+        <input type="text" value="{{ Product.nombre_producto }}" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
+        <div class="error-message" id="iNombre-error" style="color:red;"></div>
       </div>
   
       <div class="form-group">
         <label for="descripcion">Descripción *</label>
-        <textarea class="form-control" id="iDescripcion" value="{{ producto.descripcion }}" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
-        <div class="error-message" id="iDescripcion-error"></div>
+        <textarea class="form-control" id="iDescripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4">{{ Product.descripcion }}</textarea>
+        <div class="error-message" id="iDescripcion-error" style="color:red;"></div>
       </div>
   
       <div class="form-row">
         <div class="col-md-3 mb-3">
             <div class="form-group">
                 <label>Fecha de Vencimiento *</label>
-                <input type="text" class="form-control" id="iFechaven" name="iFechaven" value="{{ producto.fechaven }}" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
-                <div class="error-message" id="iFechaven-error"></div>
+                <input type="text" class="form-control" id="iFechaven" name="iFechaven" value="{{ Product.fechaven|date:'Y-m-d' }}" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
+                <div class="error-message" id="iFechaven-error" style="color:red;"></div>
             </div>
         </div>
       
-        <div class="col-md-2 mb-3">
+        <div class="col-md-3 mb-3">
           <div class="form-group">
             <label for="cant">Cantidad *</label>
-            <input type="number" class="form-control" id="iCantidad" value="{{ producto.cantidad }}" name="iCantidad"/>
-            <div class="error-message" id="iCantidad-error"></div>
+            <input type="number" class="form-control" id="iCantidad" value="{{ Product.cantidad }}" name="iCantidad"/>
+            <div class="error-message" id="iCantidad-error" style="color:red;"></div>
           </div>
         </div>
       
         <div class="col-md-3 mb-3">
           <div class="form-group">
             <label for="sabor">Sabor *</label>
-            <input type="text" class="form-control" id="iSabor" name="iSabor" value="{{ producto.sabor }}" placeholder="Sabor"/>
-            <div class="error-message" id="iSabor-error"></div>
+            <input type="text" class="form-control" id="iSabor" name="iSabor" value="{{ Product.sabor }}" placeholder="Sabor"/>
+            <div class="error-message" id="iSabor-error" style="color:red;"></div>
           </div>
         </div>
       
-        <div class="col-md-2 mb-3">
+        <div class="col-md-3 mb-3">
           <div class="form-group">
             <label for="services">Servicios *</label>
-            <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Servicios" value="{{ producto.presentacion }}"/>
+            <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Servicios" value="{{ Product.presentacion }}"/>
             <div class="error-message" style="color:red;" id="iServices-error"></div>
           </div>
         </div>
       </div>
       
-      <div class="form-group">
-        <label for="price">Precio del Producto *</label>
-        <input type="number" class="form-control" id="iPrice" name="iPrice" value="{{ producto.precio }}" placeholder="Ingrese un precio"/>
-        <div class="error-message" id="iPrice-error"></div>
-      </div>
+        <div class="form-group">
+            <label for="price">Precio del Producto *</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+                </div>
+                <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio" value="{{ Product.precio }}">
+            </div>
+            <div class="error-message" id="iPrice-error" style="color:red;"></div>
+        </div>
+    
   
       <div class="text-end">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
@@ -104,93 +116,80 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   
 <script>
-    $(document).ready(function () {
-    $('#producto-form').submit(function (event) {
-        event.preventDefault();
-        let errors = false;
+  $(document).ready(function () {
+  // Función para validar que todos los campos estén llenos
+  function validarCamposLlenos() {
+      let camposLlenos = true;
+      const nombreValue = $('#iNombre').val();
+      const descValue = $('#iDescripcion').val();
+      const fechaValue = $('#iFechaven').val();
+      const cantValue = $('#iCantidad').val();
+      const saborValue = $('#iSabor').val();
+      const presentacionValue = $('#iServices').val();
+      const priceValue = $('#iPrice').val();
 
-        // Validaciones en el lado del cliente
-        const cat = $('#iCategoria').val();
-        const brand = $('#iMarca').val();
-        const name = $('#iNombre').val();
-        const vdate = $('#iFechaven').val();
-        const cant = $('#iCantidad').val();
-        const flavor = $('#iSabor').val();
-        const service = $('#iServices').val();
-        const pPrice = $('#iPrice').val();  
+      if (!nombreValue) {
+          mostrarError('#iNombre', 'Este campo es obligatorio.');
+          camposLlenos = false;
+      }
 
-        if (!name) {
-            mostrarError('#iNombre', 'Este campo es obligatorio.');
-            errors = true;
-        } else {
-            ocultarError('#iNombre');
-        }
+      if (!descValue) {
+          mostrarError('#iDescripcion', 'Este campo es obligatorio.');
+          camposLlenos = false;
+      }
 
-        if (!vdate) {
-            mostrarError('#iFechaven', 'Este campo es obligatorio.');
-            errors = true;
-        } else {
-            ocultarError('#iFechaven');
-        }
+      if (!fechaValue) {
+          mostrarError('#iFechaven', 'Este campo es obligatorio.');
+          camposLlenos = false;
+      } 
 
-        if (!cant) {
-            mostrarError('#iCantidad', 'Este campo es obligatorio.');
-            errors = true;
-        } else {
-            ocultarError('#iNombre');
-        }
+      if (!cantValue) {
+        mostrarError('#iCantidad', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
+      
+      if (!saborValue) {
+        mostrarError('#iSabor', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
 
-        if (!flavor) {
-            mostrarError('#iSabor', 'Este campo es obligatorio.');
-            errors = true;
-        } else {
-            ocultarError('#iSabor');
-        }
+      if (!presentacionValue) {
+        mostrarError('#iServices', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
 
-        if (!service) {
-            mostrarError('#iServices', 'Este campo es obligatorio.');
-            errors = true;
-        } else {
-            ocultarError('#iServices');
-        }
+      if (!priceValue) {
+        mostrarError('#iPrice', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
+     
+      return camposLlenos;
+  }
+  
+  function mostrarError(selector, mensaje) {
+    $(selector).addClass('is-invalid');
+    $(`${selector}-error`).text(mensaje);
+}
 
-        if (!pPrice) {
-            mostrarError('#iPrice', 'Este campo es obligatorio.');
-            errors = true;
-        } else {
-            ocultarError('#iPrice');
-        }
-
-        if (!errors) {
-            $.ajax({
-                type: 'POST', //Probar sin URL Inversa
-                url: "{% url 'editAProduct' producto.id_producto %}",
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        alert('Producto editado con éxito.');
-                        window.location.href = "{% url 'productos' %}";
-                    }
-                }
-            });
+$('#producto-form').submit(function (event) {
+    event.preventDefault();
+    // Validar que todos los campos estén llenos
+    if (!validarCamposLlenos()) {
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'editAProduct' Product.id_producto %}",
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success) {
+                alert('Producto editado con éxito.');
+                window.location.href = "{% url 'productos' %}";
+            }
         }
     });
-
-    function mostrarError(elementId, errorMessage) {
-        const errorElement = $(`${elementId}-error`);
-        errorElement.text(errorMessage);
-        errorElement.show();
-    }
-
-    // Función para ocultar errores
-    function ocultarError(elementId) {
-        const errorElement = $(`${elementId}-error`);
-        errorElement.text('');
-        errorElement.hide();
-    }
-
-    });
-
+});
+});
 </script>
 
 {% endblock %}

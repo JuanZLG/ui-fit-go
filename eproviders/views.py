@@ -21,7 +21,6 @@ def crearProveedor(request):
     return render(request, 'createProvider.html')
 
 
-
 def editarProveedor(request, id_proveedor):
     if request.method == 'POST':
         nombre = request.POST['nombre_proveedor']
