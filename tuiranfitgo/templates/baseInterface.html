@@ -71,7 +71,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'mydashboard' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -93,6 +93,12 @@
                 <div id="collapseUsers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'usuarios' %}">Gestión de Usuarios</a>
+                    </div>
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'usuarios' %}">Roles</a>
+                    </div>
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'usuarios' %}">Permisos</a>
                     </div>
                 </div>
             </li>
@@ -183,12 +189,7 @@
                     <span>Configuración</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Roles</a>
-                    </div>
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Permisos</a>
-                    </div>
+                    <!-- Collapse Config Items -->
                 </div>
             </li>
 
@@ -391,7 +392,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-black-600 bold"
-                                    style="color:black;font:bolder">Bienvenido, Daniel PRB</span>
+                                    style="color:black;font:bolder">Bienvenido(a), {!username}</span>
                                 <img class="img-profile rounded-circle" src={% static 'img/rock.jpg' %}>
                             </a>
                             <!-- Dropdown - User Information -->
@@ -495,8 +496,8 @@
                     "next": "Siguiente"
                 },
                 "lengthMenu": "Mostrar _MENU_ registros por página",
-                "info": "Mostrando _START_ al _END_ de _TOTAL_ registros",
-                "infoEmpty": "Mostrando del 0 al 0 de un total de 0 registros",
+                "info": "Mostrando _START_ al _END_ de _TOTAL_ registro(s)",
+                "infoEmpty": "",
             },
             "drawCallback": function (settings) {
                 $('#dataTable_paginate .paginate_button').removeClass('selected-page');
@@ -505,14 +506,8 @@
         });
     });
 </script>
-<style>
-    .selected-page{
-        background-color: black
-    }
-</style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5" crossorigin="anonymous"></script>
-
 
     <!-- Scripts de Nivel de Página -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
