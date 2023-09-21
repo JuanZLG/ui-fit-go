@@ -17,10 +17,12 @@ def crear_venta(request):
         documento = data.get('documento', '')
         totalVenta = data.get('totalVenta', '')
         productos = data.get('productos', [])
-
+        print("Inicia")
         cliente = Clientes.objects.filter(documento=documento).first()
         venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
         for producto_datos in productos:
+            print("for")
+
             nombre_producto = producto_datos['nombre']
             cantidad_vendida = producto_datos['cantidad']
 

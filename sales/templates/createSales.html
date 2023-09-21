@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <div class="row cont-crear-venta-crear">
+        <div class="row cont-crear-venta">
             <button class="btn btn-crear" type="submit">Crear Venta</button>
         </div>
     </form>
@@ -466,19 +466,20 @@
                 const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const cantidadValue = parseInt(cantidadInput.val());
 
+
                 if (isNaN(precioUnidadValue)) {
-                    row.find(".producto-error ").text("El campo documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
+                    row.find(".producto-error ").text("Por favor, selecciona un producto válido para completar el registro.");
                     camposLlenos = false;
-                }   
-                if (!productoValue) {
-                    row.find(".producto-error ").text("El campo del producto no puede estar vacío. Por favor, ingréselo correctamente.");
-                    camposLlenos = false;
+                    $("#producto").addClass("is-invalid");
+                    $(".producto").addClass("is-invalid");
+                    mostrarError(productoInput)
                 }
 
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
-                } else if ($(".error-cantidad").length > 0) {
+                } 
+                if ($(".error-cantidad").length > 0) {
                     camposLlenos = false;
                 }
 
@@ -487,7 +488,7 @@
                     productoInput.addClass("is-invalid");
                     row
                         .find(".producto-error")
-                        .text("Este producto ya ha sido seleccionado anteriormente.");
+                        .text("Este producto ya ha sido agregado anteriormente.");
                     camposLlenos = false;
                 } else if (productoValue) {
                     productoInput.removeClass("is-invalid");
