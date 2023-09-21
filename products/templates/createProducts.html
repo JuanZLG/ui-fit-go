@@ -57,7 +57,7 @@
             </div>
         </div>
       
-        <div class="col-md-2 mb-3">
+        <div class="col-md-3 mb-3">
           <div class="form-group">
             <label for="cant">Cantidad *</label>
             <input type="number" class="form-control" id="iCantidad" name="iCantidad"/>
@@ -73,10 +73,10 @@
           </div>
         </div>
       
-        <div class="col-md-2 mb-3">
+        <div class="col-md-3 mb-3">
           <div class="form-group">
-            <label for="services">Servicios *</label>
-            <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Servicios"/>
+            <label for="services">Presentación (LBs) *</label>
+            <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Tamaño"/>
             <div class="error-message" style="color:red;" id="iServices-error"></div>
           </div>
         </div>
@@ -84,8 +84,13 @@
       
       <div class="form-group">
         <label for="price">Precio del Producto *</label>
-        <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"/>
-        <div class="error-message" style="color:red;" id="iPrice-error"></div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+            </div>
+            <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio" value="{{ Product.precio }}">
+        </div>
+        <div class="error-message" id="iPrice-error" style="color:red;"></div>
       </div>
   
       <div class="text-end">
