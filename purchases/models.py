@@ -17,39 +17,21 @@ class Categorias(models.Model):
         db_table = 'categorias'
 
 
-class Clientes(models.Model):
-    id_cliente = models.AutoField(primary_key=True)
-    id_municipio = models.ForeignKey('Municipios', models.DO_NOTHING, db_column='id_municipio')
-    documento = models.CharField(max_length=25)
-    nombres = models.CharField(max_length=60)
-    apellidos = models.CharField(max_length=60)
-    celular = models.CharField(max_length=10)
-    barrio = models.CharField(max_length=40)
-    direccion = models.CharField(max_length=50)
-    estado = models.IntegerField()
 
-    class Meta:
-        managed = False
-        db_table = 'clientes'
 
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
     fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=1) 
+    totalCompra = models.FloatField()
+
 
     class Meta:
         managed = False
         db_table = 'compras'
 
 
-class Departamentos(models.Model):
-    id_departamento = models.AutoField(primary_key=True)
-    nombre_departamento = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'departamentos'
 
 
 class Detallecompra(models.Model):
@@ -57,25 +39,14 @@ class Detallecompra(models.Model):
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
     id_compra = models.ForeignKey(Compras, models.DO_NOTHING, db_column='id_compra')
     cantidad = models.IntegerField()
-    precio_uni = models.IntegerField()
-    precio_tot = models.IntegerField()
+    precio_uni = models.FloatField()
+    precio_tot = models.FloatField()
 
     class Meta:
         managed = False
         db_table = 'detallecompra'
 
 
-class Detalleventa(models.Model):
-    id_detalleventa = models.AutoField(primary_key=True)
-    id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
-    id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
-    cantidad = models.IntegerField()
-    precio_uni = models.IntegerField()
-    precio_tot = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'detalleventa'
 
 
 class Marcas(models.Model):
@@ -87,23 +58,10 @@ class Marcas(models.Model):
         db_table = 'marcas'
 
 
-class Municipios(models.Model):
-    id_municipio = models.AutoField(primary_key=True)
-    id_departamento = models.ForeignKey(Departamentos, models.DO_NOTHING, db_column='id_departamento')
-    nombre_municipio = models.CharField(max_length=60)
-
-    class Meta:
-        managed = False
-        db_table = 'municipios'
 
 
-class Permisos(models.Model):
-    id_permiso = models.AutoField(primary_key=True)
-    nombre_permiso = models.CharField(max_length=37)
 
-    class Meta:
-        managed = False
-        db_table = 'permisos'
+
 
 
 class Productos(models.Model):
@@ -116,8 +74,9 @@ class Productos(models.Model):
     fechaven = models.DateTimeField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
-    precio = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     estado = models.IntegerField()
+    precio = models.FloatField()
+
 
     class Meta:
         managed = False
@@ -136,42 +95,5 @@ class Proveedores(models.Model):
         db_table = 'proveedores'
 
 
-class Roles(models.Model):
-    id_rol = models.AutoField(primary_key=True)
-    nombre_rol = models.CharField(max_length=37)
 
-    class Meta:
-        managed = False
-        db_table = 'roles'
-
-
-class Rolespermisos(models.Model):
-    id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol')
-    id_permiso = models.ForeignKey(Permisos, models.DO_NOTHING, db_column='id_permiso')
-
-    class Meta:
-        managed = False
-        db_table = 'rolespermisos'
-
-
-class Usuarios(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
-    id_rol = models.ForeignKey(Roles, models.DO_NOTHING, db_column='id_rol')
-    correo = models.CharField(max_length=60)
-    contrasena = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'usuarios'
-
-
-class Ventas(models.Model):
-    id_venta = models.AutoField(primary_key=True)
-    id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
-    fechareg = models.DateField(default=timezone.now)
-    estado = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'ventas'
         

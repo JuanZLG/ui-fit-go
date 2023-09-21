@@ -18,7 +18,6 @@
             <div class="col-md-7 mx-5 cont-proveedor">
                 <div class="d-flex justify-content-between">
                     <label class="mb-2">Obtener Proveedor *</label>
-                    <div id="nombreProveedorDato" style="display: none;"></div>
                 </div>
                 <input type="text" class="form-control" id="nombreProveedor" autocomplete="off"
                 placeholder="Ingrese el nombre del proveedor" maxlength="100">
@@ -247,19 +246,21 @@
         text-align: center;
     }
 
-    .resultado-sugerencia:hover {
-        cursor: pointer;
-        opacity: 0.9;
-    }
-
     .resultado-sugerencia {
-        margin-right: 5px;
-        padding: 2px 1rem;
-        color: #f2f2f2;
-        background-color: #09711c;
-        border-radius: 5px;
-        font-size: 0.8rem;
-    }
+    display: inline-block;
+    float: none;
+    margin-right: 5px;
+    padding: 2px 1rem;
+    color: #f2f2f2;
+    background-color: #48484b;
+    border-radius: 5px;
+    font-size: 0.8rem;
+}
+
+.resultado-sugerencia:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
 </style>
 
 
@@ -334,68 +335,71 @@ function validarProveedor(nombreProveedor) {
 
 
 
-        /********** PRODUCTO ***********/
-        $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
-        $(document).on("input", ".producto", function () {
-            let input = $(this).val();
-            if (input.length >= 4) {
-                let currentRow = $(this).closest("tr");
-                $.ajax({
-                    url: "{% url 'buscar_productos' %}?q=" + input,
-                    type: "GET",
-                    success: function (data) {
-                        let suggestions = currentRow.find(".producto-suggestions");
-                        suggestions.empty();
-                        data.productos = data.productos.map(producto => producto.toUpperCase());
-                        if (data.productos.length > 0) {
-                            let producSimilar1 = data.productos[0];
-                            let producSimilar2 = data.productos[1];
-                            let producSimilar3 = data.productos[2];
-                            suggestions.html("<span class='resultado-sugerencia'>" + producSimilar1);
-                            if (data.productos.length > 1) {
-                                suggestions.append("</span><span class='resultado-sugerencia'>" + producSimilar2 + "</span>")
-                            } if (data.productos.length > 2) {
-                                suggestions.append("</span><span class='resultado-sugerencia'>" + producSimilar3 + "</span>")
-                            }
-
-                            suggestions.addClass("sugerencia").show();
-                        } else {
-                            suggestions.hide();
-                        }
-                    },
-                    error: function () {
-                        currentRow.find(".producto-suggestions").empty().hide();
+       /********** PRODUCTO ***********/
+$(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
+$(document).on("input", ".producto", function () {
+    let input = $(this).val();
+    if (input.length >= 4) {
+        let currentRow = $(this).closest("tr");
+        $.ajax({
+            url: "{% url 'buscar_productos_compras'%}?q=" + input,
+            type: "GET",
+            success: function (data) {
+                let suggestions = currentRow.find(".producto-suggestions");
+                suggestions.empty();
+                data.productos = data.productos.map(producto => producto.toUpperCase());
+                if (data.productos.length > 0) {
+                    let producSimilar1 = data.productos[0];
+                    let producSimilar2 = data.productos[1];
+                    let producSimilar3 = data.productos[2];
+                    suggestions.html("<span class='resultado-sugerencia'>" + producSimilar1);
+                    if (data.productos.length > 1) {
+                        suggestions.append("</span><span class='resultado-sugerencia'>" + producSimilar2 + "</span>")
                     }
-                });
-            } else {
-                $(this).closest("tr").find(".producto-suggestions").empty().hide();
+                    if (data.productos.length > 2) {
+                        suggestions.append("</span><span class='resultado-sugerencia'>" + producSimilar3 + "</span>")
+                    }
 
+                    suggestions.addClass("sugerencia").show();
+                } else {
+                    suggestions.hide();
+                    calcularTotalCompra();
+                }
+            },
+            error: function () {
+                currentRow.find(".producto-suggestions").empty().hide();
             }
         });
+    } else {
+        $(this).closest("tr").find(".producto-suggestions").empty().hide();
+        calcularTotalCompra();
+    }
+});
 
-        $(document).on("click", function (event) {
-            if (!$(event.target).closest(".producto").length && !$(event.target).closest(".producto-suggestions").length) {
-                $(".producto-suggestions").empty().hide();
-            }
-        });
+$(document).on("click", function (event) {
+    if (!$(event.target).closest(".producto").length && !$(event.target).closest(".producto-suggestions").length) {
+        $(".producto-suggestions").empty().hide();
+    }
+});
 
-        $(document).on("click", ".producto-suggestions span.resultado-sugerencia", function () {
-            let currentRow = $(this).closest("tr");
-            let nombreProducto = $(this).text();
-            nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
-            currentRow.find(".producto").val(nombreProducto);
+$(document).on("click", ".producto-suggestions span.resultado-sugerencia", function () {
+    let currentRow = $(this).closest("tr");
+    let nombreProducto = $(this).text();
+    nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
+    currentRow.find(".producto").val(nombreProducto);
 
-            validarProducto(currentRow, nombreProducto);
-        });
+    validarProductoCompras(currentRow, nombreProducto);
+});
 
-        $(document).on("click", ".producto-suggestions span", function () {
-            let currentRow = $(this).closest("tr");
-            let nombreProducto = $(this).text();
-            nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
-            currentRow.find(".producto").val(nombreProducto);
-            currentRow.find(".producto-suggestions").empty().hide();
-            currentRow.find('.precioUnidad').removeClass('is-invalid');
-        });
+$(document).on("click", ".producto-suggestions span", function () {
+    let currentRow = $(this).closest("tr");
+    let nombreProducto = $(this).text();
+    nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
+    currentRow.find(".producto").val(nombreProducto);
+    currentRow.find(".producto-suggestions").empty().hide();
+    currentRow.find('.precioUnidad').removeClass('is-invalid');
+});
+
 
         /********** PRECIOS ***********/
         $(document).on("input", ".producto", function () {
@@ -404,54 +408,62 @@ function validarProveedor(nombreProveedor) {
             currentRow.find(".error-produ").text(""); // Limpiar mensaje de error
             if (nombreProducto.length >= 3) {
                 // Validar el producto antes de obtener el precio
-                validarProducto(currentRow, nombreProducto);
+                validarProductoCompras(currentRow, nombreProducto);
             } else {
                 currentRow.find('.cantidad, .precioTotal, .precioUnidad').val("");
                 calcularTotalCompra();
             }
         });
 
-        function validarProducto(currentRow, nombreProducto) {
+        function validarProductoCompras(currentRow, nombreProducto) {
             $.ajax({
-                url: "{% url 'validar_producto' %}",
+                url: "{% url 'validar_producto_compras' %}",
                 type: 'GET',
                 data: {
                     nombre_producto: nombreProducto
                 },
                 success: function (data) {
                     if (data.existe) {
-                        obtenerPrecioProducto(currentRow, nombreProducto);
+                        obtenerPrecioProductoCompras(currentRow, nombreProducto);
                     } else {
                         currentRow.find('.cantidad, .precioTotal, .precioUnidad').val("");
+                        calcularTotalCompra()
                     }
                 },
                 error: function () {
                     currentRow.find('.cantidad, .precioTotal').val("");
+                    calcularTotalCompra()
                 }
             });
+        }
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$ ' + precioFormateado;
         }
 
-        function obtenerPrecioProducto(currentRow, nombreProducto) {
-            $.ajax({
-                url: "{% url 'obtener_precio_producto' %}",
-                type: 'GET',
-                data: {
-                    nombre_producto: nombreProducto
-                },
-                success: function (data) {
-                    if ('precio' in data) {
-                        let precioU = currentRow.find('.precioUnidad').val(parseInt(data.precio).toLocaleString(undefined, {
-                            minimumFractionDigits: 0,
-                        }));
-                    } else {
-                        currentRow.find('.precioUnidad').addClass('is-invalid');
-                    }
-                },
-                error: function () {
-                    currentRow.find('.cantidad, .precioTotal').val("");
-                }
-            });
-        }
+        function obtenerPrecioProductoCompras(currentRow, nombreProducto) {
+    $.ajax({
+        url: "{% url 'obtener_precio_producto_compras' %}",
+        type: "GET",
+        data: {
+            nombre_producto: nombreProducto,
+        },
+        success: function (data) {
+            if ("precio" in data) {
+                let precioUValue = parseFloat(data.precio);
+                let precioTotalFormatted = formatearPrecios(precioUValue);
+                currentRow.find(".precioUnidad").val(precioTotalFormatted);
+            } else {
+                currentRow.find(".precioUnidad").addClass("is-invalid");
+            }
+        },
+        error: function () {
+            currentRow.find(".cantidad, .precioTotal").val("");
+        },
+    });
+}
+
         $(document).ready(function () {
             $(".precioTotal").val("");
             $(".precioUnidad").val("");
@@ -459,25 +471,32 @@ function validarProveedor(nombreProveedor) {
         });
 
         $(document).on("input", ".cantidad", function () {
-            calcularTotalProducto($(this));
+            calcularTotalProductoCompra($(this));
         });
-        function calcularTotalProducto(inputCantidad) {
-            let currentRow = inputCantidad.closest("tr");
-            let precioUnidad = currentRow.find(".precioUnidad").val().replace(/[^\d.-]/g, '');
-            let cantidad = parseInt(inputCantidad.val());
+        function calcularTotalProductoCompra(inputCantidad) {
+    let currentRow = inputCantidad.closest("tr");
+    let precioUnidad = parseFloat(currentRow.find(".precioUnidad").val().replace(/[$,.]/g, ''));
+    let cantidad = parseInt(inputCantidad.val());
 
-            if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
-                let total = precioUnidad * cantidad;
-                let totalProductoFormateado = total.toLocaleString(undefined, {
-                    minimumFractionDigits: 3
-                });
-                currentRow.find('.precioTotal').val(totalProductoFormateado);
-                calcularTotalCompra();
-            } else {
-                currentRow.find('.precioTotal').val("");
-                calcularTotalCompra();
-            }
-        };
+    if (isNaN(precioUnidad)) {
+        console.log("precioUnidad no es un número válido:", currentRow.find(".precioUnidad").val());
+    }
+    if (isNaN(cantidad)) {
+        console.log("cantidad no es un número válido:", inputCantidad.val());
+    }
+
+    if (!isNaN(precioUnidad) && !isNaN(cantidad)) {
+        let total = precioUnidad * cantidad;
+        let formateoTotal = formatearPrecios(total)
+        currentRow.find(".precioTotal").val(formateoTotal);
+        calcularTotalCompra(); // Llama a la función para calcular el total de compra
+    } else {
+        currentRow.find(".precioTotal").val("");
+        calcularTotalCompra(); // Llama a la función para calcular el total de compra
+    }
+}
+
+
 
 
         $(document).on("click", ".eliminar-producto", function () {
@@ -532,18 +551,32 @@ function validarProveedor(nombreProveedor) {
     let totalCompra = 0;
 
     $(".producto-row").each(function () {
-        let precioTotal = parseInt($(this).find(".precioTotal").val().replace(/[^\d.-]/g, ''));
-
+        let precioTotal = parseFloat($(this).find(".precioTotal").val().replace(/[$,.]/g, ''));
+        
+        // Verificar si precioTotal es un número válido
         if (!isNaN(precioTotal)) {
             totalCompra += precioTotal;
         }
     });
 
-    let totalCompraFormateado = "$ " + totalCompra.toLocaleString();
+    // Verificar si totalCompra es un número válido
+    if (!isNaN(totalCompra)) {
+        let formateoTotalCompra = formatearPrecios(totalCompra);
+        console.log("Valor de totalCompra:", totalCompra);
 
-    // Establece el total en un campo de entrada con el id "totalCompra"
-    $("#totalCompra").val(totalCompraFormateado);
+        $("#totalCompra").val(formateoTotalCompra);
+    } else {
+        // Si totalCompra no es un número válido, puedes asignar un valor predeterminado o mostrar un mensaje de error.
+        $("#totalCompra").val("Error");
+    }
 }
+
+
+
+
+
+
+
 
 
 
@@ -554,39 +587,42 @@ function validarProveedor(nombreProveedor) {
     $(document).ready(function () {
         function validarCamposLlenos() {
     let camposLlenos = true;
+    const totalCompraValue = parseFloat($("#totalCompra").val().replace(/[$,.]/g, '')).toFixed(2);
+    const proveedorValue = $('#nombreProveedor').val();
+
     const productos = [];
 
-    const proveedorValue = $('#nombreProveedor').val();
-    if (!proveedorValue) {
+if (!proveedorValue) {
+    mostrarError("#nombreProveedor");
+    $("#error-proveedor").text(
+        "El campo del proveedor no puede estar vacío. Por favor, ingréselo correctamente."
+    );
+    camposLlenos = false;
+} else {
+    $.ajax({
+        url: "{% url 'validar_proveedor' %}?nombreProveedor=" + proveedorValue,
+        type: "GET",
+        async: false,  // Espera la respuesta antes de continuar la ejecución
+        success: function (data) {
+    if (!data.existe) {
         mostrarError("#nombreProveedor");
         $("#error-proveedor").text(
-            "El campo del proveedor no puede estar vacío. Por favor, ingréselo correctamente."
+            "El proveedor no coincide o no existe en nuestros registros. Por favor, verifique y vuelva a intentar."
         );
         camposLlenos = false;
-    } else {
-        // Realiza una solicitud AJAX para verificar la existencia del proveedor en tu sistema.
-        $.ajax({
-            url: "{% url 'validar_proveedor' %}?nombreProveedor=" + proveedorValue,
-            type: "GET",
-            async: false,  // Espera la respuesta antes de continuar la ejecución
-            success: function (data) {
-                if (!data.existe) {
-                    mostrarError("#nombreProveedor");
-                    $("#error-proveedor").text(
-                        "El proveedor no coincide o no existe en nuestros registros. Por favor, verifique y vuelva a intentar."
-                    );
-                    camposLlenos = false;
-                }
-            },
-            error: function () {
-                mostrarError("#nombreProveedor");
-                $("#error-proveedor").text(
-                    "Ocurrió un error al validar el proveedor. Por favor, inténtelo nuevamente."
-                );
-                camposLlenos = false;
-            }
-        });
     }
+},
+error: function () {
+    mostrarError("#nombreProveedor");
+    $("#error-proveedor").text(
+        "Ocurrió un error al validar el proveedor. Por favor, inténtelo nuevamente."
+    );
+    camposLlenos = false;
+}
+
+    });
+}
+
 
     $('.producto-row').each(function (index) {
         const row = $(this);
@@ -597,8 +633,8 @@ function validarProveedor(nombreProveedor) {
         const precioTotalInput = row.find('.precioTotal');
 
         const productoValue = productoInput.val();
-        const precioUnidadValue = parseInt(precioUnidadInput.val().replace(/[^\d.-]/g, ''));
-        const precioTotalValue = parseInt(precioTotalInput.val().replace(/[^\d.-]/g, ''));
+        const precioUnidadValue = parseFloat(precioUnidadInput.val().replace(/[$,.]/g, '')).toFixed(2);
+        const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
         const cantidadValue = parseInt(cantidadInput.val());
 
         if (!precioUnidadValue || isNaN(precioUnidadValue)) {
@@ -625,7 +661,7 @@ function validarProveedor(nombreProveedor) {
         }
     });
 
-    return camposLlenos ? { proveedor: proveedorValue, productos: productos } : null;
+    return camposLlenos ? { proveedor: proveedorValue, totalCompra: totalCompraValue, productos: productos } : null;
 }
 
 

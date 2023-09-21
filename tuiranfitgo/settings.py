@@ -72,9 +72,9 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tftbd',
+        'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': 'monitoc10',
+        'PASSWORD': '3127123250',
         'PORT': '3306'
     }
 }

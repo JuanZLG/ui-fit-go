@@ -31,7 +31,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="#">Número de contacto *</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" minlength="10" maxlength="10" >
                         <span class="error-message" id="telefono-error"></span>
                     </div>
                 </div>

@@ -2,74 +2,81 @@
 
 {% block title %} Agregar Cliente {% endblock %}
 {% block body %}
-    <!-- Begin Page Content -->
-    <center><h1 class="h3 text-gray-800 mb-4">Agregar Cliente</h1></center>
+<!-- Begin Page Content -->
+<center>
+    <h1 class="h3 text-gray-800 mb-4">Agregar Cliente</h1>
+</center>
 
 <div class="card shadow">
     <div class="container p-4">
-    <form class="form" id="cliente-form" method="post">
-        {% csrf_token %}
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="iDocumento">Documento *</label>
-                <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento" minlength="8" maxlength="10">
-                <div class="error-message" id="iDocumento-error"></div>
-                <div class="info-message" id="iDocumento-info"></div>
-            </div>
-            
-            <div class="form-group col-md-6">
-                <label for="iNombres">Nombres *</label>
-                <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
-                <div class="error-message" id="iNombres-error"></div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="iApellidos">Apellidos *</label>
-                <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos">
-                <div class="error-message" id="iApellidos-error"></div>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="iCelular">Celular *</label>
-                <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular" minlength="10" maxlength="10">
-                <div class="error-message" id="iCelular-error"></div>
-                <div class="info-message" id="iCelular-info"></div>
-            </div>
-        </div>
+        <form class="form" id="cliente-form" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="iDocumento">Documento *</label>
+                    <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
+                        minlength="8" maxlength="10">
+                    <div class="error-message" id="iDocumento-error"></div>
+                    <div class="info-message" id="iDocumento-info"></div>
+                </div>
 
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="iBarrio">Barrio *</label>
-                <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
-                <div class="error-message" id="iBarrio-error"></div>
+                <div class="form-group col-md-6">
+                    <label for="iNombres">Nombres *</label>
+                    <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
+                    <div class="error-message" id="iNombres-error"></div>
+                </div>
             </div>
-            <div class="form-group col-md-6">
-                <label for="iDireccion">Dirección *</label>
-                <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección">
-                <div class="error-message" id="iDireccion-error"></div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="iApellidos">Apellidos *</label>
+                    <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos">
+                    <div class="error-message" id="iApellidos-error"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="iCelular">Celular *</label>
+                    <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
+                        minlength="10" maxlength="10">
+                    <div class="error-message" id="iCelular-error"></div>
+                    <div class="info-message" id="iCelular-info"></div>
+                </div>
             </div>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="departamento">Departamento *</label>
-                <select class="form-control" id="departamento" name="nombre_departamento">
-                </select>
-                <div class="error-message" id="departamento-error"></div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="iBarrio">Barrio *</label>
+                    <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
+                    <div class="error-message" id="iBarrio-error"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="iDireccion">Dirección *</label>
+                    <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección">
+                    <div class="error-message" id="iDireccion-error"></div>
+                </div>
             </div>
-            <div class="form-group col-md-6">
-                <label for="municipio">Municipio *</label>
-                <select class="form-control" id="municipio" name="nombre_municipio">
-                    <option value="Municipio por Defecto">Selecciona un Municipio</option>
-                </select>
-                <div class="error-message" id="municipio-error"></div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="departamento">Departamento *</label>
+                    <select class="form-control" id="departamento" name="nombre_departamento">
+                    </select>
+                    <div class="error-message" id="departamento-error"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="municipio">Municipio *</label>
+                    <select class="form-control" id="municipio" name="nombre_municipio">
+                        <option value="Municipio por Defecto">Selecciona un Municipio</option>
+                    </select>
+                    <div class="error-message" id="municipio-error"></div>
+                </div>
             </div>
-        </div>
-        <div class="text-end">
-            <button class="btn btn-success" type="submit" id="submit-button" disabled>Agregar Cliente</button>
-        </div>
-    </form>
-</div>
+            <div class="text-center">
+                <p>(*) campos obligatorios</p>
+            </div>
+            <div class="text-end">
+                <button class="btn btn-success" type="submit" id="submit-button" disabled>Agregar Cliente</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -83,6 +90,8 @@
             cargarMunicipios();
         });
 
+        // ... (código anterior)
+
         $('#iDocumento').on('input', function () {
             validarDocumento();
             habilitarBoton();
@@ -93,11 +102,21 @@
             habilitarBoton();
         });
 
-        // Cambiado el evento a 'change' para los otros campos
-        $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('change', function () {
+        // Cambiado el evento a 'input' para los otros campos
+        $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
             validarCampo($(this));
             habilitarBoton();
+
         });
+        $('#iDocumento, #iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio')
+            .on('input', function () {
+                if ($(this).val() === '') {
+                    mostrarError($(this), 'Este campo es obligatorio.');
+                } else {
+                    ocultarError($(this));
+                }
+            });
+
 
         $('#cliente-form').submit(function (event) {
             event.preventDefault();
@@ -128,155 +147,137 @@
             }
         });
 
-        // Función para obtener la lista de departamentos
-        function obtenerDepartamentos() {
-            $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                }
-            }).done(function (data) {
-                const departamentos = [...new Set(data.map(item => item.departamento))];
-                const departamentoSelect = $("#departamento");
-                departamentos.forEach(function (depto) {
-                    departamentoSelect.append($("<option>", {
-                        value: depto,
-                        text: depto
-                    }));
-                });
-
-                // Inicialmente, carga los municipios para el primer departamento en la lista
-                cargarMunicipios();
-            });
-        }
-
-        // Función para obtener la lista de municipios basados en el departamento seleccionado
-        function obtenerMunicipios() {
-            const departamentoSeleccionado = $("#departamento").val();
-            const municipioSelect = $("#municipio");
-
-            $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                    "departamento": departamentoSeleccionado
-                }
-            }).done(function (data) {
-                municipioSelect.empty(); // Limpiar opciones anteriores
-                data.forEach(function (item) {
-                    municipioSelect.append($("<option>", {
-                        value: item.municipio,
-                        text: item.municipio
-                    }));
-                });
-            });
-        }
-
-        // Función para cargar los municipios basados en el departamento seleccionado
-        function cargarMunicipios() {
-            obtenerMunicipios();
-        }
-
-        function mostrarError($campo, mensaje) {
-            $campo.addClass('is-invalid');
-            $campo.siblings('.error-message').text(mensaje);
-        }
-
-        function ocultarError($campo) {
-            $campo.removeClass('is-invalid');
-            $campo.siblings('.error-message').text('');
-        }
-
-        function mostrarInfo($campo, mensaje) {
-            $campo.siblings('.info-message').text(mensaje);
-        }
-
-        function ocultarInfo($campo) {
-            $campo.siblings('.info-message').text('');
-        }
-
-   
-        function validarDocumento() {
-                const documento = $('#iDocumento').val();
-                $.ajax({
-                    type: 'POST',
-                    url: "{% url 'verificar_documento' %}",
-                    data: {
-                        'iDocumento': documento
-                    },
-                    success: function (response) {
-                        if (response.documento_existe) {
-                            $('#iDocumento-error').html('<span class="text-danger">El documento ya está registrado.</span>');
-                        } else {
-                            $('#iDocumento-error').html(''); // Limpia el mensaje de error si el documento no existe
-                        }
-                    }
-                });
-
-                const documentoLength = documento.length;
-                const remainingDocumentoChars = (documento.length === 8 || documento.length === 10) ? 0 : (documento.length < 8) ? 8 - documentoLength : documento.length - 10;
-                const documentoError = documentoLength === 0 ? 'Este campo es obligatorio.' :
-                    !/^\d{8}(\d{2})?$/.test(documento) ? 'Número de documento inválido.' : '';
-
-                $('#iDocumento-error').html(documentoError);
-                $('#iDocumento-info').html(remainingDocumentoChars > 0 ? `Faltan ${remainingDocumentoChars} caracteres.` : (remainingDocumentoChars < 0 ? `Excedió ${Math.abs(remainingDocumentoChars)} caracteres.` : ''));
-
-                if (remainingDocumentoChars === 0 && documentoError === '') {
-                    $('#iDocumento-error').html(''); // Limpia el mensaje de error si no hay errores
-                    $('#iDocumento-info').html(''); // Limpia el mensaje de información si no hay información
-                }
-            }
-
-
-
-        function validarCelular() {
-            const celular = $('#iCelular').val();
-            const celularLength = celular.length;
-            const remainingCelularChars = (celular.length === 10) ? 0 : (celular.length < 10) ? 10 - celularLength : celular.length - 10;
-            const celularError = celularLength === 0 ? 'Este campo es obligatorio.' :
-                !/^\d{10}$/.test(celular) ? 'Número inválido.' : '';
-
-            mostrarError($('#iCelular'), celularError);
-            mostrarInfo($('#iCelular-info'), remainingCelularChars > 0 ? `Faltan ${remainingCelularChars} caracteres.` : (remainingCelularChars < 0 ? `Excedió ${Math.abs(remainingCelularChars)} caracteres.` : ''));
-
-            if (remainingCelularChars === 0 && celularError === '') {
-                ocultarError($('#iCelular'));
-                ocultarInfo($('#iCelular-info'));
-            }
-        }
-
-        function validarCampo($campo) {
-            const valor = $campo.val();
-            if (!valor) {
-                mostrarError($campo, 'Este campo es obligatorio.');
-            } else {
-                ocultarError($campo);
-            }
-        }
-
-        function habilitarBoton() {
-            const documento = $('#iDocumento').val();
-            const celular = $('#iCelular').val();
-            const nombres = $('#iNombres').val();
-            const apellidos = $('#iApellidos').val();
-            const barrio = $('#iBarrio').val();
-            const direccion = $('#iDireccion').val();
-            const departamento = $('#departamento').val();
-            const municipio = $('#municipio').val();
-
-            const documentoValido = (documento.length === 8 || documento.length === 10);
-            const celularValido = (celular.length === 10);
-            const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
-
-            if (documentoValido && celularValido && camposCompletos) {
-                $('#submit-button').prop('disabled', false);
-            } else {
-                $('#submit-button').prop('disabled', true);
-            }
-        }
+        // ... (código anterior)
     });
+
+
+    // Función para obtener la lista de departamentos
+    function obtenerDepartamentos() {
+        $.ajax({
+            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+            type: "GET",
+            data: {
+                "$limit": 5000,
+            }
+        }).done(function (data) {
+            const departamentos = [...new Set(data.map(item => item.departamento))];
+            const departamentoSelect = $("#departamento");
+            departamentos.forEach(function (depto) {
+                departamentoSelect.append($("<option>", {
+                    value: depto,
+                    text: depto
+                }));
+            });
+
+            // Inicialmente, carga los municipios para el primer departamento en la lista
+            cargarMunicipios();
+        });
+    }
+
+    // Función para obtener la lista de municipios basados en el departamento seleccionado
+    function obtenerMunicipios() {
+        const departamentoSeleccionado = $("#departamento").val();
+        const municipioSelect = $("#municipio");
+
+        $.ajax({
+            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+            type: "GET",
+            data: {
+                "$limit": 5000,
+                "departamento": departamentoSeleccionado
+            }
+        }).done(function (data) {
+            municipioSelect.empty(); // Limpiar opciones anteriores
+            data.forEach(function (item) {
+                municipioSelect.append($("<option>", {
+                    value: item.municipio,
+                    text: item.municipio
+                }));
+            });
+        });
+    }
+
+    // Función para cargar los municipios basados en el departamento seleccionado
+    function cargarMunicipios() {
+        obtenerMunicipios();
+    }
+
+    function mostrarError($campo, mensaje) {
+        $campo.addClass('is-invalid');
+        $campo.siblings('.error-message').text(mensaje);
+    }
+
+    function ocultarError($campo) {
+        $campo.removeClass('is-invalid');
+        $campo.siblings('.error-message').text('');
+    }
+
+    function mostrarInfo($campo, mensaje) {
+        $campo.siblings('.info-message').text(mensaje);
+    }
+
+    function ocultarInfo($campo) {
+        $campo.siblings('.info-message').text('');
+    }
+
+
+    function validarDocumento() {
+        const documento = $('#iDocumento').val();
+        const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+
+        $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
+        $('#iDocumento-error').html(documentoError);
+
+
+    }
+    
+
+    function validarCelular() {
+        const celular = $('#iCelular').val();
+        const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
+
+        $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
+        $('#iCelular-error').html(celularError);
+
+
+    }
+
+    // Asociar funciones a eventos de cambio en los campos
+    $('#iDocumento').on('input', validarDocumento);
+    $('#iDocumento').on('keypress', validarDocumento);
+    $('#iCelular').on('input', validarCelular);
+    $('#iCelular').on('keypress', validarCelular);
+
+
+    function validarCampo($campo) {
+        const valor = $campo.val();
+        if (!valor) {
+            mostrarError($campo, 'Este campo es obligatorio.');
+        } else {
+            ocultarError($campo);
+        }
+    }
+
+    function habilitarBoton() {
+        const documento = $('#iDocumento').val();
+        const celular = $('#iCelular').val();
+        const nombres = $('#iNombres').val();
+        const apellidos = $('#iApellidos').val();
+        const barrio = $('#iBarrio').val();
+        const direccion = $('#iDireccion').val();
+        const departamento = $('#departamento').val();
+        const municipio = $('#municipio').val();
+
+        const documentoValido = (documento.length === 8 || documento.length === 10);
+        const celularValido = (celular.length === 10);
+        const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
+
+        if (documentoValido && celularValido && camposCompletos) {
+            $('#submit-button').prop('disabled', false);
+        } else {
+            $('#submit-button').prop('disabled', true);
+        }
+    }
 </script>
 
 {% endblock %}
