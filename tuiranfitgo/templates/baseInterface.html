@@ -61,7 +61,7 @@
         <ul class="navbar-nav sidebar sidebar-dark accordion" style="background-color: #000;" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-text mx-3"><img src={% static 'img/gorille.png' %} width="48%"
                         style="margin-right: 1rem;"></div>
             </a>
@@ -70,7 +70,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'mydashboard' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -85,8 +85,7 @@
             </div>
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers"
-                    aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fa-solid fa-users"></i>
                     <span>Usuarios</span>
                 </a>
@@ -105,7 +104,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProv"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fa-solid fa-truck-fast"></i>
+                    <i class="fa-solid fa-people-carry-box"></i>
                     <span>Proveedores</span>
                 </a>
                 <div id="collapseProv" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -115,13 +114,11 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#collapseCompras"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fa-solid fa-bag-shopping"></i>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompras"aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fa-solid fa-basket-shopping"></i>
                     <span>Compras</span>
                 </a>
-                <div id="collapseCompras" class="collapse" aria-labelledby="collapseTwo"
-                    data-parent="#accordionSidebar">
+                <div id="collapseCompras" class="collapse" aria-labelledby="collapseTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'purchases' %}">Gestión de Compras</a>
                     </div>
@@ -129,10 +126,9 @@
             </li>
             
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fa-solid fa-blender"></i>
-                    <span>Productos</span>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fa-solid fa-shop"></i>
+                        <span>Productos</span>
                 </a>
                 <div id="collapseProducts" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
@@ -150,7 +146,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCustomers"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fa-solid fa-users"></i>
+                    <i class="fa-solid fa-people-group"></i>
                     <span>Clientes</span>
                 </a>
                 <div id="collapseCustomers" class="collapse" aria-labelledby="headingTwo"
@@ -163,7 +159,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSales"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fa-solid fa-store"></i>
+                    <i class="fa-solid fa-user-lock"></i>
                     <span>Ventas</span>
                 </a>
                 <div id="collapseSales" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -178,15 +174,15 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Gestión de Acceso
+                Soporte
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Configuración</span>
+                    <i class="fa-regular fa-circle-question"></i>
+                    <span>Manual de Ayuda</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <!-- Collapse Config Items -->
