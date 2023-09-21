@@ -8,5 +8,5 @@ urlpatterns=[
     path('Estado/', views.cambiarEstadoDeProducto, name='cambiarEstadoDeProducto'),
     path('details/', views.verDetallesProducto, name='verDetallesProducto'),
     path('categories/', views.catHome, name="categorias"),
-    path('brands', views.brandHome, name="marcas")
+    path('brands/', views.brandHome, name="marcas")
 ]

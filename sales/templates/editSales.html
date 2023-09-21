@@ -1,5 +1,5 @@
 {% extends "baseInterface.html" %}
-{% block title %} Agregar Venta {% endblock %}
+{% block title %} Modificar Venta {% endblock %}
 {% block body %}
 
 <head>
@@ -56,7 +56,7 @@
                                 <input type="text" class="form-control producto" name="producto" id="producto"
                                     autocomplete="off" placeholder="Nombre del producto"
                                     value="{{producto.id_producto.nombre_producto}}">
-                                <span class="error-message text-danger error-produ"></span>
+                                <span class="text-danger producto-error"></span>
                                 <div class="p-2">
                                     <label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>
                                 </div>
@@ -72,6 +72,7 @@
                                     name="cantidad" autocomplete="off" min="1" step="1"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Cantidad"
                                     value="{{producto.cantidad}}">
+                                    <span class="text-danger error-cantidad"></span>
                             </td>
                             <td>
                                 <div class="form-group">
@@ -131,7 +132,7 @@
         $("#nombreCliente").on("input", function () {
             let input = $(this).val();
             let resultadoDocu = $("#cont-docu");
-
+            $("#error-docu").text("");
             if (input.length == 8 || input.length == 10) {
                 $.ajax({
                     url: "{% url 'buscar_documentos' %}?q=" + input,
@@ -195,7 +196,7 @@
         $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
         $(document).on("input", ".producto", function () {
             let input = $(this).val();
-            if (input.length >= 4) {
+            if (input.length >= 2) {
                 let currentRow = $(this).closest("tr");
                 $.ajax({
                     url: "{% url 'buscar_productos' %}?q=" + input,
@@ -294,8 +295,10 @@
 
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
-            currentRow.find(".error-produ").removeClass("is-invalid")
-            currentRow.find(".error-produ").text("");
+            currentRow.find(".producto").removeClass("is-invalid")
+            currentRow.find(".producto-error").text("");
+            currentRow.find(".cantidad").removeClass("is-invalid");
+            currentRow.find(".error-cantidad").text("");
             unidadPrecio(currentRow);
         });
         //EDIT
@@ -389,11 +392,10 @@
                 '<tr class="producto-row">' +
                 "<td>" +
                 '<input type="text" class="form-control producto" name="producto" id="producto" autocomplete="off" placeholder="Nombre del producto">' +
-                '<span class="error-message text-danger error-produ" ></span>' +
+                '<span class="text-danger producto-error" ></span>' +
                 '<div class="p-2">' +
                 '<label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>' +
                 "</div>" +
-                '<span class="error-message producto-error"></span>' +
                 "</td>" +
                 "<td>" +
                 '<div class="form-group">' +
@@ -404,6 +406,7 @@
                 "<td>" +
                 '<div class="form-group">' +
                 '<input type="number" class="form-control cantidad p-0 text-center" id="cantidad" name="cantidad" autocomplete="off" min="1" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');" placeholder="Cantidad">' +
+                '<span class="text-danger error-cantidad"></span>' +
                 "</div>" +
                 "</td>" +
                 "<td>" +
@@ -439,6 +442,33 @@
             $("#totalVenta").val(formateoTotalVenta);
         }
 
+        
+        function validarCantidad() {
+            const cantidad = parseInt($(this).val());
+            const nombreProducto = $(this).closest("tr.producto-row").find(".producto").val();
+
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: "{% url 'validar_cantidad' %}",
+                    type: "GET",
+                    data: {
+                        cantidad: cantidad,
+                        nombre: nombreProducto,
+                    },
+                    success: function (data) {
+                        if (data.suficiente) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    },
+                    error: function () {
+                        reject(new Error("Error al validar la cantidad"));
+                    },
+                });
+            });
+        }
+
 
         function validarCamposLlenos() {
             let camposLlenos = true;
@@ -446,7 +476,7 @@
             const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
-            const productoNombres = {}; // Objeto para llevar el registro de nombres de productos
+            const productoNombres = {};
 
             if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
@@ -476,30 +506,27 @@
                 const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const cantidadValue = parseInt(cantidadInput.val());
 
-                if (!precioUnidadValue) {
-                    productoInput.addClass("is-invalid");
-                    row
-                        .find(".error-produ")
-                        .text(
-                            "Por favor, selecciona un producto válido para completar el registro."
-                        );
+                 
+                if (isNaN(precioUnidadValue)) {
+                    row.find(".producto-error ").text("El campo documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
                     camposLlenos = false;
-                }
-
+                }   
                 if (!productoValue) {
-                    mostrarError(productoInput);
+                    row.find(".producto-error ").text("El campo del producto no puede estar vacío. Por favor, ingréselo correctamente.");
                     camposLlenos = false;
                 }
 
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
+                } 
+                if ($(".error-cantidad").text() !== "")  {
+                    camposLlenos = false;
                 }
-                /// NEW
                 if (productoNombres[productoValue]) {
                     productoInput.addClass("is-invalid");
                     row
-                        .find(".error-produ")
+                        .find(".producto-error")
                         .text("Este producto ya ha sido agregado anteriormente.");
                     camposLlenos = false;
                 } else {
@@ -525,20 +552,38 @@
 
             $("#nombreCliente, .producto, .cantidad").on("input", function () {
                 const campo = $(this);
-                $("#error-docu").text("");
                 if (campo.val()) {
                     campo.removeClass("is-invalid");
                 }
             });
         }
 
-        $("#venta-form").submit(function (event) {
+         
+        $('#venta-form').submit(function (event) {
             event.preventDefault();
 
             const data = validarCamposLlenos();
-            if (!data) {
+            if (!data) { // Comprueba si la bandera indica campos válidos
                 return;
+            } else {
+                enviarDatosVentas(data);
             }
+        });
+        $(document).on('input', '.cantidad', function () {
+            const $this = $(this);
+            const fila = $this.closest("tr.producto-row");
+            validarCantidad.call(this).then(function (suficiente) {
+                if (suficiente) {
+                    $this.removeClass("is-invalid");
+                    fila.find(".error-cantidad").text("");
+                } else {
+                    $this.addClass("is-invalid");
+                    fila.find(".error-cantidad").text("La cantidad supera el stock mínimo.").css("color", "red");
+                }
+            });
+        });
+        
+        function enviarDatosVentas(data) { 
             $.ajax({
                 type: "POST",
                 url: "#",
@@ -551,7 +596,7 @@
                     }
                 },
             });
-        });
+        };
     });
 
 </script>
