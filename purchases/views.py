@@ -17,24 +17,32 @@ def crear_compra(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            logger.debug("Datos JSON recibidos: %s", data)      
+            logger.debug("Datos JSON recibidos: %s", data)
+
             proveedor_nombre = data.get('proveedor', '')
             totalCompra = data.get('totalCompra', '')
 
             productos = data.get('productos', [])
 
-            if not proveedor_nombre or not productos:
-                return JsonResponse({'error': 'Datos no válidos'}, status=400)
+            if not proveedor_nombre:
+                return JsonResponse({'error': 'El nombre del proveedor es obligatorio.'}, status=400)
+
+            if not productos:
+                return JsonResponse({'error': 'Debe agregar al menos un producto a la compra.'}, status=400)
 
             proveedor = Proveedores.objects.filter(nombre_proveedor=proveedor_nombre).first()
 
             if not proveedor:
-                return JsonResponse({'error': 'Proveedor no encontrado'}, status=400)
+                return JsonResponse({'error': 'Proveedor no encontrado en la base de datos.'}, status=400)
 
             compra = Compras.objects.create(id_proveedor=proveedor, totalCompra=totalCompra)
 
             for producto_datos in productos:
                 producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
+
+                if not producto:
+                    return JsonResponse({'error': f'Producto "{producto_datos["nombre"]}" no encontrado en la base de datos.'}, status=400)
+
                 detalle = Detallecompra.objects.create(
                     id_producto=producto,
                     id_compra=compra,
@@ -43,14 +51,23 @@ def crear_compra(request):
                     precio_tot=producto_datos['precioTotal']
                 )
 
+                # Incrementar la cantidad en stock del producto
+                producto.cantidad += producto_datos['cantidad']
+                producto.save()
+
             response_data = {'success': True}
             return JsonResponse(response_data)
 
         except json.JSONDecodeError:
-            logger.error("Error al decodificar datos JSON: %s", request.body)  # Registra el error de datos JSON no válidos
-            return JsonResponse({'error': f'Datos JSON no válidos {request.body}'}, status=400 )
+            logger.error("Error al decodificar datos JSON: %s", request.body)
+            return JsonResponse({'error': 'Datos JSON no válidos.'}, status=400)
+
+        except Exception as e:
+            logger.error("Error al crear la compra: %s", str(e))
+            return JsonResponse({'error': 'Error al crear la compra. Intente nuevamente más tarde.'}, status=500)
 
     return render(request, 'createPurchases.html')
+
 
 
 
