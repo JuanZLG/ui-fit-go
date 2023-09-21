@@ -1,32 +1,9 @@
 
-                // if (!productoValue) {
-                //     productoInput.addClass("is-invalid");
-                //     mostrarError(productoInput);
-                //     camposLlenos = false;
-                //     productoInput.addClass("is-invalid");
-                //     row
-                //         .find(".error-produ")
-                //         .text(
-                //             "Por favor, selecciona un producto válido para completar el registro."
-                //         );
-                //     camposLlenos = false;
-                // }
 
-                // existenciaProducto.call(productoInput, productoValue).then(function (existe) {
-                //     if (existe) {
-                //         productoInput.removeClass("is-invalid");
-                //         row
-                //         .find(".error-produ")
-                //         .text(
-                //             "Por favor, selecciona un producto válido para completar el registro."
-                //         );
-                //     } else {
-                //         camposLlenos = false;
-                //         productoInput.addClass("is-invalid");
-                //     row
-                //         .find(".error-produ")
-                //         .text(
-                //             "Por favor, selecciona un producto válido para completar el registro."
-                //         );
-                //     }
-                // });
+                if (!cantidadValue) {
+                    mostrarError(cantidadInput);
+                    camposLlenos = false;
+                } 
+                if ($(".error-cantidad").length > 0) {
+                    camposLlenos = false;
+                }

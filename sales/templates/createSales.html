@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <div class="row cont-crear-venta">
+        <div class="row cont-crear-venta-crear">
             <button class="btn btn-crear" type="submit">Crear Venta</button>
         </div>
     </form>
@@ -466,29 +466,28 @@
                 const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const cantidadValue = parseInt(cantidadInput.val());
 
-
                 if (isNaN(precioUnidadValue)) {
-                    row.find(".producto-error ").text("Por favor, selecciona un producto válido para completar el registro.");
+                    row.find(".producto-error ").text("El campo documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
                     camposLlenos = false;
-                    $("#producto").addClass("is-invalid");
-                    $(".producto").addClass("is-invalid");
-                    mostrarError(productoInput)
+                }   
+                if (!productoValue) {
+                    row.find(".producto-error ").text("El campo del producto no puede estar vacío. Por favor, ingréselo correctamente.");
+                    camposLlenos = false;
                 }
 
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
                 } 
-                if ($(".error-cantidad").length > 0) {
+                if ($(".error-cantidad").text() !== "")  {
                     camposLlenos = false;
                 }
-
 
                 if (productoValue && productoNombres[productoValue]) {
                     productoInput.addClass("is-invalid");
                     row
                         .find(".producto-error")
-                        .text("Este producto ya ha sido agregado anteriormente.");
+                        .text("Este producto ya ha sido seleccionado anteriormente.");
                     camposLlenos = false;
                 } else if (productoValue) {
                     productoInput.removeClass("is-invalid");
@@ -505,6 +504,7 @@
                 ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
                 : null;
         }
+
 
 
         function mostrarError(selector) {
