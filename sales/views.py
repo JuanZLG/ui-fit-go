@@ -202,26 +202,6 @@ def obtener_nombre(request):
             status=400,
         )
 
-
-def detalles_venta(request, venta_id):
-    detalles = Detalleventa.objects.filter(id_venta=venta_id)
-    detalles_data = []
-
-    for detalle in detalles:
-        # Cambia detalle.id_producto por detalle.id_producto_id si es un ForeignKey
-        producto = Productos.objects.get(id_producto=detalle.id_producto)
-        detalle_data = {
-            'producto': producto.nombre_producto,
-            'cantidad': detalle.cantidad,
-            'precio_uni': detalle.precio_uni,
-            'precio_tot': detalle.precio_tot,
-        }
-
-        detalles_data.append(detalle_data)
-
-    return JsonResponse({'detalleventa': detalles_data})
-
-
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         venta_id = request.GET.get('venta_id')
@@ -236,4 +216,42 @@ def cambiarEstado(request):
         except Clientes.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
         
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
+
+def detalles_venta(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        id_venta = request.GET.get('venta_id')
+        if id_venta:
+            try:
+                venta = Ventas.objects.get(id_venta=id_venta)
+                detalles = Detalleventa.objects.filter(id_venta=id_venta)
+                detalles_data = []
+
+                for detalle in detalles:
+                    producto = Productos.objects.get(id_producto=detalle.id_producto.id_producto)
+                    detalle_data = {
+                        'producto': producto.nombre_producto,
+                        'cantidad': detalle.cantidad,
+                        'precio_uni': detalle.precio_uni,
+                        'precio_tot': detalle.precio_tot,
+                    }
+                    detalles_data.append(detalle_data)
+
+                data = {
+                    'fechareg': venta.fechareg,
+                    'cliente': venta.id_cliente.nombres + ' ' + venta.id_cliente.apellidos,
+                    'estado': venta.estado,
+                    'documento': venta.id_cliente.documento,
+                    'totalVenta': venta.totalVenta,
+                    'detalles': detalles_data
+                }
+                return JsonResponse({'success': data})
+            except Ventas.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Venta no encontrado'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'ID de Venta no proporcionado'})
+    
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})

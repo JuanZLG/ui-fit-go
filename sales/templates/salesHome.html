@@ -63,11 +63,10 @@
                         <td class="cell-actions">
                             <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm" id="editbutton"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="{% url 'verVenta' venta.id_venta %}" class="btn btn-sm btn-primary"
-                                id="detailsbutton" data-bs-toggle="modal" data-bs-target="#DetallesModalVenta"
+                            <button type="button" class="btn btn-sm btn-primary verVenta"
                                 data-venta-id="{{ venta.id_venta }}">
                                 <i class="fa-solid fa-eye"></i>
-                            </a>
+                            </button>
                         </td>
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -115,5 +114,112 @@
 </div>
 
 
+
+<div class="modal-backdrop"></div>
+
+<dialog id="verDetallesDialog" class="ventaDialog dragHandle">
+    <form method="dialog">
+        <div class="modal-container-header">
+            <div class="estadoVentaCircle {% if venta.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <h2>Información de la venta</h2>
+            <button class="cerrar-venta" type="button" id="cerrarDetallesVenta">
+                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="cont-detalle-header">
+            <p class="font-weight-bold">Fecha de venta: <span id="fechareg" class="font-weight-normal"></span></p>
+            <p class="font-weight-bold">Cliente: <span id="cliente" class="font-weight-normal"></span> <span class="ml-3">Documento: </span> <span id="documento" class="font-weight-normal"></span> </p>
+        </div>
+        <div class="linea-detalle mb-2">
+            <h3>Detalles de la Compra:</h3>
+        </div>
+        <table class="table table-detalles">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Producto</th>
+                    <th style="width: 20%;">Precio Unitario</th>
+                    <th style="width: 10%;">Cantidad</th>
+                    <th style="width: 30%;">Total del producto</th>
+                </tr>
+            </thead>
+            <tbody id="modalDetallesVenta">
+            </tbody>
+        </table>
+        <div class="cont-detalle-total">
+            <p class="font-weight-bold">TOTAL:  <span id="totalVenta" class="font-weight-normal"></span></p>
+        </div>
+    </form>
+</dialog>
+
+
+<script>
+    $(document).ready(function () {
+        $(".verVenta").click(function () {
+            let venta_id = $(this).data("venta-id");
+            console.log(venta_id)
+            $.ajax({
+                url: "{% url 'verDetallesVenta' %}",
+                data: {
+                    venta_id: venta_id
+                },
+                method: "GET",
+                success: function (response) {
+                    var venta = response.success;
+                    console.log(venta)
+                    $("#fechareg").text(venta.fechareg);
+                    $("#cliente").text(venta.cliente);
+                    $("#documento").text(venta.documento);
+                    $("#totalVenta").text(venta.totalVenta);
+
+                    if (venta.estado == 1) {
+                        $(".estadoVentaCircle").addClass("activo").removeClass("inactivo");
+                    } else {
+                        $(".estadoVentaCircle").addClass("inactivo").removeClass("activo");
+                    }
+                    var detalles = venta.detalles;
+                    let detallesVentaHTML = "";
+                    for (let detalle of detalles) {
+                        const precioUnitario = parseFloat(detalle.precio_uni);
+                        const totalProducto = parseFloat(detalle.precio_tot);
+
+                        detallesVentaHTML += `
+                            <tr>
+                                <td>${detalle.producto}</td>
+                                <td>${precioUnitario}</td>
+                                <td>${detalle.cantidad}</td>
+                                <td>${totalProducto}</td> 
+                            </tr>
+                        `;
+                    }
+                    document.getElementById("modalDetallesVenta").innerHTML = detallesVentaHTML;
+
+            
+                    document.getElementById("verDetallesDialog").showModal();
+                    $(".ventaDialog").addClass("fadeIn");
+                    $(".modal-backdrop").show();
+                    $(".modal-backdrop").addClass("fadeInBack");
+                }
+            });
+        });
+
+        $("#cerrarDetallesVenta").click(function () {
+            $(".ventaDialog").addClass("fadeOut");
+            $(".modal-backdrop").addClass("fadeOut");
+            setTimeout(function () {
+                document.getElementById("verDetallesDialog").close();
+                $(".ventaDialog").removeClass("fadeOut");
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").removeClass("fadeOut");
+            }, 300);
+        });
+    });
+
+
+</script>
 
 {% endblock %}
