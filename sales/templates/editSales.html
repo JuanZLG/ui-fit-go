@@ -56,7 +56,7 @@
                                 <input type="text" class="form-control producto" name="producto" id="producto"
                                     autocomplete="off" placeholder="Nombre del producto"
                                     value="{{producto.id_producto.nombre_producto}}">
-                                <span class="error-message text-danger error-produ"></span>
+                                <span class="text-danger producto-error"></span>
                                 <div class="p-2">
                                     <label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>
                                 </div>
@@ -131,7 +131,7 @@
         $("#nombreCliente").on("input", function () {
             let input = $(this).val();
             let resultadoDocu = $("#cont-docu");
-
+            $("#error-docu").text("");
             if (input.length == 8 || input.length == 10) {
                 $.ajax({
                     url: "{% url 'buscar_documentos' %}?q=" + input,
@@ -294,8 +294,8 @@
 
         $(document).on("input", ".producto", function () {
             let currentRow = $(this).closest("tr");
-            currentRow.find(".error-produ").removeClass("is-invalid")
-            currentRow.find(".error-produ").text("");
+            currentRow.find(".producto").removeClass("is-invalid")
+            currentRow.find(".producto-error").text("");
             unidadPrecio(currentRow);
         });
         //EDIT
@@ -389,11 +389,10 @@
                 '<tr class="producto-row">' +
                 "<td>" +
                 '<input type="text" class="form-control producto" name="producto" id="producto" autocomplete="off" placeholder="Nombre del producto">' +
-                '<span class="error-message text-danger error-produ" ></span>' +
+                '<span class="text-danger producto-error" ></span>' +
                 '<div class="p-2">' +
                 '<label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>' +
                 "</div>" +
-                '<span class="error-message producto-error"></span>' +
                 "</td>" +
                 "<td>" +
                 '<div class="form-group">' +
@@ -476,30 +475,21 @@
                 const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const cantidadValue = parseInt(cantidadInput.val());
 
-                if (!precioUnidadValue) {
-                    productoInput.addClass("is-invalid");
-                    row
-                        .find(".error-produ")
-                        .text(
-                            "Por favor, selecciona un producto válido para completar el registro."
-                        );
+                 
+                if (isNaN(precioUnidadValue)) {
+                    row.find(".producto-error").text("Por favor, selecciona un producto válido para completar el registro.");
                     camposLlenos = false;
-                }
-
-                if (!productoValue) {
-                    mostrarError(productoInput);
-                    camposLlenos = false;
-                }
+                    mostrarError(productoInput)
+                } 
 
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
                 }
-                /// NEW
                 if (productoNombres[productoValue]) {
                     productoInput.addClass("is-invalid");
                     row
-                        .find(".error-produ")
+                        .find(".producto-error")
                         .text("Este producto ya ha sido agregado anteriormente.");
                     camposLlenos = false;
                 } else {
@@ -525,7 +515,6 @@
 
             $("#nombreCliente, .producto, .cantidad").on("input", function () {
                 const campo = $(this);
-                $("#error-docu").text("");
                 if (campo.val()) {
                     campo.removeClass("is-invalid");
                 }
