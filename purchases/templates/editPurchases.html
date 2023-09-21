@@ -1,42 +1,216 @@
 {% extends "baseInterface.html" %}
-{% block title %} Agregar Proveedor {% endblock %}
+{% block title %} Modificar Compra{% endblock %}
 {% block body %}
 
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/CreateEditVentas.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
+
+
+<style>/* CSS adaptado para la vista de compras y proveedores */
+
+    /* Estilo para la tabla */
+    .table,
+    .cont-proveedor {
+        box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Estilo para filas de productos o detalles */
+    .producto-row {
+        border-radius: 19px 19px 7px 7px;
+    }
+    
+    /* Estilo para celdas de la tabla */
+    .table td {
+        padding-top: 30px !important;
+    }
+    
+    /* Estilo para el contenedor de total de compra o total de venta */
+    .cont-total-compra,
+    .cont-total-venta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding: 20px;
+        background-color: #F2f2f2;
+    }
+    
+    /* Estilo para el botón de eliminar producto */
+    .eliminar-producto {
+        position: relative;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .eliminar-producto .icono-eliminar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 25px;
+        background-color: #ba4d4d;
+        border-radius: 100%;
+        color: #ffff;
+    }
+    
+    .eliminar-producto:hover .icono-eliminar {
+        animation: sacudir 0.3s ease-in 1;
+        transform: translate(0);
+    }
+    
+    @keyframes sacudir {
+        0% {
+            transform: translate(-2px, 2px);
+        }
+    
+        100% {
+            transform: translate(0);
+        }
+    }
+    
+    /* Estilo para el contenedor de proveedor o cliente */
+    .cont-proveedor,
+    .cont-cliente {
+        width: auto;
+        margin-right: 30px;
+        min-width: 400px;
+        padding: 20px;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    
+    /* Estilo para el contenedor de error de documento */
+    .cont-error-docu {
+        width: 330px;
+    }
+    
+    /* Estilo para el contenedor de crear compra o venta */
+    .cont-crear-compra,
+    .cont-crear-venta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 50px;
+        padding: 0 20px;
+        background: transparent;
+    }
+    
+    /* Estilo para botones */
+    .btn-crear {
+        width: 300px;
+        color: #fff;
+        font-weight: bold;
+        background-color: #26272d;
+    }
+    
+    .btn-crear:hover, .btn-omitir:hover, .btn-revertir:hover {
+        color: #fff;
+        opacity: 0.9;
+    }
+    
+    .btn-omitir {
+        background-color: #111424;
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    .btn-revertir {
+        background-color: #48484b;
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    .btn-agregar {
+        width: 200px;
+        border: 1px solid #3c3636;
+        color: #09711c;
+        font-weight: bold;
+        background-color: #95eea5;
+    }
+    
+    .btn-agregar:hover {
+        color: #09711c;
+        opacity: 0.9;
+    }
+    
+    /* Estilo para el campo de total de compra o total de venta */
+    #totalCompra,
+    #totalVenta {
+        background-color: #ccc;
+        font-weight: bold;
+    }
+    #totalCompra,
+#totalVenta:focus {
+    outline: 0 !important;
+
+}
+
+.btn-agregar:active,
+.btn-agregar:active {
+    transform: scale(0.95);
+}
+
+
+.eliminar-producto:hover {
+    cursor: pointer;
+}
+
+.fa-trash-can {
+    color: #a60202;
+    font-size: 24px;
+    display: block;
+    text-align: center
+}
+
+.producto-suggestions {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 10px;
+}
+
+.resultado-sugerencia {
+    display: inline-block;
+    float: none;
+    margin-right: 5px;
+    padding: 2px 1rem;
+    color: #f2f2f2;
+    background-color: #48484b;
+    border-radius: 5px;
+    font-size: 0.8rem;
+}
+
+.resultado-sugerencia:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+    </style>
 
 <section class="row">
     <div class="col-md-5 mb-3 d-flex align-items-center justify-content-center">
-        <h1 class="modtitles">Editar Ventas</h1>
+        <h1 class="modtitles">Editar Compras</h1>
     </div>
     <div class="col-md-7 mb-3">
         <div class="row justify-content-end">
-            <div class="cont-cliente">
-                <div class="d-flex gap-4 justify-content-between ">
-                    <label class="mb-2 font-weight-bold">Cliente *</label>
-                    <div class='text-secondary d-flex gap-2' id="cont-docu"></div>
+            <div class="col-md-7 mx-5 cont-proveedor">
+                <div class="d-flex justify-content-between">
+                    <label class="mb-2">Obtener Proveedor *</label>
                 </div>
-                <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
-                    placeholder="Ingrese el documento para buscar al cliente"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10"
-                    value="{{ venta.id_cliente.documento}}">
-                <div class="cont-error-docu">
-                    <span class="error-message text-danger" id="error-docu"></span>
-                </div>
+                <input type="text" class="form-control" id="nombreProveedor" autocomplete="off"
+                placeholder="Ingrese el nombre del proveedor" maxlength="100" value="{{ compra.id_proveedor.nombre_proveedor}}">
+         <span class="error-message text-danger" id="error-proveedor"></span>
+         
+         
+
             </div>
         </div>
     </div>
+
 </section>
 
 
 <section class="container">
     <div class="ml-3">
-        <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{venta.fechareg|date:'d/m/Y'}}</span></p>
+        <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{compra.fechareg|date:'d/m/Y'}}</span></p>
     </div>
-    <form id="venta-form" method="post"> {% csrf_token %}
+    <form id="compra-form" method="post"> {% csrf_token %}
         <div class="card shadow mb-4">
             <div class="card-header">
                 <table class="table">
@@ -51,7 +225,7 @@
                     </thead>
                     <tbody>
                         {% for producto in detalles %}
-                        <tr class="producto-row" data-id-detalle="{{ producto.id_detalleventa }}">
+                        <tr class="producto-row" data-id-detalle="{{ producto.id_detallecompra }}">
                             <td class="p-2">
                                 <input type="text" class="form-control producto" name="producto" id="producto"
                                     autocomplete="off" placeholder="Nombre del producto"
@@ -85,10 +259,10 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="cont-total-venta">
+                <div class="cont-total-compra">
                     <div>
-                        <input type="text" class="form-control" style="width: 200px;" id="totalVenta" readonly
-                            placeholder="Total de Venta">
+                        <input type="text" class="form-control" style="width: 200px;" id="totalCompra" readonly
+                            placeholder="Total de Compra">
                     </div>
                     <div>
                         <button class="btn btn-agregar" id="agregar-producto" type="button">+
@@ -97,9 +271,9 @@
                 </div>
             </div>
         </div>
-        <div class="cont-crear-venta">
+        <div class="cont-crear-compra">
             <div>
-                <a class="btn btn-omitir" href="{% url 'ventas'%}"><i class="fas fa-arrow-left mr-2"></i>Omitir
+                <a class="btn btn-omitir" href="{% url 'purchases'%}"><i class="fas fa-arrow-left mr-2"></i>Omitir
                     cambios</a>
                 <button class="btn btn-revertir" type="button" onclick="revertirCambios()"><i
                         class="fas fa-undo mr-2"></i>Revertir cambios</button>
@@ -118,78 +292,77 @@
     }
     //EDIT
     $(document).ready(function () {
-        let resultadoDocu = $("#cont-docu");
-        resultadoDocu.html("<p id='nomClienteDato'>{{venta.id_cliente.nombres}}{{venta.id_cliente.apellidos}}</p><span>Doc:</span><p id='documentoDato'>{{venta.id_cliente.documento}}</p>"
-        );
-        $("#nombreCliente").addClass("is-valid");z
+        let resultadoProveedor = $("#cont-proveedor");
+        resultadoProveedor.html("<p id='nomProveedorDato'>{{compra.id_proveedor.nombre}}</p><span>Proveedor:</span>");
+        $("#nombreProveedor").addClass("is-valid");
     });
+ 
 
     /********** DOCUMENTO ***********/
     $(document).ready(function () {
+    $("#nombreProveedor").on("input", function () {
+        let input = $(this).val();
+        let resultadoDocu = $("#nombreProveedorDato");
 
+        if (input) {
+            $.ajax({
+                url: "{% url 'buscar_proveedores' %}?q=" + input,
+                type: "GET",
+                success: function (data) {
+                    let esCoincidenciaExacta = data.proveedores.includes(input);
 
-        $("#nombreCliente").on("input", function () {
-            let input = $(this).val();
-            let resultadoDocu = $("#cont-docu");
-
-            if (input.length == 8 || input.length == 10) {
-                $.ajax({
-                    url: "{% url 'buscar_documentos' %}?q=" + input,
-                    type: "GET",
-                    success: function (data) {
-                        let documento = data.documentos[0];
-                        let nomClienteDato = data.nombre_cliente;
-
-                        if (data.documentos.length > 0) {
-                            validarCliente(documento).then(function (existe) {
-                                if (existe && documento === input) {
-                                    resultadoDocu.html(
-                                        "<p id='nomClienteDato'>" +
-                                        nomClienteDato +
-                                        "</p><span>Doc:</span><p id='documentoDato'>" +
-                                        documento +
-                                        "</p>"
-                                    );
-                                    $("#nombreCliente").addClass("is-valid");
-                                } else {
-                                    resultadoDocu.empty();
-                                }
-                            });
-                        } else {
-                            resultadoDocu.hide();
-                        }
-                    },
-                    error: function () {
-                        $("#nombreCliente").addClass("is-invalid");
-                    },
-                });
-            } else {
-                resultadoDocu.empty().hide(); // Limpiar y ocultar cont-docu
-                $("#nombreCliente").removeClass("is-valid is-invalid"); // Remover clases de validación
-            }
-        });
-
-        function validarCliente(documentoDato) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: "{% url 'validar_cliente' %}",
-                    type: "GET",
-                    data: {
-                        documentoDato: documentoDato,
-                    },
-                    success: function (data) {
-                        if (data.existe) {
-                            resolve(true);
-                        } else {
-                            resolve(false);
-                        }
-                    },
-                    error: function () {
-                        reject(new Error("Error al validar el cliente"));
-                    },
-                });
+                    if (esCoincidenciaExacta) {
+                        resultadoDocu.html(input);
+                        resultadoDocu.show(); // Mostrar el nombre del proveedor
+                        $("#nombreProveedor").removeClass("is-invalid").addClass("is-valid");
+                    } else {
+                        resultadoDocu.empty().hide(); // Limpiar y ocultar el nombre del proveedor
+                        $("#nombreProveedor").removeClass("is-valid is-invalid");
+                    }
+                },
+                error: function () {
+                    $("#nombreProveedor").addClass("is-invalid");
+                    resultadoDocu.empty().hide(); // En caso de error, ocultar el nombre del proveedor
+                }
             });
+        } else {
+            resultadoDocu.empty().hide(); // Limpiar y ocultar el nombre del proveedor
+            $("#nombreProveedor").removeClass("is-valid is-invalid");
         }
+    });
+});
+
+
+
+
+
+
+
+
+
+function validarProveedor(nombreProveedor) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "{% url 'validar_proveedor' %}",
+            type: 'GET',
+            data: {
+                nombreProveedor: nombreProveedor
+            },
+            success: function (data) {
+                if (data.existe) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            },
+            error: function () {
+                reject(new Error("Error al validar el proveedor"));
+            },
+        });
+    });
+
+}
+
 
         /********** PRODUCTO ***********/
         $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
@@ -198,7 +371,7 @@
             if (input.length >= 4) {
                 let currentRow = $(this).closest("tr");
                 $.ajax({
-                    url: "{% url 'buscar_productos' %}?q=" + input,
+                    url: "{% url 'buscar_productos_compras' %}?q=" + input,
                     type: "GET",
                     success: function (data) {
                         let suggestions = currentRow.find(".producto-suggestions");
@@ -231,7 +404,7 @@
                             suggestions.addClass("sugerencia").show();
                         } else {
                             suggestions.hide();
-                            calcularTotalVenta()
+                            calcularTotalCompra()
                         }
                     },
                     error: function () {
@@ -263,7 +436,7 @@
                     nombreProducto.slice(1).toLowerCase();
                 currentRow.find(".producto").val(nombreProducto);
 
-                validarProducto(currentRow, nombreProducto);
+                validarProductoCompras(currentRow, nombreProducto);
             }
         );
 
@@ -284,10 +457,10 @@
         function unidadPrecio(currentRow) {
             let nombreProducto = currentRow.find(".producto").val();
             if (nombreProducto.length >= 2) {
-                validarProducto(currentRow, nombreProducto);
+                validarProductoCompras(currentRow, nombreProducto);
             } else {
                 currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
-                calcularTotalVenta();
+                calcularTotalCompra();
             }
         }
         //EDIT
@@ -305,24 +478,24 @@
             unidadPrecio(currentRow);
         });
 
-        function validarProducto(currentRow, nombreProducto) {
+        function validarProductoCompras(currentRow, nombreProducto) {
             $.ajax({
-                url: "{% url 'validar_producto' %}",
+                url: "{% url 'validar_producto_compras' %}",
                 type: "GET",
                 data: {
                     nombre_producto: nombreProducto,
                 },
                 success: function (data) {
                     if (data.existe) {
-                        obtenerPrecioProducto(currentRow, nombreProducto);
+                        obtenerPrecioProductoCompras(currentRow, nombreProducto);
                     } else {
                         currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
-                        calcularTotalVenta();
+                        calcularTotalCompra();
                     }
                 },
                 error: function () {
                     currentRow.find(".cantidad, .precioTotal").val("");
-                    calcularTotalVenta();
+                    calcularTotalCompra();
                 },
             });
         }
@@ -333,9 +506,9 @@
             return '$ ' + precioFormateado;
         }
 
-        function obtenerPrecioProducto(currentRow, nombreProducto) {
+        function obtenerPrecioProductoCompras(currentRow, nombreProducto) {
             $.ajax({
-                url: "{% url 'obtener_precio_producto' %}",
+                url: "{% url 'obtener_precio_producto_compras' %}",
                 type: "GET",
                 data: {
                     nombre_producto: nombreProducto,
@@ -358,12 +531,12 @@
 
 
         $(document).on("input", ".cantidad", function () {
-            calcularTotalProducto($(this));
+            calcularTotalProductoCompra($(this));
         });
         $(".cantidad").each(function () {
-            calcularTotalProducto($(this));
+            calcularTotalProductoCompra($(this));
         });
-        function calcularTotalProducto(inputCantidad) {
+        function calcularTotalProductoCompra(inputCantidad) {
             let currentRow = inputCantidad.closest("tr");
             let precioUnidad = parseFloat(currentRow.find(".precioUnidad").val().replace(/[$,.]/g, ''));
             let cantidad = parseInt(inputCantidad.val());
@@ -372,16 +545,16 @@
                 let total = precioUnidad * cantidad;
                 let formateoTotal = formatearPrecios(total)
                 currentRow.find(".precioTotal").val(formateoTotal);
-                calcularTotalVenta();
+                calcularTotalCompra();
             } else {
                 currentRow.find(".precioTotal").val("");
-                calcularTotalVenta();
+                calcularTotalCompra();
             }
         }
 
         $(document).on("click", ".eliminar-producto", function () {
             currentRow = $(this).closest("tr.producto-row").remove();
-            calcularTotalVenta();
+            calcularTotalCompra();
         });
 
         $("#agregar-producto").on("click", function () {
@@ -425,42 +598,69 @@
                 .find(".mess-sugges-prod")
                 .after('<div class="producto-suggestions"></div>');
         }
-        function calcularTotalVenta() {
-            let totalVenta = 0; // Inicializa como número
+        function calcularTotalCompra() {
+    let totalCompra = 0;
 
-            $(".producto-row").each(function () {
-                let precioTotal = parseFloat($(this).find(".precioTotal").val().replace(/[$,.]/g, ''));
-                if (!isNaN(precioTotal)) {
-                    totalVenta += precioTotal;
-                }
-            });
-
-            let formateoTotalVenta = formatearPrecios(totalVenta)
-            $("#totalVenta").val(formateoTotalVenta);
+    $(".producto-row").each(function () {
+        let precioTotal = parseFloat($(this).find(".precioTotal").val().replace(/[$,.]/g, ''));
+        
+        // Verificar si precioTotal es un número válido
+        if (!isNaN(precioTotal)) {
+            totalCompra += precioTotal;
         }
+    });
+
+    // Verificar si totalCompra es un número válido
+    if (!isNaN(totalCompra)) {
+        let formateoTotalCompra = formatearPrecios(totalCompra);
+        console.log("Valor de totalCompra:", totalCompra);
+
+        $("#totalCompra").val(formateoTotalCompra);
+    } else {
+        // Si totalCompra no es un número válido, puedes asignar un valor predeterminado o mostrar un mensaje de error.
+        $("#totalCompra").val("Error");
+    }
+}
 
 
         function validarCamposLlenos() {
             let camposLlenos = true;
-            const documentoValue = $("#documentoDato").text();
-            const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
-            const nombreClienteValue = $("#nombreCliente").val();
+            const totalCompraValue = parseFloat($("#totalCompra").val().replace(/[$,.]/g, '')).toFixed(2);
+            const proveedorValue = $('#nombreProveedor').val();
+
             const productos = [];
             const productoNombres = {}; // Objeto para llevar el registro de nombres de productos
 
-            if (!nombreClienteValue) {
-                mostrarError("#nombreCliente");
-                $("#error-docu").text(
-                    "El campo del documento no puede estar vacío. Por favor, ingréselo correctamente."
-                );
-                camposLlenos = false;
-            } else if (!documentoValue) {
-                mostrarError("#nombreCliente");
-                $("#error-docu").text(
-                    "El documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar."
-                );
-                camposLlenos = false;
-            }
+            if (!proveedorValue) {
+    mostrarError("#nombreProveedor");
+    $("#error-proveedor").text(
+        "El campo del proveedor no puede estar vacío. Por favor, ingréselo correctamente."
+    );
+    camposLlenos = false;
+} else {
+    $.ajax({
+        url: "{% url 'validar_proveedor' %}?nombreProveedor=" + proveedorValue,
+        type: "GET",
+        async: false,  // Espera la respuesta antes de continuar la ejecución
+        success: function (data) {
+    if (!data.existe) {
+        mostrarError("#nombreProveedor");
+        $("#error-proveedor").text(
+            "El proveedor no coincide o no existe en nuestros registros. Por favor, verifique y vuelva a intentar."
+        );
+        camposLlenos = false;
+    }
+},
+error: function () {
+    mostrarError("#nombreProveedor");
+    $("#error-proveedor").text(
+        "Ocurrió un error al validar el proveedor. Por favor, inténtelo nuevamente."
+    );
+    camposLlenos = false;
+}
+
+    });
+}
 
             $(".producto-row").each(function (index) {
                 const row = $(this);
@@ -516,14 +716,14 @@
             });
 
             return camposLlenos
-                ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
+                ? { proveedor: proveedorValue, totalCompra: totalCompraValue, productos: productos }
                 : null;
         }
 
         function mostrarError(selector) {
             $(selector).addClass("is-invalid");
 
-            $("#nombreCliente, .producto, .cantidad").on("input", function () {
+            $("#nombreProveedor, .producto, .cantidad").on("input", function () {
                 const campo = $(this);
                 $("#error-docu").text("");
                 if (campo.val()) {
@@ -532,27 +732,31 @@
             });
         }
 
-        $("#venta-form").submit(function (event) {
+        $("#compra-form").submit(function (event) {
             event.preventDefault();
 
             const data = validarCamposLlenos();
+            console.log(JSON.stringify(data))
+
+
+
             if (!data) {
                 return;
             }
             $.ajax({
                 type: "POST",
-                url: "#",
+                url: "{% url 'editarCompra' compra.id_compra %}",
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
                         alert("Datos cambiados.");
-                        window.location.href = "{% url 'ventas' %}";
+                        window.location.href = "{% url 'purchases' %}";
                     }
                 },
             });
         });
-    });
+    
 
 </script>
 {% endblock %}

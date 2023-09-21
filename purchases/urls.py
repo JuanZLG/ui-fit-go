@@ -6,6 +6,7 @@ urlpatterns = [
     path('createPurchase/', views.crear_compra, name='crear_compra'),
     path('buscar_proveedores/', views.buscar_proveedores, name='buscar_proveedores'),
     path('buscar_productos/', views.buscar_productos, name='buscar_productos_compras'),
+    path('editarCompra/<int:id_compra>', views.editar_compra, name='editarCompra'),
 
     path('validar_producto/', views.validar_producto, name='validar_producto_compras'),
     path('obtener_precio/', views.obtener_precio, name='obtener_precio_producto_compras'),
