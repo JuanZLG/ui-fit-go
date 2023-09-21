@@ -1,7 +1,5 @@
 from django.db import models
-
 from django.utils import timezone
-
 
 
 class Clientes(models.Model):
@@ -96,4 +94,3 @@ class Ventas(models.Model):
     class Meta:
         managed = False
         db_table = 'ventas'
-        

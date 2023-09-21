@@ -58,7 +58,7 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editarCompra' compra.id_compra %}"class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a href="#" class="btn btn-sm btn-primary" id="editbutton{{ compra.id_compra }}" data-compra-id="{{ compra.id_compra }}" onclick="mostrarDetallesCompra({{ compra.id_compra }})">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
