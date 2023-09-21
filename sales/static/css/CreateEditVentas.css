@@ -71,6 +71,10 @@
     padding: 0 20px;
     background: transparent;
 }
+.cont-crear-venta.crear {
+    display: flex;
+    justify-content: flex-end;
+}
 
 .btn-crear {
     width: 300px;

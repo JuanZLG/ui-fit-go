@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <div class="row cont-crear-venta">
+        <div class="row cont-crear-venta crear">
             <button class="btn btn-crear" type="submit">Crear Venta</button>
         </div>
     </form>
@@ -257,6 +257,7 @@
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).val();
             currentRow.find(".producto-error").text("");
+            currentRow.find(".producto").removeClass("is-invalid");
             currentRow.find(".cantidad").removeClass("is-invalid");
             currentRow.find(".error-cantidad").text("");
             if (nombreProducto.length >= 2) {
@@ -465,32 +466,28 @@
                 const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
                 const cantidadValue = parseInt(cantidadInput.val());
 
-
                 if (isNaN(precioUnidadValue)) {
-                    row.find(".producto-error ").text("Por favor, selecciona un producto válido para completar el registro.");
+                    row.find(".producto-error ").text("El campo documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
                     camposLlenos = false;
-                    $("#producto").addClass("is-invalid");
-                    $(".producto").addClass("is-invalid");
-                    mostrarError(productoInput)
+                }   
+                if (!productoValue) {
+                    row.find(".producto-error ").text("El campo del producto no puede estar vacío. Por favor, ingréselo correctamente.");
+                    camposLlenos = false;
                 }
 
                 if (!cantidadValue) {
                     mostrarError(cantidadInput);
                     camposLlenos = false;
-                } 
-                validarCantidad.call(cantidadInput).then(function (suficiente) {
-                        if (!suficiente) {
-                            cantidadInput.addClass("is-invalid");
-                            row.find(".error-cantidad").text("La cantidad supera el stock mínimo.").css("color", "red");
-                            camposLlenos = false;
-                        }
-                    });
+                } else if ($(".error-cantidad").length > 0) {
+                    camposLlenos = false;
+                }
+
 
                 if (productoValue && productoNombres[productoValue]) {
                     productoInput.addClass("is-invalid");
                     row
                         .find(".producto-error")
-                        .text("Este producto ya ha sido agregado anteriormente.");
+                        .text("Este producto ya ha sido seleccionado anteriormente.");
                     camposLlenos = false;
                 } else if (productoValue) {
                     productoInput.removeClass("is-invalid");
@@ -566,6 +563,7 @@
     });
 
 </script>
+
 <style>
 </style>
 
