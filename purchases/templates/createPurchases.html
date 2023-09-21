@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-md-5 mb-3">
         <center>
-            <h1 class="modtitles">Agregar Compra</h1>
+            <h1 class="modtitles">Crear Compra</h1>
         </center>
     </div>
     <div class="col-md-7 mb-3">
@@ -259,8 +259,7 @@
 
 .resultado-sugerencia:hover {
     cursor: pointer;
-    opacity: 0.9;
-}
+    opacity: 0.9;}
 </style>
 
 
@@ -589,6 +588,7 @@ $(document).on("click", ".producto-suggestions span", function () {
     let camposLlenos = true;
     const totalCompraValue = parseFloat($("#totalCompra").val().replace(/[$,.]/g, '')).toFixed(2);
     const proveedorValue = $('#nombreProveedor').val();
+    const productoNombres = {}; // Objeto para llevar el registro de nombres de productos
 
     const productos = [];
 
@@ -624,45 +624,62 @@ error: function () {
 }
 
 
-    $('.producto-row').each(function (index) {
-        const row = $(this);
-        const productoInput = row.find('.producto');
-        const cantidadInput = row.find('.cantidad');
-        const precioUnidad = row.find('.precioUnidad').val();
-        const precioUnidadInput = row.find('.precioUnidad');
-        const precioTotalInput = row.find('.precioTotal');
+$(".producto-row").each(function (index) {
+    const row = $(this);
+    const productoInput = row.find(".producto");
+    const cantidadInput = row.find(".cantidad");
+    const precioUnidad = row.find(".precioUnidad").val();
+    const precioUnidadInput = row.find(".precioUnidad");
+    const precioTotalInput = row.find(".precioTotal");
 
-        const productoValue = productoInput.val();
-        const precioUnidadValue = parseFloat(precioUnidadInput.val().replace(/[$,.]/g, '')).toFixed(2);
-        const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
-        const cantidadValue = parseInt(cantidadInput.val());
+    const productoValue = productoInput.val().toLowerCase();
+    const precioUnidadValue = parseFloat(precioUnidadInput.val().replace(/[$,.]/g, '')).toFixed(2);
+    const precioTotalValue = parseFloat(precioTotalInput.val().replace(/[$,.]/g, '')).toFixed(2);
+    const cantidadValue = parseInt(cantidadInput.val());
 
-        if (!precioUnidadValue || isNaN(precioUnidadValue)) {
-            productoInput.addClass('is-invalid');
-            mostrarError(productoInput, "Por favor, selecciona un producto válido para completar el registro.");
-            camposLlenos = false;
-        }
+    if (!precioUnidadValue || isNaN(precioUnidadValue)) {
+        productoInput.addClass("is-invalid");
+        row
+            .find(".error-produ")
+            .text(
+                "Por favor, selecciona un producto válido para completar el registro."
+            );
+        camposLlenos = false;
+    }
 
-        if (!productoValue) {
-            mostrarError(productoInput, "El campo del producto no puede estar vacío.");
-            camposLlenos = false;
-        }
+    if (!productoValue) {
+        mostrarError(productoInput);
+        camposLlenos = false;
+    }
 
-        if (!cantidadValue || isNaN(cantidadValue) || cantidadValue <= 0) {
-            mostrarError(cantidadInput, "Por favor, ingresa una cantidad válida mayor a cero.");
-            camposLlenos = false;
-        } else {
-            productos.push({
-                nombre: productoValue,
-                precioUnidad: precioUnidadValue,
-                precioTotal: precioTotalValue,
-                cantidad: cantidadValue
-            });
-        }
-    });
+    if (!cantidadValue || isNaN(cantidadValue) || cantidadValue <= 0) {
+        mostrarError(cantidadInput);
+        camposLlenos = false;
+    }
 
-    return camposLlenos ? { proveedor: proveedorValue, totalCompra: totalCompraValue, productos: productos } : null;
+    if (productoNombres[productoValue]) {
+        productoInput.addClass("is-invalid");
+        row
+            .find(".error-produ")
+            .text("Este producto ya ha sido agregado anteriormente.");
+        camposLlenos = false;
+    } else {
+        productoInput.removeClass("is-invalid");
+        productos.push({
+            nombre: productoValue,
+            precioUnidad: precioUnidadValue,
+            precioTotal: precioTotalValue,
+            cantidad: cantidadValue
+        });
+        productoNombres[productoValue] = true;
+    }
+});
+
+return camposLlenos
+    ? { documento: documentoValue, totalVenta: totalVentaValue, productos: productos }
+    : null;
 }
+
 
 
 function mostrarError(selector, mensaje) {
