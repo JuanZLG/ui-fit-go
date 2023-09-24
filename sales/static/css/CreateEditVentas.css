@@ -20,13 +20,14 @@
     background-color: #F2f2f2;
 }
 
-.eliminar-producto {
+.inhabilitar-producto {
     position: relative;
     padding: 10px;
     text-align: center;
+    cursor: pointer;
 }
 
-.eliminar-producto .icono-eliminar {
+.inhabilitar-producto .icono-inhabilitar {
     position: absolute;
     top: 0;
     right: 0;
@@ -36,11 +37,15 @@
     color: #ffff;
 }
 
-.eliminar-producto:hover .icono-eliminar {
+.inhabilitar-producto:hover .icono-inhabilitar {
+    cursor: pointer;
     animation: sacudir 0.3s ease-in 1;
     transform: translate(0);
 }
-
+.detalle-inactivo {
+    background-color: #ddd;
+    color: #777;
+}
 @keyframes sacudir {
     0% {
         transform: translate(-2px, 2px);
@@ -128,10 +133,6 @@
     transform: scale(0.95);
 }
 
-
-.eliminar-producto:hover {
-    cursor: pointer;
-}
 
 .fa-trash-can {
     color: #a60202;

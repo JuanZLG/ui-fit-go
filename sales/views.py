@@ -41,8 +41,9 @@ def crear_venta(request):
             )
         response_data = {'success': True}  
         return JsonResponse(response_data)
-
-    return render(request, 'createSales.html')
+    
+    clientes = Clientes.objects.all()
+    return render(request, 'createSales.html', {'clientes': clientes})
 
     
 from django.db.models import Q

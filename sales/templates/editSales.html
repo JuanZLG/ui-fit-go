@@ -34,7 +34,8 @@
 
 <section class="container">
     <div class="ml-3">
-        <p class="font-weight-bold">Fecha de registro: <span class="font-weight-normal">{{venta.fechareg|date:'d/m/Y'}}</span></p>
+        <p class="font-weight-bold">Fecha de registro: <span
+                class="font-weight-normal">{{venta.fechareg|date:'d/m/Y'}}</span></p>
     </div>
     <form id="venta-form" method="post"> {% csrf_token %}
         <div class="card shadow mb-4">
@@ -51,7 +52,8 @@
                     </thead>
                     <tbody>
                         {% for producto in detalles %}
-                        <tr class="producto-row" data-id-detalle="{{ producto.id_detalleventa }}">
+                        <tr class="producto-row {% if producto.estado == 0 %}detalle-inactivo{% endif %}"
+                            data-id-detalle="{{ producto.id_detalleventa }}" data-estado="{{ producto.estado }}">
                             <td class="p-2">
                                 <input type="text" class="form-control producto" name="producto" id="producto"
                                     autocomplete="off" placeholder="Nombre del producto"
@@ -78,9 +80,8 @@
                                     <input type="text" class="form-control precioTotal" id="precioTotal"
                                         name="precioTotal" readonly value="{{producto.precio_tot|floatformat:'-2'}}">
                                 </div>
-                                {% if forloop.counter > 1 %}
-                            <td class="eliminar-producto"><span class="icono-eliminar">X</span></td>
-                            {% endif %}
+                            <td class="inhabilitar-producto"><span class="icono-inhabilitar"><i
+                                        class="fas fa-ban"></i></span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -379,10 +380,33 @@
             }
         }
 
-        $(document).on("click", ".eliminar-producto", function () {
-            currentRow = $(this).closest("tr.producto-row").remove();
+
+
+        $(document).on("click", ".inhabilitar-producto", function () {
+            let currentRow = $(this).closest("tr.producto-row");
+            let precioInput = currentRow.find('.precioUnidad');
+
+            if (precioInput.val() === "") {
+                currentRow.remove();
+            } else {
+                let estado = currentRow.data("estado");
+                if (estado === 1) {
+                    estado = 0;
+                    currentRow.addClass("detalle-inactivo");
+                    currentRow.find('input').prop('disabled', true);
+                } else {
+                    estado = 1;
+                    currentRow.removeClass("detalle-inactivo");
+                    currentRow.find('input').prop('disabled', false);
+                }
+
+                currentRow.data("estado", estado);
+            }
+
             calcularTotalVenta();
         });
+
+
 
         $("#agregar-producto").on("click", function () {
             let nuevaFila =
@@ -411,7 +435,7 @@
                 '<input type="text" class="form-control precioTotal" id="precioTotal" name="precioTotal" readonly>' +
                 '<span class="error-message" id="total-error"></span>' +
                 "</div>" +
-                '<td class="eliminar-producto"><span class="icono-eliminar">X</span></td>' +
+                '<td class="inhabilitar-producto"><span class="icono-inhabilitar"><i class="fas fa-ban"></i></span></td>' +
                 "</td>";
             +"</tr>";
             let filaAgregada = $(nuevaFila);
