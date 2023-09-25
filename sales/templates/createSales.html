@@ -6,10 +6,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/CreateEditVentas.css' %}">
     <link rel="stylesheet" href="{% static 'css/common.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <section class="row">
@@ -19,12 +15,13 @@
     <div class="col-md-7 mb-3">
         <div class="row justify-content-end">
             <div class="cont-cliente">
-                <select class="js-example-basic-single" name="client" style="width: 100%;">
-                    <option value="">Selecciona el cliente</option>
-                    {% for cliente in clientes %}
-                        <option value="{{ cliente.id }}">{{ cliente.nombres }}  {{ cliente.apellidos }}  doc:  {{ cliente.documento }}</option>
-                    {% endfor %}
-                </select>
+                <div class="d-flex gap-4 justify-content-between ">
+                    <label class="mb-2 font-weight-bold">Cliente *</label>
+                    <div class='text-secondary d-flex gap-2' id="cont-docu"></div>
+                </div>
+                <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+                    placeholder="Ingrese el documento para buscar al cliente"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10">
                 <div class="cont-error-docu">
                     <span class="text-danger" id="error-docu"></span>
                 </div>
@@ -33,15 +30,6 @@
     </div>
 </section>
 
-<script>
-$(document).ready(function() {
-    $('.js-example-basic-single').select2({
-        placeholder: 'Buscar cliente...',
-        allowClear: true,
-        minimumInputLength: 3, // Mínimo de caracteres para buscar
-    });
-});
-</script>
 
 <section class="container">
     <form id="venta-form" method="post"> {% csrf_token %}
@@ -107,13 +95,53 @@ $(document).ready(function() {
 </section>
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- <script src="{% static 'js/crearVentas.js'%}"></script> -->
 
 <script>
     /********** DOCUMENTO ***********/
 
     $(document).ready(function () {
-      
+        $("#nombreCliente").on("input", function () {
+            let input = $(this).val();
+            let resultadoDocu = $("#cont-docu");
+            $("#error-docu").text("");
+            if (input.length == 8 || input.length == 10) {
+                $.ajax({
+                    url: "{% url 'buscar_documentos' %}?q=" + input,
+                    type: "GET",
+                    success: function (data) {
+                        let documento = data.documentos[0];
+                        let nomClienteDato = data.nombre_cliente;
+
+                        if (data.documentos.length > 0) {
+                            validarCliente(documento).then(function (existe) {
+                                if (existe && documento === input) {
+                                    resultadoDocu.html(
+                                        "<p id='nomClienteDato'>" +
+                                        nomClienteDato +
+                                        "</p><span>Doc:</span><p id='documentoDato'>" +
+                                        documento +
+                                        "</p>"
+                                    );
+                                    $("#nombreCliente").addClass("is-valid");
+                                } else {
+                                    resultadoDocu.empty();
+                                }
+                            });
+                        } else {
+                            resultadoDocu.hide();
+                        }
+                    },
+                    error: function () {
+                        $("#nombreCliente").addClass("is-invalid");
+                    },
+                });
+            } else {
+                resultadoDocu.empty().hide(); // Limpiar y ocultar cont-docu
+                $("#nombreCliente").removeClass("is-valid is-invalid"); // Remover clases de validación
+            }
+        });
 
         function validarCliente(documentoDato) {
             return new Promise(function (resolve, reject) {
@@ -407,8 +435,23 @@ $(document).ready(function() {
             let camposLlenos = true;
             const documentoValue = $("#documentoDato").text();
             const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
+            const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
             const productoNombres = {};
+
+            if (!nombreClienteValue) {
+                mostrarError("#nombreCliente");
+                $("#error-docu").text(
+                    "El campo del documento no puede estar vacío. Por favor, ingréselo correctamente."
+                );
+                camposLlenos = false;
+            } else if (!documentoValue) {
+                mostrarError("#nombreCliente");
+                $("#error-docu").text(
+                    "El documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar."
+                );
+                camposLlenos = false;
+            }
 
             $(".producto-row").each(function (index) {
                 const row = $(this);
@@ -424,7 +467,7 @@ $(document).ready(function() {
                 const cantidadValue = parseInt(cantidadInput.val());
 
                 if (isNaN(precioUnidadValue)) {
-                    row.find(".producto-error ").text("El campo del producto debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
+                    row.find(".producto-error ").text("El campo documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
                     camposLlenos = false;
                 }   
                 if (!productoValue) {

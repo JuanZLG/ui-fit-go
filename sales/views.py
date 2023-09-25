@@ -17,12 +17,10 @@ def crear_venta(request):
         documento = data.get('documento', '')
         totalVenta = data.get('totalVenta', '')
         productos = data.get('productos', [])
-        print("Inicia")
+
         cliente = Clientes.objects.filter(documento=documento).first()
         venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
         for producto_datos in productos:
-            print("for")
-
             nombre_producto = producto_datos['nombre']
             cantidad_vendida = producto_datos['cantidad']
 
@@ -45,8 +43,6 @@ def crear_venta(request):
     clientes = Clientes.objects.all()
     return render(request, 'createSales.html', {'clientes': clientes})
 
-    
-from django.db.models import Q
 
 @csrf_exempt
 def editar_venta(request, id_venta):
@@ -65,60 +61,57 @@ def editar_venta(request, id_venta):
             venta.totalVenta = totalVenta
             venta.save()
 
-            productos_nuevos = []
-            productos_actualizar = []
-            for producto in productos:
-                if producto["idDetalle"] is None or producto["idDetalle"] == "":
-                    productos_nuevos.append(producto)
-                else:
-                    productos_actualizar.append(producto)
-                    
             detalles = Detalleventa.objects.filter(id_venta=venta)
-            
-            idDetalles_faltantes = [detalle.id_detalleventa for detalle in detalles if detalle.id_detalleventa not in [producto["idDetalle"] for producto in productos]]
 
-            Detalleventa.objects.filter(id_detalleventa__in=idDetalles_faltantes).delete()
+            stock_actual = {}
 
-            for productoDatos in productos_actualizar:
-                nombre_producto = productoDatos["nombre"]
+            for detalle in detalles:
+                producto = detalle.id_producto
+                stock_actual.setdefault(producto.nombre_producto, producto.cantidad)
+
+                for productoDatos in productos:
+                    if productoDatos["idDetalle"] == detalle.id_detalleventa:
+                        nueva_cantidad = productoDatos["cantidad"]
+                        diferencia = nueva_cantidad - detalle.cantidad
+                        detalle.cantidad = nueva_cantidad
+
+                        detalle.estado = productoDatos["estado"]
+
+                        detalle.save()
+                        producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
+                        producto.save()
+                        break
+
+            for productoDatos in productos:
                 id_detalle = productoDatos["idDetalle"]
-                detalle = Detalleventa.objects.get(id_detalleventa=id_detalle)
-                producto = Productos.objects.get(nombre_producto=nombre_producto)
-                try:
-                    detalle.id_producto = producto
-                    detalle.cantidad = productoDatos["cantidad"]
-                    detalle.precio_uni = productoDatos["precioUnidad"]
-                    detalle.precio_tot = productoDatos["precioTotal"]
-                    detalle.save()
-                except Exception as e:
-                    print(f"Error al guardar detalle: {str(e)}")
-        
+                if not Detalleventa.objects.filter(id_detalleventa=id_detalle).exists():
+                    nombre_producto = productoDatos["nombre"]
+                    nueva_cantidad = productoDatos["cantidad"]
 
-            for productoDatos in productos_nuevos:
-                nombre_producto = productoDatos["nombre"]
-                producto = Productos.objects.get(nombre_producto=nombre_producto)
-                try:
-                    Detalleventa.objects.create(
-                    id_producto=producto,
-                    id_venta=venta,
-                    cantidad=productoDatos["cantidad"],
-                    precio_uni=productoDatos["precioUnidad"],
-                    precio_tot=productoDatos["precioTotal"]
-                )
-                except Exception as e:
-                    print(f"Error al guardar detalle: {str(e)}")
+                    producto = Productos.objects.get(nombre_producto=nombre_producto)
 
+                    if producto:
+                        producto.cantidad -= nueva_cantidad
+                        producto.save()
+
+                    detalle = Detalleventa.objects.create(
+                        id_venta=venta,
+                        id_producto=producto,
+                        cantidad=nueva_cantidad,
+                        precio_uni=productoDatos["precioUnidad"],
+                        precio_tot=productoDatos["precioTotal"],
+                    )
 
 
             response_data = {'success': True}
         except Exception as e:
             response_data = {'success': False, 'error_message': str(e)}
+
         return JsonResponse(response_data)
 
     venta = Ventas.objects.get(id_venta=id_venta)
     detalles = Detalleventa.objects.filter(id_venta=id_venta)
     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
-
 
            
 def buscar_documentos(request):

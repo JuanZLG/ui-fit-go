@@ -20,14 +20,15 @@
     background-color: #F2f2f2;
 }
 
-.inhabilitar-producto {
+.inhabilitar-producto, .eliminar-producto {
     position: relative;
     padding: 10px;
     text-align: center;
     cursor: pointer;
 }
 
-.inhabilitar-producto .icono-inhabilitar {
+.inhabilitar-producto .icono-inhabilitar,
+.eliminar-producto .icono-eliminar {
     position: absolute;
     top: 0;
     right: 0;
@@ -37,7 +38,8 @@
     color: #ffff;
 }
 
-.inhabilitar-producto:hover .icono-inhabilitar {
+.inhabilitar-producto:hover .icono-inhabilitar,
+.eliminar-producto:hover .icono-eliminar {
     cursor: pointer;
     animation: sacudir 0.3s ease-in 1;
     transform: translate(0);
