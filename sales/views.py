@@ -114,6 +114,8 @@ def editar_venta(request, id_venta):
     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
 
            
+
+           
 def buscar_documentos(request):
     q = request.GET.get("q", "")
     documentos = Clientes.objects.filter(documento__contains=q).values_list(
