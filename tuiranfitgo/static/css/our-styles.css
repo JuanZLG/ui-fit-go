@@ -1,0 +1,118 @@
+
+/* #em{
+    padding:0;
+    width:auto;
+    block-size: 6vh;
+    background-color:black;
+    color:white;
+    display:flex;
+    align-items: center;
+    #addicon{
+        color: #ffffff;
+    };
+}
+
+#em:hover {
+    background-color: rgb(59, 155, 193);
+}
+
+#of:hover{
+    background-color: rgb(113, 8, 8);
+    color:white;
+} */
+
+/* .theads{
+    color:white; 
+    background-color:black
+} */
+
+
+
+
+
+/* rgb(0, 142, 213); */
+/* .modtitles{
+    color: rgb(0, 0, 0);
+    font-weight:bold;
+} */
+/* 
+.modtitles{
+        font-size: 2em;
+        background-image: linear-gradient(45deg,rgb(0, 0, 0),rgb(255, 0, 0),rgb(0, 0, 0));
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight:bold;
+    } */
+    
+    
+@keyframes animarGradiente {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 50%;
+    }
+    50% {
+        background-position: 75% 50%;
+        }
+    75%{
+        background-position: 50% 50%;
+    }
+    100%{
+        background-position: 0% 50%;
+    }
+    }
+
+.dataTables_length select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    padding-right: 30px;
+}
+
+.dataTables_length label {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.dataTables_paginate .paginate_button.current {
+    background-color: black;
+    color: white;
+}
+
+.paginate_button .page-item.active{
+    background-color:black !important
+  }
+
+.container-fluid{
+    height:100vh;   
+}
+
+#editbutton{
+    background-color:transparent; 
+    border: solid 1px black
+}
+
+#editbutton:hover{
+    background-color: rgb(158, 153, 153);
+}
+
+.selected-page{
+    background-color: black !important;
+    color: white;
+}
+
+/* #dataTable .paginate_button:not(.active) {
+    background-color: white;
+    color: black;
+} */
+
+

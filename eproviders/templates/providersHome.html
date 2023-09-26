@@ -1,0 +1,407 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Proveedores {% endblock %}
+
+{% block body %}
+
+
+<center>
+    <h1 class="modtitles">Gestión de Proveedores</h1>
+</center>
+<br>
+<div class="card shadow mb-4">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <span> 
+            <a href="{%url 'crearProveedor'%}" class="m-0 btn btn-success btn-icon-split btn-add">
+                <span class="icon ">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="text">Agregar Proveedor</span>
+                </span>
+            </a>
+        </span>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger btn-dash">Generar Informe</button>
+        </span>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <div class="table-responsive">
+            <table class="table table-bordered mx-auto text-center" id="dataTable">
+                <thead class="theads">
+                    <tr>
+                        <th>ID</th> <!-- parce Julian no lo elimines hasta que no terminemos jaja o_O ya lo he cambiado 7800 veces -->
+                        <th>Nombre del proveedor</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proveedor in proveedores %}
+                    <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
+                        <td>{{ proveedor.id_proveedor }}</td>
+                        <td>{{ proveedor.nombre_proveedor }}</td>
+                        <td>{{ proveedor.telefono }}</td>
+                        <td>{{ proveedor.correo }}</td>
+                        <td>
+                            <button
+                                class="cambiar-estado statusbutton mx-3 {% if proveedor.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                                data-proveedor-id="{{ proveedor.id_proveedor }}"
+                                data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
+                                {% if proveedor.estado == 1 %}
+                                Activo
+                                {% else %}
+                                Inactivo
+                                {% endif %}
+                            </button>
+                        </td>
+                        <td class="cell-actions">
+                            <a href="{% url 'editarProveedor' proveedor.id_proveedor %}" class="btn btn-sm"
+                                id="editarProveedor"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <button type="button" class="btn btn-sm btn-primary verProveedor"
+                                data-prov-id="{{ proveedor.id_proveedor }}">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".cambiar-estado").click(function () {
+            var proveedorId = $(this).data("proveedor-id");
+            var nuevoEstado = $(this).data("nuevo-estado");
+
+            Swal.fire({
+                title: 'Estado',
+                text: '¿Desea cambiar el estado de este registro?',
+                showCancelButton: true,
+                confirmButtonColor: '#419edd',
+                cancelButtonColor: '#ba4d4d',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{% url 'cambiarEstadoProveedor'  %}",
+                        data: {
+                            proveedor_id: proveedorId,
+                            nuevo_estado: nuevoEstado
+                        },
+                        method: "GET",
+                        success: function (response) {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .table {
+        width: 80%;
+    }
+
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+    tr.inactivo {
+        background-color: #67666629;
+        color: #676666;
+    }
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editarProveedor {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        /* background-color: #1e3799; */
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+
+<style>
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.833);
+        z-index: 100;
+        display: none;
+        animation: fadeInBack 0.3s ease-in-out;
+    }
+
+    .proveedorDialog {
+        max-width: 70%;
+        width: 30%;
+        min-height: 10vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fadeInBack {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fadeOut {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+
+    .proveedorDialog .modal-container-header {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .proveedorDialog h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        gap: 8px;
+    }
+
+    .cerrar-proveedor {
+        padding: 0;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.15s ease;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .estadoProveedorCircle {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+    }
+
+    .estadoProveedorCircle.activo {
+        background-color: #72d072;
+        /* Color para estado activo */
+    }
+
+    .estadoProveedorCircle.inactivo {
+        background-color: #ba4d4d;
+        /* Color para estado inactivo */
+    }
+
+
+    .proveedorDialog section {
+        padding: 20px;
+    }
+
+    .proveedorDialog section p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #222222;
+    }
+
+    .proveedorDialog section p span {
+        color: rgb(99, 99, 99);
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+
+<div class="modal-backdrop"></div>
+
+<dialog id="verDetallesDialog" class="proveedorDialog dragHandle">
+    <form method="dialog">
+        <div class="modal-container-header">
+            <div class="estadoProveedorCircle {% if proveedor.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <h2>Información del Proveedor</h2>
+            <button class="cerrar-proveedor" type="button" id="cerrarDetallesProveedor">
+                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+        <section>
+            <p>Nombre del Proveedor: <span id="nombreProveedor"></span></p>
+            <p>Teléfono: <span id="telefonoProveedor"></span></p>
+            <p>Correo: <span id="correoProveedor"></span></p>
+        </section>
+    </form>
+</dialog>
+
+<script>
+    $(document).ready(function () {
+        $(".verProveedor").click(function () {
+            var proveedorId = $(this).data("prov-id");
+            $.ajax({
+                url: "{% url 'verDetallesProveedor' %}",
+                data: {
+                    proveedor_id: proveedorId
+                },
+                method: "GET",
+                success: function (response) {
+                    var proveedor = response.success;
+                    $("#nombreProveedor").text(proveedor.nombre_proveedor);
+                    $("#telefonoProveedor").text(proveedor.telefono);
+                    $("#correoProveedor").text(proveedor.correo);
+                    if (proveedor.estado == 1) {
+                        $(".estadoProveedorCircle").addClass("activo").removeClass("inactivo");
+                    } else {
+                        $(".estadoProveedorCircle").addClass("inactivo").removeClass("activo");
+                    }
+                    document.getElementById("verDetallesDialog").showModal();
+                    $(".proveedorDialog").addClass("fadeIn");
+                    $(".modal-backdrop").show();
+                    $(".modal-backdrop").addClass("fadeInBack");
+                },
+            });
+        });
+
+        $("#cerrarDetallesProveedor").click(function () {
+            $(".proveedorDialog").addClass("fadeOut");
+            $(".modal-backdrop").addClass("fadeOut");
+            setTimeout(function () {
+                document.getElementById("verDetallesDialog").close();
+                $(".proveedorDialog").removeClass("fadeOut");
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").removeClass("fadeOut");
+            }, 300);
+        });
+    });
+
+</script>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Categorías de Productos {% endblock %}
+
+{% block body %}
+<style>
+    .table {
+              width: 80%;
+          }
+      
+          table thead.theads {
+              text-align: center;
+              color: white;
+              background-color: #222222;
+          }
+      
+          table tbody.tbody {
+              text-align: center;
+          }
+      
+          .modtitles {
+              font-size: 2em;
+              background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+              background-size: 200% 200%;
+              -webkit-background-clip: text;
+              background-clip: text;
+              color: transparent;
+              animation: animarGradiente 3s linear infinite;
+              font-weight: bold;
+              padding:2px;
+          }
+  
+          /* Toco repetir codigo para cambiar el blanco */
+          .btn-add,
+          .btn-dash {
+              color: #000;
+              font-weight: 600;
+          }
+      
+          .btn-add:hover,
+          .btn-dash:hover {
+              color: #000;
+          }
+      
+          .btn-add {
+              padding: 0;
+              width: auto;
+              block-size: 6vh;
+              background-color: #85da85;
+              display: flex;
+              align-items: center;
+          }
+      
+          .btn-add:hover {
+              background-color: #72d072;
+          }
+      
+          .btn-dash {
+              background-color: #c55c5c;
+          }
+      
+          .btn-dash:hover {
+              background-color: #ba4d4d;
+          }
+      
+          tr.inactivo {
+              background-color: #ccc;
+              /* Cambia el fondo a un tono más claro */
+              color: #676666;
+          }
+      
+          .statusbutton {
+              width: 5rem;
+              border-radius: 3px;
+              border: none;
+          }
+      
+          .statusbutton:hover {
+              opacity: 0.9;
+          }
+      
+          #deleteButton {
+              background-color: transparent;
+              color: #000;
+              /* background-color: #3498db; */
+              border: none;
+              transition: transform 0.5s;
+      
+          }
+      
+          #deleteButton:hover {
+              background-color:white;
+          }
+      
+          .cell-actions {
+              display: flex;
+              justify-content: space-around;
+          }
+      
+          .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 70vh; 
+            }
+          </style>
+
+<div class="center-content">
+<h1 class="modtitles">Categorías de Producto</h1>
+<br>
+
+        <div class="card shadow mb-3" style="width:60%">
+            <div class="card-header py-3 d-flex justify-content-center">
+                <span>
+                  <a href="#" class="m-0 btn btn-success btn-icon-split btn-add">
+                    <span class="icon">
+                        <i class="fa-solid fa-plus"></i>
+                        <span class="text">Agregar Categoría</span>
+                    </span>
+                </a>
+                </span>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4" style="width:60%">
+            <div class="card-header py-4">
+                <div class="table-responsive">
+            <table class="table table-bordered table-hover mx-auto text-center" width="80%" cellspacing="0">
+                <thead class="theads">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de la Categoría</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ct in cats %}
+                    <tr>
+                        <td>{{ct.id_categoria}}</td>
+                        <td>{{ct.nombre_categoria}}</td>
+                        <td>
+                            <a class="btn btn-sm"
+                            id="deleteButton"><i class="fa-solid fa-trash-can" style="color: #f50f0f;"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+{% endblock %}

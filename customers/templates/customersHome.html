@@ -1,0 +1,431 @@
+{% extends "baseInterface.html" %}
+
+{% block body %}
+
+
+  
+<center>
+    <h1 class="modtitles">Gestión de Clientes</h1>
+</center>
+<br>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <span>
+            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split btn-add" id="em">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Cliente</span>
+            </span>
+            </a>
+        </span>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger btn-dash">Generar Informe</button>
+        </span>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <div class="table-responsive">
+            <style>
+                .table-responsive{
+                overflow-y: auto;
+                max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+            }
+            </style>
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" cellspacing="3">
+                <thead class="theads">
+                    <tr>
+                        <th>ID</th>
+                        <th>Documento</th>
+                        <th>Nombre</th>
+                        <th>Celular</th>
+                        <th>Residencia</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="tbody">
+                    {% for cliente in clientes %}
+                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
+                        <td>{{ cliente.id_cliente }}</td>
+                        <td>{{ cliente.documento }}</td>
+                        <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
+                        <td>{{ cliente.celular }}</td>
+                        <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
+                        <td>
+                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
+                                data-cliente-id="{{ cliente.id_cliente }}"
+                                data-nuevo-estado="{% if cliente.estado == 0 %}1{% else %}0{% endif %}">
+                                {% if cliente.estado == 0 %}
+                                Inactivo
+                                {% else %}
+                                Activo
+                                {% endif %}
+                            </button>
+                        </td>
+                        <td class="cell-actions">
+                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
+                                id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a  class="btn btn-sm btn-primary detailsbutton verCliente" data-cliente-id="{{ cliente.id_cliente }}">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>     
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".cambiar-estado").click(function() {
+            var clienteId = $(this).data("cliente-id");
+            var nuevoEstado = $(this).data("nuevo-estado");
+
+            Swal.fire({
+                title: 'Estado',
+                text: '¿Desea cambiar el estado de este registro?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{% url 'cambiarEstadoClientes'  %}",
+                        data: {
+                            cliente_id: clienteId,
+                            nuevo_estado: nuevoEstado
+                        },
+                        method: "GET",
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function(error) {
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    // JavaScript para cargar los detalles del cliente cuando se hace clic en "Details"
+    
+</script>
+
+
+
+<style>
+    .table {
+        width: 80%;
+    }
+
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+    tr.inactivo {
+        background-color: #ccc;
+        color: #676666;
+    }
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    .detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+<style>
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.833);
+        z-index: 100;
+        display: none;
+        animation: fadeInBack 0.3s ease-in-out;
+    }
+
+    .clienteDialog {
+        max-width: 70%;
+        width: 30%;
+        min-height: 10vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fadeInBack {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fadeOut {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .clienteDialog .modal-container-header {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .clienteDialog h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        gap: 8px;
+    }
+
+    .cerrar-cliente {
+        padding: 0;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.15s ease;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .estadoClienteCircle {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+    }
+
+    .estadoClienteCircle.activo {
+        background-color: #72d072;
+        /* Color para estado activo */
+    }
+
+    .estadoClienteCircle.inactivo {
+        background-color: #ba4d4d;
+        /* Color para estado inactivo */
+    }
+
+    .clienteDialog section {
+        padding: 20px;
+    }
+
+    .clienteDialog section p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #222222;
+    }
+
+    .clienteDialog section p span {
+        color: rgb(99, 99, 99);
+    }
+</style>
+
+<dialog id="verDetallesClienteDialog" class="clienteDialog dragHandle">
+    <form method="dialog">
+        <div class="modal-container-header">
+            <div class="estadoClienteCircle {% if cliente.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <h2>Detalles del Cliente</h2>
+            <button class="cerrar-cliente" type="button" id="cerrarDetallesCliente">
+                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        fill="currentColor"></path>
+                </svg>
+            </button>
+        </div>
+        <section>
+            <p>Nombre del Cliente: <span id="nombreCliente"></span></p>
+            <p>Documento: <span id="documentoCliente"></span></p>
+            <p>Celular: <span id="celularCliente"></span></p>
+            <p>Barrio: <span id="barrioCliente"></span></p>
+            <p>Dirección: <span id="direccionCliente"></span></p>
+            <p>Estado: <span id="estadoCliente"></span></p>
+            <p>Departamento: <span id="departamentoCliente"></span></p>
+            <p>Municipio: <span id="municipioCliente"></span></p>
+        </section>
+    </form>
+</dialog>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".verCliente").click(function () {
+            var clienteId = $(this).data("cliente-id");
+            $.ajax({
+                url: "{% url 'ver_detalles_cliente' %}",
+                data: {
+                    cliente_id: clienteId
+                },
+                method: "GET",
+                success: function (response) {
+                    var cliente = response.success;
+                    $("#nombreCliente").text(cliente.nombres + ' ' + cliente.apellidos);
+                    $("#documentoCliente").text(cliente.documento);
+                    $("#celularCliente").text(cliente.celular);
+                    $("#barrioCliente").text(cliente.barrio);
+                    $("#direccionCliente").text(cliente.direccion);
+                    $("#estadoCliente").text(cliente.estado == 1 ? 'Activo' : 'Inactivo');
+                    $("#departamentoCliente").text(cliente.departamento);
+                    $("#municipioCliente").text(cliente.municipio);
+
+                    if (cliente.estado == 1) {
+                        $(".estadoClienteCircle").addClass("activo").removeClass("inactivo");
+                    } else {
+                        $(".estadoClienteCircle").addClass("inactivo").removeClass("activo");
+                    }
+                    document.getElementById("verDetallesClienteDialog").showModal();
+                    $(".clienteDialog").addClass("fadeIn");
+                    $(".modal-backdrop").show();
+                    $(".modal-backdrop").addClass("fadeInBack");
+                },
+            });
+        });
+
+        $("#cerrarDetallesCliente").click(function () {
+            $(".clienteDialog").addClass("fadeOut");
+            $(".modal-backdrop").addClass("fadeOut");
+            setTimeout(function () {
+                document.getElementById("verDetallesClienteDialog").close();
+                $(".clienteDialog").removeClass("fadeOut");
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").removeClass("fadeOut");
+            }, 300);
+        });
+    });
+
+</script>
+
+
+{% endblock %}

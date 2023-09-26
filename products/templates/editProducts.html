@@ -1,0 +1,195 @@
+{% extends "baseInterface.html" %} 
+
+{% block title %} Modificar Producto {% endblock %} 
+
+{% block body %}
+<center><h1 class="h3 text-black-800 mb-4">Modificar Producto</h1></center>
+
+<div class="card shadow mb-5" style="margin-bottom:7rem">
+  <div class="container p-4">
+    <form class="form" id="producto-form" method="post">
+      {% csrf_token %}
+      
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select class="form-select" aria-label="Default" name="iCategoria" id="iCategoria">
+              {% for c in categorias %}
+              <option value="{{ c.id_categoria }}"
+                {% if c.id_categoria == Product.id_categoria.id_categoria %} selected {% endif %}>
+                {{ c.nombre_categoria }}
+              </option>
+              {% endfor %}
+            </select>
+            <div class="error-message" id="iCategoria-error" style="color:red;"></div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <div class="form-group">
+            <label>Marca</label>
+            <select class="form-select" aria-label="Default select example" name="iMarca" id="iMarca">
+              {% for m in marcas %}
+              <option value="{{ m.id_marca }}"
+                {% if m.id_marca == Product.id_marca.id_marca %} selected {% endif %}>
+                {{ m.nombre_marca }}
+              </option>
+              {% endfor %}
+            </select>
+            <div class="error-message" id="iMarca-error" style="color:red;"></div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label>Nombre *</label>
+        <input type="text" value="{{ Product.nombre_producto }}" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
+        <div class="error-message" id="iNombre-error" style="color:red;"></div>
+      </div>
+  
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea class="form-control" id="iDescripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4">{{ Product.descripcion }}</textarea>
+        <div class="error-message" id="iDescripcion-error" style="color:red;"></div>
+      </div>
+  
+      <div class="form-row">
+        <div class="col-md-3 mb-3">
+            <div class="form-group">
+                <label>Fecha de Vencimiento *</label>
+                <input type="text" class="form-control" id="iFechaven" name="iFechaven" value="{{ Product.fechaven|date:'Y-m-d' }}" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
+                <div class="error-message" id="iFechaven-error" style="color:red;"></div>
+            </div>
+        </div>
+      
+        <div class="col-md-3 mb-3">
+          <div class="form-group">
+            <label for="cant">Cantidad *</label>
+            <input type="number" class="form-control" id="iCantidad" value="{{ Product.cantidad }}" name="iCantidad" placeholder=" Número de Existencias"/>
+            <div class="error-message" id="iCantidad-error" style="color:red;"></div>
+          </div>
+        </div>
+      
+        <div class="col-md-3 mb-3">
+          <div class="form-group">
+            <label for="sabor">Sabor *</label>
+            <input type="text" class="form-control" id="iSabor" name="iSabor" value="{{ Product.sabor }}" placeholder="Sabor"/>
+            <div class="error-message" id="iSabor-error" style="color:red;"></div>
+          </div>
+        </div>
+      
+        <div class="col-md-3 mb-3">
+          <div class="form-group">
+            <label for="services">Presentación (LBs) *</label>
+            <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Tamaño" value="{{ Product.presentacion }}"/>
+            <div class="error-message" style="color:red;" id="iServices-error"></div>
+          </div>
+        </div>
+      </div>
+      
+        <div class="form-group">
+            <label for="price">Precio del Producto *</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+                </div>
+                <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio" value="{{ Product.precio }}">
+            </div>
+            <div class="error-message" id="iPrice-error" style="color:red;"></div>
+        </div>
+    
+  
+      <div class="text-end">
+        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  var fechaActual = new Date().toISOString().split("T")[0];
+  document.getElementById("iFechaven").min = fechaActual;
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+<script>
+  $(document).ready(function () {
+  // Función para validar que todos los campos estén llenos
+  function validarCamposLlenos() {
+      let camposLlenos = true;
+      const nombreValue = $('#iNombre').val();
+      const descValue = $('#iDescripcion').val();
+      const fechaValue = $('#iFechaven').val();
+      const cantValue = $('#iCantidad').val();
+      const saborValue = $('#iSabor').val();
+      const presentacionValue = $('#iServices').val();
+      const priceValue = $('#iPrice').val();
+
+      if (!nombreValue) {
+          mostrarError('#iNombre', 'Este campo es obligatorio.');
+          camposLlenos = false;
+      }
+
+      if (!descValue) {
+          mostrarError('#iDescripcion', 'Este campo es obligatorio.');
+          camposLlenos = false;
+      }
+
+      if (!fechaValue) {
+          mostrarError('#iFechaven', 'Este campo es obligatorio.');
+          camposLlenos = false;
+      } 
+
+      if (!cantValue) {
+        mostrarError('#iCantidad', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
+      
+      if (!saborValue) {
+        mostrarError('#iSabor', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
+
+      if (!presentacionValue) {
+        mostrarError('#iServices', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
+
+      if (!priceValue) {
+        mostrarError('#iPrice', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
+     
+      return camposLlenos;
+  }
+  
+  function mostrarError(selector, mensaje) {
+    $(selector).addClass('is-invalid');
+    $(`${selector}-error`).text(mensaje);
+}
+
+$('#producto-form').submit(function (event) {
+    event.preventDefault();
+    // Validar que todos los campos estén llenos
+    if (!validarCamposLlenos()) {
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'editAProduct' Product.id_producto %}",
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success) {
+                alert('Producto editado con éxito.');
+                window.location.href = "{% url 'productos' %}";
+            }
+        }
+    });
+});
+});
+</script>
+
+{% endblock %}

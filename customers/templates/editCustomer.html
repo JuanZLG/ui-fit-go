@@ -1,0 +1,303 @@
+{% extends "baseInterface.html" %}
+
+{% block title %}Modificar Cliente{% endblock %}
+
+{% block body %}
+<center><h1 class="h3 text-gray-800 mb-4">Modificar Cliente</h1></center>
+
+    <div class="card shadow">
+        <div class="container p-4">
+            <form id="cliente-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="cliente_id" value="{{ cliente.id_cliente }}">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="iDocumento">Documento *</label>
+                        <input type="text" class="form-control" id="iDocumento" name="iDocumento"
+                               placeholder="Documento" value="{{ cliente.documento }}" minlength="8" maxlength="10">
+                        <div class="error-message" id="iDocumento-error"></div>
+                        <div class="info-message" id="iDocumento-info"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iNombres">Nombres *</label>
+                        <input type="text" class="form-control" id="iNombres" name="iNombres"
+                               placeholder="Nombres" value="{{ cliente.nombres }}">
+                        <div class="error-message" id="iNombres-error"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="iApellidos">Apellidos *</label>
+                        <input type="text" class="form-control" id="iApellidos" name="iApellidos"
+                               placeholder="Apellidos" value="{{ cliente.apellidos }}">
+                        <div class="error-message" id="iApellidos-error"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iCelular">Celular *</label>
+                        <input type="text" class="form-control" id="iCelular" name="iCelular"
+                               placeholder="Celular" value="{{ cliente.celular }}" minlength="10" maxlength="10">
+                        <div class="error-message" id="iCelular-error"></div>
+                        <div class="info-message" id="iCelular-info"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="iBarrio">Barrio *</label>
+                        <input type="text" class="form-control" id="iBarrio" name="iBarrio"
+                               placeholder="Barrio" value="{{ cliente.barrio }}">
+                        <div class="error-message" id="iBarrio-error"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iDireccion">Dirección *</label>
+                        <input type="text" class="form-control" id="iDireccion" name="iDireccion"
+                               placeholder="Dirección" value="{{ cliente.direccion }}">
+                        <div class="error-message" id="iDireccion-error"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="departamento">Departamento *</label>
+                        <select class="form-control" id="departamento" name="nombre_departamento">
+                            <option value="{{ cliente.id_municipio.id_departamento.nombre_departamento }}"
+                                    selected>{{ cliente.id_municipio.id_departamento.nombre_departamento }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="municipio">Municipio *</label>
+                        <select class="form-control" id="municipio" name="nombre_municipio">
+                            <option value="{{ cliente.id_municipio.id_municipio }}"
+                                    selected>{{ cliente.id_municipio.nombre_municipio }}</option>
+                        </select>
+                        <div class="error-message" id="nombre_municipio-error"></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-14">
+                    <label for="id_estado">Estado *</label>
+                    <select class="form-control" id="id_estado" name="id_estado">
+                        <option value="1" {% if cliente.estado == 1 %} selected {% endif %}>Inactivo</option>
+                        <option value="0" {% if cliente.estado == 0 %} selected {% endif %}>Activo</option>
+                    </select>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-success" type="submit" id="submit-button" disabled>Modificar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            // Función para cargar la lista de departamentos
+            function cargarDepartamentos() {
+                $.ajax({
+                    url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+                    type: "GET",
+                    data: {
+                        "$limit": 5000,
+                    },
+                    success: function (data) {
+                        const departamentoSelect = $("#departamento");
+                        const departamentos = [...new Set(data.map(item => item.departamento))];
+                        departamentos.forEach(function (depto) {
+                            departamentoSelect.append($("<option>", {
+                                value: depto,
+                                text: depto
+                            }));
+                        });
+
+                        // Dispara el evento change en el departamento al cargar la página
+                        departamentoSelect.trigger("change");
+                    }
+                });
+            }
+
+            // Función para obtener la lista de municipios basados en el departamento seleccionado
+            function obtenerMunicipios(departamentoSeleccionado) {
+                return $.ajax({
+                    url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+                    type: "GET",
+                    data: {
+                        "$limit": 5000,
+                        "departamento": departamentoSeleccionado
+                    }
+                });
+            }
+
+            // Función para cargar los municipios basados en el departamento seleccionado
+            function cargarMunicipios(departamentoSeleccionado) {
+                obtenerMunicipios(departamentoSeleccionado).done(function (data) {
+                    const municipioSelect = $("#municipio");
+                    municipioSelect.empty();
+                    data.forEach(function (item) {
+                        municipioSelect.append($("<option>", {
+                            value: item.municipio,
+                            text: item.municipio
+                        }));
+                    });
+
+                    // Selecciona automáticamente el municipio registrado
+                    const municipioRegistrado = "{{ cliente.id_municipio.nombre_municipio }}";
+                    municipioSelect.val(municipioRegistrado);
+
+                    // Habilita el botón después de cargar los municipios
+                    habilitarBoton();
+                });
+            }
+
+            // Cargar la lista de departamentos
+            cargarDepartamentos();
+
+            // Evento para cargar los municipios cuando se cambia la selección del departamento
+            $("#departamento").change(function () {
+                const departamentoSeleccionado = $(this).val();
+                cargarMunicipios(departamentoSeleccionado);
+            });
+
+            // Validar documento
+            $('#iDocumento').on('input', function () {
+                validarDocumento();
+                habilitarBoton();
+            });
+
+            $('#iDocumento').on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    validarDocumento();
+                    habilitarBoton();
+                }
+            });
+
+            // Validar celular
+            $('#iCelular').on('input', function () {
+                validarCelular();
+                habilitarBoton();
+            });
+
+            $('#iCelular').on('keypress', function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    validarCelular();
+                    habilitarBoton();
+                }
+            });
+
+            // Función para validar el documento
+            function validarDocumento() {
+                const documento = $('#iDocumento').val();
+                const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+
+                $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
+                $('#iDocumento-error').html(documentoError);
+            }
+
+            // Función para validar el celular
+            function validarCelular() {
+                const celular = $('#iCelular').val();
+                const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
+
+                $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
+                $('#iCelular-error').html(celularError);
+            }
+
+            // Función para validar campos en tiempo real
+            $('#iDocumento, #iNombres, #iApellidos, #iCelular, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
+                if ($(this).val() === '') {
+                    mostrarError($(this), 'Este campo es obligatorio.');
+                } else {
+                    ocultarError($(this));
+                }
+                habilitarBoton();
+            });
+
+            // Función para mostrar errores
+            function mostrarError($campo, mensaje) {
+                $campo.addClass('is-invalid');
+                $campo.siblings('.error-message').text(mensaje);
+            }
+
+            // Función para ocultar errores
+            function ocultarError($campo) {
+                $campo.removeClass('is-invalid');
+                $campo.siblings('.error-message').text('');
+            }
+
+            // Función para habilitar/deshabilitar el botón de "Modificar Cliente"
+            function habilitarBoton() {
+                const documento = $('#iDocumento').val();
+                const celular = $('#iCelular').val();
+                const nombres = $('#iNombres').val();
+                const apellidos = $('#iApellidos').val();
+                const barrio = $('#iBarrio').val();
+                const direccion = $('#iDireccion').val();
+                const departamento = $('#departamento').val();
+                const municipio = $('#municipio').val();
+
+                const documentoValido = (documento.length === 8 || documento.length === 10);
+                const celularValido = (celular.length === 10);
+                const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
+
+                if (documentoValido && celularValido && camposCompletos) {
+                    $('#submit-button').prop('disabled', false);
+                } else {
+                    $('#submit-button').prop('disabled', true);
+                }
+            }
+
+            // Submit del formulario
+            $('#cliente-form').submit(function (event) {
+                event.preventDefault();
+                let errors = false;
+
+                // Validaciones en el lado del cliente
+                const documento = $('#iDocumento').val();
+                const nombres = $('#iNombres').val();
+                const apellidos = $('#iApellidos').val();
+                const celular = $('#iCelular').val();
+                const barrio = $('#iBarrio').val();
+                const direccion = $('#iDireccion').val();
+                const municipio = $('#municipio').val();
+
+                // Validación de campo requerido
+                if (documento === '') {
+                    mostrarError($('#iDocumento'), 'Este campo es obligatorio.');
+                    errors = true;
+                } else {
+                    ocultarError($('#iDocumento'));
+                }
+
+                if (nombres === '') {
+                    mostrarError($('#iNombres'), 'Este campo es obligatorio.');
+                    errors = true;
+                } else {
+                    ocultarError($('#iNombres'));
+                }
+
+                if (apellidos === '') {
+                    mostrarError($('#iApellidos'), 'Este campo es obligatorio.');
+                    errors = true;
+                } else {
+                    ocultarError($('#iApellidos'));
+                }
+
+                // Otras validaciones personalizadas (agrega más según sea necesario)
+
+                // Verificar si hay errores antes de enviar el formulario
+                if (!errors) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'editarCliente' cliente.id_cliente %}",
+                        data: $(this).serialize(),
+                        success: function (response) {
+                            if (response.success) {
+                                alert('Cliente editado con éxito.');
+                                window.location.href = "{% url 'Clientes' %}";
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
