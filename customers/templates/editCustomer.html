@@ -15,14 +15,14 @@
                         <label for="iDocumento">Documento *</label>
                         <input type="text" class="form-control" id="iDocumento" name="iDocumento"
                                placeholder="Documento" value="{{ cliente.documento }}" minlength="8" maxlength="10">
-                        <div class="error-message" id="iDocumento-error"></div>
+                        <div class="error-message" id="iDocumento-error" style="color:red;"></div>
                         <div class="info-message" id="iDocumento-info"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="iNombres">Nombres *</label>
                         <input type="text" class="form-control" id="iNombres" name="iNombres"
                                placeholder="Nombres" value="{{ cliente.nombres }}">
-                        <div class="error-message" id="iNombres-error"></div>
+                        <div class="error-message" id="iNombres-error" style="color:red;"></div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -30,13 +30,13 @@
                         <label for="iApellidos">Apellidos *</label>
                         <input type="text" class="form-control" id="iApellidos" name="iApellidos"
                                placeholder="Apellidos" value="{{ cliente.apellidos }}">
-                        <div class="error-message" id="iApellidos-error"></div>
+                        <div class="error-message" id="iApellidos-error" style="color:red;"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="iCelular">Celular *</label>
                         <input type="text" class="form-control" id="iCelular" name="iCelular"
                                placeholder="Celular" value="{{ cliente.celular }}" minlength="10" maxlength="10">
-                        <div class="error-message" id="iCelular-error"></div>
+                        <div class="error-message" id="iCelular-error" style="color:red;"></div>
                         <div class="info-message" id="iCelular-info"></div>
                     </div>
                 </div>
@@ -45,13 +45,13 @@
                         <label for="iBarrio">Barrio *</label>
                         <input type="text" class="form-control" id="iBarrio" name="iBarrio"
                                placeholder="Barrio" value="{{ cliente.barrio }}">
-                        <div class="error-message" id="iBarrio-error"></div>
+                        <div class="error-message" id="iBarrio-error" style="color:red;"></div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="iDireccion">Dirección *</label>
                         <input type="text" class="form-control" id="iDireccion" name="iDireccion"
                                placeholder="Dirección" value="{{ cliente.direccion }}">
-                        <div class="error-message" id="iDireccion-error"></div>
+                        <div class="error-message" id="iDireccion-error" style="color:red;"></div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -62,23 +62,17 @@
                                     selected>{{ cliente.id_municipio.id_departamento.nombre_departamento }}</option>
                         </select>
                     </div>
+                    
                     <div class="form-group col-md-6">
                         <label for="municipio">Municipio *</label>
                         <select class="form-control" id="municipio" name="nombre_municipio">
                             <option value="{{ cliente.id_municipio.id_municipio }}"
                                     selected>{{ cliente.id_municipio.nombre_municipio }}</option>
                         </select>
-                        <div class="error-message" id="nombre_municipio-error"></div>
+                        <div class="error-message" id="nombre_municipio-error" style="color:red;"></div>
                     </div>
                 </div>
 
-                <div class="form-group col-md-14">
-                    <label for="id_estado">Estado *</label>
-                    <select class="form-control" id="id_estado" name="id_estado">
-                        <option value="1" {% if cliente.estado == 1 %} selected {% endif %}>Inactivo</option>
-                        <option value="0" {% if cliente.estado == 0 %} selected {% endif %}>Activo</option>
-                    </select>
-                </div>
                 <div class="text-end">
                     <button class="btn btn-success" type="submit" id="submit-button" disabled>Modificar Cliente</button>
                 </div>

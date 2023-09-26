@@ -31,7 +31,7 @@
     <br>
     <div class="card shadow mb-4 w-70">
         <div class="card-header py-4">
-            <form id="proveedor-form" method="post">
+            <form id="proveedor-form" method="post" >
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
@@ -41,7 +41,7 @@
                         <span class="error-message" id="nombre_proveedor-error"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="#">Número de contacto *</label>
+                        <label for="#">Número de Contacto *</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '');" minlength="10" maxlength="10" >
                         <span class="error-message" id="telefono-error"></span>
@@ -141,7 +141,7 @@
                         }
                     },
                     error: function () {
-                        reject(new Error("Error al validar el cliente"));
+                        reject(new Error("Error al validar el proveedor"));
                     },
                 });
             });

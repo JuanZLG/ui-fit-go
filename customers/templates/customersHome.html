@@ -11,7 +11,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
-            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split btn-add" id="em">
+            <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split btn-add">
                 <span class="icon">
                     <i class="fa-solid fa-plus" id="addicon"></i>
                 <span class="text">Agregar Cliente</span>
@@ -31,13 +31,12 @@
             <style>
                 .table-responsive{
                 overflow-y: auto;
-                max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+                max-height: 400px;
             }
             </style>
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" cellspacing="3">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Documento</th>
                         <th>Nombre</th>
                         <th>Celular</th>
@@ -49,7 +48,6 @@
                 <tbody class="tbody">
                     {% for cliente in clientes %}
                     <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
-                        <td>{{ cliente.id_cliente }}</td>
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
@@ -122,8 +120,6 @@
             });
         });
     });
-
-    // JavaScript para cargar los detalles del cliente cuando se hace clic en "Details"
     
 </script>
 

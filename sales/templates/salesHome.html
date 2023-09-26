@@ -36,10 +36,15 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
+            <style>
+                .table-responsive{
+                overflow-y: auto;
+                max-height: 400px;
+            }
+            </style>
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" cellspacing="3">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Cliente</th>
                         <th>Fecha de Registro</th>
                         <th>Estado</th>
@@ -49,7 +54,6 @@
                 <tbody>
                     {% for venta in ventas %}
                     <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
-                        <td>{{ venta.id_venta }}</th>
                         <td class="d-flex ">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
                         <td>
@@ -136,7 +140,7 @@
             <p class="font-weight-bold">Cliente: <span id="cliente" class="font-weight-normal"></span> <span class="ml-3">Documento: </span> <span id="documento" class="font-weight-normal"></span> </p>
         </div>
         <div class="linea-detalle mb-2">
-            <h3>Detalles de la Compra:</h3>
+            <h3>Detalles de la Venta:</h3>
         </div>
         <table class="table table-detalles">
             <thead>
@@ -221,5 +225,148 @@
 
 
 </script>
+<style>
+    
 
+
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.833);
+    z-index: 100;
+    display: none;
+    animation: fadeInBack 0.3s ease-in-out;
+}
+
+.ventaDialog {
+    max-width: 70%;
+    width: 30%;
+    min-height: 10vh;
+    border: none;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+    animation: fadeIn 0.3s ease-in-out;
+
+    margin: auto;
+    padding: 20px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInBack {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeOut {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+.ventaDialog .modal-container-header, .linea-detalle {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-container-header h2, .ventaDialog h3{
+    font-size: 1.125rem;
+    font-weight: 700;
+    gap: 8px;
+    text-align: center;
+}
+
+
+.cerrar-venta {
+    padding: 0;
+    border: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.15s ease;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.estadoVentaCircle {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+
+.estadoVentaCircle.activo {
+    background-color: #72d072;
+    /* Color para estado activo */
+}
+
+.estadoVentaCircle.inactivo {
+    background-color: #ba4d4d;
+    /* Color para estado inactivo */
+}
+
+
+.cont-detalle-header {
+    padding: 20px;
+}
+
+.VentaDialog section p {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #222222;
+}
+
+.VentaDialog section p span {
+    color: rgb(99, 99, 99);
+}
+
+
+.table-detalles {
+    margin: auto;
+    width: 100%;
+
+}
+.table-detalles thead {
+    text-align: center;
+}
+
+
+
+.cont-detalle-total {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+
+</style>
 {% endblock %}

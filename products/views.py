@@ -94,6 +94,11 @@ def cambiarEstadoDeProducto(request):
             return JsonResponse({'status': 'error', 'message': 'Producto no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+# def producto_unico(request):
+#     producto = request.GET.get("producto", "")
+#     producto_existe = Productos.objects.filter(nombre_producto=producto).exists()
+#     return JsonResponse({"existe": producto_existe})
+
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_producto = request.GET.get('producto_id')
@@ -103,10 +108,15 @@ def verDetallesProducto(request):
                 producto = Productos.objects.get(id_producto=id_producto)
                 # Si el producto se encuentra
                 data = {
+                    'categoria': producto.id_categoria.nombre_categoria,
+                    'marca': producto.id_marca.nombre_marca,
                     'nombre_producto': producto.nombre_producto,
                     'descripcion': producto.descripcion,
+                    'fechaven': producto.fechaven,
                     'cantidad': producto.cantidad,
                     'sabor': producto.sabor,
+                    'status': producto.estado,
+                    'servicios': producto.presentacion
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:
@@ -115,3 +125,22 @@ def verDetallesProducto(request):
             return JsonResponse({'status': 'error', 'message': 'ID de producto no proporcionado'})
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+def crearCategoria(request):
+    if request.method == 'POST':
+        nombre = request.POST['znombre']
+        categoria = Categorias.objects.create(nombre_categoria=nombre)
+        return JsonResponse({'success': True})
+    return render(request, 'createProduct.html')
+
+from .forms import CategoriaForm
+
+def crear_categoria(request):
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categorias')  # Redirige a la página de listar categorías o la que desees
+    else:
+        form = CategoriaForm()
+    return render(request, 'productsHome.html', {'form': form})

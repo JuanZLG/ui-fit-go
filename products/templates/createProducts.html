@@ -114,6 +114,16 @@
           validarCampo($(this));
       });
 
+      $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice').on('input', function () {
+        const campo = $(this);
+        const campoValue = campo.val();
+
+        if (campoValue) {
+            campo.removeClass('is-invalid');
+            $(`#${campo.attr('id')}-error`).text('');
+        }
+      });
+
       $('#producto-form').submit(function (event) {
           event.preventDefault();
           let errors = false;
@@ -127,6 +137,7 @@
           validarCampo($('#iSabor'));
           validarCampo($('#iServices'));
           validarCampo($('#iPrice'));
+
 
           if ($('.error-message').text() === '') {
               $.ajax({
