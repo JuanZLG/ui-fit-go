@@ -8,26 +8,22 @@
     <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 
-<section class="row">
-    <div class="col-md-5 mb-3 d-flex align-items-center justify-content-center">
-        <h1 class="modtitles">Editar Ventas</h1>
-    </div>
-    <div class="col-md-7 mb-3">
-        <div class="row justify-content-end">
-            <div class="cont-cliente">
-                <div class="d-flex gap-4 justify-content-between ">
-                    <label class="mb-2 font-weight-bold">Cliente *</label>
-                    <div class='text-secondary d-flex gap-2' id="cont-docu"></div>
-                </div>
-                <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
-                    placeholder="Ingrese el documento para buscar al cliente"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10"
-                    value="{{ venta.id_cliente.documento}}">
-                <div class="cont-error-docu">
-                    <span class="text-danger" id="error-docu"></span>
-                </div>
+<section class="row text-center mx-auto mb-4">
+    <h1 class="modtitles pb-5">Modificar Venta</h1>
+    <div class="cont-princ-cliente col-md-10">
+        <div class="cont-cliente">
+            <div class="d-flex justify-content-between">
+                <label class="mb-2 font-weight-bold">Cliente *</label>
+                <label id="cont-docu"></label>
+            </div>
+            <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+                placeholder="Ingrese el nombre del cliente"
+                oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '');">
+            <div class="text-left">
+                <span class="text-danger" id="error-docu"></span>
             </div>
         </div>
+        <div id="resultado-cliente" class="resultado-cliente"></div>
     </div>
 </section>
 
@@ -82,8 +78,11 @@
                                         name="precioTotal" readonly value="{{producto.precio_tot|floatformat:'-2'}}">
                                 </div>
 
-                            <td class="inhabilitar-producto"><span class="icono-inhabilitar"><i
-                                        class="fas fa-ban"></i></span></td>
+                            <td class="inhabilitar-producto">
+                                <span class="icono-inhabilitar"><i class="fas fa-ban"></i></span>
+                                <div class="cont-confirmacion-estado">
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -122,44 +121,92 @@
     //EDIT
     $(document).ready(function () {
         let resultadoDocu = $("#cont-docu");
-        resultadoDocu.html("<p id='nomClienteDato'>{{venta.id_cliente.nombres}}{{venta.id_cliente.apellidos}}</p><span>Doc:</span><p id='documentoDato'>{{venta.id_cliente.documento}}</p>"
-        );
-        $("#nombreCliente").addClass("is-valid");
+        let resultadoCliente = $("#nombreCliente").addClass("is-valid");
+        resultadoDocu.html("Identificacion:<label id='documento' class='ml-2'>{{venta.id_cliente.documento}}</label>");
+        resultadoCliente.val("{{venta.id_cliente.nombres}} {{venta.id_cliente.apellidos}}")
+
     });
 
     /********** DOCUMENTO ***********/
+
     $(document).ready(function () {
+        $(".inhabilitar-producto").on("click", function () {
+            var confirmationMessage = $(this).find(".cont-confirmacion-estado");
+
+            if (confirmationMessage.is(":visible")) {
+                confirmationMessage.hide().empty();
+            } else {
+                var contenidoHTML = `
+                    <div class="confirmacion-estado">
+                        <p>¿Estás seguro de cambiar el estado?</p>
+                        <div class="d-flex"> 
+                            <button class="btn-confirm">Confirmar</button>
+                            <button class="btn-cancel">Cancelar</button>
+                        </div>
+                    </div>
+                `;
+                confirmationMessage.html(contenidoHTML).show();
+
+                confirmationMessage.find(".btn-confirm").on("click", function () {
+                    var currentRow = $(this).closest("tr.producto-row");
+                    var estado = currentRow.data("estado");
+                    if (estado === 1) {
+                        estado = 0;
+                        currentRow.addClass("detalle-inactivo");
+                        currentRow.find('input').prop('disabled', true);
+                    } else {
+                        estado = 1;
+                        currentRow.removeClass("detalle-inactivo");
+                        currentRow.find('input').prop('disabled', false);
+                    }
+                    currentRow.data("estado", estado);
+
+                    calcularTotalVenta();
+                });
+            }
+        });
 
 
         $("#nombreCliente").on("input", function () {
-            let input = $(this).val();
-            let resultadoDocu = $("#cont-docu");
+            let nombreCliente = $(this).val();
+            $("#resultado-cliente").show();
+            $("#cont-docu").empty()
+            let tablaClientes = $("#resultado-cliente");
 
-            if (input.length == 8 || input.length == 10) {
+            $("#error-docu").text("");
+
+            if (nombreCliente.length >= 5) {
                 $.ajax({
-                    url: "{% url 'buscar_documentos' %}?q=" + input,
+                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
                     type: "GET",
                     success: function (data) {
-                        let documento = data.documentos[0];
-                        let nomClienteDato = data.nombre_cliente;
+                        if (data.resultados.length > 0) {
+                            tablaClientes.empty();
 
-                        if (data.documentos.length > 0) {
-                            validarCliente(documento).then(function (existe) {
-                                if (existe && documento === input) {
-                                    resultadoDocu.html(
-                                        "<p id='nomClienteDato'>" +
-                                        nomClienteDato +
-                                        "</p><span>Doc:</span><p id='documentoDato'>" +
-                                        documento +
-                                        "</p>"
-                                    );
-                                    $("#nombreCliente").addClass("is-valid");
-                                } else {
-                                    resultadoDocu.empty();
-                                }
-                            });
+                            for (let i = 0; i < Math.min(5, data.resultados.length); i++) {
+                                let documento = data.resultados[i].documento;
+                                let nomClienteDato = data.resultados[i].nombre_cliente;
+                                let estadoCliente = data.resultados[i].estado;
+
+                                let estadoClass = estadoCliente === 1 ? "activo" : "inactivo";
+
+                                let filaHtml = `
+                                <div class="cliente-item ${estadoClass}"> 
+                                    <div class="cliente-info">
+                                        <div class="estadoClienteCircle ${estadoClass}"></div>
+                                        <span id="nombreDato">${nomClienteDato}</span>
+                                    </div>
+                                    <div class="identificacion">Identificación: <span id="documentoDato">${documento}</span></div>
+                                </div>`;
+
+                                tablaClientes.append(filaHtml);
+                            }
+
+                            setTimeout(function () {
+                                tablaClientes.css("opacity", "1");
+                            }, 100);
                         } else {
-                            resultadoDocu.hide();
+                            tablaClientes.empty();
                         }
                     },
                     error: function () {
@@ -167,32 +214,26 @@
                     },
                 });
             } else {
-                resultadoDocu.empty().hide(); // Limpiar y ocultar cont-docu
-                $("#nombreCliente").removeClass("is-valid is-invalid"); // Remover clases de validación
+                tablaClientes.css("opacity", "0");
+                tablaClientes.empty();
+                $("#nombreCliente").removeClass("is-valid is-invalid");
             }
+
+            tablaClientes.on("click", ".cliente-item", function () {
+                if (!$(this).hasClass("inactivo")) {
+                    let nombreApellido = $(this).find("#nombreDato").text();
+                    let documento = $(this).find("#documentoDato").text();
+
+                    let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
+                    $("#cont-docu").html(identificacionCompleta);
+
+                    $("#nombreCliente").val(nombreApellido).addClass("is-valid");
+                    $("#resultado-cliente").hide();
+                }
+            });
         });
 
-        function validarCliente(documentoDato) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: "{% url 'validar_cliente' %}",
-                    type: "GET",
-                    data: {
-                        documentoDato: documentoDato,
-                    },
-                    success: function (data) {
-                        if (data.existe) {
-                            resolve(true);
-                        } else {
-                            resolve(false);
-                        }
-                    },
-                    error: function () {
-                        reject(new Error("Error al validar el cliente"));
-                    },
-                });
-            });
-        }
+        
 
         /********** PRODUCTO ***********/
         $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
@@ -384,24 +425,6 @@
             }
         }
 
-        $(document).on("click", ".inhabilitar-producto", function () {
-            let currentRow = $(this).closest("tr.producto-row");
-            let precioInput = currentRow.find('.precioUnidad');
-
-            let estado = currentRow.data("estado");
-            if (estado === 1) {
-                estado = 0;
-                currentRow.addClass("detalle-inactivo");
-                currentRow.find('input').prop('disabled', true);
-            } else {
-                estado = 1;
-                currentRow.removeClass("detalle-inactivo");
-                currentRow.find('input').prop('disabled', false);
-            }
-            currentRow.data("estado", estado);
-
-            calcularTotalVenta();
-        });
 
         $(document).on("click", ".eliminar-producto", function () {
             currentRow = $(this).closest("tr.producto-row").remove();
@@ -492,23 +515,22 @@
         }
         function validarCamposLlenos() {
             let camposLlenos = true;
-            const documentoValue = $("#documentoDato").text();
+            const documentoValue = $("#documento").text();
             const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
             const productoNombres = {}; // Objeto para llevar el registro de nombres de productos
 
-            //// A ELIMINAR
             if (!nombreClienteValue) {
                 mostrarError("#nombreCliente");
                 $("#error-docu").text(
-                    "El campo del documento no puede estar vacío. Por favor, ingréselo correctamente."
+                    "El campo del documento no puede estar vacío."
                 );
                 camposLlenos = false;
             } else if (!documentoValue) {
                 mostrarError("#nombreCliente");
                 $("#error-docu").text(
-                    "El documento debe estar correctamente escrito. Por favor, verifique y vuelva a intentar."
+                    "El documento debe estar correctamente escrito."
                 );
                 camposLlenos = false;
             }
@@ -530,7 +552,7 @@
                 const cantidadValue = parseInt(cantidadInput.val());
 
                 if (isNaN(precioUnidadValue)) {
-                    row.find(".producto-error ").text("El campo del producto debe estar correctamente escrito. Por favor, verifique y vuelva a intentar.");
+                    row.find(".producto-error ").text("El campo del producto debe estar correctamente escrito.");
                     camposLlenos = false;
                 }
                 if (!productoValue) {
@@ -623,6 +645,8 @@
         }
 
     });
+
+
 
 </script>
 {% endblock %}

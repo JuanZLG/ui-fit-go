@@ -1,9 +1,10 @@
-import math
 from django.http import JsonResponse
-from django.shortcuts import render,  get_object_or_404
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
+from django.db.models import Q
+
 
 def Home(request):
     ventas = Ventas.objects.all()
@@ -76,8 +77,8 @@ def editar_venta(request, id_venta):
                         detalle.cantidad = nueva_cantidad
 
                         detalle.estado = productoDatos["estado"]
-
                         detalle.save()
+                           
                         producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
                         producto.save()
                         break
@@ -113,7 +114,48 @@ def editar_venta(request, id_venta):
     detalles = Detalleventa.objects.filter(id_venta=id_venta)
     return render(request, 'editSales.html', {"detalles": detalles, "venta": venta})
 
-           
+    
+
+def buscar_cliente(request):
+    nombre_cliente = request.GET.get("q", "")
+
+    palabras_clave = nombre_cliente.split()
+    clientes_encontrados = Clientes.objects.all()
+
+    for palabra_clave in palabras_clave:
+        clientes_encontrados = clientes_encontrados.filter(
+            Q(nombres__icontains=palabra_clave) | Q(apellidos__icontains=palabra_clave)
+        )
+
+    resultados = [
+        {
+            "documento": cliente.documento,
+            "nombre_cliente": f"{cliente.nombres} {cliente.apellidos}",
+            "estado": cliente.estado,
+        }
+        for cliente in clientes_encontrados
+    ]
+
+    return JsonResponse({"resultados": resultados})
+
+
+
+def buscar_productos(request):
+    q = request.GET.get("q", "")
+    productos = Productos.objects.filter(nombre_producto__icontains=q).values_list(
+        "nombre_producto", flat=True
+    )
+    return JsonResponse({"productos": list(productos)})
+
+
+def validar_cantidad(request):
+    cantidad = request.GET.get("cantidad", "")
+    nombre = request.GET.get("nombre", "")
+    producto = Productos.objects.get(nombre_producto__iexact=nombre)
+    if int(cantidad) > producto.cantidad:
+        return JsonResponse({"suficiente": False})
+    return JsonResponse({"suficiente": True})
+
 
            
 def buscar_documentos(request):
@@ -133,22 +175,6 @@ def buscar_documentos(request):
         {"documentos": list(documentos), "nombre_cliente": nombre_cliente}
     )
 
-
-def buscar_productos(request):
-    q = request.GET.get("q", "")
-    productos = Productos.objects.filter(nombre_producto__icontains=q).values_list(
-        "nombre_producto", flat=True
-    )
-    return JsonResponse({"productos": list(productos)})
-
-
-def validar_cantidad(request):
-    cantidad = request.GET.get("cantidad", "")
-    nombre = request.GET.get("nombre", "")
-    producto = Productos.objects.get(nombre_producto__iexact=nombre)
-    if int(cantidad) > producto.cantidad:
-        return JsonResponse({"suficiente": False})
-    return JsonResponse({"suficiente": True})
 
 
 def validar_producto(request):

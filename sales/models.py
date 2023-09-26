@@ -7,6 +7,7 @@ class Clientes(models.Model):
     documento = models.CharField(max_length=25)
     nombres = models.CharField(max_length=60)
     apellidos = models.CharField(max_length=60)
+    estado = models.IntegerField(default=1)
 
     class Meta:
         managed = False
