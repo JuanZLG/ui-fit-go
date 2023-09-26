@@ -75,11 +75,19 @@ def editar_venta(request, id_venta):
                         nueva_cantidad = productoDatos["cantidad"]
                         diferencia = nueva_cantidad - detalle.cantidad
                         detalle.cantidad = nueva_cantidad
+                        detalle.save()
 
+                        if detalle.estado != productoDatos["estado"]:                      
+                            if detalle.estado == 1 and productoDatos["estado"] == 0:
+                                producto.cantidad += nueva_cantidad
+                            elif detalle.estado == 0 and productoDatos["estado"] == 1:
+                                producto.cantidad -= nueva_cantidad
+
+                        else:
+                            producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
+                        
                         detalle.estado = productoDatos["estado"]
                         detalle.save()
-                           
-                        producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
                         producto.save()
                         break
 

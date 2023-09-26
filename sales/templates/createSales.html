@@ -104,6 +104,8 @@
             let nombreCliente = $(this).val(); 
             $("#resultado-cliente").show();
             $("#cont-docu").empty()
+            $("#nombreCliente").removeClass("is-valid")            
+
             let tablaClientes = $("#resultado-cliente");
 
             $("#error-docu").text("");
@@ -156,7 +158,7 @@
             if (!$(this).hasClass("inactivo")) {
                 let nombreApellido = $(this).find("#nombreDato").text();
                 let documento = $(this).find("#documentoDato").text();
-
+                $("#error-docu").text("")
                 let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
                 $("#cont-docu").html(identificacionCompleta);
 
@@ -418,7 +420,7 @@
 
         function validarCamposLlenos() {
             let camposLlenos = true;
-            const documentoValue = $("#documentoDato").text();
+            const documentoValue = $("#documento").text();
             const totalVentaValue = parseFloat($("#totalVenta").val().replace(/[$,.]/g, '')).toFixed(2);
             const nombreClienteValue = $("#nombreCliente").val();
             const productos = [];
@@ -431,7 +433,7 @@
                 camposLlenos = false;
             } else if (!documentoValue) {
                 $("#error-docu").text(
-                    "El documento debe estar correctamente escrito."
+                    "Por favor, asegúrese de seleccionar un cliente antes de continuar."
                 );
                 camposLlenos = false;
             }
