@@ -118,12 +118,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'users', 'static'),
+    os.path.join(BASE_DIR, 'tuiranfitgo', 'static'), 
     os.path.join(BASE_DIR, 'sales', 'static'),
+    os.path.join(BASE_DIR, 'users', 'static')
 ]
-
 
 CORS_ALLOW_ALL_ORIGINS = True
 
