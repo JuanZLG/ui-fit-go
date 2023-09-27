@@ -1,9 +1,6 @@
 from pathlib import Path
 import os
-<<<<<<< HEAD
-=======
 from django.urls import reverse_lazy
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +28,7 @@ INSTALLED_APPS = [
     'customers',
     'purchases',
     'sales',
-    'users',
+    # 'users',
     'dashboard',
 ]
 
@@ -57,7 +54,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'sales', 'templates'),
                  os.path.join(BASE_DIR, 'purchases', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
-                 os.path.join(BASE_DIR, 'users', 'templates'),
+                #  os.path.join(BASE_DIR, 'users', 'templates'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -72,19 +69,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
+# settings.py
+
 
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-<<<<<<< HEAD
         'NAME':'_tuiranfit',
         'USER': 'root',
         'PASSWORD': '1234',
-=======
-        'NAME':'tuiranfit',
-        'USER': 'root',
-        'PASSWORD': 'administrador',
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
         'PORT': '3306'
     }
 }
@@ -108,6 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -119,30 +113,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-<<<<<<< HEAD
-=======
 LOGIN_REDIRECT_URL = '/mydashboard/'
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-<<<<<<< HEAD
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'tuiranfitgo', 'static'), 
-    os.path.join(BASE_DIR, 'sales', 'static'),     
-]
-
-=======
-STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'users', 'static'),
     os.path.join(BASE_DIR, 'sales', 'static'),
 ]
 
 
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Default primary key field typeF

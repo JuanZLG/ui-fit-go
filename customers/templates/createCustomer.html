@@ -34,11 +34,26 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="iCelular">Celular *</label>
-                    <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                        minlength="10" maxlength="10">
-                    <div class="error-message" id="iCelular-error"></div>
-                    <div class="info-message" id="iCelular-info"></div>
+                    <div class="input-group">
+                        <select class="form-control" id="iPais" name="iPais" onchange="actualizarCodigoLlamada(this)">
+                            <option value="CO" selected>Colombia</option>
+                            <option value="VE">Venezuela</option>
+                            <option value="EC">Ecuador</option>
+                        </select>
+                        <input type="text" class="form-control" id="iCodigoLlamada" name="iCodigoLlamada" placeholder="+57" readonly>
+                        <input type="text" class="form-control" id="iNumeroCelular" name="iNumeroCelular" placeholder="Número de celular" minlength="10" maxlength="10">
+                    </div>
+                    <div class="error-message" id="iNumeroCelular-error"></div>
+                    <div class="info-message" id="iNumeroCelular-info"></div>
                 </div>
+                
+                <script>
+                function actualizarCodigoLlamada(select) {
+                    const codigoLlamada = select.value === 'CO' ? '+57' : select.value === 'VE' ? '+58' : select.value === 'EC' ? '+593' : '';
+                    document.getElementById('iCodigoLlamada').value = codigoLlamada;
+                }
+                </script>
+                
             </div>
 
             <div class="form-row">
