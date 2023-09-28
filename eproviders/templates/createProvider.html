@@ -1,7 +1,5 @@
 {% extends "baseInterface.html" %}
-
 {% block title %} Agregar Proveedor {% endblock %}
-
 {% block body %}
 
 <style>
@@ -12,73 +10,116 @@
         align-items: center;
         height: 70vh;
     }
-    .modtitles {
-    font-size: 2em;
-    background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: animarGradiente 3s linear infinite;
-    font-weight: bold;
-    padding: 30px;
-}
 
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+        padding: 30px;
+    }
 </style>
 
-<div class="center-content" style="margin-bottom:10px">
+<div class="center-content mt-5">
     <h1 class="modtitles">Agregar Proveedor</h1>
     <br>
-    <div class="card shadow mb-4 w-70">
+    <div class="mb-4 col-md-7 p-0 card shadow">
         <div class="card-header py-4">
             <form id="proveedor-form" method="post">
                 {% csrf_token %}
                 <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <label for="#">Nombre del Proveedor *</label>
+                    <div class="col-md-7 mb-3">
+                        <label for="nombre_proveedor">Nombre del Proveedor *</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
                             placeholder="Nombre">
                         <span class="error-message" id="nombre_proveedor-error"></span>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="#">Número de contacto *</label>
+                    <div class="col-md-5 mb-3">
+                        <label for="telefono">Número de contacto *</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" minlength="10" maxlength="10" >
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" minlength="10" maxlength="10">
                         <span class="error-message" id="telefono-error"></span>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-12 mb-3">
-                        <label for="#">Correo Electrónico *</label>
+                    <div class="col-md-7 mb-3">
+                        <label for="correo">Correo Electrónico *</label>
                         <input type="text" class="form-control" id="correo" name="correo"
                             placeholder="Correo Electrónico">
                         <span class="error-message" id="correo-error"></span>
                     </div>
+                    <div class="col-md-5 mb-3">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
+                        <span class="error-message" id="direccion-error"></span>
+                    </div>
                 </div>
-                <div class="text-end">
+                <div class="form-row">
+                    <div class="col-md-4 mb-3" style=" display: flex; flex-direction: column;">
+                        <label>Tipo de Documento</label>
+                        <select id="tipoIdentificacion" class="select-tipo" name="tipoIdentificacion">
+                            <option value="">Seleccionar tipo</option>
+                            <option value="DOC">Documento</option>
+                            <option value="NIT">NIT</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label>Numero de identificación</label>
+                        <input type="text" class="form-control" id="identificacion" name="identificacion"
+                            placeholder="Documento o NIT">
+                        <span class="error-message" id="identificacion-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Información Adicional</label>
+                    <textarea id="informacion" class="form-control" rows="4" cols="50" name="informacion"></textarea>
+                </div>
+                <div class="text-end mt-3">
                     <button class="btn btn-success mx-auto" type="submit">Guardar</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
 
+<style>
+ 
+
+    .select-tipo {
+        background-color: #ccc;
+        color: #000;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        height: 40px;
+        width: 100%;
+    }
+    .select-tipo option {
+        background-color: #fff;
+    }
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        $("#nombre_proveedor").val("");
-        $("#telefono").val("");
-        $("#correo").val("");
-    });
+$(document).ready(function () {
+    $("#nombre_proveedor, #telefono, #correo, #tipoIdentificacion, #identificacion, #direccion, #informacion").val("");
+});
+
 
     $(document).ready(function () {
         // Función para validar que todos los campos estén llenos
-        function validarCamposLlenos() {
+        function validarCamposObligatorios() {
             let camposLlenos = true;
             const nombreValue = $('#nombre_proveedor').val();
             const telefonoValue = $('#telefono').val();
             const correoValue = $('#correo').val();
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val(); // Obtener valor del select
+            const identificacionValue = $('#identificacion').val(); // Obtener valor del input identificacion
 
             if (!nombreValue) {
                 mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
@@ -98,11 +139,23 @@
                 mostrarError('#correo', 'El formato del correo electrónico no es válido.');
                 camposLlenos = false;
             }
+
+            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
+                mostrarError('#identificacion', 'Debe ingresar una identificación.');
+                camposLlenos = false;
+            } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
+                mostrarError('#identificacion', 'Debe seleeccionar el tipo de identificación.');
+                camposLlenos = false;
+            } else {
+                $("#identificacion").removeClass("is-invalid")
+                $("#identificacion-error").text("")
+            }
+
             return camposLlenos;
         }
 
-        // Validación de campos al escribir
-        $('#nombre_proveedor, #telefono, #correo').on('input', function () {
+
+        $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
             const campo = $(this);
             const campoValue = campo.val();
 
@@ -150,14 +203,12 @@
         $('#proveedor-form').submit(function (event) {
             event.preventDefault();
 
-            // Validar que todos los campos estén llenos
-            if (!validarCamposLlenos()) {
+            if (!validarCamposObligatorios()) {
                 return;
             }
             prov = $("#nombre_proveedor").val()
             validarProveedor(prov).then(function (existe) {
                 if (existe) {
-                    console.log("error unico")
                     $("#nombre_proveedor").addClass("is-invalid");
                     $("#nombre_proveedor-error").text("El proveedor " + prov + " ya existe").css("color", "red");
                 } else {
