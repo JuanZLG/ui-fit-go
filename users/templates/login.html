@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/EstilosLogin.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <div class="wrapper">
+
+        {% comment %} <form method="post">
+            {% csrf_token %}
+            <h1>Iniciar Sesión</h1>
+            {{ form.as_p }}
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+         {% endcomment %}
+
+        <h1>Iniciar Sesión</h1>
+        <br>
+        <center><img src={% static 'img/GIcon.png' %} style="width:40%;"></center>
+        <form method="post" action="{% url 'login_view' %}">
+            {% csrf_token %}
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Usuario" required>
+                <box-icon type='solid' name='user'></box-icon>
+            </div>
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <box-icon name='lock-alt' type='solid'></box-icon>
+            </div>
+    
+            <div class="remember-forgot">
+                <label>¿No tienes una cuenta? <a href="#">Regístrate</a></label>
+            </div>
+        
+            <div class="remember-forgot">
+            <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+        
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+    </div>
+</body>
+</html>

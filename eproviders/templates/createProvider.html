@@ -29,7 +29,7 @@
     <br>
     <div class="mb-4 col-md-7 p-0 card shadow">
         <div class="card-header py-4">
-            <form id="proveedor-form" method="post">
+            <form id="proveedor-form" method="post" >
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="col-md-7 mb-3">
@@ -194,7 +194,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function () {
-                        reject(new Error("Error al validar el cliente"));
+                        reject(new Error("Error al validar el proveedor"));
                     },
                 });
             });

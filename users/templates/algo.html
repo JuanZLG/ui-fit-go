@@ -1,0 +1,175 @@
+{% extends "baseInterface.html" %}
+{% block title %} Usuarios {% endblock %}
+{% block body %}
+<style>
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+</style>
+
+
+<style>
+    .seccion-usuarios {
+        text-align: center;
+    }
+</style>
+
+<section class="seccion-usuarios">
+    <h1 class="modtitles">Gestión de Usuarios</h1>
+    <div class="card shadow mb-4 mt-4">
+        <div class="card-header py-3 d-flex justify-content-between">
+            <span>
+                <a href="#" class="m-0 btn btn-success btn-icon-split btn-add">
+                    <span class="icon">
+                        <i class="fa-solid fa-plus"></i>
+                        <span class="text">Agregar Usuario</span>
+                    </span>
+                </a>
+            </span>
+            <span class="d-flex align-items-end">
+                <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+                <button class="btn btn-danger btn-dash">Generar Informe</button>
+            </span>
+        </div>
+    </div>
+    <style>
+        .user-card {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 0 auto;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .user {
+            position: relative;
+            width: 300px;
+        } .user-name {
+            font-weight: bold;
+            margin: 0;
+        }
+        .options-admin {
+            align-self: flex-end;
+            background-color: #ccc;
+            color: #000;
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .set-admin {
+            position: absolute;
+            top: 0;
+            left: 5px;
+            width: 1rem;
+            height: 1rem;
+            background-color: #ccc;
+            border: 2px solid #f2f2f2;
+            border-radius: 50%;
+
+        }
+
+        .user-more {
+            width: 40%;
+            display: flex;
+            gap: 5rem;
+            align-items: center;
+        }
+        .user-action:hover {
+            cursor: pointer;
+        } 
+        .user-estado {
+            cursor: pointer;
+            color: #fff;
+            font-weight: bold;
+            padding: 4px 15px;
+            border-radius: 10px;
+        }
+    </style>
+    <div class="card col-md-11 user-card">
+        <div class="user">
+            <span class="set-admin"></span>
+            <p class="user-name">ADMINISTRADOR</p>
+            <span>correoadmin@gmail.com</span>
+        </div>
+    </div>
+    <div class="card col-md-11 mt-3 user-card">
+        <div class="user">
+            <p class="user-name">Julanito</p>
+            <span>Julanito@gmail.com</span>
+        </div>
+        <div class="user-more">
+            <div class="user-action">
+                <p class="user-name">ROL</p>
+                <span>Gerente</span>
+            </div>
+            <div class="user-action">
+                <p class="user-name">PERMISOS</p>
+                <span>3/6</span>
+            </div>
+            <div class="user-estado" style="background: #72d072;">
+                <span>Activo</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card col-md-11 mt-3 user-card">
+        <div class="user">
+            <p class="user-name">Jobserd</p>
+            <span>Jobserd@gmail.com</span>
+        </div>
+        <div class="user-more">
+            <div class="user-action">
+                <p class="user-name">ROL</p>
+                <span>Otro rol</span>
+            </div>
+            <div class="user-action">
+                <p class="user-name">PERMISOS</p>
+                <span>6/6</span>
+            </div>
+            <div class="user-estado" style="background-color: #ba4d4d;">
+                <span>Inactivo</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

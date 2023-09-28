@@ -6,30 +6,43 @@
 
 <center><h1 class="modtitles">Gestión de Productos</h1></center>
 <br>
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex justify-content-between">
-                <span>
-                  <a href="{% url 'createAProduct'%}" class="m-0 btn btn-success btn-icon-split btn-add">
-                    <span class="icon">
-                        <i class="fa-solid fa-plus"></i>
-                        <span class="text">Agregar Producto</span>
-                    </span>
-                </a>
-                </span>
-                <span class="d-flex align-items-end">
-                  <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-                  <button class="btn btn-danger btn-dash">Generar Informe</button>
-              </span>
-            </div>
-        </div>
-
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <span>
+            <a href="{% url 'createAProduct' %}" class="btn btn-success btn-icon-split btn-add">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Producto</span>
+            </span>
+            </a>
+        </span>
+        <span>
+            <a class="btn btn-success btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                <span class="text">Agregar Categoria</span>
+            </span>
+            </a>
+        </span>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger btn-dash">Generar Informe</button>
+        </span>
+    </div>
+</div>
         <div class="card shadow mb-4">
             <div class="card-header py-4">
                 <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="80%" cellspacing="0">
+                    <style>
+                        .table-responsive{
+                        overflow-y: auto;
+                        max-height: 400px;
+                    }
+                    </style>
+
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="80%" cellspacing="0">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Categoría</th>
                         <th>Marca</th>
                         <th>Producto</th>
@@ -42,7 +55,6 @@
                 <tbody>
                     {% for p in Products %}
                     <tr>
-                        <td>{{p.id_producto}}</td>
                         <td>{{p.id_categoria.nombre_categoria}}</td>
                         <td>{{p.id_marca.nombre_marca}}</td>
                         <td>{{p.nombre_producto}}</td>
@@ -317,12 +329,10 @@
         
             .estadoProductoCircle.activo {
                 background-color: #72d072;
-                /* Color para estado activo */
             }
         
             .estadoProductoCircle.inactivo {
                 background-color: #ba4d4d;
-                /* Color para estado inactivo */
             }
         
         
@@ -346,12 +356,12 @@
 
 <div class="modal-backdrop"></div>
 
-<dialog id="verDetallesDialog" class="productoDialog dragHandle">
+<dialog id="verDetalleDialog" class="productoDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
-            <div class="estadoProductoCircle {% if p.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <div class="estadoProductoCircle {% if '#status' == 1 %}activo{% else %}inactivo{% endif %}"></div>
             <h2>Información del Producto</h2>
-            <button class="cerrar-producto" type="button" id="cerrarDetallesProducto">
+            <button class="cerrar-producto" type="button" id="cerrarDetalleProducto">
                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 0h24v24H0z" fill="none"></path>
                     <path
@@ -361,9 +371,14 @@
             </button>
         </div>
         <section>
-            <p>Nombre del Producto: <span id="nameprod"></span></p>
-            <p>Categoría: <span id="telefonoProveedor"></span></p>
-            <p>Marca: <span id="correoProveedor"></span></p>
+            <p>Nombre del Producto: <span id="nameProd"></span></p>
+            <p>Categoría: <span id="catProd"></span></p>
+            <p>Marca: <span id="brandProd"></span></p>
+            <p>Descripción: <span id="descProd"></span></p>
+            <p>Fecha de Vencimiento: <span id="fechavenProd"></span></p>
+            <p>Existencias: <span id="cantProd"></span></p>
+            <p>Sabor: <span id="saborProd"></span></p>
+            <p>Presentación: <span id="tamanoProd"></span><span> Libra(s)</span></p>
         </section>
     </form>
 </dialog>
@@ -373,22 +388,30 @@
         $(".verProducto").click(function () {
             var productoId = $(this).data("prod-id");
             $.ajax({
-                url: "{% url 'verDetallesProducto' %}",
+                url: "{% url 'verDetalleDeProducto' %}",
                 data: {
                     producto_id: productoId
                 },
                 method: "GET",
                 success: function (response) {
                     var producto = response.success;
+                    $("#status").text(producto.estado);
                     $("#nameProd").text(producto.nombre_producto);
                     $("#catProd").text(producto.categoria);
                     $("#brandProd").text(producto.marca);
-                    if (proveedor.estado == 1) {
+                    $("#descProd").text(producto.descripcion);
+                    var fechaVen = new Date(producto.fechaven);
+                    var fechaFormateada = fechaVen.getFullYear() + '-' + (fechaVen.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaVen.getDate().toString().padStart(2, '0');
+                    $("#fechavenProd").text(fechaFormateada);
+                    $("#cantProd").text(producto.cantidad);
+                    $("#saborProd").text(producto.sabor);
+                    $("#tamanoProd").text(producto.servicios);
+                    if (producto.estado == 1) {
                         $(".estadoProductoCircle").addClass("activo").removeClass("inactivo");
                     } else {
                         $(".estadoProductoCircle").addClass("inactivo").removeClass("activo");
                     }
-                    document.getElementById("verDetallesDialog").showModal();
+                    document.getElementById("verDetalleDialog").showModal();
                     $(".productoDialog").addClass("fadeIn");
                     $(".modal-backdrop").show();
                     $(".modal-backdrop").addClass("fadeInBack");
@@ -396,11 +419,11 @@
             });
         });
 
-        $("#cerrarDetallesProducto").click(function () {
+        $("#cerrarDetalleProducto").click(function () {
             $(".productoDialog").addClass("fadeOut");
             $(".modal-backdrop").addClass("fadeOut");
             setTimeout(function () {
-                document.getElementById("verDetallesDialog").close();
+                document.getElementById("verDetalleDialog").close();
                 $(".productoDialog").removeClass("fadeOut");
                 $(".modal-backdrop").hide();
                 $(".modal-backdrop").removeClass("fadeOut");
@@ -409,5 +432,38 @@
     });
 
 </script>
+
+<div class="modal fade" id="crearCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Categoría</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="card shadow mb-4 w-70">
+                        <div class="card-header py-4">
+                            <form method="post" action="{% url 'create_category'%}">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-10 mb-1">
+                                        <label for="#">Nombre de la Categoria *</label>
+                                        <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" placeholder="Nombre">
+                                        <div style="margin-top:10px"></div>
+                                        <span class="error-message" id="nombre_categoria-error"></span>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                    <button type="submit" class="btn btn-success mx-auto">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

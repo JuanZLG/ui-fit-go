@@ -129,7 +129,6 @@
             <table class="table table-bordered table-hover mx-auto text-center" width="80%" cellspacing="0">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Nombre de Marca</th>
                         <th>Acción</th>
                     </tr>
@@ -137,9 +136,10 @@
                 <tbody>
                     {% for mc in pbrands %}
                     <tr>
-                        <td>{{mc.id_marca}}</td>
                         <td>{{mc.nombre_marca}}</td>
                         <td>
+                            <a href="#" class="btn btn-sm"
+                            id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a class="btn btn-sm"
                             id="deleteButton"><i class="fa-solid fa-trash-can" style="color: #f50f0f;"></i></a>
                         </td>

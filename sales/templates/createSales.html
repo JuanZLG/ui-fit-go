@@ -11,7 +11,7 @@
 
 <section class="row text-center mx-auto mb-4">
     <h1 class="modtitles pb-5">Agregar Venta</h1>
-    <div class="cont-princ-cliente col-md-10">
+    <div class="cont-princ-cliente col-md-11">
         <div class="cont-cliente">
             <div class="d-flex justify-content-between">
                 <label class="mb-2 font-weight-bold">Cliente *</label>
@@ -23,7 +23,6 @@
             <div class="text-left">
                 <span class="text-danger" id="error-docu"></span>
             </div>
-            
         </div>
         <div id="resultado-cliente" class="resultado-cliente"></div>
     </div>
@@ -428,7 +427,7 @@
 
             if (!nombreClienteValue) {
                 $("#error-docu").text(
-                    "El campo del documento no puede estar vacío."
+                    "El campo del cliente no puede estar vacío."
                 );
                 camposLlenos = false;
             } else if (!documentoValue) {
