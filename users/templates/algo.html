@@ -77,17 +77,23 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            align-items: center;
+            height: 100px;
             margin: 0 auto;
             border-radius: 10px;
             padding: 10px;
         }
+
         .user {
             position: relative;
             width: 300px;
-        } .user-name {
+        }
+
+        .user-name {
             font-weight: bold;
             margin: 0;
         }
+
         .options-admin {
             align-self: flex-end;
             background-color: #ccc;
@@ -96,6 +102,7 @@
             padding: 5px;
             border-radius: 5px;
         }
+
         .set-admin {
             position: absolute;
             top: 0;
@@ -109,20 +116,44 @@
         }
 
         .user-more {
-            width: 40%;
+            width: 45%;
             display: flex;
             gap: 5rem;
             align-items: center;
         }
+
         .user-action:hover {
             cursor: pointer;
-        } 
+        }
+
         .user-estado {
             cursor: pointer;
             color: #fff;
             font-weight: bold;
             padding: 4px 15px;
             border-radius: 10px;
+        }
+
+        #editbutton {
+            background-color: #FFFF99;
+            color: #000;
+            /* background-color: #3498db; */
+            border: none;
+            transition: transform 0.5s;
+
+        }
+
+        #detailsbutton {
+            background-color: #419edd;
+            color: #000;
+            /* background-color: #1e3799; */
+            border: none;
+            transition: transform 0.5s;
+        }
+
+        #editbutton:hover,
+        #detailsbutton:hover {
+            transform: scale(1.1);
         }
     </style>
     <div class="card col-md-11 user-card">
@@ -146,9 +177,16 @@
                 <p class="user-name">PERMISOS</p>
                 <span>3/6</span>
             </div>
-            <div class="user-estado" style="background: #72d072;">
-                <span>Activo</span>
+            <div class="d-flex gap-3">
+                <div class="user-estado" style="background: #72d072;">
+                    <span>Activo</span>
+                </div>
+                <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                <button type="button" class="btn btn-sm btn-primary verVenta">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
             </div>
+
         </div>
     </div>
 
@@ -166,8 +204,14 @@
                 <p class="user-name">PERMISOS</p>
                 <span>6/6</span>
             </div>
-            <div class="user-estado" style="background-color: #ba4d4d;">
-                <span>Inactivo</span>
+            <div class="d-flex gap-3">
+                <div class="user-estado" style="background: #ba4d4d;">
+                    <span>Activo</span>
+                </div>
+                <a href="#" class="btn btn-sm" id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                <button type="button" class="btn btn-sm btn-primary verVenta">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
             </div>
         </div>
     </div>
