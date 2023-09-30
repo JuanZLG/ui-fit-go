@@ -1,0 +1,50 @@
+ $.ajax({
+                type: "GET",
+                url: "{% url 'obtener_datos_rol' %}",
+                data: { id: idRol },
+                success: function (data) {
+                    $("#nombreRol").val(data.nombre);
+
+                    document.getElementById("modalAcciones").showModal();
+                    $(".rolDialog").addClass("fadeIn");
+                    $(".modal-backdrop").show();
+                    $(".modal-backdrop").addClass("fadeInBack");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    // Maneja el error de la solicitud AJAX de manera detallada
+                    console.log("Error en la solicitud AJAX:");
+                    console.log("Estado de la solicitud: " + textStatus);
+                    console.log("Error lanzado: " + errorThrown);
+
+                }
+
+
+                
+def obtener_datos_rol(request):
+    print("LLEGA")
+    id_rol = int(request.GET.get("id"));
+    
+    try:
+        rol_permisos = Rolespermisos.objects.get(id_rol=id_rol)
+        
+        nombre_rol = rol_permisos.id_rol.nombre_rol
+        
+        permisos = {
+            "Clientes": rol_permisos.clientes,
+            "Usuarios": rol_permisos.usuarios,
+            "Proveedores": rol_permisos.proveedores,
+            "Productos": rol_permisos.productos,
+            "Compras": rol_permisos.compras,
+            "Ventas": rol_permisos.ventas,
+        }
+        
+        datos_rol = {
+            "nombre_rol": nombre_rol,
+            "permisos": permisos,
+        }
+        
+        return JsonResponse({"datos_rol": datos_rol})
+    
+    except Rolespermisos.DoesNotExist:
+        # Maneja el caso en que el rol no exista en la tabla RolesPermisos
+        return JsonResponse({"error": "El rol no existe"}, status=404)

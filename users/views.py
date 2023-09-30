@@ -35,13 +35,13 @@ from django.shortcuts import render, redirect
 #     return redirect('login')
 
 
-# def Home(request):
-#     user = Usuarios.objects.all()
-#     return render(request, 'usersHome.html', {"Users":user}) 
-
 def Home(request):
     user = Usuarios.objects.all()
-    return render(request, 'algo.html', {"Users":user}) 
+    return render(request, 'usersHome.html', {"Users":user}) 
+
+# def Home(request):
+#     user = Usuarios.objects.all()
+#     return render(request, 'algo.html', {"Users":user}) 
 
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -93,3 +93,68 @@ def editUser(request, id_usuario):
         return JsonResponse(response_data)    
     users = Usuarios.objects.get(id_usuario=id_usuario)
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
+
+
+
+
+def HomeRoles(request):
+    rolPermisos = Rolespermisos.objects.all()
+    permisos_count = {}
+    for rp in rolPermisos:
+        rol = rp.id_rol.nombre_rol
+        permisos = sum([
+            rp.id_permiso.clientes,
+            rp.id_permiso.usuarios,
+            rp.id_permiso.proveedores,
+            rp.id_permiso.productos,
+            rp.id_permiso.compras,
+            rp.id_permiso.ventas,
+        ])
+        
+        if rol in permisos_count:
+            permisos_count[rol] += permisos
+        else:
+            permisos_count[rol] = permisos
+
+    return render(request, 'rolesHome.html', {"permisos_count": permisos_count })
+
+
+@csrf_exempt
+def createRol(request):
+    print("crear")
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        nombre_rol = data.get("nombreRol")
+        permisos = data.get("permisos")
+
+        rol = Roles(nombre_rol=nombre_rol)
+        rol.save()
+
+        permiso = Permisos(
+            clientes=permisos.get("Clientes", 0),
+            usuarios=permisos.get("Usuarios", 0),
+            proveedores=permisos.get("Proveedores", 0),
+            productos=permisos.get("Productos", 0),
+            compras=permisos.get("Compras", 0),
+            ventas=permisos.get("Ventas", 0)
+        )
+        permiso.save()
+
+        roles_permisos = Rolespermisos(
+            id_rol=rol,
+            id_permiso=permiso
+        )
+        roles_permisos.save()
+
+        response_data = {"success": True}
+        return JsonResponse(response_data)
+
+
+
+@csrf_exempt
+def editRol(request):
+    print("editar")
+
+
+
