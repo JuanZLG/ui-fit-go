@@ -136,14 +136,18 @@ def verDetallesProducto(request):
 from .forms import CategoriaForm, MarcaForm
 
 def crear_categoria(request):
+    categorias = Categorias.objects.all()
     if request.method == 'POST':
-        form = CategoriaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('categorias') 
-    else:
-        form = CategoriaForm()
-    return render(request, 'productsHome.html', {'form': form})
+        nombre_categoria = request.POST.get('nombre_categoria')
+        Categorias.objects.create(nombre_categoria=nombre_categoria)
+        response_data = {"success": True}
+        return JsonResponse(response_data)
+    
+    return render(request, 'productsHome.html', {'categorias': categorias})
+
+
+
+
 
 def editar_categoria(request, categoria_id):
     categoria = get_object_or_404(Categorias, id_categoria=categoria_id)
@@ -170,11 +174,13 @@ def crear_marca(request):
     return render(request, 'productsHome.html', {'form': form})
 
 
-def eliminar_categoria(request, categoria_id):
+def eliminar_categoria(request):
     if request.method == 'POST':
         try:
-            cat = Categorias.objects.get(id_categoria=categoria_id)
-            cat.delete()
+            categoria_id = request.POST.get('idToDelete')  
+            categoria = get_object_or_404(Categorias, id_categoria=categoria_id)
+            categoria.delete()
+            
             return JsonResponse({'message': 'Registro eliminado con Éxito'})
         except Categorias.DoesNotExist:
             return JsonResponse({'error': 'Categoría no encontrada'})

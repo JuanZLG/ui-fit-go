@@ -120,8 +120,8 @@
 
     table thead.theads {
         text-align: center;
-        color: #000;
-        background-color: #2222;
+        color: #fff;
+        background-color: #000;
     }
 
     .table thead tr th {
@@ -371,7 +371,7 @@ html {
 <dialog id="verDetallesDialog" class="proveedorDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
-            <div class="estadoProveedorCircle {% if proveedor.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <div class="estadoProveedorCircle"></div>
             <h2>Información del Proveedor</h2>
             <button class="cerrar-proveedor" type="button" id="cerrarDetallesProveedor">
                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
