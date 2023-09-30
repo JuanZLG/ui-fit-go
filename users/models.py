@@ -27,8 +27,8 @@ class Usuarios(models.Model):
     class Meta:
         managed = False
         db_table = 'usuarios'
-    
-    
+       
+        
     # user_permissions = models.ManyToManyField(
     #     Permisos,
     #     verbose_name=('user permissions'),

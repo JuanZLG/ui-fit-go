@@ -126,21 +126,62 @@ def verDetallesProducto(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-def crearCategoria(request):
-    if request.method == 'POST':
-        nombre = request.POST['znombre']
-        categoria = Categorias.objects.create(nombre_categoria=nombre)
-        return JsonResponse({'success': True})
-    return render(request, 'createProduct.html')
+# def crearCategoria(request):
+#     if request.method == 'POST':
+#         nombre = request.POST['znombre']
+#         categoria = Categorias.objects.create(nombre_categoria=nombre)
+#         return JsonResponse({'success': True})
+#     return render(request, 'createProduct.html')
 
-from .forms import CategoriaForm
+from .forms import CategoriaForm, MarcaForm
 
 def crear_categoria(request):
     if request.method == 'POST':
         form = CategoriaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('categorias')  # Redirige a la página de listar categorías o la que desees
+            return redirect('categorias') 
     else:
         form = CategoriaForm()
     return render(request, 'productsHome.html', {'form': form})
+
+def editar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categorias, id_categoria=categoria_id)
+    
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+    else:
+        form = CategoriaForm(instance=categoria)
+    
+    return render(request, 'categoriesHome.html', {'form': form, 'categoria': categoria})
+
+
+def crear_marca(request):
+    if request.method == 'POST':
+        form = MarcaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('marcas') 
+    else:
+        form = MarcaForm()
+    return render(request, 'productsHome.html', {'form': form})
+
+
+def eliminar_categoria(request, categoria_id):
+    if request.method == 'POST':
+        try:
+            cat = Categorias.objects.get(id_categoria=categoria_id)
+            cat.delete()
+            return JsonResponse({'message': 'Registro eliminado con Éxito'})
+        except Categorias.DoesNotExist:
+            return JsonResponse({'error': 'Categoría no encontrada'})
+    else:
+        return JsonResponse({'error': 'Método no permitido.'})
+
+
+
+
+

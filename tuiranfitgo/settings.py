@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'tuiranfitgo.urls'
 
 TEMPLATES = [
@@ -75,7 +76,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '3127123250',
+        'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }

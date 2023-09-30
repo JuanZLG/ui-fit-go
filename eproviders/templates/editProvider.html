@@ -19,13 +19,13 @@
         color: transparent;
         animation: animarGradiente 3s linear infinite;
         font-weight: bold;
-        padding: 30px;
+        height:8.5vh;
+        padding:20px;
     }
 </style>
 
-
-
 <div class="center-content mt-5">
+    <br>
     <h1 class="modtitles">Modificar Proveedor</h1>
     <br>
     <div class="mb-4 col-md-7 p-0 card shadow">
@@ -78,8 +78,8 @@
                 </div>
                 <div class="form-row">
                     <label>Información Adicional</label>
-                    <textarea id="informacion" class="form-control" rows="4" cols="50"
-                        name="informacion">{{proveedor.informacion_adicional}}</textarea>
+                    <textarea id="informacion" class="form-control" rows="3" cols="50"
+                        name="informacion" style="resize: none; max-height: 200px;">{{proveedor.informacion_adicional}}</textarea>
                 </div>
                 <div class="text-end mt-3">
                     <button class="btn btn-success" type="submit">Guardar</button>

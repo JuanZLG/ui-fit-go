@@ -1,6 +1,6 @@
 {% extends "baseInterface.html" %}
 
-{% block title %} Marcas de Productos {% endblock %}
+{% block title %} Marcas {% endblock %}
 
 {% block body %}
 <style>
@@ -103,54 +103,140 @@
             justify-content: center;
             align-items: center;
             height: 70vh; 
-        }
+          }
+
+            .active-status {
+                background-color: #95eea5;
+                color: #09711c;
+            }
+        
+            .inactive-status {
+                background-color: #ec8080;
+                color: #8a0404;
+            }
+        
           </style>
 
-<div class="center-content">
-    <h1 class="modtitles">Marcas de Producto</h1></center>
-<br>
-
-        <div class="card shadow mb-3" style="width:60%">
-            <div class="card-header py-4 d-flex justify-content-center">
+          <center>
+            <h1 class="modtitles">Marcas de Producto</h1>
+        </center>
+        <br>
+        <div class="card shadow mb-4">
+            <div class="card-header" style="display: flex; justify-content: center; align-items:center;">
                 <span>
-                  <a href="#" class="m-0 btn btn-success btn-icon-split btn-add">
-                    <span class="icon">
-                        <i class="fa-solid fa-plus"></i>
+                    <a class="btn btn-success btn-icon-split btn-add" data-toggle="modal" data-target="#crearMarcaModal">
+                        <span class="icon">
+                            <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Marca</span>
                     </span>
-                </a>
+                    </a>
                 </span>
             </div>
         </div>
-
-        <div class="card shadow mb-4" style="width:60%">
+        <div class="card shadow mb-4">
             <div class="card-header py-4">
                 <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" width="80%" cellspacing="0">
-                <thead class="theads">
-                    <tr>
-                        <th>Nombre de Marca</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for mc in pbrands %}
-                    <tr>
-                        <td>{{mc.nombre_marca}}</td>
-                        <td>
-                            <a href="#" class="btn btn-sm"
-                            id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a class="btn btn-sm"
-                            id="deleteButton"><i class="fa-solid fa-trash-can" style="color: #f50f0f;"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    <style>
+                        .table-responsive{
+                        overflow-y: auto;
+                        max-height: 400px;
+                    }
+                    </style>
+                    <table class="table table-bordered mx-auto text-center" id="dataTable" width="60%">
+                        <thead class="theads">
+                            <tr>
+                                <th>Nombre de la Marca</th>
+                                <th>Estado</th>
+                                <th>Accion(es)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mc in pbrands %}
+                            <tr>
+                                <td>{{ mc.nombre_marca }}</td>
+                                <td><button
+                                    class="cambiar-estado statusbutton mx-3 active-status">Activo
+                                </button></td>
+                                <td>
+                                    <a href="#" class="btn btn-sm"
+                                    id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% comment %} <script>
+    $(document).ready(function() {
+        $(".delete-button").click(function() {
+            var marcaId = $(this).data("marca-id");
+    
+                Swal.fire({
+                    title: '¿Estás seguro de eliminar esta marca?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{% url 'eliminar_marca' marca.id_marca %}",
+
+                            data: {
+                                marca_id: marcaId,
+                            },
+                            method: "GET",
+                            success: function(response) {
+                                location.reload();
+                            },
+                            error: function(error) {
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+    </script> {% endcomment %}
+    
+    <div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Marca</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div class="card shadow mb-4 w-70">
+                            <div class="card-header py-4">
+                                <form method="post" action="{% url 'create_brand' %}">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-md-10 mb-1">
+                                            <label for="nombre_marca">Nombre de la Marca *</label>
+                                            <input type="text" class="form-control" id="nombre_marca" name="nombre_marca" placeholder="Ingrese un nombre" required>
+                                            <div style="margin-top:10px"></div>
+                                            <span class="error-message" id="nombre_marca-error"></span>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                        <button type="submit" class="btn btn-success mx-auto">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
-</div>
 
 {% endblock %}

@@ -35,13 +35,13 @@ from django.shortcuts import render, redirect
 #     return redirect('login')
 
 
-# def Home(request):
-#     user = Usuarios.objects.all()
-#     return render(request, 'usersHome.html', {"Users":user}) 
-
 def Home(request):
     user = Usuarios.objects.all()
-    return render(request, 'algo.html', {"Users":user}) 
+    return render(request, 'usersHome.html', {"Users":user}) 
+
+# def Home(request):
+#     user = Usuarios.objects.all()
+#     return render(request, 'algo.html', {"Users":user}) 
 
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

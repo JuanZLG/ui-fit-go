@@ -20,11 +20,13 @@
         color: transparent;
         animation: animarGradiente 3s linear infinite;
         font-weight: bold;
-        padding: 30px;
+        height:8.5vh;
+        padding:20px;
     }
 </style>
 
 <div class="center-content mt-5">
+    <br>
     <h1 class="modtitles">Agregar Proveedor</h1>
     <br>
     <div class="mb-4 col-md-7 p-0 card shadow">
@@ -39,7 +41,7 @@
                         <span class="error-message" id="nombre_proveedor-error"></span>
                     </div>
                     <div class="col-md-5 mb-3">
-                        <label for="telefono">Número de contacto *</label>
+                        <label for="telefono">Número de Contacto *</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Número"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '');" minlength="10" maxlength="10">
                         <span class="error-message" id="telefono-error"></span>
@@ -62,13 +64,13 @@
                     <div class="col-md-4 mb-3" style=" display: flex; flex-direction: column;">
                         <label>Tipo de Documento</label>
                         <select id="tipoIdentificacion" class="select-tipo" name="tipoIdentificacion">
-                            <option value="">Seleccionar tipo</option>
+                            <option value="">Seleccionar</option>
                             <option value="DOC">Documento</option>
                             <option value="NIT">NIT</option>
                         </select>
                     </div>
                     <div class="col-md-8 mb-3">
-                        <label>Numero de identificación</label>
+                        <label>Número de Identificación</label>
                         <input type="text" class="form-control" id="identificacion" name="identificacion"
                             placeholder="Documento o NIT">
                         <span class="error-message" id="identificacion-error"></span>
@@ -76,7 +78,7 @@
                 </div>
                 <div class="form-row">
                     <label>Información Adicional</label>
-                    <textarea id="informacion" class="form-control" rows="4" cols="50" name="informacion"></textarea>
+                    <textarea id="informacion" class="form-control" rows="3" cols="50" name="informacion" style="resize: none; max-height: 200px;"></textarea>
                 </div>
                 <div class="text-end mt-3">
                     <button class="btn btn-success mx-auto" type="submit">Guardar</button>
