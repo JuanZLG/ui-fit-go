@@ -3,140 +3,149 @@
 {% block body %}
 <style>
     .table {
-              width: 80%;
-          }
-      
-          table thead.theads {
-              text-align: center;
-              color: white;
-              background-color: #222222;
-          }
-      
-          table tbody.tbody {
-              text-align: center;
-          }
-      
-          .modtitles {
-              font-size: 2em;
-              background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-              background-size: 200% 200%;
-              -webkit-background-clip: text;
-              background-clip: text;
-              color: transparent;
-              animation: animarGradiente 3s linear infinite;
-              font-weight: bold;
-          }
-  
-          /* Toco repetir codigo para cambiar el blanco */
-          .btn-add,
-          .btn-dash {
-              color: #000;
-              font-weight: 600;
-          }
-      
-          .btn-add:hover,
-          .btn-dash:hover {
-              color: #000;
-          }
-      
-          .btn-add {
-              padding: 0;
-              width: auto;
-              block-size: 6vh;
-              background-color: #85da85;
-              display: flex;
-              align-items: center;
-          }
-      
-          .btn-add:hover {
-              background-color: #72d072;
-          }
-      
-          .btn-dash {
-              background-color: #c55c5c;
-          }
-      
-          .btn-dash:hover {
-              background-color: #ba4d4d;
-          }
-      
-          tr.inactivo {
-              background-color: #ccc;
-              /* Cambia el fondo a un tono más claro */
-              color: #676666;
-          }
-      
-          .statusbutton {
-              width: 5rem;
-              border-radius: 3px;
-              border: none;
-          }
-      
-          .statusbutton:hover {
-              opacity: 0.9;
-          }
-      
-          #editbutton {
-              background-color: #FFFF99;
-              color: #000;
-              /* background-color: #3498db; */
-              border: none;
-              transition: transform 0.5s;
-      
-          }
-      
-          #detailsbutton {
-              background-color: #419edd;
-              color: #000;
-              /* background-color: #1e3799; */
-              border: none;
-              transition: transform 0.5s;
-          }
-      
-          #editbutton:hover,
-          #detailsbutton:hover {
-              transform: scale(1.1);
-          }
-      
-          .cell-actions {
-              display: flex;
-              justify-content: space-around;
-          }
-      
-          .active-status {
-              background-color: #95eea5;
-              color: #09711c;
-          }
-      
-          .inactive-status {
-              background-color: #ec8080;
-              color: #8a0404;
-          }
-          </style>
+        width: 80%;
+    }
 
-<center><h1 class="modtitles">Gestión de Usuarios</h1></center>
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+    tr.inactivo {
+        background-color: #ccc;
+        /* Cambia el fondo a un tono más claro */
+        color: #676666;
+    }
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        /* background-color: #1e3799; */
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+<center>
+    <h1 class="modtitles">Gestión de Usuarios</h1>
+</center>
 <br>
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex justify-content-between">
-                <span>
-                  <a href="{% url 'createAUser' %}" class="m-0 btn btn-success btn-icon-split btn-add">
-                    <span class="icon">
-                        <i class="fa-solid fa-plus"></i>
-                        <span class="text">Agregar Usuario</span>
-                    </span>
-                </a>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <span>
+            <a href="{% url 'createAUser' %}" class="m-0 btn btn-success btn-icon-split btn-add">
+                <span class="icon">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="text">Agregar Usuario</span>
                 </span>
-                <span class="d-flex align-items-end">
-                  <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-                  <button class="btn btn-danger btn-dash">Generar Informe</button>
-              </span>
-            </div>
-        </div>
+            </a>
+            <a href="{% url 'HomeRoles' %}" class="m-0 btn btn-success btn-icon-split btn-add">
+                <span class="icon">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="text">ROL</span>
+                </span>
+            </a>
+        </span>
+        <span class="d-flex align-items-end">
+            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
+            <button class="btn btn-danger btn-dash">Generar Informe</button>
+        </span>
+    </div>
+</div>
 
-        <div class="card shadow mb-4">
-            <div class="card-header py-4">
-                <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="80%" cellspacing="0">
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="80%"
+                cellspacing="0">
                 <thead class="theads">
                     <tr>
                         <th>Rol</th>
@@ -153,7 +162,7 @@
                         <td>{{u.nombre_usuario}}</td>
                         <td>{{u.correo}}</td>
                         <td>
-                          <button
+                            <button
                                 class="cambiar-estado statusbutton mx-3 {% if u.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-usuario-id="{{ u.id_usuario }}"
                                 data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}">
@@ -165,13 +174,14 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm"id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm" id="editbutton"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
                             <button type="button" class="btn btn-sm btn-primary verUsuario"
-                            data-usu-id="{{ u.id_usuario }}">
-                            <i class="fa-solid fa-eye"></i>
+                                data-usu-id="{{ u.id_usuario }}">
+                                <i class="fa-solid fa-eye"></i>
                             </button>
-                          </a>
-                      </td>
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -182,9 +192,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script>
+<script>
     $(document).ready(function () {
         $(".cambiar-estado").click(function () {
             var usuarioId = $(this).data("usuario-id");
