@@ -4,37 +4,39 @@
 
 {% block body %}
 
-<center><h1 class="modtitles">Gestión de Productos</h1></center>
+<center>
+    <h1 class="modtitles">Gestión de Productos</h1>
+</center>
 <br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
-        <div class="d-flex flex-row justify-content-between" >
-        <span class="mx-2">
-            <a href="{% url 'createAProduct' %}" class="btn btn-success btn-icon-split btn-add">
-                <span class="icon">
-                    <i class="fa-solid fa-plus" id="addicon"></i>
-                <span class="text">Agregar Producto</span>
+        <div class="d-flex flex-row justify-content-between">
+            <span class="mx-2">
+                <a href="{% url 'createAProduct' %}" class="btn btn-success btn-icon-split btn-add">
+                    <span class="icon">
+                        <i class="fa-solid fa-plus" id="addicon"></i>
+                        <span class="text">Agregar Producto</span>
+                    </span>
+                </a>
             </span>
-            </a>
-        </span>
-        <span class="mx-2">
-            <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
-                <span class="icon">
-                    <i class="fa-solid fa-plus" id="addicon"></i>
-                <span class="text">Agregar Categoria</span>
+            <span class="mx-2">
+                <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
+                    <span class="icon">
+                        <i class="fa-solid fa-plus" id="addicon"></i>
+                        <span class="text">Agregar Categoria</span>
+                    </span>
+                </a>
             </span>
-            </a>
-        </span>
 
-        <span class="mx-2">
-            <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearMarcaModal">
-                <span class="icon">
-                    <i class="fa-solid fa-plus" id="addicon"></i>
-                <span class="text">Agregar Marca</span>
+            <span class="mx-2">
+                <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearMarcaModal">
+                    <span class="icon">
+                        <i class="fa-solid fa-plus" id="addicon"></i>
+                        <span class="text">Agregar Marca</span>
+                    </span>
+                </a>
             </span>
-            </a>
-        </span>
-    </div>
+        </div>
 
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
@@ -42,15 +44,15 @@
         </span>
     </div>
 </div>
-        <div class="card shadow mb-4">
-            <div class="card-header py-4">
-                <div class="table-responsive">
-                    <style>
-                        .table-responsive{
-                        overflow-y: auto;
-                        max-height: 400px;
-                    }
-                    </style>
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <div class="table-responsive">
+            <style>
+                .table-responsive {
+                    overflow-y: auto;
+                    max-height: 400px;
+                }
+            </style>
 
             <table class="table table-bordered mx-auto text-center" id="dataTable" width="80%" cellspacing="0">
                 <thead class="theads">
@@ -71,9 +73,9 @@
                         <td>{{p.id_marca.nombre_marca}}</td>
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
-                        <td>{{p.precio}}</td>
+                        <td>{{p.precio|floatformat:'-2' }}</td>
                         <td>
-                          <button
+                            <button
                                 class="cambiar-estado statusbutton mx-3 {% if p.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-producto-id="{{ p.id_producto }}"
                                 data-nuevo-estado="{% if p.estado == 1 %}0{% else %}1{% endif %}">
@@ -85,13 +87,13 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm"
-                            id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm" id="editbutton"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
                             <button type="button" class="btn btn-sm btn-primary verProducto"
-                            data-prod-id="{{ p.id_producto }}">
-                            <i class="fa-solid fa-eye"></i>
+                                data-prod-id="{{ p.id_producto }}">
+                                <i class="fa-solid fa-eye"></i>
                             </button>
-                      </td>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -101,10 +103,10 @@
 </div>
 </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script>
+<script>
     $(document).ready(function () {
         $(".cambiar-estado").click(function () {
             var productoId = $(this).data("producto-id");
@@ -137,241 +139,241 @@
     });
 </script>
 
-  <style>
-  .table {
-            width: 80%;
-        }
-    
-        table thead.theads {
-            text-align: center;
-            color: white;
-            background-color: #222222;
-        }
-    
-        table tbody.tbody {
-            text-align: center;
-        }
-    
-        .modtitles {
-            font-size: 2em;
-            background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: animarGradiente 3s linear infinite;
-            font-weight: bold;
+<style>
+    .table {
+        width: 80%;
+    }
+
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+    tr.inactivo {
+        background-color: #ccc;
+        /* Cambia el fondo a un tono más claro */
+        color: #676666;
+    }
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #addc {
+        background-color: #FFFF99;
+    }
+
+    #addc:hover {
+        background-color: DEDE89;
+    }
+
+
+    #detailsbutton {
+        background-color: #419edd;
+        color: #000;
+        /* background-color: #1e3799; */
+        border: none;
+        transition: transform 0.5s;
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+<style>
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.833);
+        z-index: 100;
+        display: none;
+        animation: fadeInBack 0.3s ease-in-out;
+    }
+
+    .productoDialog {
+        max-width: 70%;
+        width: 30%;
+        min-height: 10vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
         }
 
-        /* Toco repetir codigo para cambiar el blanco */
-        .btn-add,
-        .btn-dash {
-            color: #000;
-            font-weight: 600;
+        to {
+            opacity: 1;
+            transform: scale(1);
         }
-    
-        .btn-add:hover,
-        .btn-dash:hover {
-            color: #000;
-        }
-    
-        .btn-add {
-            padding: 0;
-            width: auto;
-            block-size: 6vh;
-            background-color: #85da85;
-            display: flex;
-            align-items: center;
-        }
-    
-        .btn-add:hover {
-            background-color: #72d072;
-        }
-    
-        .btn-dash {
-            background-color: #c55c5c;
-        }
-    
-        .btn-dash:hover {
-            background-color: #ba4d4d;
-        }
-    
-        tr.inactivo {
-            background-color: #ccc;
-            /* Cambia el fondo a un tono más claro */
-            color: #676666;
-        }
-    
-        .statusbutton {
-            width: 5rem;
-            border-radius: 3px;
-            border: none;
-        }
-    
-        .statusbutton:hover {
-            opacity: 0.9;
-        }
-    
-        #editbutton {
-            background-color: #FFFF99;
-            color: #000;
-            /* background-color: #3498db; */
-            border: none;
-            transition: transform 0.5s;
-    
+    }
+
+    @keyframes fadeInBack {
+        from {
+            opacity: 0;
         }
 
-        #addc{
-            background-color: #FFFF99;
+        to {
+            opacity: 1;
         }
+    }
 
-        #addc:hover{
-            background-color: DEDE89;
-        }
+    .fadeOut {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
 
-    
-        #detailsbutton {
-            background-color: #419edd;
-            color: #000;
-            /* background-color: #1e3799; */
-            border: none;
-            transition: transform 0.5s;
-        }
-    
-        #editbutton:hover,
-        #detailsbutton:hover {
-            transform: scale(1.1);
-        }
-    
-        .cell-actions {
-            display: flex;
-            justify-content: space-around;
-        }
-    
-        .active-status {
-            background-color: #95eea5;
-            color: #09711c;
-        }
-    
-        .inactive-status {
-            background-color: #ec8080;
-            color: #8a0404;
-        }
-        </style>
 
-        <style>
-            .modal-backdrop {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.833);
-                z-index: 100;
-                display: none;
-                animation: fadeInBack 0.3s ease-in-out;
-            }
-        
-            .productoDialog {
-                max-width: 70%;
-                width: 30%;
-                min-height: 10vh;
-                border: none;
-                background-color: rgb(255, 255, 255);
-                border-radius: 8px;
-                position: relative;
-                overflow: hidden;
-                box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-                animation: fadeIn 0.3s ease-in-out;
-            }
-        
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: scale(0.9);
-                }
-        
-                to {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-            }
-        
-            @keyframes fadeInBack {
-                from {
-                    opacity: 0;
-                }
-        
-                to {
-                    opacity: 1;
-                }
-            }
-        
-            .fadeOut {
-                opacity: 0;
-                transition: opacity 0.3s ease-in-out;
-            }
-        
-        
-            .productoDialog .modal-container-header {
-                text-align: center;
-                border-bottom: 1px solid #ddd;
-            }
-        
-            .productoDialog h2 {
-                font-size: 1.125rem;
-                font-weight: 700;
-                gap: 8px;
-            }
-        
-            .cerrar-producto {
-                padding: 0;
-                border: 0;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-                cursor: pointer;
-                border-radius: 8px;
-                transition: 0.15s ease;
-                position: absolute;
-                top: 0;
-                right: 0;
-            }
-        
-            .estadoProductoCircle {
-                width: 1rem;
-                height: 1rem;
-                border-radius: 50%;
-            }
-        
-            .estadoProductoCircle.activo {
-                background-color: #72d072;
-            }
-        
-            .estadoProductoCircle.inactivo {
-                background-color: #ba4d4d;
-            }
-        
-        
-            .productoDialog section {
-                padding: 20px;
-            }
-        
-            .productoDialog section p {
-                font-size: 1rem;
-                font-weight: bold;
-                color: #222222;
-            }
-        
-            .productoDialog section p span {
-                color: rgb(99, 99, 99);
-            }
-        </style>
-      
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    .productoDialog .modal-container-header {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .productoDialog h2 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        gap: 8px;
+    }
+
+    .cerrar-producto {
+        padding: 0;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.15s ease;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .estadoProductoCircle {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+    }
+
+    .estadoProductoCircle.activo {
+        background-color: #72d072;
+    }
+
+    .estadoProductoCircle.inactivo {
+        background-color: #ba4d4d;
+    }
+
+
+    .productoDialog section {
+        padding: 20px;
+    }
+
+    .productoDialog section p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #222222;
+    }
+
+    .productoDialog section p span {
+        color: rgb(99, 99, 99);
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
 
 <div class="modal-backdrop"></div>
@@ -379,7 +381,7 @@
 <dialog id="verDetalleDialog" class="productoDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
-            <div class="estadoProductoCircle {% if '#status' == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <div class="estadoProductoCircle"></div>
             <h2>Información del Producto</h2>
             <button class="cerrar-producto" type="button" id="cerrarDetalleProducto">
                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -415,7 +417,6 @@
                 method: "GET",
                 success: function (response) {
                     var producto = response.success;
-                    $("#status").text(producto.estado);
                     $("#nameProd").text(producto.nombre_producto);
                     $("#catProd").text(producto.categoria);
                     $("#brandProd").text(producto.marca);
@@ -426,11 +427,13 @@
                     $("#cantProd").text(producto.cantidad);
                     $("#saborProd").text(producto.sabor);
                     $("#tamanoProd").text(producto.servicios);
-                    if (producto.estado == 1) {
+
+                    if (producto.status == 1) {
                         $(".estadoProductoCircle").addClass("activo").removeClass("inactivo");
                     } else {
                         $(".estadoProductoCircle").addClass("inactivo").removeClass("activo");
                     }
+                    
                     document.getElementById("verDetalleDialog").showModal();
                     $(".productoDialog").addClass("fadeIn");
                     $(".modal-backdrop").show();
@@ -453,7 +456,8 @@
 
 </script>
 
-<div class="modal fade" id="crearCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="crearCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -463,30 +467,32 @@
                 </button>
             </div>
             <div class="modal-body">
-                    <div class="card shadow mb-4 w-70">
-                        <div class="card-header py-4">
-                            <form method="post" action="{% url 'create_category' %}">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="col-md-10 mb-1">
-                                        <label for="nombre_categoria">Nombre de la Categoria *</label>
-                                        <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" placeholder="Ingrese un nombre" required>
-                                        <div style="margin-top:10px"></div>
-                                        <span class="error-message" id="nombre_categoria-error"></span>
-                                    </div>
+                <div class="card shadow mb-4 w-70">
+                    <div class="card-header py-4">
+                        <form method="post" action="{% url 'create_category' %}">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col-md-10 mb-1">
+                                    <label for="nombre_categoria">Nombre de la Categoria *</label>
+                                    <input type="text" class="form-control" id="nombre_categoria"
+                                        name="nombre_categoria" placeholder="Ingrese un nombre" required>
+                                    <div style="margin-top:10px"></div>
+                                    <span class="error-message" id="nombre_categoria-error"></span>
+                                </div>
                             </div>
-                        </div>
                     </div>
-                    <div class="text-end">
+                </div>
+                <div class="text-end">
                     <button type="submit" class="btn btn-success mx-auto">Guardar</button>
-                    </div>
+                </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -496,23 +502,24 @@
                 </button>
             </div>
             <div class="modal-body">
-                    <div class="card shadow mb-4 w-70">
-                        <div class="card-header py-4">
-                            <form method="post" action="{% url 'create_brand' %}">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="col-md-10 mb-1">
-                                        <label for="nombre_marca">Nombre de la Marca *</label>
-                                        <input type="text" class="form-control" id="nombre_marca" name="nombre_marca" placeholder="Ingrese un nombre" required>
-                                        <div style="margin-top:10px"></div>
-                                        <span class="error-message" id="nombre_marca-error"></span>
-                                    </div>
+                <div class="card shadow mb-4 w-70">
+                    <div class="card-header py-4">
+                        <form method="post" action="{% url 'create_brand' %}">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col-md-10 mb-1">
+                                    <label for="nombre_marca">Nombre de la Marca *</label>
+                                    <input type="text" class="form-control" id="nombre_marca" name="nombre_marca"
+                                        placeholder="Ingrese un nombre" required>
+                                    <div style="margin-top:10px"></div>
+                                    <span class="error-message" id="nombre_marca-error"></span>
+                                </div>
                             </div>
-                        </div>
                     </div>
-                    <div class="text-end">
+                </div>
+                <div class="text-end">
                     <button type="submit" class="btn btn-success mx-auto">Guardar</button>
-                    </div>
+                </div>
                 </form>
             </div>
         </div>
