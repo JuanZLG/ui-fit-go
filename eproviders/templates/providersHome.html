@@ -11,7 +11,7 @@
 <br>
 <div class="card shadow mb-4">
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
-        <span> 
+        <span>
             <a href="{%url 'crearProveedor'%}" class="m-0 btn btn-success btn-icon-split btn-add">
                 <span class="icon ">
                     <i class="fa-solid fa-plus"></i>
@@ -28,13 +28,18 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
+            <style>
+                .table-responsive{
+                overflow-y: auto;
+                max-height: 400px;
+            }
+            </style>
             <table class="table table-bordered mx-auto text-center" id="dataTable">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th> <!-- parce Julian no lo elimines hasta que no terminemos jaja o_O ya lo he cambiado 7800 veces -->
                         <th>Nombre del proveedor</th>
                         <th>Teléfono</th>
-                        <th>Correo</th>
+                        <th>Correo Electrónico</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -42,7 +47,6 @@
                 <tbody>
                     {% for proveedor in proveedores %}
                     <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
-                        <td>{{ proveedor.id_proveedor }}</td>
                         <td>{{ proveedor.nombre_proveedor }}</td>
                         <td>{{ proveedor.telefono }}</td>
                         <td>{{ proveedor.correo }}</td>
@@ -116,13 +120,18 @@
 
     table thead.theads {
         text-align: center;
-        color: white;
-        background-color: #222222;
+        color: #fff;
+        background-color: #000;
+    }
+
+    .table thead tr th {
+        border: none;
     }
 
     table tbody.tbody {
         text-align: center;
     }
+
 
     .modtitles {
         font-size: 2em;
@@ -135,7 +144,6 @@
         font-weight: bold;
     }
 
-    /* Toco repetir codigo para cambiar el blanco */
     .btn-add,
     .btn-dash {
         color: #000;
@@ -223,6 +231,10 @@
 
 
 <style>
+
+html {
+        box-sizing: border-box;
+    }
     .modal-backdrop {
         position: fixed;
         top: 0;
@@ -236,8 +248,7 @@
     }
 
     .proveedorDialog {
-        max-width: 70%;
-        width: 30%;
+        width: 40%;
         min-height: 10vh;
         border: none;
         background-color: rgb(255, 255, 255);
@@ -312,28 +323,44 @@
 
     .estadoProveedorCircle.activo {
         background-color: #72d072;
-        /* Color para estado activo */
     }
 
     .estadoProveedorCircle.inactivo {
         background-color: #ba4d4d;
-        /* Color para estado inactivo */
+    }
+
+    .cont-identificacion {
+        padding: 5px;
+        color: #3c3636;
+        font-weight: 700;
+        border-bottom: 1px solid #ddd;
+
+    }
+    .seccion-detalles {
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px solid #ddd;
+
+    } .seccion-detalles div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .seccion-detalles div p {
+        margin: 8px;
+        font-weight: 600;
+    } .seccion-detalles div span {
+        color: #3c3636;
+    }
+    .informacion-adicional {
+        padding: 0 10px;
+        margin-top: 10px;
+        font-weight: 600;
+    } .informacion-adicional #informacion {
+        color: #3c3636;
     }
 
 
-    .proveedorDialog section {
-        padding: 20px;
-    }
-
-    .proveedorDialog section p {
-        font-size: 1rem;
-        font-weight: bold;
-        color: #222222;
-    }
-
-    .proveedorDialog section p span {
-        color: rgb(99, 99, 99);
-    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -344,7 +371,7 @@
 <dialog id="verDetallesDialog" class="proveedorDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
-            <div class="estadoProveedorCircle {% if proveedor.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
+            <div class="estadoProveedorCircle"></div>
             <h2>Información del Proveedor</h2>
             <button class="cerrar-proveedor" type="button" id="cerrarDetallesProveedor">
                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -355,11 +382,22 @@
                 </svg>
             </button>
         </div>
-        <section>
-            <p>Nombre del Proveedor: <span id="nombreProveedor"></span></p>
-            <p>Teléfono: <span id="telefonoProveedor"></span></p>
-            <p>Correo: <span id="correoProveedor"></span></p>
+        <div id="identificacionRow" class="cont-identificacion">Identificación : <span
+                id="tipo" class="mr-2"></span><span id="identificacion"></span></div>
+        <section class="seccion-detalles">
+            <div>
+                <p>Nombre del Proveedor: <span class="proveedor-info" id="nombreProveedor"></p>
+                <p>Teléfono: <span class="proveedor-info" id="telefonoProveedor"></span></p>
+            </div>
+            <div>
+                <p>Correo: <span id="correoProveedor"></span></p>
+                <p id="direccionRow">Dirección : <span id="direccion"></span></p>
+            </div>
         </section>
+        <div id="informacionRow" class="informacion-adicional">
+            <p>Información Adicional :</p>
+            <p id="informacion"></p>
+        </div>
     </form>
 </dialog>
 
@@ -378,11 +416,35 @@
                     $("#nombreProveedor").text(proveedor.nombre_proveedor);
                     $("#telefonoProveedor").text(proveedor.telefono);
                     $("#correoProveedor").text(proveedor.correo);
+
+                    if (proveedor.identificacion !== "") {
+                        $("#tipo").text(proveedor.tipo);
+                        $("#identificacion").text(proveedor.identificacion);
+                        $("#identificacionRow").show(); // Mostramos la fila de identificación
+                    } else {
+                        $("#identificacionRow").hide(); // Ocultamos la fila de identificación
+                    }
+
+                    if (proveedor.direccion !== "") {
+                        $("#direccion").text(proveedor.direccion);
+                        $("#direccionRow").show(); // Mostramos la fila de dirección
+                    } else {
+                        $("#direccionRow").hide(); // Ocultamos la fila de dirección
+                    }
+
+                    if (proveedor.informacion !== "") {
+                        $("#informacion").text(proveedor.informacion);
+                        $("#informacionRow").show(); // Mostramos la fila de dirección
+                    } else {
+                        $("#informacionRow").hide();
+                    }
+
                     if (proveedor.estado == 1) {
                         $(".estadoProveedorCircle").addClass("activo").removeClass("inactivo");
                     } else {
                         $(".estadoProveedorCircle").addClass("inactivo").removeClass("activo");
                     }
+
                     document.getElementById("verDetallesDialog").showModal();
                     $(".proveedorDialog").addClass("fadeIn");
                     $(".modal-backdrop").show();
@@ -402,6 +464,6 @@
             }, 300);
         });
     });
-
 </script>
+
 {% endblock %}

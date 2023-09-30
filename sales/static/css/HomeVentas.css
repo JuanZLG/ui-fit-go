@@ -95,7 +95,6 @@ tr.inactivo {
 
 
 
-
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -110,7 +109,7 @@ tr.inactivo {
 
 .ventaDialog {
     max-width: 70%;
-    width: 30%;
+    width: 40%;
     min-height: 10vh;
     border: none;
     background-color: rgb(255, 255, 255);
@@ -202,34 +201,29 @@ tr.inactivo {
 .cont-detalle-header {
     padding: 20px;
 }
-
-.VentaDialog section p {
+.cont-detalle-header p {
     font-size: 1rem;
     font-weight: bold;
     color: #222222;
 }
-
-.VentaDialog section p span {
+.cont-detalle-header p span {
     color: rgb(99, 99, 99);
 }
-
-
-.table-detalles {
-    margin: auto;
+.tabla-detalles {
     width: 100%;
-
-}
-.table-detalles thead {
+    background-color: #2222;
     text-align: center;
+} 
+.tabla-detalles tbody tr:hover {
+    background-color: #22202022;
 }
 
-
-
-.cont-detalle-total {
+.total-venta {
+    padding: 10px 8px;
+    border: 3px solid #ccc;
+    border-radius: 5px;
+    background-color: #22202022;
     display: flex;
-    justify-content: flex-end;
     gap: 10px;
-    padding: 10px;
-    margin-right: 10px;
 }
 

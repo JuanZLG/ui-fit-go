@@ -1,0 +1,157 @@
+{% extends "baseInterface.html" %} 
+
+{% block title %} Modificar Usuario {% endblock %} 
+
+{% block body %}
+<center><h1 class="h3 text-black-800 mb-4">Modificar Usuario</h1></center>
+
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6">
+        <div class="card shadow">
+          <div class="card-body p-4">
+            <form class="form" id="usuario-form" method="post">
+            {% csrf_token %}
+      
+      <div class="form-group">
+        <label for="categoria">Rol del Usuario</label>
+        <select class="form-select" aria-label="Default" name="iRole" id="iRole">
+          {% for r in rols %}
+          <option value="{{ r.id_rol }}"
+                {% if r.id_rol == people.id_rol.id_rol %} selected {% endif %}>
+                {{ r.nombre_rol }}
+              </option>
+          {% endfor %}
+        </select>
+        <div class="error-message" style="color:red;" id="iRole-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre de Usuario *</label>
+        <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese un nombre de usuario" value="{{ people.nombre_usuario }}"/>
+        <div class="error-message" style="color:red;" id="iNombre-error"></div>
+      </div>
+      
+      <div class="form-group">
+        <label>Correo *</label>
+        <input type="text" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" value="{{ people.correo }}"/>
+        <div class="error-message" style="color:red;" id="iCorreo-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña *</label>
+        <input type="text" class="form-control" id="iPassword" name="iPassword" placeholder="Ingrese una contraseña" value="{{ people.contrasena }}"/>
+        <div class="error-message" style="color:red;" id="iPassword-error"></div>
+      </div>
+  
+      <div class="text-center">
+        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+  var fechaActual = new Date().toISOString().split("T")[0];
+  document.getElementById("iFechaven").min = fechaActual;
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+<script>
+    $(document).ready(function () {
+
+        $('#iRole, #iNombre, #iCorreo, #iPassword').on('change', function () {
+            ocultarError($(this));
+        });
+
+        function validarCamposLlenos() {
+            let camposLlenos = true;
+            const nombreValue = $('#iNombre').val();
+            const emailValue = $('#iCorreo').val();
+            const pwValue = $('#iPassword').val();
+            const roleValue = $('#iRole').val();
+    
+            if (!nombreValue) {
+                mostrarError('#iNombre', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarNombreUsuario(nombreValue)) {
+                mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
+                camposLlenos = false;
+            }
+    
+            if (!emailValue) {
+                mostrarError('#iCorreo', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarCorreo(emailValue)) {
+                mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
+                camposLlenos = false;
+            }
+    
+            if (!pwValue) {
+                mostrarError('#iPassword', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarContraseña(pwValue)) {
+                mostrarError('#iPassword', 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.');
+                camposLlenos = false;
+            }
+    
+            return camposLlenos;
+        }
+    
+        function validarCorreo(correo) {
+            // Debe contener al menos un "@" y un "."
+            const correoRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+            return correoRegex.test(correo);
+        }
+        
+        function validarContraseña(contraseña) {
+            // Debe tener al menos 8 caracteres, una mayúscula y un número
+            const contraseñaRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+            return contraseñaRegex.test(contraseña);
+        }
+        
+        function validarNombreUsuario(name) {
+            const nombreFormateado = name.charAt(0).toUpperCase() + name.slice(1);
+            
+            // Validar que no contenga caracteres especiales ni números
+            const nombreUsuarioRegex = /^[A-Za-z]+$/; // Nombre de usuario solo letras (mayúsculas o minúsculas)
+            return nombreUsuarioRegex.test(nombreFormateado);
+        }
+        
+        function mostrarError(selector, mensaje) {
+            $(selector).addClass('is-invalid');
+            $(`${selector}-error`).text(mensaje);
+        }
+    
+        function ocultarError($campo) {
+            $campo.removeClass('is-invalid');
+            $campo.siblings('.error-message').text('');
+        }
+    
+        $('#usuario-form').submit(function (event) {
+            event.preventDefault();
+            if (!validarCamposLlenos()) {
+                return;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'editAUser' people.id_usuario %}",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        alert('Usuario Guardado.');
+                        window.location.href = "{% url 'usuarios' %}";
+                    }
+                }
+            });
+        });
+    });
+    
+</script>
+
+{% endblock %}

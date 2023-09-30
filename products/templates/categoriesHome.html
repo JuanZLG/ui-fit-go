@@ -1,147 +1,154 @@
 {% extends "baseInterface.html" %}
 
-{% block title %} Categorías de Productos {% endblock %}
+{% block title %} Categorías {% endblock %}
 
 {% block body %}
+
 <style>
     .table {
-              width: 80%;
-          }
-      
-          table thead.theads {
-              text-align: center;
-              color: white;
-              background-color: #222222;
-          }
-      
-          table tbody.tbody {
-              text-align: center;
-          }
-      
-          .modtitles {
-              font-size: 2em;
-              background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-              background-size: 200% 200%;
-              -webkit-background-clip: text;
-              background-clip: text;
-              color: transparent;
-              animation: animarGradiente 3s linear infinite;
-              font-weight: bold;
-              padding:2px;
-          }
-  
-          /* Toco repetir codigo para cambiar el blanco */
-          .btn-add,
-          .btn-dash {
-              color: #000;
-              font-weight: 600;
-          }
-      
-          .btn-add:hover,
-          .btn-dash:hover {
-              color: #000;
-          }
-      
-          .btn-add {
-              padding: 0;
-              width: auto;
-              block-size: 6vh;
-              background-color: #85da85;
-              display: flex;
-              align-items: center;
-          }
-      
-          .btn-add:hover {
-              background-color: #72d072;
-          }
-      
-          .btn-dash {
-              background-color: #c55c5c;
-          }
-      
-          .btn-dash:hover {
-              background-color: #ba4d4d;
-          }
-      
-          tr.inactivo {
-              background-color: #ccc;
-              /* Cambia el fondo a un tono más claro */
-              color: #676666;
-          }
-      
-          .statusbutton {
-              width: 5rem;
-              border-radius: 3px;
-              border: none;
-          }
-      
-          .statusbutton:hover {
-              opacity: 0.9;
-          }
-      
-          #deleteButton {
-              background-color: transparent;
-              color: #000;
-              /* background-color: #3498db; */
-              border: none;
-              transition: transform 0.5s;
-      
-          }
-      
-          #deleteButton:hover {
-              background-color:white;
-          }
-      
-          .cell-actions {
-              display: flex;
-              justify-content: space-around;
-          }
-      
-          .center-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 70vh; 
-            }
-          </style>
+        width: 80%;
+    }
 
-<div class="center-content">
-<h1 class="modtitles">Categorías de Producto</h1>
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
+
+    table tbody.tbody {
+        text-align: center;
+    }
+
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+        height: 5.7vh;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .cell-actions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+
+<center>
+    <h1 class="modtitles">Categorías de Producto</h1>
+</center>
 <br>
-
-        <div class="card shadow mb-3" style="width:60%">
-            <div class="card-header py-3 d-flex justify-content-center">
-                <span>
-                  <a href="#" class="m-0 btn btn-success btn-icon-split btn-add">
-                    <span class="icon">
-                        <i class="fa-solid fa-plus"></i>
-                        <span class="text">Agregar Categoría</span>
-                    </span>
-                </a>
+<div class="card shadow mb-4">
+    <div class="card-header" style="display: flex; justify-content: center; align-items:center;">
+        <span>
+            <a class="btn btn-success btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
+                <span class="icon">
+                    <i class="fa-solid fa-plus" id="addicon"></i>
+                    <span class="text">Agregar Categoria</span>
                 </span>
-            </div>
-        </div>
-
-        <div class="card shadow mb-4" style="width:60%">
-            <div class="card-header py-4">
-                <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" width="80%" cellspacing="0">
+            </a>
+        </span>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-4">
+        <div class="table-responsive">
+            <style>
+                .table-responsive {
+                    overflow-y: auto;
+                    max-height: 400px;
+                }
+            </style>
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="60%">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Nombre de la Categoría</th>
-                        <th>Acción</th>
+                        <th style="color:red;">Estado</th>
+                        <th>Accion(es)</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ct in cats %}
                     <tr>
-                        <td>{{ct.id_categoria}}</td>
-                        <td>{{ct.nombre_categoria}}</td>
+                        <td>{{ ct.nombre_categoria }}</td>
+                        <td class="cell-actions"><button class="cambiar-estado statusbutton mx-3 active-status">Activo
+                            </button></td>
                         <td>
-                            <a class="btn btn-sm"
-                            id="deleteButton"><i class="fa-solid fa-trash-can" style="color: #f50f0f;"></i></a>
+                            <a class="btn btn-sm btn-danger delete-button" data-id-categoria="{{ ct.id_categoria }}"
+                                style="height:27px;"><i class="fa-solid fa-trash-can fa-sm"
+                                    style="color: #ffffff;"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -150,7 +157,174 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="crearCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Categoría</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow mb-4 w-70">
+                    <div class="card-header py-4">
+                        <form class="form" id="category-form" method="post">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col-md-10 mb-1">
+                                    <label for="nombre_categoria">Nombre de la Categoria *</label>
+                                    <input type="text" class="form-control" id="nombre_categoria"
+                                        name="nombre_categoria" placeholder="Ingrese un nombre">
+                                    <div style="margin-top:10px"></div>
+                                    <span class="error-message" id="nombre_categoria-error"></span>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-success mx-auto" id="guardarCategoria">Guardar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        
+        $("#nombre_categoria").on('input', function () {
+            $("#nombre_categoria-error").text("");
+            $("#nombre_categoria").removeClass("is-invalid")
+        });
+
+        $("#guardarCategoria").click(function () {
+            camposValidos = true;
+            if ($("#nombre_categoria").val().trim() === "") {
+                $("#nombre_categoria").addClass("is-invalid")
+                $('#nombre_categoria-error').text('Este campo es obligatorio.').css("color", "red");
+                camposValidos = false;
+            } else {
+                $("#nombre_categoria").removeClass("is-invalid")
+                $('#nombre_categoria-error').text('');
+            }
+
+            if (!camposValidos) {
+                return;
+            } else {
+                enviarDatosCategoria();
+            }
+        });
+
+
+        function enviarDatosCategoria() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'create_category' %}",
+                data: $('#category-form').serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        alert("La categoria ha sido guardada exitosamente");
+                        location.reload();
+                    }
+                }
+            });
+        }
+
+    });
+</script>
+
+
+
+<div class="modal fade" id="editarCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Modificar Categoría</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow mb-4 w-70">
+                    <div class="card-header py-4">
+                        <form method="post" id="editarCategoriaForm">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col-md-10 mb-1">
+                                    <label for="nombre_categoria_edit">Nombre de la Categoria *</label>
+                                    <input type="text" class="form-control" id="nombre_categoria_edit"
+                                        placeholder="Ingrese un nombre" required>
+                                    <div style="margin-top:10px"></div>
+                                    <span class="error-message" id="nombre_categoria-error"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-success mx-auto" id="guardarCambiosCategoria">Guardar
+                        Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".delete-button").click(function () {
+            var idToDelete = parseInt($(this).data("id-categoria"));
+            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+
+            // Muestra una confirmación al usuario (puedes usar SweetAlert o Bootstrap Modal)
+            if (confirm("¿Estás seguro de eliminar esta categoría?")) {
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": csrfToken
+                    },
+                    url: "{% url 'borrarCategoria' %}",
+                    data: {
+                        idToDelete: idToDelete
+                    },
+                    method: "POST", // O "GET" según tu vista de Django
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        // Maneja errores si es necesario
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+{% comment %}
+<script>
+    $(document).ready(function () {
+        $(".editar-categoria-button").click(function () {
+            var categoriaId = $(this).data("categoria-id");
+            var nombreCategoria = $(this).data("nombre-categoria");
+            $("#nombre_categoria_edit").val(nombreCategoria);
+            $("#editarCategoriaForm").attr("action", "/editcategory/" + categoriaId + "/");
+            $("#editarCategoriaModal").modal("show");
+        });
+
+        $("#guardarCambiosCategoria").click(function () {
+            $("#editarCategoriaForm").submit();
+        });
+    });
+</script> {% endcomment %}
 
 {% endblock %}

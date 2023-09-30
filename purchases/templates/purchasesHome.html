@@ -32,11 +32,16 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
+            <style>
+                .table-responsive{
+                overflow-y: auto;
+                max-height: 400px;
+            }
+            </style>
             <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="90%"
                 cellspacing="3">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Proveedor</th>
                         <th>Fecha de Registro</th>
                         <th>Estado</th>
@@ -46,7 +51,6 @@
                 <tbody>
                     {% for compra in compras %}
                     <tr class="{% if compra.estado == 0 %}inactivo{% endif %}">
-                        <td>{{compra.id_compra}}</td>
 
                         <td>{{ compra.id_proveedor.nombre_proveedor }}</td>
                         <td>{{ compra.fechareg }}</td>
@@ -66,11 +70,6 @@
                                 onclick="mostrarDetallesCompra({{ compra.id_compra }})">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-
-
-
-
-
                         </td>
                     </tr>
                     {% endfor %}

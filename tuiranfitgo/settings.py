@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'tuiranfitgo.urls'
 
 TEMPLATES = [
@@ -77,6 +78,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'_tuiranfit',
         'USER': 'root',
+        'PASSWORD': '3127123250',
         'PASSWORD': '1234',
         'PORT': '3306'
     }
@@ -113,17 +115,20 @@ USE_I18N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = '/mydashboard/'
+# LOGIN_REDIRECT_URL = '/mydashboard/'
+
+# AUTH_USUARIOS_MODEL = 'users.Usuarios'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'users', 'static'),
+    os.path.join(BASE_DIR, 'tuiranfitgo', 'static'), 
     os.path.join(BASE_DIR, 'sales', 'static'),
+    os.path.join(BASE_DIR, 'users', 'static')
 ]
-
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -131,4 +136,3 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
