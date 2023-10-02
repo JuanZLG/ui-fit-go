@@ -145,11 +145,9 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" width="80%"
-                cellspacing="0">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="80%" cellspacing="0">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Nombre del Rol</th>
                         <th>Permisos</th>
                         <th>Acciones</th>
@@ -157,16 +155,18 @@
                 </thead>
                 <tbody>
                     {% for rol, recuento in permisos_count.items %}
-                    <tr>
-                        <td>{{ rol.id_rol }}</td>
+                    <tr class="{% if rol.id_rol == 1 %}admin{% endif %}">
                         <td>{{ rol.nombre_rol }}</td>
                         <td>{{ recuento }} / 6 </td>
                         <td class="cell-actions">
-                            <button type="button" class="btn btn-sm verEditar"
-                                data-id-rol="{{rol.id_rol}}"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button type="button" class="btn btn-sm btn-primary verDetalles" data-id-rol="{{rol.id_rol}}">
+                            <button type="button" class="btn btn-sm verEditar" data-id-rol="{{rol.id_rol}}"><i
+                                    class="fa-solid fa-pen-to-square"></i></button>
+                            <button type="button" class="btn btn-sm btn-primary verDetalles"
+                                data-id-rol="{{rol.id_rol}}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
+                            <a class="btn btn-sm btn-danger delete-button" data-id-rol="{{ rol.id_rol }}"><i
+                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -177,10 +177,57 @@
 </div>
 </div>
 
+<style>
+    .admin {
+        background-color: #ccc;
+        font-weight: bold;
+    }
+
+    .admin button,
+    .admin a {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
+<script>
+    // $(document).ready(function () {
+
+
+    $(".delete-button").click(function () {
+        let idrol = parseInt($(this).data("id-rol"));
+        Swal.fire({
+            title: 'Eliminacion de Rol',
+            text: "¿Estás seguro de eliminar este rol?",
+            html: '<p>Eliminar este rol tendrá un impacto en la condición y la capacidad de acceso del usuario asociado a este rol en el sistema.</p>',
+            showCancelButton: true,
+            confirmButtonColor: '#ba4d4d',
+            cancelButtonColor: '#222222',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Eliminar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{% url 'eliminarRol'  %}",
+                    data: {
+                        idrol: idrol,
+                    },
+                    method: "GET",
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 <div class="modal-backdrop"></div>
 
@@ -361,13 +408,17 @@
         gap: 10px;
         color: #fff;
     }
+
     .permiso {
         padding: 5px 10px;
-        border-radius: 10px;
+        border-radius: 5px;
     }
+
     .permiso.activo {
         background-color: #85da85;
-    } .permiso.inactivo {
+    }
+
+    .permiso.inactivo {
         background-color: #ba4d4d;
     }
 </style>
@@ -424,10 +475,15 @@
                             dialogEditar.showModal();
                         }
                     } else {
-                        let nombreRol= $("#verDetalles #nombreRol").text(datos.nombre_rol);
+                        let nombreRol = $("#verDetalles #nombreRol").text(datos.nombre_rol);
 
                         $.each(datos.permisos, function (permiso, valor) {
-                            $("#verDetalles #permiso" + permiso).text(permiso).addClass(valor === 1 ? 'activo' : 'inactivo');
+                            let permisoElement = $("#verDetalles #permiso" + permiso).text(permiso);
+                            if (valor === 1) {
+                                permisoElement.addClass('activo').removeClass('inactivo');
+                            } else {
+                                permisoElement.addClass('inactivo').removeClass('activo');
+                            }
                         });
 
                         let dialogEditar = document.getElementById("verDetalles");
@@ -462,10 +518,29 @@
         });
 
 
+        function validarRol(nombre_rol) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: "{% url 'rol_unico' %}",
+                    type: "GET",
+                    data: {
+                        nombre_rol: nombre_rol,
+                    },
+                    success: function (data) {
+                        if (data.existe) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    }
+                });
+            });
+        }
+
         $("#guardarRol, #modificarRol").click(function (event) {
+            event.preventDefault();
             camposValidos = true;
             let accion = "";
-
             if ($("#" + modal + " .nombreRol").val().trim() === "") {
                 $("#" + modal + " .nombreRol").addClass("is-invalid");
                 $("#" + modal + " .error-rol").text("El campo es requerido.").css("color", "red");
@@ -474,16 +549,26 @@
                 $("#" + modal + " .nombreRol").removeClass("is-invalid");
                 $("#" + modal + " .error-rol").text("");
             }
-
+            nombre_rol = $("#" + modal + " .nombreRol").val()
             if (!camposValidos) {
                 return;
             } else {
                 if ($(this).attr("id") == "guardarRol") {
                     accion = "create";
-                } else if ($(this).attr("id") == "modificarRol") {
-                    accion = "edit";
+                    validarRol(nombre_rol).then(function (existe) {
+                        if (existe) {
+                            $("#" + modal + " .nombreRol").addClass("is-invalid");
+                            $("#" + modal + " .error-rol").text("El nombre del rol '" + nombre_rol + "' ya existe").css("color", "red");
+                            camposValidos = false;
+                        } else {
+                            enviarDatosVentas(accion);
+                        }
+                    });
                 }
-                enviarDatosVentas(accion);
+                else if ($(this).attr("id") == "modificarRol") {
+                    accion = "edit";
+                    enviarDatosVentas(accion);
+                }
             }
         });
 

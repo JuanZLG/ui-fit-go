@@ -88,13 +88,6 @@
     #detailsbutton:hover {
         transform: scale(1.1);
     }
-
-    .cell-actions {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-    }
-
     .active-status {
         background-color: #95eea5;
         color: #09711c;
@@ -143,8 +136,10 @@
                     {% for ct in cats %}
                     <tr>
                         <td>{{ ct.nombre_categoria }}</td>
-                        <td class="cell-actions"><button class="cambiar-estado statusbutton mx-3 active-status">Activo
-                            </button></td>
+                        <td>
+                            <button class="cambiar-estado statusbutton mx-3 active-status">Activo
+                            </button>
+                        </td>
                         <td>
                             <a class="btn btn-sm btn-danger delete-button" data-id-categoria="{{ ct.id_categoria }}"
                                 style="height:27px;"><i class="fa-solid fa-trash-can fa-sm"

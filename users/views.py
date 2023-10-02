@@ -1,5 +1,5 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 import json
 from urllib.parse import parse_qs
@@ -188,4 +188,39 @@ def obtener_datos(request):
             }
         }
         return JsonResponse({'success': True, 'datos': datos})
+
+
+def rol_unico(request):
+    nombre_rol = request.GET.get("nombre_rol", "")
+    rol_existe = Roles.objects.filter(nombre_rol=nombre_rol).exists()
+    print(rol_existe)
+    return JsonResponse({"existe": rol_existe})
+
+
+def eliminar_rol(request):
+    id_rol = request.GET.get('idrol')
+    
+    try:
+        rol = Roles.objects.get(id_rol=id_rol)
+        
+        usuario = Usuarios.objects.filter(id_rol=rol).first()
+        if usuario:
+            usuario.id_rol = None 
+            usuario.estado = 0
+            usuario.save()
+        
+        roles_permisos = Rolespermisos.objects.filter(id_rol=rol).first()
+        if roles_permisos:
+            permiso = roles_permisos.id_permiso
+            permiso.delete()
+            
+            roles_permisos.delete()
+        
+        rol.delete()
+        
+        return JsonResponse({'message': 'Rol, permiso y estado de usuario eliminados con éxito'})
+    
+    except Roles.DoesNotExist:
+        return JsonResponse({'error': 'El rol no existe'})
+
 

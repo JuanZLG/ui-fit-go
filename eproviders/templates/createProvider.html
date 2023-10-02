@@ -146,7 +146,7 @@ $(document).ready(function () {
                 mostrarError('#identificacion', 'Debe ingresar una identificación.');
                 camposLlenos = false;
             } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
-                mostrarError('#identificacion', 'Debe seleeccionar el tipo de identificación.');
+                mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
                 camposLlenos = false;
             } else {
                 $("#identificacion").removeClass("is-invalid")
@@ -194,10 +194,7 @@ $(document).ready(function () {
                         } else {
                             resolve(false);
                         }
-                    },
-                    error: function () {
-                        reject(new Error("Error al validar el proveedor"));
-                    },
+                    }
                 });
             });
         }

@@ -13,7 +13,8 @@ urlpatterns=[
     path('Roles/', views.HomeRoles, name='HomeRoles'), 
     path('action-rol/', views.accion_rol, name="accion_rol"),
     path('obtener_datos/', views.obtener_datos, name='obtener_datos'),
-    # path('editRol', views.editRol, name="editar_rol"),
+    path('rol_unico/', views.rol_unico, name='rol_unico'),
+    path('remove/', views.eliminar_rol, name='eliminarRol'),
     
     
 ]
