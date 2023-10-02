@@ -17,8 +17,6 @@ class Categorias(models.Model):
         db_table = 'categorias'
 
 
-
-
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
@@ -30,8 +28,6 @@ class Compras(models.Model):
     class Meta:
         managed = False
         db_table = 'compras'
-
-
 
 
 class Detallecompra(models.Model):
@@ -47,8 +43,6 @@ class Detallecompra(models.Model):
     class Meta:
         managed = False
         db_table = 'detallecompra'
-
-
 
 
 class Marcas(models.Model):
