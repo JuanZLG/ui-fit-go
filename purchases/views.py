@@ -208,7 +208,7 @@ def editar_compra(request, id_compra):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print("Datos recibidos en la solicitud POST:", data)  # Imprimir los datos recibidos en el servidor
+            print("Datos recibidos en la solicitud POST:", data)
 
             proveedor_nombre = data.get('proveedor', '')
             totalCompra = data.get('totalCompra', 0)
@@ -249,12 +249,6 @@ def editar_compra(request, id_compra):
                     detalle.save()
                 except Exception as e:
                     print(f"Error al guardar detalle: {str(e)}")
-        
-
-
-
-
-
 
             for productoDatos in productos_nuevos:
                 nombre_producto = productoDatos["nombre"]
