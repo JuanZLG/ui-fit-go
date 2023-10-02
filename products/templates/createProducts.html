@@ -194,6 +194,34 @@
               });
           }
       });
+    
+        $('#iFechaven').on('input', function () {
+            const campo = $(this);
+            const fechaValue = campo.val();
+    
+            if (fechaValue) {
+                // Validar que la fecha tenga el formato AAAA-MM-DD
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
+                    mostrarError(campo, 'El formato de la fecha no es correcto (AAAA-MM-DD).');
+                    return;
+                }
+    
+                const [anno, mes, dia] = fechaValue.split('-').map(Number);
+  
+                if (mes < 1 || mes > 12) {
+                    mostrarError(campo, 'El mes (MM) debe estar entre 01 y 12.');
+                    return;
+                }
+    
+                if (dia < 1 || dia > 31) {
+                    mostrarError(campo, 'El día (DD) debe estar entre 01 y 31.');
+                    return;
+                }
+
+                ocultarError(campo);
+            }
+        });
+    
 
       function mostrarError($campo, mensaje) {
           $campo.addClass('is-invalid');

@@ -10,30 +10,23 @@ from users.models import Roles, Permisos, Usuarios, Rolespermisos
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = CustomAuthenticationForm(request, request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data['username']
-#             password = form.cleaned_data['password']
-#             user = authenticate(request, username=username, password=password)
-#             if user is not None:
-#                 login(request, user)
-#                 # Redirigir al usuario a donde quieras después de iniciar sesión
-#                 return redirect('ruta_despues_de_inicio_de_sesion')
-#             else:
-#                 # El inicio de sesión falló
-#                 # Puedes mostrar un mensaje de error o realizar otras acciones aquí
-#                 pass
-#     else:
-#         form = CustomAuthenticationForm()
-#     return render(request, 'login.html', {'form': form})
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('Entrance')
+        else:
+            return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
+
+    return render(request, 'login.html')
 
 
-# def logout_view(request):
-#     logout(request)
-#     return redirect('login')
-
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 def Home(request):
     user = Usuarios.objects.all()
