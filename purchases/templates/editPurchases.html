@@ -167,6 +167,91 @@
         width: 330px;
     }
 
+    .cont-princ-proveedor {
+        margin: 0 auto;
+        box-shadow: 0 0 10px #ccc;
+        height: 140px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .cont-proveedor {
+        width: 35%;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 2px;
+    }
+
+    .resultado-proveedor {
+        margin-left: 20px;
+        width: 65%;
+        display: flex;
+        flex-wrap: wrap;
+        grid-gap: 5px;
+    }
+
+    .proveedor-item {
+        position: relative;
+        height: 50%;
+        background-color: #fff;
+        padding: 10px;
+    }
+
+    .proveedor-item:hover {
+        cursor: pointer;
+        background-color: #F2f2f2;
+    }
+
+    .proveedor-item.inactivo::before {
+        content: "Proveedor inhabilitado";
+        position: absolute;
+        background-color: #26272d;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .proveedor-item.inactivo:hover::before {
+        opacity: 1;
+    }
+
+    .proveedor-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 5px;
+    }
+
+    .estadoProveedorCircle {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+    }
+
+    .estadoProveedorCircle.activo {
+        background-color: #72d072;
+    }
+
+    .estadoProveedorCircle.inactivo {
+        background-color: #ba4d4d;
+    }
+
+
+
     /* Estilo para el contenedor de crear compra o venta */
     .cont-crear-compra,
     .cont-crear-venta {
@@ -333,7 +418,9 @@
                                 <input type="number" class="form-control cantidad p-0 text-center" id="cantidad"
                                     name="cantidad" autocomplete="off" min="1" step="1"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''"
-                                    placeholder="Cantidad" value="{{producto.cantidad}}" data-id-cantidad="{{producto.cantidad}}" {% if producto.estado == 0 %}readonly{% endif %}>
+                                    placeholder="Cantidad" value="{{producto.cantidad}}"
+                                    data-id-cantidad="{{producto.cantidad}}"
+                                    {% if producto.estado == 0 %}readonly{% endif %}>
                                 <span class="text-danger error-cantidad"></span>
                             </td>
                             <td>
@@ -393,7 +480,9 @@
     $(document).ready(function () {
         let resultadoDocu = $("#cont-prov");
         let resultadoCliente = $("#nombreProveedor").addClass("is-valid");
-        resultadoDocu.html("Identificacion:<label id='documento' class='ml-2'>{{compra.id_proveedor.numero_documento_nit}}</label>");
+        resultadoDocu.html(
+            "Identificacion:<label id='documento' class='ml-2'>{{compra.id_proveedor.numero_documento_nit}}</label>"
+            );
         resultadoCliente.val("{{compra.id_proveedor.nombre_proveedor}}")
 
     });
@@ -425,15 +514,15 @@
                     if (estado === 1) {
                         estado = 0;
                         currentRow.addClass("detalle-inactivo");
-                        currentRow.find('input').prop('readonly', true);
+                        currentRow.find('input[type="number"]').prop('readonly', true);
                     } else {
                         estado = 1;
                         currentRow.removeClass("detalle-inactivo");
-                        currentRow.find('input').prop('readonly', false);
+                        currentRow.find('input[type="number"]').prop('readonly', false);
                     }
                     currentRow.data("estado", estado);
 
-                    calcularTotalVenta();
+                    calcularTotalCompra();
                 });
             }
         });
@@ -693,7 +782,7 @@
             $(".inhabilitar-producto").removeClass("inhabilitar");
         }
 
-        calcularTotalProducto($(this));
+        calcularTotalProductoCompra($(this));
     });
 
     $(".cantidad").each(function () {

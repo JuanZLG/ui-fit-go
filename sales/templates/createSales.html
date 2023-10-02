@@ -1,5 +1,5 @@
 {% extends "baseInterface.html" %}
-{% block title %} Agregar Venta {% endblock %}
+{% block title %}Agregar Venta{% endblock %}
 {% block body %}
 
 <head>
@@ -109,7 +109,7 @@
 
             $("#error-docu").text("");
 
-            if (nombreCliente.length >= 5) {
+            if (nombreCliente.length >= 3) {
                 $.ajax({
                     url: "{% url 'buscar_cliente' %}?q=" + nombreCliente, 
                     type: "GET",
@@ -378,7 +378,7 @@
         }
 
         function calcularTotalVenta() {
-            let totalVenta = 0; // Inicializa como número
+            let totalVenta = 0; 
 
             $(".producto-row").each(function () {
                 let precioTotal = parseFloat($(this).find(".precioTotal").val().replace(/[$,.]/g, ''));
@@ -390,6 +390,7 @@
             let formateoTotalVenta = formatearPrecios(totalVenta)
             $("#totalVenta").val(formateoTotalVenta);
         }
+
 
         function validarCantidad() {
             const cantidad = parseInt($(this).val());

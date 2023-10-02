@@ -200,6 +200,7 @@ def obtener_detalles_compra(request, compra_id):
     compra = detalles_compra.first().id_compra 
     datos_generales = {
         'proveedor': compra.id_proveedor.nombre_proveedor,
+        
         'fechaRegistro': compra.fechareg,
         'estado': 'Activo' if compra.estado == 1 else 'Inactivo',
     }
@@ -293,7 +294,6 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import json
 from .models import Compras, Detallecompra, Proveedores, Productos
-
 @csrf_exempt
 def editar_compra(request, id_compra):
     if request.method == 'POST':
@@ -321,25 +321,26 @@ def editar_compra(request, id_compra):
                 stock_actual.setdefault(producto.nombre_producto, producto.cantidad)
 
                 for productoDatos in productos:
-                    if productoDatos["idDetalle"] == detalle.id_detallecompra:
+                    if detalle.id_detallecompra == productoDatos["idDetalle"]:
+
                         nueva_cantidad = productoDatos["cantidad"]
-                        diferencia = nueva_cantidad - detalle.cantidad
-                        detalle.cantidad = nueva_cantidad
+                        diferencia =  detalle.cantidad - nueva_cantidad 
+
+                        # Solo actualizar el registro si el id del detalle existe
+                        detalle.cantidad == nueva_cantidad
                         detalle.save()
 
                         if detalle.estado != productoDatos["estado"]:
                             if detalle.estado == 1 and productoDatos["estado"] == 0:
-                                producto.cantidad += nueva_cantidad
-                            elif detalle.estado == 0 and productoDatos["estado"] == 1:
                                 producto.cantidad -= nueva_cantidad
-                            else:
-                                producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
+                            elif detalle.estado == 0 and productoDatos["estado"] == 1:
+                                producto.cantidad += nueva_cantidad
+                        else:
+                            producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
 
                         detalle.estado = productoDatos["estado"]
                         detalle.save()
                         producto.save()
-                        if detalle.estado == 0:
-                            producto.cantidad -= detalle.cantidad - diferencia
                         break
 
             for productoDatos in productos:
@@ -351,7 +352,7 @@ def editar_compra(request, id_compra):
                     producto = Productos.objects.get(nombre_producto=nombre_producto)
 
                     if producto:
-                        producto.cantidad -= nueva_cantidad
+                        producto.cantidad += nueva_cantidad
                         producto.save()
 
             response_data = {'success': True}
@@ -363,4 +364,7 @@ def editar_compra(request, id_compra):
 
     compra = Compras.objects.get(id_compra=id_compra)
     detalles = Detallecompra.objects.filter(id_compra=compra)
+
     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
+
+

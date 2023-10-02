@@ -42,7 +42,7 @@
                 max-height: 400px;
             }
             </style>
-            <table class="table table-bordered table-hover mx-auto text-center" id="dataTable" cellspacing="3">
+            <table class="table table-bordered  mx-auto text-center" id="dataTable" cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Cliente</th>
@@ -65,12 +65,20 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm" id="editbutton"><i
-                                    class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm {% if venta.estado == 0 %}not-active-edit {% endif %}" id="editbutton"><i
+                                class="fa-solid fa-pen-to-square"></i></a>
                             <button type="button" class="btn btn-sm btn-primary verVenta"
                                 data-venta-id="{{ venta.id_venta }}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
+                            <style>
+                                .not-active-edit { 
+                                    opacity: 0.5;
+                                    pointer-events: none; 
+                                    cursor: default; 
+                                } 
+
+                            </style>
                         </td>
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -79,10 +87,16 @@
                                 $(".cambiar-estado").click(function () {
                                     let ventaId = $(this).data("venta-id");
                                     let nuevoEstado = $(this).data("nuevo-estado");
-
+                                    let mensaje;
+                                    if (nuevoEstado === 0) {
+                                        mensaje = "¿Estás seguro de desactivar esta venta? Esto marcará la venta como inactiva y sumará las cantidades al stock de los productos relacionados.";
+                                    } else {
+                                        mensaje = "¿Estás seguro de activar esta venta? Esto marcará la venta como activa y restará las cantidades al stock de los productos relacionados.";
+                                    }
                                     Swal.fire({
+                                        icon: 'warning',
                                         title: 'Estado',
-                                        text: '¿Desea cambiar el estado de este registro?',
+                                        text: mensaje,
                                         showCancelButton: true,
                                         confirmButtonColor: '#419edd',
                                         cancelButtonColor: '#ba4d4d',
@@ -172,7 +186,6 @@
         
         $(".verVenta").click(function () {
             let venta_id = $(this).data("venta-id");
-            console.log(venta_id)
             $.ajax({
                 url: "{% url 'verDetallesVenta' %}",
                 data: {

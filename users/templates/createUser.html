@@ -12,6 +12,8 @@
           <div class="card-body p-4">
             <form class="form" id="usuario-form" method="post">
               {% csrf_token %}
+
+              <div class="col-md-5 mb-3">
               <div class="form-group">
                 <label for="categoria">Rol del Usuario</label>
                 <select class="form-select" aria-label="Default" name="iRole" id="iRole">
@@ -21,24 +23,31 @@
                 </select>
                 <div class="error-message" style="color:red;" id="iRole-error"></div>
               </div>
-    
+            </div>
+            
+            <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Nombre de Usuario *</label>
                 <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese un nombre de usuario"/>
                 <div class="error-message" style="color:red;" id="iNombre-error"></div>
               </div>
+            </div>
               
+            <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Correo *</label>
                 <input type="text" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido"/>
                 <div class="error-message" style="color:red;" id="iCorreo-error"></div>
               </div>
-    
+            </div>
+            
+            <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Contraseña *</label>
                 <input type="text" class="form-control" id="iPassword" name="iPassword" placeholder="Ingrese una contraseña"/>
                 <div class="error-message" style="color:red;" id="iPassword-error"></div>
               </div>
+            </div>
     
               <div class="text-center">
                 <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
