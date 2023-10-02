@@ -41,6 +41,8 @@ class Detallecompra(models.Model):
     cantidad = models.IntegerField()
     precio_uni = models.FloatField()
     precio_tot = models.FloatField()
+    estado = models.IntegerField(default=1)
+
 
     class Meta:
         managed = False
@@ -88,7 +90,11 @@ class Proveedores(models.Model):
     nombre_proveedor = models.CharField(max_length=65)
     telefono = models.CharField(max_length=10)
     correo = models.CharField(max_length=65)
-    estado = models.IntegerField()
+    direccion = models.CharField(max_length=50)
+    informacion_adicional = models.TextField()
+    tipo_documento = models.CharField(max_length=50)
+    numero_documento_nit = models.CharField(max_length=50)
+    estado = models.IntegerField(default=1)
 
     class Meta:
         managed = False

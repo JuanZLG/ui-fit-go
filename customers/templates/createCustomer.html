@@ -7,6 +7,35 @@
     <h1 class="h3 text-gray-800 mb-4">Agregar Cliente</h1>
 </center>
 
+<style>
+    .flag-select {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Ajusta el margen derecho según tu preferencia */
+}
+
+/* Ajusta el tamaño del select según tus preferencias */
+#iPais {
+    width: 100px; /* Ajusta el ancho según tu preferencia */
+}
+
+/* Ajusta el tamaño del input con los prefijos */
+#iCodigoLlamada {
+    width: 80px; /* Ajusta el ancho según tu preferencia */
+}
+
+/* Ajusta el tamaño del otro input (Número de celular) */
+#iCelular {
+    width: 400px; /* Ajusta el ancho según tu preferencia */
+}
+
+/* Clase para el input más pequeño */
+.smaller-input {
+    width: 80px; /* Ajusta el ancho según tu preferencia */
+}
+
+</style>
+
 <div class="card shadow">
     <div class="container p-4">
         <form class="form" id="cliente-form" method="post">
@@ -35,17 +64,20 @@
                 <div class="form-group col-md-6">
                     <label for="iCelular">Celular *</label>
                     <div class="input-group">
-                        <select class="form-control" id="iPais" name="iPais" onchange="actualizarCodigoLlamada(this)">
-                            <option value="CO" selected>Colombia</option>
-                            <option value="VE">Venezuela</option>
-                            <option value="EC">Ecuador</option>
-                        </select>
+                        <div class="flag-select">
+                            <select class="form-control" id="iPais" name="iPais" onchange="actualizarCodigoLlamada(this)">
+                                <option value="CO" selected>Colombia</option>
+                                <option value="VE">Venezuela</option>
+                                <option value="EC">Ecuador</option>
+                            </select>
+                        </div>
                         <input type="text" class="form-control" id="iCodigoLlamada" name="iCodigoLlamada" placeholder="+57" readonly>
-                        <input type="text" class="form-control" id="iNumeroCelular" name="iNumeroCelular" placeholder="Número de celular" minlength="10" maxlength="10">
+                        <input type="text" class="form-control smaller-input" id="iCelular" name="iCelular" placeholder="Número de celular" minlength="10" maxlength="10">
                     </div>
-                    <div class="error-message" id="iNumeroCelular-error"></div>
-                    <div class="info-message" id="iNumeroCelular-info"></div>
+                    <div class="error-message" id="iCelular-error"></div>
+                    <div class="info-message" id="iCelular-info"></div>
                 </div>
+                
                 
                 <script>
                 function actualizarCodigoLlamada(select) {
