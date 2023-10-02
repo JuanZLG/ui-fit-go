@@ -173,25 +173,19 @@ def accion_rol(request):
     return JsonResponse(response_data)
 
 
-def obtener_datos_edicion(request):
-    try:
-        if request.method == 'GET':
-            nombreRol = request.GET.get('nombreRol')
-            rolespermisos = Rolespermisos.objects.get(id_rol__nombre_rol=nombreRol)
-            datos_edicion = {
-                'nombre_rol': rolespermisos.id_rol.nombre_rol,
-                'permisos': {
-                    'Clientes': rolespermisos.id_permiso.clientes,
-                    'Proveedores': rolespermisos.id_permiso.proveedores,
-                    'Productos': rolespermisos.id_permiso.productos,
-                    'Ventas': rolespermisos.id_permiso.ventas,
-                    'Compras': rolespermisos.id_permiso.compras,
-                    'Usuarios': rolespermisos.id_permiso.usuarios,
-                }
+def obtener_datos(request):
+        id_rol = request.GET.get('param')
+        rolespermisos = Rolespermisos.objects.get(id_rol=id_rol)
+        datos = {
+            'nombre_rol': rolespermisos.id_rol.nombre_rol,
+            'permisos': {
+                'Clientes': rolespermisos.id_permiso.clientes,
+                'Proveedores': rolespermisos.id_permiso.proveedores,
+                'Productos': rolespermisos.id_permiso.productos,
+                'Ventas': rolespermisos.id_permiso.ventas,
+                'Compras': rolespermisos.id_permiso.compras,
+                'Usuarios': rolespermisos.id_permiso.usuarios,
             }
-            return JsonResponse({'success': True, 'datos_edicion': datos_edicion})
-    except Rolespermisos.DoesNotExist:
-        return JsonResponse({'success': False, 'mensaje': 'El rol no existe'})
-
-
+        }
+        return JsonResponse({'success': True, 'datos': datos})
 

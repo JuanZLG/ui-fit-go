@@ -162,9 +162,9 @@
                         <td>{{ rol.nombre_rol }}</td>
                         <td>{{ recuento }} / 6 </td>
                         <td class="cell-actions">
-                            <button type="button" class="btn btn-sm verEditar" data-rol="{{rol.nombre_rol}}" data-id-rol="{{rol.id_rol}}"><i
-                                    class="fa-solid fa-pen-to-square"></i></button>
-                            <button type="button" class="btn btn-sm btn-primary">
+                            <button type="button" class="btn btn-sm verEditar"
+                                data-id-rol="{{rol.id_rol}}"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button type="button" class="btn btn-sm btn-primary verDetalles" data-id-rol="{{rol.id_rol}}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
@@ -325,6 +325,53 @@
     </form>
 </dialog>
 
+
+<dialog id="verDetalles" class="rolDialog dragHandle">
+    <div class="modal-container-header linea-detalle">
+        <h2>Detalles <span id="nombreRol"></span> </h2>
+        <button class="cerrar-rol" type="button">
+            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h24v24H0z" fill="none"></path>
+                <path
+                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                    fill="currentColor"></path>
+            </svg>
+        </button>
+    </div>
+    <div class="mt-3">
+        <p class="font-weight-bold">Permisos:</p>
+        <div class="cont-permisos-detalles">
+            <span id="permisoClientes" class="permiso"></span>
+            <span id="permisoProveedores" class="permiso"></span>
+            <span id="permisoProductos" class="permiso"></span>
+            <span id="permisoVentas" class="permiso"></span>
+            <span id="permisoCompras" class="permiso"></span>
+            <span id="permisoUsuarios" class="permiso"></span>
+        </div>
+    </div>
+</dialog>
+
+<style>
+    .cont-permisos-detalles {
+        margin: auto;
+        width: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        color: #fff;
+    }
+    .permiso {
+        padding: 5px 10px;
+        border-radius: 10px;
+    }
+    .permiso.activo {
+        background-color: #85da85;
+    } .permiso.inactivo {
+        background-color: #ba4d4d;
+    }
+</style>
+
 <script>
     $(document).ready(function () {
 
@@ -337,36 +384,56 @@
             $(".modal-backdrop").show().addClass("fadeInBack");
         });
 
-            $(".verEditar").click(function () {
-                let nombreRol = $(this).data("rol");
-                id_rol = $(this).data("id-rol");
-                modal = "verEditar";
-                cargarDatosEdicion(nombreRol);
-                $(".rolDialog, .modal-backdrop").addClass("fadeIn");
-                $(".modal-backdrop").show().addClass("fadeInBack");
-            });
+        $(".verEditar").click(function () {
+            id_rol = $(this).data("id-rol");
+            modal = "verEditar";
+            cargarDatos(id_rol, modal);
+            $(".rolDialog, .modal-backdrop").addClass("fadeIn");
+            $(".modal-backdrop").show().addClass("fadeInBack");
+        });
+
+        $(".verDetalles").click(function () {
+            id_rol = $(this).data("id-rol");
+            modal = "verDetalles";
+            cargarDatos(id_rol, modal);
+            $(".rolDialog, .modal-backdrop").addClass("fadeIn");
+            $(".modal-backdrop").show().addClass("fadeInBack");
+        });
 
 
-        function cargarDatosEdicion(nombreRol) {
+        function cargarDatos(param, modal) {
             $.ajax({
-                url: "{% url 'obtener_datos_edicion'  %}",
+                url: "{% url 'obtener_datos'  %}",
                 data: {
-                    nombreRol: nombreRol
+                    param: param
                 },
                 method: "GET",
                 success: function (data) {
-                    let datosEdicion = data.datos_edicion;
-                    let nombreRolInput = $("#verEditar .nombreRol");
-                    nombreRolInput.val(datosEdicion.nombre_rol);
+                    let datos = data.datos;
+                    if (modal == "verEditar") {
+                        let nombreRolInput = $("#verEditar .nombreRol");
+                        nombreRolInput.val(datos.nombre_rol);
 
-                    $.each(datosEdicion.permisos, function (permiso, valor) {
-                        let checkbox = $("#verEditar input[name='permiso" + permiso + "']");
-                        checkbox.prop("checked", valor === 1);
-                    });
+                        $.each(datos.permisos, function (permiso, valor) {
+                            let checkbox = $("#verEditar input[name='permiso" + permiso + "']");
+                            checkbox.prop("checked", valor === 1);
+                        });
 
-                    let dialogEditar = document.getElementById("verEditar");
-                    if (dialogEditar && !dialogEditar.open) {
-                        dialogEditar.showModal();
+                        let dialogEditar = document.getElementById("verEditar");
+                        if (dialogEditar && !dialogEditar.open) {
+                            dialogEditar.showModal();
+                        }
+                    } else {
+                        let nombreRol= $("#verDetalles #nombreRol").text(datos.nombre_rol);
+
+                        $.each(datos.permisos, function (permiso, valor) {
+                            $("#verDetalles #permiso" + permiso).text(permiso).addClass(valor === 1 ? 'activo' : 'inactivo');
+                        });
+
+                        let dialogEditar = document.getElementById("verDetalles");
+                        if (dialogEditar && !dialogEditar.open) {
+                            dialogEditar.showModal();
+                        }
                     }
                 },
                 error: function (error) {
@@ -441,7 +508,7 @@
             permisos["Usuarios"] = checkboxUsuarios.is(":checked") ? 1 : 0;
 
             var data = {
-                id_rol:id_rol,
+                id_rol: id_rol,
                 accion: accion,
                 nombreRol: nombreRol,
                 permisos: permisos
