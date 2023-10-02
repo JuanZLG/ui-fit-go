@@ -3,5 +3,6 @@ from . import views
 
 
 urlpatterns=[
-    path('', views.Home, name="mydashboard"),
+    path('', views.Entrance, name="entrada"),
+    path('dashboard/', views.Home, name='mydashboard')
 ]

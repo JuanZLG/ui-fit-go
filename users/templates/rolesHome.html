@@ -160,7 +160,6 @@
                 cellspacing="0">
                 <thead class="theads">
                     <tr>
-                        <th>ID</th>
                         <th>Nombre del Rol</th>
                         <th>Permisos</th>
                         <th>Acciones</th>
@@ -169,7 +168,6 @@
                 <tbody>
                     {% for rol, recuento in permisos_count.items %}
                     <tr>
-                        <td>{{ rol.id_rol }}</td>
                         <td>{{ rol.nombre_rol }}</td>
                         <td>{{ recuento }} / 6 </td>
                         <td class="cell-actions">

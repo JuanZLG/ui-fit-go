@@ -76,7 +76,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '3127123250',
+        'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }
@@ -111,10 +111,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-# LOGIN_REDIRECT_URL = '/mydashboard/'
+LOGIN_REDIRECT_URL = 'entrada'
 
 # AUTH_USUARIOS_MODEL = 'users.Usuarios'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
