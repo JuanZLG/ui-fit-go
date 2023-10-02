@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'customers',
     'purchases',
     'sales',
-    # 'users',
+    'users',
     'dashboard',
 ]
 
@@ -55,7 +55,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'sales', 'templates'),
                  os.path.join(BASE_DIR, 'purchases', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
-                #  os.path.join(BASE_DIR, 'users', 'templates'),
+                 os.path.join(BASE_DIR, 'users', 'templates'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
