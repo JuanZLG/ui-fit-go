@@ -251,6 +251,11 @@ def editar_compra(request, id_compra):
                     print(f"Error al guardar detalle: {str(e)}")
         
 
+
+
+
+
+
             for productoDatos in productos_nuevos:
                 nombre_producto = productoDatos["nombre"]
                 producto = Productos.objects.get(nombre_producto=nombre_producto)
