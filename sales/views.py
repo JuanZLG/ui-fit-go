@@ -231,39 +231,22 @@ def obtener_nombre(request):
             {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
             status=400,
         )
-from django.http import JsonResponse
-from django.http import JsonResponse
-
-from django.http import JsonResponse
 
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         venta_id = request.GET.get('venta_id')
         nuevo_estado = request.GET.get('nuevo_estado')
         
-        venta = Ventas.objects.get(id_venta=venta_id)
-        venta.estado = int(nuevo_estado)
-        venta.save()
-
-        detalles = Detalleventa.objects.filter(id_venta=venta_id)
-        for detalle in detalles:
-            producto = detalle.id_producto
-
-            if venta.estado == 1: 
-                detalle.estado = 1  
-                producto.cantidad -= detalle.cantidad  
-                producto.save()  
-
-            else:  
-                detalle.estado = 0  
-                producto.cantidad += detalle.cantidad 
-                producto.save()  
-
-            detalle.save() 
+        try:
+            venta = Ventas.objects.get(id_venta=venta_id)
+            venta.estado = int(nuevo_estado)
+            venta.save()
+            
+            return JsonResponse({'status': 'success'})
+        except Clientes.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
         
-        return JsonResponse({'status': 'success'})
-
-
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
 

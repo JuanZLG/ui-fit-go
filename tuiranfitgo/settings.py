@@ -70,13 +70,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
+# settings.py
+
 
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tuiranfit',
+        'NAME':'_tuiranfit',
         'USER': 'root',
-        'PASSWORD': 'monitoc10',
+        'PASSWORD': '3127123250',
+        'PASSWORD': '1234',
         'PORT': '3306'
     }
 }
@@ -98,6 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
