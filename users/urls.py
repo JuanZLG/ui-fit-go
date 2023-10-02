@@ -11,9 +11,9 @@ urlpatterns=[
     # path('logout/', views.logout_view, name='logout'),
 
     path('Roles/', views.HomeRoles, name='HomeRoles'), 
-    path('addRol', views.createRol, name="crear_rol"),
+    path('action-rol/', views.accion_rol, name="accion_rol"),
+    path('obtener_datos_edicion/', views.obtener_datos_edicion, name='obtener_datos_edicion'),
     # path('editRol', views.editRol, name="editar_rol"),
-    # path('obtener_datos_rol', views.obtener_datos_rol, name="obtener_datos_rol"),
     
     
 ]

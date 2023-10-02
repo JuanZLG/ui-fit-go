@@ -153,11 +153,11 @@
                     if (estado === 1) {
                         estado = 0;
                         currentRow.addClass("detalle-inactivo");
-                        currentRow.find('input').prop('readonly', true);
+                        currentRow.find('input[type="number"]').prop('readonly', true);
                     } else {
                         estado = 1;
                         currentRow.removeClass("detalle-inactivo");
-                        currentRow.find('input').prop('readonly', false);
+                        currentRow.find('input[type="number"]').prop('readonly', false);
                     }
                     currentRow.data("estado", estado);
 
