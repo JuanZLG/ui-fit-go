@@ -1,6 +1,6 @@
 {% extends "baseInterface.html" %} 
 
-{% block title %} Agregar Producto {% endblock %} 
+{% block title %}Agregar Producto{% endblock %} 
 
 {% block body %}
 
@@ -24,7 +24,7 @@
     text-align: center;
   }
 </style>
-<center><h1 class="h3 text-gray-800 mb-4">Agregar Producto</h1></center>
+<center><h1 class="h3 text-black-800 mb-4" style="font-weight:bold;">Agregar Producto</h1></center>
 
 <div class="card shadow">
   <div class="container p-4">
@@ -111,18 +111,28 @@
     </div>
     
       
-      <div class="col-md-3 mb-3 mx-auto">
+    <div class="col-md-3 mb-3 mx-auto">
       <div class="form-group">
-        <label for="price">Precio del Producto *</label>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
-            </div>
-            <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio" value="{{ Product.precio }}">
-        </div>
-        <div class="error-message" id="iPrice-error" style="color:red;"></div>
+          <label for="price">Precio del Producto *</label>
+          <div class="input-group">
+              <div class="input-group-prepend">
+                  <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+              </div>
+              <input
+                  type="text"
+                  class="form-control"
+                  id="iPrice"
+                  name="iPrice"
+                  placeholder="Ingrese un precio"
+                  oninput="formatPriceInput(this);"
+                  value="{{ Product.precio }}"
+              >
+          </div>
+          <div class="error-message" id="iPrice-error" style="color:red;"></div>
       </div>
-    </div>
+  </div>
+  
+  
   
       <div class="text-end">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
@@ -206,4 +216,20 @@
   });
 </script>
 
+<script>
+  function formatPriceInput(inputElement) {
+
+      let unformattedValue = inputElement.value.replace(/[,.]/g, '');
+  
+  
+      let formattedValue = '';
+  
+      if (!isNaN(unformattedValue)) {
+          formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      }
+
+      inputElement.value = formattedValue;
+  }
+  </script>
+  
 {% endblock %}

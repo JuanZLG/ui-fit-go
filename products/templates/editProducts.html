@@ -1,9 +1,9 @@
 {% extends "baseInterface.html" %} 
 
-{% block title %} Modificar Producto {% endblock %} 
+{% block title %}Modificar Producto{% endblock %} 
 
 {% block body %}
-<center><h1 class="h3 text-black-800 mb-4">Modificar Producto</h1></center>
+<center><h1 class="h3 text-black-800 mb-4" style="font-weight:bold;">Modificar Producto</h1></center>
 
 <div class="card shadow mb-5" style="margin-bottom:7rem">
   <div class="container p-4">
@@ -95,20 +95,26 @@
         </div>
       </div>
 
-      <div class="col-md-2 mb-3 mx-auto">
+      <div class="col-md-3 mb-3 mx-auto">
         <div class="form-group">
             <label for="price">Precio del Producto *</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
                 </div>
-                <input type="number" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio" value="{{ Product.precio }}">
+                <input
+                    type="text"
+                    class="form-control"
+                    id="iPrice"
+                    name="iPrice"
+                    placeholder="Ingrese un precio"
+                    oninput="formatPriceInput(this);"
+                    value="{{ Product.precio }}"
+                >
             </div>
             <div class="error-message" id="iPrice-error" style="color:red;"></div>
         </div>
-      </div>
-  
-    
+    </div>
   
       <div class="text-end">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
@@ -183,7 +189,6 @@
 
 $('#producto-form').submit(function (event) {
     event.preventDefault();
-    // Validar que todos los campos estén llenos
     if (!validarCamposLlenos()) {
         return;
     }
@@ -193,7 +198,7 @@ $('#producto-form').submit(function (event) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success) {
-                alert('Producto editado con éxito.');
+                alert('Se ha modificado el producto con éxito.');
                 window.location.href = "{% url 'productos' %}";
             }
         }
@@ -201,5 +206,28 @@ $('#producto-form').submit(function (event) {
 });
 });
 </script>
+
+<script>
+  function formatPriceInput(inputElement) {
+      let unformattedValue = inputElement.value.replace(/[,.]/g, '');
+      let formattedValue = '';
+
+      if (!isNaN(unformattedValue)) {
+          formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      }
+
+      inputElement.value = formattedValue;
+  }
+
+  // Ejecutar la función al cargar la página
+  document.addEventListener('DOMContentLoaded', function() {
+      let priceInputs = document.querySelectorAll('.form-control[name="iPrice"]');
+
+      priceInputs.forEach(function(input) {
+          formatPriceInput(input);
+      });
+  });
+</script>
+
 
 {% endblock %}
