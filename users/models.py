@@ -7,7 +7,7 @@ class Usuarios(models.Model):
     correo = models.CharField(max_length=60)
     nombre_usuario = models.CharField(max_length=60)
     contrasena = models.CharField(max_length=50)
-    estado = models.IntegerField(blank=True, null=True)
+    estado = models.IntegerField(default=1)
 
     class Meta:
         managed = False
@@ -21,10 +21,6 @@ class Usuarios(models.Model):
     #     related_name='usuarios',
     #     related_query_name='usuario',
     # )
-
-
-
-
 
 class Roles(models.Model):
     id_rol = models.AutoField(primary_key=True)
