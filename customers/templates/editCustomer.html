@@ -79,15 +79,10 @@
             </form>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
 
-<<<<<<< HEAD
             // Función para cargar la lista de departamentos
             function cargarDepartamentos() {
                 $.ajax({
@@ -153,66 +148,6 @@
                 const departamentoSeleccionado = $(this).val();
                 cargarMunicipios(departamentoSeleccionado);
             });
-=======
-            function cargarDepartamentos() {
-            $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                },
-                success: function (data) {
-                    const departamentoSelect = $("#departamento");
-                    const departamentos = [...new Set(data.map(item => item.departamento))];
-                    departamentos.forEach(function (depto) {
-                        departamentoSelect.append($("<option>", {
-                            value: depto,
-                            text: depto
-                        }));
-                    });
-
-                    // Dispara el evento change en el departamento al cargar la página
-                    departamentoSelect.trigger("change");
-                }
-            });
-        }
-
-        // Función para obtener la lista de municipios basados en el departamento seleccionado
-        function obtenerMunicipios(departamentoSeleccionado) {
-            return $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                    "departamento": departamentoSeleccionado
-                }
-            });
-        }
-
-        // Función para cargar los municipios basados en el departamento seleccionado
-        function cargarMunicipios(departamentoSeleccionado) {
-            obtenerMunicipios(departamentoSeleccionado).done(function (data) {
-                const municipioSelect = $("#municipio");
-                municipioSelect.empty();
-                data.forEach(function (item) {
-                    municipioSelect.append($("<option>", {
-                        value: item.municipio,
-                        text: item.municipio
-                    }));
-                });
-            });
-        }
-
-        // Cargar la lista de departamentos
-        cargarDepartamentos();
-
-        // Evento para cargar los municipios cuando se cambia la selección del departamento
-        $("#departamento").change(function () {
-            const departamentoSeleccionado = $(this).val();
-            cargarMunicipios(departamentoSeleccionado);
-        });
-    
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
 
             // Validar documento
             $('#iDocumento').on('input', function () {
@@ -249,11 +184,6 @@
 
                 $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
                 $('#iDocumento-error').html(documentoError);
-<<<<<<< HEAD
-=======
-
-               
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
             }
 
             // Función para validar el celular
@@ -263,11 +193,6 @@
 
                 $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
                 $('#iCelular-error').html(celularError);
-<<<<<<< HEAD
-=======
-
-                
->>>>>>> d86a451fe320dd7fc709af3a61f76e492cfc14c3
             }
 
             // Función para validar campos en tiempo real

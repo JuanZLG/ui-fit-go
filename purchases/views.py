@@ -73,11 +73,15 @@ def crear_compra(request):
 
 
 
+from django.http import JsonResponse
+from django.db.models import Q
+from .models import Proveedores  # Asegúrate de importar el modelo Proveedores
+
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
     palabras_clave = nombre_proveedor.split()
-    proveedores_encontrados = Proveedores.objects.all()
+    proveedores_encontrados = Proveedores.objects.filter(estado__gt=0)  # Filtrar por estado > 0
 
     for palabra_clave in palabras_clave:
         proveedores_encontrados = proveedores_encontrados.filter(
@@ -97,26 +101,20 @@ def buscar_proveedor(request):
 
 
 
+
+from django.http import JsonResponse
+
 def buscar_productos(request):
     q = request.GET.get("q", "")
-    productos = Productos.objects.filter(nombre_producto__icontains=q).values_list(
-        "nombre_producto", flat=True
-    )
+    productos = Productos.objects.filter(
+        nombre_producto__icontains=q,
+    ).values_list("nombre_producto", flat=True)
     return JsonResponse({"productos": list(productos)})
+
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
     return JsonResponse({"existe": producto_existe})
-
-
-
-
-
-
-
-
-
-
 
 def obtener_precio(request):
     nombre_producto = request.GET.get(
@@ -171,16 +169,27 @@ def cambiarEstado(request):
         compra_id = request.GET.get('compra_id')
         nuevo_estado = request.GET.get('nuevo_estado')
         
-        try:
-            compra = Compras.objects.get(id_compra=compra_id)
-            compra.estado = int(nuevo_estado)
-            compra.save()
-            
-            return JsonResponse({'status': 'success'})
-        except Compras.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Registro de compra no encontrado'})
+        compra = Compras.objects.get(id_compra=compra_id)
+        compra.estado = int(nuevo_estado)
+        compra.save()
+
+        detalles = Detallecompra.objects.filter(id_compra=compra_id)
+        for detalle in detalles:
+            producto = detalle.id_producto
+
+            if compra.estado == 1: 
+                detalle.estado = 1  
+                producto.cantidad += detalle.cantidad  
+                producto.save()  
+
+            else:  
+                detalle.estado = 0  
+                producto.cantidad -= detalle.cantidad 
+                producto.save()  
+
+            detalle.save() 
         
-    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+        return JsonResponse({'status': 'success'})
 
 
 def obtener_detalles_compra(request, compra_id):

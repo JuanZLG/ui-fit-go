@@ -86,11 +86,17 @@
         $(".cambiar-estado-compra").click(function () {
             let compraId = $(this).data("compra-id");
             let nuevoEstado = $(this).data("nuevo-estado");
+            let mensaje;
+            if (nuevoEstado === 0) {
+                mensaje = "¿Estás seguro de desactivar esta compra? Esto marcará la compra como inactiva y restará las cantidades al stock de los productos relacionados.";
+            } else {
+                mensaje = "¿Estás seguro de activar esta compra? Esto marcará la compra como activa y sumará las cantidades al stock de los productos relacionados.";
+            }
 
             Swal.fire({
-                title: 'Confirmar',
-                text: '¿Estás seguro de que deseas cambiar el estado?',
-                icon: 'warning',
+                title: 'Estado',
+                text: mensaje,
+               
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -117,6 +123,7 @@
         });
     });
 </script>
+
 
 </div>
 
