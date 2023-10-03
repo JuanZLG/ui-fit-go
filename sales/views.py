@@ -232,23 +232,33 @@ def obtener_nombre(request):
             status=400,
         )
 
+
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         venta_id = request.GET.get('venta_id')
         nuevo_estado = request.GET.get('nuevo_estado')
         
-        try:
-            venta = Ventas.objects.get(id_venta=venta_id)
-            venta.estado = int(nuevo_estado)
-            venta.save()
-            
-            return JsonResponse({'status': 'success'})
-        except Clientes.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Registros de venta no encontrado'})
+        venta = Ventas.objects.get(id_venta=venta_id)
+        venta.estado = int(nuevo_estado)
+        venta.save()
+
+        detalles = Detalleventa.objects.filter(id_venta=venta_id)
+        for detalle in detalles:
+            producto = detalle.id_producto
+
+            if venta.estado == 1: 
+                detalle.estado = 1  
+                producto.cantidad -= detalle.cantidad  
+                producto.save()  
+
+            else:  
+                detalle.estado = 0  
+                producto.cantidad += detalle.cantidad 
+                producto.save()  
+
+            detalle.save() 
         
-    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
-
+        return JsonResponse({'status': 'success'})
 
 
 def detalles_venta(request):

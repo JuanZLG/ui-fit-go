@@ -169,7 +169,7 @@
                         <form class="form" id="category-form" method="post">
                             {% csrf_token %}
                             <div class="form-row">
-                                <div class="col-md-10 mb-1">
+                                <div class="col-md-12 mb-1">
                                     <label for="nombre_categoria">Nombre de la Categoria *</label>
                                     <input type="text" class="form-control" id="nombre_categoria"
                                         name="nombre_categoria" placeholder="Ingrese un nombre">
@@ -252,7 +252,7 @@
                         <form method="post" id="editarCategoriaForm">
                             {% csrf_token %}
                             <div class="form-row">
-                                <div class="col-md-10 mb-1">
+                                <div class="col-md-12 mb-1">
                                     <label for="nombre_categoria_edit">Nombre de la Categoria *</label>
                                     <input type="text" class="form-control" id="nombre_categoria_edit"
                                         placeholder="Ingrese un nombre" required>
@@ -281,7 +281,6 @@
             var idToDelete = parseInt($(this).data("id-categoria"));
             var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-            // Muestra una confirmación al usuario (puedes usar SweetAlert o Bootstrap Modal)
             if (confirm("¿Estás seguro de eliminar esta categoría?")) {
                 $.ajax({
                     headers: {
@@ -291,12 +290,12 @@
                     data: {
                         idToDelete: idToDelete
                     },
-                    method: "POST", // O "GET" según tu vista de Django
+                    method: "POST", 
                     success: function (response) {
                         location.reload();
                     },
                     error: function (error) {
-                        // Maneja errores si es necesario
+                       
                     }
                 });
             }
