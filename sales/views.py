@@ -231,10 +231,9 @@ def obtener_nombre(request):
             {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
             status=400,
         )
-from django.http import JsonResponse
-from django.http import JsonResponse
 
-from django.http import JsonResponse
+
+
 
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -253,10 +252,10 @@ def cambiarEstado(request):
                 detalle.estado = 1  
                 producto.cantidad -= detalle.cantidad  
                 producto.save()  
-
             else:  
-                detalle.estado = 0  
-                producto.cantidad += detalle.cantidad 
+                if detalle.estado == 1:
+                    detalle.estado = 0
+                    producto.cantidad += detalle.cantidad 
                 producto.save()  
 
             detalle.save() 
