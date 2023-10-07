@@ -17,8 +17,6 @@ class Categorias(models.Model):
         db_table = 'categorias'
 
 
-
-
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
     id_proveedor = models.ForeignKey('Proveedores', models.DO_NOTHING, db_column='id_proveedor')
@@ -32,8 +30,6 @@ class Compras(models.Model):
         db_table = 'compras'
 
 
-
-
 class Detallecompra(models.Model):
     id_detallecompra = models.AutoField(primary_key=True)
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
@@ -41,12 +37,12 @@ class Detallecompra(models.Model):
     cantidad = models.IntegerField()
     precio_uni = models.FloatField()
     precio_tot = models.FloatField()
+    estado = models.IntegerField(default=1)
+
 
     class Meta:
         managed = False
         db_table = 'detallecompra'
-
-
 
 
 class Marcas(models.Model):
@@ -88,7 +84,11 @@ class Proveedores(models.Model):
     nombre_proveedor = models.CharField(max_length=65)
     telefono = models.CharField(max_length=10)
     correo = models.CharField(max_length=65)
-    estado = models.IntegerField()
+    direccion = models.CharField(max_length=50)
+    informacion_adicional = models.TextField()
+    tipo_documento = models.CharField(max_length=50)
+    numero_documento_nit = models.CharField(max_length=50)
+    estado = models.IntegerField(default=1)
 
     class Meta:
         managed = False

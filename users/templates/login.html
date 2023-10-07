@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
+    <title>TuiranFit</title>
     <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/EstilosLogin.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -12,14 +12,6 @@
 <body>
     
     <div class="wrapper">
-
-        {% comment %} <form method="post">
-            {% csrf_token %}
-            <h1>Iniciar Sesión</h1>
-            {{ form.as_p }}
-            <button type="submit" class="btn">Entrar</button>
-        </form>
-         {% endcomment %}
 
         <h1>Iniciar Sesión</h1>
         <br>
@@ -42,7 +34,6 @@
             <button type="submit" class="btn">Entrar</button>
         </form>
     </div>
-
       
 </body>
 </html>

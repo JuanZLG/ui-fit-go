@@ -1,6 +1,7 @@
 from django.urls import path, include 
 from . import views 
 from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns=[
     path('', views.Home, name='usuarios'),
@@ -14,6 +15,5 @@ urlpatterns=[
     path('obtener_datos/', views.obtener_datos, name='obtener_datos'),
     path('rol_unico/', views.rol_unico, name='rol_unico'),
     path('remove/', views.eliminar_rol, name='eliminarRol'),
-    
-    
 ]
+

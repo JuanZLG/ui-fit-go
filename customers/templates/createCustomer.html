@@ -7,6 +7,56 @@
     <h1 class="h3 text-black-800 mb-4" style="font-weight:bold;">Agregar Cliente</h1>
 </center>
 
+<style>
+    .flag-select {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    #iPais {
+        width: 100px;
+    }
+
+    #iCodigoLlamada {
+        flex: 0 0 60px; /* Ajusta el tamaño del iCodigoLlamada */
+    }
+
+    #iCelular {
+        flex: 1;
+        min-width: 100px; /* Establece un ancho mínimo para evitar montarse en pantallas pequeñas */
+    }
+
+    .smaller-input {
+        flex: 0 0 60px; /* Ajusta el tamaño del smaller-input */
+    }
+
+    /* Agrega un estilo para pantallas pequeñas (menos de 576px) */
+    @media (max-width: 575px) {
+        .flag-select {
+            flex-direction: column; /* Cambia a dirección vertical en pantallas pequeñas */
+            align-items: flex-start;
+        }
+
+        #iCodigoLlamada,
+        #iCelular {
+            width: 100%; /* Toma todo el ancho en pantallas pequeñas */
+            flex: 0 0 auto; /* Restaura el tamaño automático en pantallas pequeñas */
+        }
+
+        .smaller-input {
+            width: 100%; /* Toma todo el ancho en pantallas pequeñas */
+            flex: 0 0 auto; /* Restaura el tamaño automático en pantallas pequeñas */
+        }
+    }
+</style>
+
+
+
+
+
+
+
 <div class="card shadow">
     <div class="container p-4">
         <form class="form" id="cliente-form" method="post">
@@ -34,11 +84,60 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="iCelular">Celular *</label>
-                    <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                        minlength="10" maxlength="10">
-                    <div class="error-message" id="iCelular-error" style="color:red;"></div>
+                    <div class="input-group">
+                        <div class="flag-select">
+                            <select class="form-control" id="iPais" name="iPais"
+                                onchange="actualizarCodigoLlamada(this)">
+                                <option value="CO" selected>Colombia</option>
+                                <option value="VE">Venezuela</option>
+                                <option value="EC">Ecuador</option>
+                            </select>
+                        </div>
+                        <input type="text" class="form-control" id="iCodigoLlamada" name="iCodigoLlamada"
+                            placeholder="+57" readonly>
+                        <input type="text" class="form-control smaller-input" id="iCelular" name="iCelular"
+                            placeholder="Número de celular" minlength="10" maxlength="13">
+                    </div>
+                    <div class="error-message" id="iCelular-error"></div>
                     <div class="info-message" id="iCelular-info"></div>
                 </div>
+
+
+                <script>
+                    function actualizarCodigoLlamada(select) {
+                        const codigoLlamada = select.value === 'CO' ? '+57' : select.value === 'VE' ? '+58' : select.value === 'EC' ? '+593' : '';
+                        const celular = document.getElementById('iCelular').value;
+                
+                        // Si el número de celular ya contiene un prefijo diferente, no lo modificamos
+                        if (!celular.startsWith('+57') && !celular.startsWith('+58') && !celular.startsWith('+593')) {
+                            document.getElementById('iCelular').value = codigoLlamada;
+                        } else {
+                            // Si ya contiene un prefijo, reemplazamos el prefijo antiguo con el nuevo
+                            const nuevoCelular = celular.replace(/^(\+57|\+58|\+593)/, codigoLlamada);
+                            document.getElementById('iCelular').value = nuevoCelular;
+                        }
+                
+                        document.getElementById('iCodigoLlamada').value = codigoLlamada;
+                    }
+                
+                    // Establecer el valor por defecto al cargar la página
+                    window.onload = function () {
+                        const selectPais = document.getElementById('iPais');
+                        actualizarCodigoLlamada(selectPais);
+                    };
+                
+                    // Escuchar cambios en la selección del país
+                    document.getElementById('iPais').onchange = function () {
+                        actualizarCodigoLlamada(this);
+                    };
+                </script>
+                
+                
+                
+
+
+
+
             </div>
 
             <div class="form-row">
@@ -69,7 +168,7 @@
                     <div class="error-message" id="municipio-error" style="color:red;"></div>
                 </div>
             </div>
-            
+
             <div class="text-end">
                 <button class="btn btn-success" type="submit" id="submit-button" disabled>Guardar</button>
             </div>
@@ -228,11 +327,11 @@
 
 
     }
-    
+
 
     function validarCelular() {
         const celular = $('#iCelular').val();
-        const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
+        const celularError = /^\d{0,13}$/.test(celular) ? '' : 'Número inválido.';
 
         $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
         $('#iCelular-error').html(celularError);
@@ -267,7 +366,7 @@
         const municipio = $('#municipio').val();
 
         const documentoValido = (documento.length === 8 || documento.length === 10);
-        const celularValido = (celular.length === 10);
+        const celularValido = (celular.length === 12 || celular.length === 13);
         const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
 
         if (documentoValido && celularValido && camposCompletos) {

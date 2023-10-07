@@ -263,10 +263,6 @@ def cambiarEstado(request):
         return JsonResponse({'status': 'success'})
 
 
-
-
-
-
 def detalles_venta(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_venta = request.GET.get('venta_id')

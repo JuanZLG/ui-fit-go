@@ -159,7 +159,7 @@
                                 </button></td>
                                 <td>
                                     <a class="btn btn-sm btn-danger delete-button" data-id-marca="{{ mc.id_marca }}"
-                                style="height:27px;"><i class="fa-solid fa-trash-can fa-sm"
+                                style="height:27px;" data-toggle="tooltip" data-placement="right" title="Elimina esta marca"><i class="fa-solid fa-trash-can fa-sm"
                                     style="color: #ffffff;"></i></a>
                                 </td>
                             </tr>
@@ -179,7 +179,6 @@
             var idToDelete = parseInt($(this).data("id-marca"));
             var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-            // Muestra una confirmación al usuario (puedes usar SweetAlert o Bootstrap Modal)
             if (confirm("¿Está seguro de eliminar esta marca?")) {
                 $.ajax({
                     headers: {
@@ -189,12 +188,12 @@
                     data: {
                         idToDelete: idToDelete
                     },
-                    method: "POST", // O "GET" según tu vista de Django
+                    method: "POST",
                     success: function (response) {
                         location.reload();
                     },
                     error: function (error) {
-                        // Maneja errores si es necesario
+                      
                     }
                 });
             }
@@ -218,7 +217,7 @@ aria-hidden="true">
                     <form class="form" id="marca-form" method="post">
                         {% csrf_token %}
                         <div class="form-row">
-                            <div class="col-md-10 mb-1">
+                            <div class="col-md-12 mb-1">
                                 <label for="nombre_marca">Nombre de la Marca *</label>
                                 <input type="text" class="form-control" id="nombre_marca"
                                     name="nombre_marca" placeholder="Ingrese un nombre">

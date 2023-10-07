@@ -8,7 +8,7 @@ class Clientes(models.Model):
     documento = models.CharField(max_length=25, unique=True)  
     nombres = models.CharField(max_length=60)
     apellidos = models.CharField(max_length=60)
-    celular = models.CharField(max_length=10)
+    celular = models.CharField(max_length=15)
     barrio = models.CharField(max_length=40)
     direccion = models.CharField(max_length=50)
     estado = models.IntegerField(default=1)
