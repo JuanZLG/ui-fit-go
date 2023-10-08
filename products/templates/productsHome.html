@@ -13,7 +13,7 @@
         <div class="d-flex flex-row justify-content-between">
             <span class="mx-2">
                 <a href="{% url 'createAProduct' %}" class="btn btn-success btn-icon-split btn-add">
-                    <span class="icon">
+                    <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea un Producto">
                         <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Producto</span>
                     </span>
@@ -21,7 +21,7 @@
             </span>
             <span class="mx-2">
                 <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
-                    <span class="icon">
+                    <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea una Categoría">
                         <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Categoria</span>
                     </span>
@@ -30,7 +30,7 @@
 
             <span class="mx-2">
                 <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearMarcaModal">
-                    <span class="icon">
+                    <span class="icon" data-toggle="tooltip" data-placement="right" title="Eliminar Marca"
                         <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Marca</span>
                     </span>
@@ -60,8 +60,8 @@
                         <th>Categoría</th>
                         <th>Marca</th>
                         <th>Producto</th>
-                        <th>Existencias</th>
-                        <th>Precio</th>
+                        <th data-toggle="tooltip" data-placement="top" title="Stock del Producto">Existencias</th>
+                        <th data-toggle="tooltip" data-placement="top" title="Valor Unitario">Precio</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -75,7 +75,7 @@
                         <td>{{p.cantidad}}</td>
                         <td class="precio-format">{{ p.precio|floatformat:"0" }}</td>
                         <td>
-                            <button
+                            <button data-toggle="tooltip" data-placement="top" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton mx-3 {% if p.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-producto-id="{{ p.id_producto }}"
                                 data-nuevo-estado="{% if p.estado == 1 %}0{% else %}1{% endif %}">
@@ -87,10 +87,10 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm" id="editbutton"><i
+                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm" id="editbutton" data-toggle="tooltip" data-placement="top" title="Editar Producto"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
                             <button type="button" class="btn btn-sm btn-primary verProducto"
-                                data-prod-id="{{ p.id_producto }}">
+                                data-prod-id="{{ p.id_producto }}" data-toggle="tooltip" data-placement="right" title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
@@ -631,6 +631,18 @@ aria-hidden="true">
         });
     });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+
+        });
+    </script>
 
 
 {% endblock %}
