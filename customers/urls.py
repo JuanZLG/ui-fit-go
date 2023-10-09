@@ -9,7 +9,7 @@ urlpatterns = [
     path('ver_detalles_cliente/', views.verDetallesCliente, name='ver_detalles_cliente'),
 
 
-    path('verificar_documento/', views.verificar_documento, name='verificar_documento'),
+    path('validar_documento/', views.validar_documento, name='validarDocumento'),
 
     path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoClientes'),
 

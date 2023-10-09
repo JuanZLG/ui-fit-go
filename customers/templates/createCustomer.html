@@ -4,58 +4,8 @@
 {% block body %}
 <!-- Begin Page Content -->
 <center>
-    <h1 class="h3 text-black-800 mb-4" style="font-weight:bold;">Agregar Cliente</h1>
+    <h1 class="h3 text-gray-800 mb-4">Agregar Cliente</h1>
 </center>
-
-<style>
-    .flag-select {
-        display: flex;
-        align-items: center;
-        margin-right: 10px;
-    }
-
-    #iPais {
-        width: 100px;
-    }
-
-    #iCodigoLlamada {
-        flex: 0 0 60px; /* Ajusta el tamaño del iCodigoLlamada */
-    }
-
-    #iCelular {
-        flex: 1;
-        min-width: 100px; /* Establece un ancho mínimo para evitar montarse en pantallas pequeñas */
-    }
-
-    .smaller-input {
-        flex: 0 0 60px; /* Ajusta el tamaño del smaller-input */
-    }
-
-    /* Agrega un estilo para pantallas pequeñas (menos de 576px) */
-    @media (max-width: 575px) {
-        .flag-select {
-            flex-direction: column; /* Cambia a dirección vertical en pantallas pequeñas */
-            align-items: flex-start;
-        }
-
-        #iCodigoLlamada,
-        #iCelular {
-            width: 100%; /* Toma todo el ancho en pantallas pequeñas */
-            flex: 0 0 auto; /* Restaura el tamaño automático en pantallas pequeñas */
-        }
-
-        .smaller-input {
-            width: 100%; /* Toma todo el ancho en pantallas pequeñas */
-            flex: 0 0 auto; /* Restaura el tamaño automático en pantallas pequeñas */
-        }
-    }
-</style>
-
-
-
-
-
-
 
 <div class="card shadow">
     <div class="container p-4">
@@ -67,89 +17,40 @@
                     <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
                         minlength="8" maxlength="10">
                     <div class="error-message" id="iDocumento-error"></div>
-                    <div class="info-message" id="iDocumento-info" style="color:red;"></div>
+                    <div class="info-message" id="iDocumento-info"></div>
                 </div>
 
                 <div class="form-group col-md-6">
                     <label for="iNombres">Nombres *</label>
                     <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
-                    <div class="error-message" id="iNombres-error" style="color:red;"></div>
+                    <div class="error-message" id="iNombres-error"></div>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="iApellidos">Apellidos *</label>
                     <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos">
-                    <div class="error-message" id="iApellidos-error" style="color:red;"></div>
+                    <div class="error-message" id="iApellidos-error"></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="iCelular">Celular *</label>
-                    <div class="input-group">
-                        <div class="flag-select">
-                            <select class="form-control" id="iPais" name="iPais"
-                                onchange="actualizarCodigoLlamada(this)">
-                                <option value="CO" selected>Colombia</option>
-                                <option value="VE">Venezuela</option>
-                                <option value="EC">Ecuador</option>
-                            </select>
-                        </div>
-                        <input type="text" class="form-control" id="iCodigoLlamada" name="iCodigoLlamada"
-                            placeholder="+57" readonly>
-                        <input type="text" class="form-control smaller-input" id="iCelular" name="iCelular"
-                            placeholder="Número de celular" minlength="10" maxlength="13">
-                    </div>
+                    <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
+                        minlength="10" maxlength="10">
                     <div class="error-message" id="iCelular-error"></div>
                     <div class="info-message" id="iCelular-info"></div>
                 </div>
-
-
-                <script>
-                    function actualizarCodigoLlamada(select) {
-                        const codigoLlamada = select.value === 'CO' ? '+57' : select.value === 'VE' ? '+58' : select.value === 'EC' ? '+593' : '';
-                        const celular = document.getElementById('iCelular').value;
-                
-                        // Si el número de celular ya contiene un prefijo diferente, no lo modificamos
-                        if (!celular.startsWith('+57') && !celular.startsWith('+58') && !celular.startsWith('+593')) {
-                            document.getElementById('iCelular').value = codigoLlamada;
-                        } else {
-                            // Si ya contiene un prefijo, reemplazamos el prefijo antiguo con el nuevo
-                            const nuevoCelular = celular.replace(/^(\+57|\+58|\+593)/, codigoLlamada);
-                            document.getElementById('iCelular').value = nuevoCelular;
-                        }
-                
-                        document.getElementById('iCodigoLlamada').value = codigoLlamada;
-                    }
-                
-                    // Establecer el valor por defecto al cargar la página
-                    window.onload = function () {
-                        const selectPais = document.getElementById('iPais');
-                        actualizarCodigoLlamada(selectPais);
-                    };
-                
-                    // Escuchar cambios en la selección del país
-                    document.getElementById('iPais').onchange = function () {
-                        actualizarCodigoLlamada(this);
-                    };
-                </script>
-                
-                
-                
-
-
-
-
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="iBarrio">Barrio *</label>
                     <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
-                    <div class="error-message" id="iBarrio-error" style="color:red;"></div>
+                    <div class="error-message" id="iBarrio-error"></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="iDireccion">Dirección *</label>
                     <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección">
-                    <div class="error-message" id="iDireccion-error" style="color:red;"></div>
+                    <div class="error-message" id="iDireccion-error"></div>
                 </div>
             </div>
 
@@ -158,17 +59,19 @@
                     <label for="departamento">Departamento *</label>
                     <select class="form-control" id="departamento" name="nombre_departamento">
                     </select>
-                    <div class="error-message" id="departamento-error" style="color:red;"></div>
+                    <div class="error-message" id="departamento-error"></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="municipio">Municipio *</label>
                     <select class="form-control" id="municipio" name="nombre_municipio">
                         <option value="Municipio por Defecto">Selecciona un Municipio</option>
                     </select>
-                    <div class="error-message" id="municipio-error" style="color:red;"></div>
+                    <div class="error-message" id="municipio-error"></div>
                 </div>
             </div>
-
+            <div class="text-center">
+                <p>(*) campos obligatorios</p>
+            </div>
             <div class="text-end">
                 <button class="btn btn-success" type="submit" id="submit-button" disabled>Guardar</button>
             </div>
@@ -319,19 +222,33 @@
 
 
     function validarDocumento() {
-        const documento = $('#iDocumento').val();
-        const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+    const documento = $('#iDocumento').val();
+    const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
 
-        $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
-        $('#iDocumento-error').html(documentoError);
+    $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
+    $('#iDocumento-error').html(documentoError);
 
+    // Verificar si el documento ya existe en la base de datos
+    $.ajax({
+        type: 'GET',
+        url: "{% url 'validarDocumento' %}", // Asegúrate de que coincida con la URL en urls.py
+        data: { documento: documento },
+        success: function (response) {
+            if (response.existe) {
+                mostrarError($('#iDocumento'), 'Este cliente ya está registrado.');
+            } else {
+                ocultarError($('#iDocumento'));
+            }
+            habilitarBoton(); // Llamar a habilitarBoton después de la verificación
+        }
+    });
+}
 
-    }
-
+    
 
     function validarCelular() {
         const celular = $('#iCelular').val();
-        const celularError = /^\d{0,13}$/.test(celular) ? '' : 'Número inválido.';
+        const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
 
         $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
         $('#iCelular-error').html(celularError);
@@ -366,7 +283,7 @@
         const municipio = $('#municipio').val();
 
         const documentoValido = (documento.length === 8 || documento.length === 10);
-        const celularValido = (celular.length === 12 || celular.length === 13);
+        const celularValido = (celular.length === 10);
         const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
 
         if (documentoValido && celularValido && camposCompletos) {

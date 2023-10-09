@@ -196,13 +196,12 @@ def verDetallesCliente(request):
 
 
 
-def verificar_documento(request):
-    if request.method == 'POST':
-        documento = request.POST.get('iDocumento')
 
-        documento_existe = Clientes.objects.filter(documento=documento).exists()
+def validar_documento(request):
+    documento = request.GET.get('documento', '')
 
-        return JsonResponse({'documento_existe': documento_existe})
+    # Verificar si ya existe un cliente con el mismo documento
+    cliente_existente = Clientes.objects.filter(documento=documento).exists()
 
-    # Manejar otros métodos y errores si es necesario
+    return JsonResponse({'existe': cliente_existente})
 
