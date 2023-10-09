@@ -108,7 +108,7 @@
             habilitarBoton();
 
         });
-        $('#iDocumento, #iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio')
+        $('#iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #iDocumento, #departamento, #municipio')
             .on('input', function () {
                 if ($(this).val() === '') {
                     mostrarError($(this), 'Este campo es obligatorio.');
@@ -123,6 +123,7 @@
             let errors = false;
 
             // Validaciones en el lado del cliente para los campos que no han sido validados en tiempo real
+
             validarCampo($('#iNombres'));
             validarCampo($('#iApellidos'));
             validarCampo($('#iBarrio'));
@@ -222,29 +223,39 @@
 
 
     function validarDocumento() {
-    const documento = $('#iDocumento').val();
-    const documentoError = /^\d{0,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+        const documento = $('#iDocumento').val();
 
-    $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
-    $('#iDocumento-error').html(documentoError);
-
-    // Verificar si el documento ya existe en la base de datos
-    $.ajax({
-        type: 'GET',
-        url: "{% url 'validarDocumento' %}", // Asegúrate de que coincida con la URL en urls.py
-        data: { documento: documento },
-        success: function (response) {
-            if (response.existe) {
-                mostrarError($('#iDocumento'), 'Este cliente ya está registrado.');
-            } else {
-                ocultarError($('#iDocumento'));
-            }
-            habilitarBoton(); // Llamar a habilitarBoton después de la verificación
+        // Verificar si el campo está vacío
+        if (documento.trim() === '') {
+            mostrarError($('#iDocumento'), 'Este campo es obligatorio.');
+            habilitarBoton();
+            return; // No continúes con la validación si el campo está vacío
         }
-    });
-}
 
-    
+        const documentoError = /^\d{8,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+
+        $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
+        $('#iDocumento-error').html(documentoError);
+
+        // Verificar si el documento ya existe en la base de datos
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'validarDocumento' %}", // Asegúrate de que coincida con la URL en urls.py
+            data: {
+                documento: documento
+            },
+            success: function (response) {
+                if (response.existe) {
+                    mostrarError($('#iDocumento'), 'Este cliente ya está registrado.');
+                } else {
+                    ocultarError($('#iDocumento'));
+                }
+                habilitarBoton(); // Llamar a habilitarBoton después de la verificación
+            }
+        });
+    }
+
+
 
     function validarCelular() {
         const celular = $('#iCelular').val();
