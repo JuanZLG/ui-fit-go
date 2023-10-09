@@ -12,7 +12,7 @@
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
             <a href="{% url 'agregarClientes' %}" class="btn btn-success btn-icon-split btn-add">
-                <span class="icon">
+                <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea un Cliente">
                     <i class="fa-solid fa-plus" id="addicon"></i>
                 <span class="text">Agregar Cliente</span>
             </span>
@@ -53,7 +53,7 @@
                         <td>{{ cliente.celular }}</td>
                         <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
                         <td>
-                            <button class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
+                            <button  data-toggle="tooltip" data-placement="right" title="Cambiar de Estado" class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
                                 data-cliente-id="{{ cliente.id_cliente }}"
                                 data-nuevo-estado="{% if cliente.estado == 0 %}1{% else %}0{% endif %}">
                                 {% if cliente.estado == 0 %}
@@ -65,8 +65,8 @@
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
-                                id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a  class="btn btn-sm btn-primary detailsbutton verCliente" data-cliente-id="{{ cliente.id_cliente }}">
+                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top" title="Editar Cliente"></i></a>
+                                <a  class="btn btn-sm btn-primary detailsbutton verCliente" data-cliente-id="{{ cliente.id_cliente }}"  data-toggle="tooltip" data-placement="right" title="Ver Detalles">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>     
                         </td>
