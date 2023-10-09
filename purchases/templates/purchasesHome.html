@@ -12,14 +12,14 @@
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
             <a href="{% url 'crear_compra' %}" class="btn btn-success btn-icon-split btn-add" id="am">
-                <span class="icon">
+                <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea una Compra">
                     <i class="fa-solid fa-plus" id="addicon"></i>
                     <span class="text">Agregar Compra</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger btn-dash" id="of">Generar Informe</button>
+            <button class="btn btn-danger btn-dash" id="of" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">Generar Informe</button>
         </span>
     </div>
 </div>
@@ -56,6 +56,7 @@
                         <td>{{ compra.fechareg }}</td>
                         <td>
                             <button
+                            data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
                                 class="cambiar-estado-compra btn statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-compra-id="{{ compra.id_compra }}"
                                 data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
@@ -64,10 +65,10 @@
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editarCompra' compra.id_compra %}" class="btn btn-sm" id="editbutton"><i
-                                    class="fa-solid fa-pen-to-square"></i></a>
+                                    class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top" title="Editar Compra"></i></a>
                             <a href="#" class="btn btn-sm btn-primary" id="editbutton{{ compra.id_compra }}"
                                 data-compra-id="{{ compra.id_compra }}"
-                                onclick="mostrarDetallesCompra({{ compra.id_compra }})">
+                                onclick="mostrarDetallesCompra({{ compra.id_compra }})" data-toggle="tooltip" data-placement="right" title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                         </td>
@@ -336,8 +337,7 @@
 
 
 
-<!-- Modal con etiqueta dialog -->
-<dialog id="verDetallesDialog" class="compraDialog dragHandle">
+<dialog id="verDetallesDialogg" class="compraDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoCompraCircle {% if compra.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
@@ -367,7 +367,7 @@
                     <th style="width: 30%;">Total del producto</th>
                 </tr>
             </thead>
-            <tbody id="modalDetallesVenta">
+            <tbody id="modalDetallesCompra">
             </tbody>
         </table>
         <div class="d-flex justify-content-end mt-2">
@@ -376,60 +376,66 @@
     </form>
 </dialog>
 
-
-
-
-
 <script>
     function mostrarDetallesCompra(compraId) {
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$ ' + precioFormateado;
+        }
+        
         // Realiza una solicitud AJAX al servidor para obtener los detalles de la compra
         $.ajax({
-            url: `{% url 'obtener_detalles_compra' 0 %}`.replace('0', compraId),
-            method: "GET",
+            url: "{% url 'obtener_detalles_compra' 0 %}".replace('0', compraId),
+            method: "GET", // Actualiza la URL según tu configuración
+
             success: function (response) {
-                console.log('Respuesta del servidor:', response);
-
                 // Llena el modal con los detalles de la compra obtenidos del servidor
-                document.getElementById("proveedor").textContent = response.proveedor;
-                console.log('Proveedor:', response.proveedor);
-
-                document.getElementById("fechareg").textContent = response.fechaRegistro;
-                console.log('Fecha de Registro:', response.fechaRegistro);
-
-                document.getElementById("modalEstado").textContent = response.estado;
-                console.log('Estado:', response.estado);
-
+                var compra = response.success;
+                $("#fechareg").text(compra.fechareg);
+                $("#proveedor").text(compra.proveedor);
+                $("#documento").text(compra.documento);
+                $("#totalCompra").text(formatearPrecios(compra.totalCompra));
+                
+                if (response.estado == 1) {
+                    $(".estadoCompraCircle").addClass("activo").removeClass("inactivo");
+                } else {
+                    $(".estadoCompraCircle").addClass("inactivo").removeClass("activo");
+                }
+                
                 // Llena la tabla de detalles de la compra
                 let detallesCompraHTML = "";
                 let totalCompra = 0; // Variable para calcular el total de compra
-
+    
                 for (let detalle of response.detalles) {
                     console.log('Detalle:', detalle);
-
+    
                     // Convierte precioUnitario y totalProducto a números
-                    const precioUnitario = parseFloat(detalle.precioUnitario);
-                    const totalProducto = parseFloat(detalle.totalProducto);
-
+                    const precioUnitario = formatearPrecios(detalle.precioUnitario);
+                    const totalProducto = formatearPrecios(detalle.totalProducto);
+    
                     detallesCompraHTML += `
                         <tr>
                             <td>${detalle.producto}</td>
-                            <td>${precioUnitario.toFixed(2)}</td> <!-- Mostrar con 2 decimales -->
+                            <td>${precioUnitario}</td> <!-- Mostrar con 2 decimales -->
                             <td>${detalle.cantidad}</td>
-                            <td>${totalProducto.toFixed(2)}</td> <!-- Mostrar con 2 decimales -->
+                            <td>${totalProducto}</td> <!-- Mostrar con 2 decimales -->
                         </tr>
                     `;
-
+    
                     totalCompra += totalProducto; // Suma el total del producto al total de compra
                 }
-
+    
                 document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
-
+    
                 // Actualiza el "Total de Compra" con la suma calculada
-                document.getElementById("totalCompra").textContent = totalCompra.toFixed(2); // Mostrar con 2 decimales
-
+                document.getElementById("totalCompra").textContent = formatearPrecios(totalCompra) // Mostrar con 2 decimales
+    
                 // Abre el modal
-                const modal = document.getElementById("verDetallesDialog");
+                const modal = document.getElementById("verDetallesDialogg");
                 modal.showModal();
+                const cerrarBoton = document.getElementById("cerrarDetallesCompra");
+                cerrarBoton.addEventListener("click", cerrarModal);
             },
             error: function (error) {
                 console.error('Error en la solicitud AJAX:', error);
@@ -437,13 +443,16 @@
             }
         });
     }
-
+    
     function cerrarModal() {
         // Cierra el modal
-        const modal = document.getElementById("verDetallesDialog");
+        const modal = document.getElementById("verDetallesDialogg");
         modal.close();
     }
 </script>
+
+    
+    
 
 
 
