@@ -109,7 +109,7 @@
 
     .cell-actions {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-evenly;
     }
 
     .active-status {
@@ -139,7 +139,7 @@
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
             <button class="m-0 btn btn-success btn-icon-split btn-add verCrear">
-                <span class="icon">
+                <span class="icon" data-toggle="tooltip" data-placement="right" title="Crear Rol">
                     <i class="fa-solid fa-plus"></i>
                     <span class="text">Agregar Rol</span>
                 </span>
@@ -147,7 +147,7 @@
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger btn-dash">Generar Informe</button>
+            <button class="btn btn-danger btn-dash" data-toggle="tooltip" data-placement="right" title="Descargar PDF de Registros">Generar Informe</button>
         </span>
     </div>
 </div>
@@ -160,7 +160,7 @@
                 <thead class="theads">
                     <tr>
                         <th>Nombre del Rol</th>
-                        <th>Permisos</th>
+                        <th data-toggle="tooltip" data-placement="top" title="Controla el acceso a cada módulo.">Permisos</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -168,16 +168,16 @@
                     {% for rol, recuento in permisos_count.items %}
                     <tr class="{% if rol.id_rol == 1 %}admin{% endif %}">
                         <td>{{ rol.nombre_rol }}</td>
-                        <td>{{ recuento }} / 6 </td>
+                        <td data-toggle="tooltip" data-placement="right" title="Cantidad de Permisos">{{ recuento }} / 6 </td>
                         <td class="cell-actions">
-                            <button type="button" class="btn btn-sm verEditar" data-id-rol="{{rol.id_rol}}"><i
+                            <button type="button" class="btn btn-sm verEditar" data-id-rol="{{rol.id_rol}}"data-toggle="tooltip" data-placement="right" title="Modificar Rol y Permisos"><i
                                     class="fa-solid fa-pen-to-square"></i></button>
                             <button type="button" class="btn btn-sm btn-primary verDetalles"
-                                data-id-rol="{{rol.id_rol}}">
+                                data-id-rol="{{rol.id_rol}}" data-toggle="tooltip" data-placement="right" title="Ver Permisos">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                             <a class="btn btn-sm btn-danger delete-button" data-id-rol="{{ rol.id_rol }}"><i
-                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;"></i></a>
+                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip" data-placement="top" title="Eliminar Rol"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
