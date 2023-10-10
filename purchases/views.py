@@ -205,6 +205,8 @@ def obtener_detalles_compra(request, compra_id):
     compra = detalles_compra.first().id_compra 
     datos_generales = {
         'proveedor': compra.id_proveedor.nombre_proveedor,
+        'documento': compra.id_proveedor.numero_documento_nit,
+
         
         'fechaRegistro': compra.fechareg,
         'estado': 'Activo' if compra.estado == 1 else 'Inactivo',
@@ -212,6 +214,7 @@ def obtener_detalles_compra(request, compra_id):
 
     respuesta = {
         'proveedor': datos_generales['proveedor'],
+        'documento': datos_generales['documento'],
         'fechaRegistro': str(datos_generales['fechaRegistro']),
         'estado': datos_generales['estado'],
         'detalles': detalles,
