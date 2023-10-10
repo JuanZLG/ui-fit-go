@@ -72,6 +72,7 @@
                                 data-placement="right" title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
+                            
                         </td>
                     </tr>
                     {% endfor %}
@@ -230,8 +231,9 @@
 
     .cell-actions {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-evenly;
     }
+
 
     .active-status {
         background-color: #95eea5;
@@ -244,8 +246,9 @@
     }
 </style>
 
+<div class="modal-backdrop"></div>
 
-<dialog id="verDetallesCompraDialog" class="compraDialog dragHandle" style="z-index: 9999;" >
+<dialog id="verDetallesCompraDialog" class="compraDialog dragHandle" style="z-index: 9999;">
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoCompraCircle {% if compra.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
@@ -261,7 +264,7 @@
         </div>
         <div class="cont-detalle-header">
             <p class="font-weight-bold">Fecha de compra: <span id="fecharegCompra"></span></p>
-            <p class="font-weight-bold">Proveedor: <span id="proveedorCompra"></span>  </p>
+            <p class="font-weight-bold">Proveedor: <span id="proveedorCompra"></span> </p>
         </div>
         <div class="linea-detalle mb-2">
             <h3>Detalles de la Compra:</h3>
@@ -306,7 +309,7 @@
                 var compra = response;
                 $("#fecharegCompra").text(compra.fechaRegistro);
                 $("#proveedorCompra").text(compra.proveedor);
-                
+
                 $("#totalCompraCompra").text(formatearPrecios(compra.totalCompra));
 
                 if (compra.estado == 'Activo') {
@@ -335,7 +338,8 @@
                         </tr>
                     `;
 
-                    totalCompra += parseFloat(detalle.totalProducto); // Suma el total del producto al total de compra
+                    totalCompra += parseFloat(detalle
+                        .totalProducto); // Suma el total del producto al total de compra
                 }
 
                 document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
@@ -379,7 +383,7 @@
         display: none;
         animation: fadeInBack 0.3s ease-in-out;
     }
-    
+
     .compraDialog {
         max-width: 70%;
         width: 30%;
@@ -394,46 +398,48 @@
         margin: auto;
         padding: 20px;
     }
-    
+
     @keyframes fadeIn {
         from {
             opacity: 0;
             transform: scale(0.9);
         }
-    
+
         to {
             opacity: 1;
             transform: scale(1);
         }
     }
-    
+
     @keyframes fadeInBack {
         from {
             opacity: 0;
         }
-    
+
         to {
             opacity: 1;
         }
     }
-    
+
     .fadeOut {
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
     }
-    
-    .compraDialog .modal-container-header, .linea-detalle {
+
+    .compraDialog .modal-container-header,
+    .linea-detalle {
         text-align: center;
         border-bottom: 1px solid #ddd;
     }
-    
-    .modal-container-header h2, .compraDialog h3{
+
+    .modal-container-header h2,
+    .compraDialog h3 {
         font-size: 1.125rem;
         font-weight: 700;
         gap: 8px;
         text-align: center;
     }
-    
+
     .cerrar-compra {
         padding: 0;
         border: 0;
@@ -450,47 +456,93 @@
         top: 0;
         right: 0;
     }
-    
+
     .estadoCompraCircle {
         width: 1rem;
         height: 1rem;
         border-radius: 50%;
     }
-    
+
     .estadoCompraCircle.activo {
         background-color: #72d072;
-        /* Color para estado activo */
+        position: relative;
+        cursor: pointer;
     }
-    
+
+    .estadoCompraCircle.activo::before {
+        content: "Activo";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #72d072;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .estadoCompraCircle.activo:hover::before {
+        opacity: 1;
+    }
+
+
     .estadoCompraCircle.inactivo {
         background-color: #ba4d4d;
-        /* Color para estado inactivo */
+        position: relative;
+        cursor: pointer;
     }
-    
+
+    .estadoCompraCircle.inactivo::before {
+        content: "Inactivo";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ba4d4d;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .estadoCompraCircle.inactivo:hover::before {
+        opacity: 1;
+    }
+
+
     .cont-detalle-header {
         padding: 20px;
     }
-    
-    .compraDialog section p {
+
+    .cont-detalle-header p {
         font-size: 1rem;
         font-weight: bold;
         color: #222222;
     }
-    
-    .compraDialog section p span {
+
+    .cont-detalle-header p span {
         color: rgb(99, 99, 99);
     }
-    
+
     .tabla-detalles {
         width: 100%;
-        max-width: 800px; 
-        overflow-y: auto; 
+        background-color: #2222;
+        text-align: center;
     }
-    
+
+    .tabla-detalles tbody tr:hover {
+        background-color: #22202022;
+    }
+
     .tabla-detalles thead {
         text-align: center;
     }
-    
+
     .cont-detalle-total {
         display: flex;
         justify-content: flex-end;
@@ -498,8 +550,17 @@
         padding: 10px;
         margin-right: 10px;
     }
-    </style>
-    
+
+    .total-compra {
+        padding: 10px 8px;
+        border: 3px solid #ccc;
+        border-radius: 5px;
+        background-color: #22202022;
+        display: flex;
+        gap: 10px;
+    }
+</style>
+
 
 
 
