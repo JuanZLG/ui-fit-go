@@ -77,6 +77,8 @@ def verDetallesUsuario(request):
                     'Rol': usuario.id_rol.nombre_rol,
                     'Nombre de Usuario': usuario.nombre_usuario,
                     'documento': usuario.correo,
+                    'Estado': usuario.estado,
+                    
                 }
                 return JsonResponse({'success': data})
             except Usuarios.DoesNotExist:
