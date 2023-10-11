@@ -222,7 +222,7 @@
 </script>
 
 <style>
-    .modal-backdrop {
+    .modal-backdrop-usuario {
         position: fixed;
         top: 0;
         left: 0;
@@ -234,7 +234,7 @@
         animation: fadeInBack 0.3s ease-in-out;
     }
 
-    .clienteDialog {
+    .usuarioDialog {
         max-width: 70%;
         width: 30%;
         min-height: 10vh;
@@ -274,18 +274,18 @@
         transition: opacity 0.3s ease-in-out;
     }
 
-    .clienteDialog .modal-container-header {
+    .usuarioDialog .modal-container-header {
         text-align: center;
         border-bottom: 1px solid #ddd;
     }
 
-    .clienteDialog h2 {
+    .usuarioDialog h2 {
         font-size: 1.125rem;
         font-weight: 700;
         gap: 8px;
     }
 
-    .cerrar-cliente {
+    .cerrar-usuario {
         padding: 0;
         border: 0;
         width: 40px;
@@ -302,43 +302,42 @@
         right: 0;
     }
 
-    .estadoClienteCircle {
+    .estadoUsuarioCircle {
         width: 1rem;
         height: 1rem;
         border-radius: 50%;
     }
 
-    .estadoClienteCircle.activo {
-        background-color: #72d072;
-        /* Color para estado activo */
+    .estadoUsuarioCircle.activo {
+        background-color: #72d072; /* Color para estado activo */
     }
 
-    .estadoClienteCircle.inactivo {
-        background-color: #ba4d4d;
-        /* Color para estado inactivo */
+    .estadoUsuarioCircle.inactivo {
+        background-color: #ba4d4d; /* Color para estado inactivo */
     }
 
-    .clienteDialog section {
+    .usuarioDialog section {
         padding: 20px;
     }
 
-    .clienteDialog section p {
+    .usuarioDialog section p {
         font-size: 1rem;
         font-weight: bold;
         color: #222222;
     }
 
-    .clienteDialog section p span {
+    .usuarioDialog section p span {
         color: rgb(99, 99, 99);
     }
 </style>
 
-<dialog id="verDetallesUsuariosDialog" class="clienteDialog dragHandle">
+
+<dialog id="verDetallesUsuarioDialog" class="usuarioDialog dragHandle">
     <form method="dialog">
         <div class="modal-container-header">
-            <div class="estadoClienteCircle {% if cliente.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
-            <h2>Detalles del Cliente</h2>
-            <button class="cerrar-cliente" type="button" id="cerrarDetallesCliente">
+            <div class="estadoUsuarioCircle"></div>
+            <h2>Detalles del Usuario</h2>
+            <button class="cerrar-usuario" type="button" id="cerrarDetallesUsuario">
                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 0h24v24H0z" fill="none"></path>
                     <path
@@ -348,67 +347,60 @@
             </button>
         </div>
         <section>
-            <p>Nombre del Cliente: <span id="nombreCliente"></span></p>
-            <p>Documento: <span id="documentoCliente"></span></p>
-            <p>Celular: <span id="celularCliente"></span></p>
-            <p>Barrio: <span id="barrioCliente"></span></p>
-            <p>Dirección: <span id="direccionCliente"></span></p>
-            <p>Estado: <span id="estadoCliente"></span></p>
-            <p>Departamento: <span id="departamentoCliente"></span></p>
-            <p>Municipio: <span id="municipioCliente"></span></p>
+            <p>Rol: <span class="rolUsuario"></span></p>
+            <p>Nombre de Usuario: <span class="nombreUsuario"></span></p>
+            <p>Correo: <span class="correoUsuario"></span></p>
+            <p>Estado: <span class="estadoUsuario"></span></p>
         </section>
     </form>
 </dialog>
 
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $(".verCliente").click(function () {
-            var clienteId = $(this).data("cliente-id");
+        $(".verUsuario").click(function () {
+            var usuarioId = $(this).data("usu-id"); // Corregido para que coincida con el atributo data-usu-id
+    
             $.ajax({
-                url: "{% url 'ver_detalles_cliente' %}",
+                url: "{% url 'ver_detalles_usuario' %}",
                 data: {
-                    cliente_id: clienteId
+                    usuario_id: usuarioId
                 },
                 method: "GET",
                 success: function (response) {
-                    var cliente = response.success;
-                    $("#nombreCliente").text(cliente.nombres + ' ' + cliente.apellidos);
-                    $("#documentoCliente").text(cliente.documento);
-                    $("#celularCliente").text(cliente.celular);
-                    $("#barrioCliente").text(cliente.barrio);
-                    $("#direccionCliente").text(cliente.direccion);
-                    $("#estadoCliente").text(cliente.estado == 1 ? 'Activo' : 'Inactivo');
-                    $("#departamentoCliente").text(cliente.departamento);
-                    $("#municipioCliente").text(cliente.municipio);
-
-                    if (cliente.estado == 1) {
-                        $(".estadoClienteCircle").addClass("activo").removeClass("inactivo");
+                    var usuario = response.success;
+                    $(".rolUsuario").text(usuario.Rol); // Corregido para que coincida con el JSON de respuesta
+                    $(".nombreUsuario").text(usuario['Nombre de Usuario']); // Corregido para que coincida con el JSON de respuesta
+                    $(".correoUsuario").text(usuario.documento); // Corregido para que coincida con el JSON de respuesta
+                    $(".estadoUsuario").text(usuario.Estado == 1 ? 'Activo' : 'Inactivo'); // Corregido para que coincida con el JSON de respuesta
+    
+                    if (usuario.Estado == 1) {
+                        $(".estadoUsuarioCircle").addClass("activo").removeClass("inactivo");
                     } else {
-                        $(".estadoClienteCircle").addClass("inactivo").removeClass("activo");
+                        $(".estadoUsuarioCircle").addClass("inactivo").removeClass("activo");
                     }
-                    document.getElementById("verDetallesUsuariosDialog").showModal();
-                    $(".clienteDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
+                    document.getElementById("verDetallesUsuarioDialog").showModal();
+                    $(".usuarioDialog").addClass("fadeIn");
+                    $(".modal-backdrop-usuario").show(); // Corregido para que coincida con el nombre de clase correcto
+                    $(".modal-backdrop-usuario").addClass("fadeInBack"); // Corregido para que coincida con el nombre de clase correcto
                 },
             });
         });
-
-        $("#cerrarDetallesCliente").click(function () {
-            $(".clienteDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
+    
+        $("#cerrarDetallesUsuario").click(function () {
+            $(".usuarioDialog").addClass("fadeOut");
+            $(".modal-backdrop-usuario").addClass("fadeOut"); // Corregido para que coincida con el nombre de clase correcto
             setTimeout(function () {
-                document.getElementById("verDetallesUsuariosDialog").close();
-                $(".clienteDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").removeClass("fadeOut");
+                document.getElementById("verDetallesUsuarioDialog").close();
+                $(".usuarioDialog").removeClass("fadeOut");
+                $(".modal-backdrop-usuario").hide(); // Corregido para que coincida con el nombre de clase correcto
+                $(".modal-backdrop-usuario").removeClass("fadeOut"); // Corregido para que coincida con el nombre de clase correcto
             }, 300);
         });
     });
-
+    
 </script>
-
 
 {% endblock %}

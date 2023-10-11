@@ -64,6 +64,30 @@ def cambiarEstadoDeUsuario(request):
             return JsonResponse({'status': 'error', 'message': 'Usuario no Encontrado.'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+
+def verDetallesUsuario(request):
+    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        id_usuario = request.GET.get('usuario_id')
+        
+        if id_usuario:
+            try:
+                usuario = Usuarios.objects.get(id_usuario=id_usuario)
+                
+                data = {
+                    'Rol': usuario.id_rol.nombre_rol,
+                    'Nombre de Usuario': usuario.nombre_usuario,
+                    'documento': usuario.correo,
+                }
+                return JsonResponse({'success': data})
+            except Usuarios.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Usuario no encontrado'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'ID de Usuario no proporcionado'})
+    
+    return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+
 def createUser(request):
     roles = Roles.objects.all()
     
