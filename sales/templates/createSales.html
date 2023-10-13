@@ -536,7 +536,7 @@
 
 
 
-        function enviarDatosVentas(data) {  // Recibir data como argumento
+        function enviarDatosVentas(data) { 
             $.ajax({
                 type: "POST",
                 url: "{% url 'crear_venta' %}",
@@ -544,13 +544,20 @@
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        alert("Venta Creada con Éxito.");
-                        window.location.href = "{% url 'ventas' %}";
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Venta creada con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000, 
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'ventas' %}";
+                        }, 2000);
                     }
                 },
-            });
+            });            
         }
-
     });
 
 </script>
