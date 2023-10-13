@@ -12,14 +12,15 @@
     <div class="card-header py-3 d-flex justify-content-between">
         <span>
             <a href="{% url 'crear_compra' %}" class="btn btn-success btn-icon-split btn-add" id="am">
-                <span class="icon">
+                <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea una Compra">
                     <i class="fa-solid fa-plus" id="addicon"></i>
                     <span class="text">Agregar Compra</span>
             </a>
         </span>
         <span class="d-flex align-items-end">
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger btn-dash" id="of">Generar Informe</button>
+            <button class="btn btn-danger btn-dash" id="of" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">Generar Informe</button>
         </span>
     </div>
 </div>
@@ -33,13 +34,12 @@
     <div class="card-header py-4">
         <div class="table-responsive">
             <style>
-                .table-responsive{
-                overflow-y: auto;
-                max-height: 400px;
-            }
+                .table-responsive {
+                    overflow-y: auto;
+                    max-height: 400px;
+                }
             </style>
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="90%"
-                cellspacing="3">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Proveedor</th>
@@ -55,7 +55,7 @@
                         <td>{{ compra.id_proveedor.nombre_proveedor }}</td>
                         <td>{{ compra.fechareg }}</td>
                         <td>
-                            <button
+                            <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
                                 class="cambiar-estado-compra btn statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-compra-id="{{ compra.id_compra }}"
                                 data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
@@ -64,12 +64,15 @@
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editarCompra' compra.id_compra %}" class="btn btn-sm" id="editbutton"><i
-                                    class="fa-solid fa-pen-to-square"></i></a>
+                                    class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                                    title="Editar Compra"></i></a>
                             <a href="#" class="btn btn-sm btn-primary" id="editbutton{{ compra.id_compra }}"
                                 data-compra-id="{{ compra.id_compra }}"
-                                onclick="mostrarDetallesCompra({{ compra.id_compra }})">
+                                onclick="mostrarDetallesCompra({{ compra.id_compra }})" data-toggle="tooltip"
+                                data-placement="right" title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
+                            
                         </td>
                     </tr>
                     {% endfor %}
@@ -88,15 +91,17 @@
             let nuevoEstado = $(this).data("nuevo-estado");
             let mensaje;
             if (nuevoEstado === 0) {
-                mensaje = "¿Estás seguro de desactivar esta compra? Esto marcará la compra como inactiva y restará las cantidades al stock de los productos relacionados.";
+                mensaje =
+                    "¿Estás seguro de desactivar esta compra? Esto marcará la compra como inactiva y restará las cantidades al stock de los productos relacionados.";
             } else {
-                mensaje = "¿Estás seguro de activar esta compra? Esto marcará la compra como activa y sumará las cantidades al stock de los productos relacionados.";
+                mensaje =
+                    "¿Estás seguro de activar esta compra? Esto marcará la compra como activa y sumara las cantidades al stock de los productos relacionados.";
             }
 
             Swal.fire({
                 title: 'Estado',
                 text: mensaje,
-               
+
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -226,8 +231,9 @@
 
     .cell-actions {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-evenly;
     }
+
 
     .active-status {
         background-color: #95eea5;
@@ -238,106 +244,11 @@
         background-color: #ec8080;
         color: #8a0404;
     }
-
-    /* Estilo para el modal */
-    #detalleCompraDialog {
-        max-width: 70%;
-        width: 30%;
-        min-height: 10vh;
-        border: none;
-        background-color: rgb(255, 255, 255);
-        border-radius: 8px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    .fadeOut {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-
-    #detalleCompraDialog .modal-body {
-        padding: 20px;
-    }
-
-    #detalleCompraDialog .modal-body table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
-
-    #detalleCompraDialog .modal-body table th,
-    #detalleCompraDialog .modal-body table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    #detalleCompraDialog .modal-body table th {
-        background-color: #f2f2f2;
-    }
-
-    #detalleCompraDialog .modal-body h5 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #222222;
-        margin-bottom: 10px;
-    }
-
-    #detalleCompraDialog .modal-body strong {
-        font-weight: bold;
-        color: #222222;
-    }
-
-    #detalleCompraDialog #cerrarModal {
-        padding: 8px 16px;
-        border: none;
-        background-color: #f2f2f2;
-        color: #222222;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: background-color 0.15s ease;
-    }
-
-    #detalleCompraDialog #cerrarModal:hover {
-        background-color: #ddd;
-    }
-
-    #modalEstado {
-        font-weight: bold;
-        color: #222222;
-    }
-
-    #modalEstado.activo {
-        color: #72d072;
-        /* Color para estado activo */
-    }
-
-    #modalEstado.inactivo {
-        color: #ba4d4d;
-        /* Color para estado inactivo */
-    }
 </style>
 
+<div class="modal-backdrop"></div>
 
-
-<!-- Modal con etiqueta dialog -->
-<dialog id="verDetallesDialog" class="compraDialog dragHandle">
+<dialog id="verDetallesCompraDialog" class="compraDialog dragHandle" style="z-index: 9999;">
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoCompraCircle {% if compra.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
@@ -352,8 +263,8 @@
             </button>
         </div>
         <div class="cont-detalle-header">
-            <p class="font-weight-bold">Fecha de compra: <span id="fechareg"></span></p>
-            <p class="font-weight-bold">Proveedor: <span id="proveedor"></span> <span class="ml-3" style="color: black;">Documento: </span> <span id="documento" class="font-weight-normal"></span> </p>
+            <p class="font-weight-bold">Fecha de compra: <span id="fecharegCompra"></span></p>
+            <p class="font-weight-bold">Proveedor: <span id="proveedorCompra"></span> </p>
         </div>
         <div class="linea-detalle mb-2">
             <h3>Detalles de la Compra:</h3>
@@ -367,69 +278,83 @@
                     <th style="width: 30%;">Total del producto</th>
                 </tr>
             </thead>
-            <tbody id="modalDetallesVenta">
+            <tbody id="modalDetallesCompra">
             </tbody>
         </table>
         <div class="d-flex justify-content-end mt-2">
-            <span class="font-weight-bold total-compra">TOTAL:<span id="totalCompra"></span></span>
+            <span class="font-weight-bold total-compra">TOTAL:<span id="totalCompraCompra"></span></span>
         </div>
     </form>
 </dialog>
 
 
-
-
-
 <script>
     function mostrarDetallesCompra(compraId) {
-        // Realiza una solicitud AJAX al servidor para obtener los detalles de la compra
+        console.log("Mostrar detalles de compra llamado con compraId:", compraId);
+
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$ ' + precioFormateado;
+        }
+
         $.ajax({
-            url: `{% url 'obtener_detalles_compra' 0 %}`.replace('0', compraId),
-            method: "GET",
+            url: "{% url 'obtener_detalles_compra' 0 %}".replace('0', compraId),
+            method: "GET", // Actualiza la URL según tu configuración
+
             success: function (response) {
-                console.log('Respuesta del servidor:', response);
+                console.log("Respuesta del servidor:", response);
 
                 // Llena el modal con los detalles de la compra obtenidos del servidor
-                document.getElementById("proveedor").textContent = response.proveedor;
-                console.log('Proveedor:', response.proveedor);
+                var compra = response;
+                $("#fecharegCompra").text(compra.fechaRegistro);
+                $("#proveedorCompra").text(compra.proveedor);
 
-                document.getElementById("fechareg").textContent = response.fechaRegistro;
-                console.log('Fecha de Registro:', response.fechaRegistro);
+                $("#totalCompraCompra").text(formatearPrecios(compra.totalCompra));
 
-                document.getElementById("modalEstado").textContent = response.estado;
-                console.log('Estado:', response.estado);
+                if (compra.estado == 'Activo') {
+                    $(".estadoCompraCircle").addClass("activo").removeClass("inactivo");
+                } else {
+                    $(".estadoCompraCircle").addClass("inactivo").removeClass("activo");
+                }
 
                 // Llena la tabla de detalles de la compra
                 let detallesCompraHTML = "";
                 let totalCompra = 0; // Variable para calcular el total de compra
 
-                for (let detalle of response.detalles) {
+                for (let detalle of compra.detalles) {
                     console.log('Detalle:', detalle);
 
                     // Convierte precioUnitario y totalProducto a números
-                    const precioUnitario = parseFloat(detalle.precioUnitario);
-                    const totalProducto = parseFloat(detalle.totalProducto);
+                    const precioUnitario = formatearPrecios(detalle.precioUnitario);
+                    const totalProducto = formatearPrecios(detalle.totalProducto);
 
                     detallesCompraHTML += `
                         <tr>
                             <td>${detalle.producto}</td>
-                            <td>${precioUnitario.toFixed(2)}</td> <!-- Mostrar con 2 decimales -->
+                            <td>${precioUnitario}</td> <!-- Mostrar con 2 decimales -->
                             <td>${detalle.cantidad}</td>
-                            <td>${totalProducto.toFixed(2)}</td> <!-- Mostrar con 2 decimales -->
+                            <td>${totalProducto}</td> <!-- Mostrar con 2 decimales -->
                         </tr>
                     `;
 
-                    totalCompra += totalProducto; // Suma el total del producto al total de compra
+                    totalCompra += parseFloat(detalle
+                        .totalProducto); // Suma el total del producto al total de compra
                 }
 
                 document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
 
                 // Actualiza el "Total de Compra" con la suma calculada
-                document.getElementById("totalCompra").textContent = totalCompra.toFixed(2); // Mostrar con 2 decimales
+                document.getElementById("totalCompraCompra").textContent = formatearPrecios(
+                    totalCompra); // Mostrar con 2 decimales
+
+                const modal = document.getElementById("verDetallesCompraDialog");
+                console.log("Modal obtenido:", modal);
 
                 // Abre el modal
-                const modal = document.getElementById("verDetallesDialog");
                 modal.showModal();
+                const cerrarBoton = document.getElementById("cerrarDetallesCompra");
+                cerrarBoton.addEventListener("click", cerrarModal);
             },
             error: function (error) {
                 console.error('Error en la solicitud AJAX:', error);
@@ -440,10 +365,204 @@
 
     function cerrarModal() {
         // Cierra el modal
-        const modal = document.getElementById("verDetallesDialog");
+        const modal = document.getElementById("verDetallesCompraDialog");
         modal.close();
     }
 </script>
+
+
+<style>
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.833);
+        z-index: 100;
+        display: none;
+        animation: fadeInBack 0.3s ease-in-out;
+    }
+
+    .compraDialog {
+        max-width: 70%;
+        width: 30%;
+        min-height: 10vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        animation: fadeIn 0.3s ease-in-out;
+        margin: auto;
+        padding: 20px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fadeInBack {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .fadeOut {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .compraDialog .modal-container-header,
+    .linea-detalle {
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .modal-container-header h2,
+    .compraDialog h3 {
+        font-size: 1.125rem;
+        font-weight: 700;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .cerrar-compra {
+        padding: 0;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: 0.15s ease;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .estadoCompraCircle {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+    }
+
+    .estadoCompraCircle.activo {
+        background-color: #72d072;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .estadoCompraCircle.activo::before {
+        content: "Activo";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #72d072;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .estadoCompraCircle.activo:hover::before {
+        opacity: 1;
+    }
+
+
+    .estadoCompraCircle.inactivo {
+        background-color: #ba4d4d;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .estadoCompraCircle.inactivo::before {
+        content: "Inactivo";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ba4d4d;
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .estadoCompraCircle.inactivo:hover::before {
+        opacity: 1;
+    }
+
+
+    .cont-detalle-header {
+        padding: 20px;
+    }
+
+    .cont-detalle-header p {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #222222;
+    }
+
+    .cont-detalle-header p span {
+        color: rgb(99, 99, 99);
+    }
+
+    .tabla-detalles {
+        width: 100%;
+        background-color: #2222;
+        text-align: center;
+    }
+
+    .tabla-detalles tbody tr:hover {
+        background-color: #22202022;
+    }
+
+    .tabla-detalles thead {
+        text-align: center;
+    }
+
+    .cont-detalle-total {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 10px;
+        margin-right: 10px;
+    }
+
+    .total-compra {
+        padding: 10px 8px;
+        border: 3px solid #ccc;
+        border-radius: 5px;
+        background-color: #22202022;
+        display: flex;
+        gap: 10px;
+    }
+</style>
+
+
+
 
 
 

@@ -3,14 +3,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0">
     <title>TuiranFit</title>
     <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/EstilosLogin.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    
+    <video autoplay muted loop id="video-fondo">
+        <source src="{% static 'img/cpunk.webm' %}" type="video/webm">
+        Tu navegador no admite la reproducción de videos HTML5.
+      </video>
+    <div class="wrapperLogus">
+        <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
+    </div>
     <div class="wrapper">
 
         <h1>Iniciar Sesión</h1>
@@ -35,5 +41,12 @@
         </form>
     </div>
       
+    <script>
+        var imgn = document.getElementById('logus');
+        
+        imgn.oncontextmenu = function(e) {
+            e.preventDefault();
+        };
+    </script>
 </body>
 </html>

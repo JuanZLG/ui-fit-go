@@ -73,15 +73,11 @@ def crear_compra(request):
 
 
 
-from django.http import JsonResponse
-from django.db.models import Q
-from .models import Proveedores  # Asegúrate de importar el modelo Proveedores
-
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
     palabras_clave = nombre_proveedor.split()
-    proveedores_encontrados = Proveedores.objects.filter(estado__gt=0)  # Filtrar por estado > 0
+    proveedores_encontrados = Proveedores.objects.all()
 
     for palabra_clave in palabras_clave:
         proveedores_encontrados = proveedores_encontrados.filter(
@@ -98,7 +94,6 @@ def buscar_proveedor(request):
     ]
 
     return JsonResponse({"resultados": resultados})
-
 
 
 
@@ -177,19 +172,20 @@ def cambiarEstado(request):
         for detalle in detalles:
             producto = detalle.id_producto
 
-            if compra.estado == 1: 
-                detalle.estado = 1  
-                producto.cantidad += detalle.cantidad  
-                producto.save()  
+            if detalle.estado == 1: 
+                if compra.estado == 1: 
+                    producto.cantidad += detalle.cantidad  
+                else:  
+                    producto.cantidad -= detalle.cantidad 
 
-            else:  
-                detalle.estado = 0  
-                producto.cantidad -= detalle.cantidad 
                 producto.save()  
 
             detalle.save() 
         
         return JsonResponse({'status': 'success'})
+
+
+
 
 
 def obtener_detalles_compra(request, compra_id):
@@ -209,6 +205,8 @@ def obtener_detalles_compra(request, compra_id):
     compra = detalles_compra.first().id_compra 
     datos_generales = {
         'proveedor': compra.id_proveedor.nombre_proveedor,
+        'documento': compra.id_proveedor.numero_documento_nit,
+
         
         'fechaRegistro': compra.fechareg,
         'estado': 'Activo' if compra.estado == 1 else 'Inactivo',
@@ -216,6 +214,7 @@ def obtener_detalles_compra(request, compra_id):
 
     respuesta = {
         'proveedor': datos_generales['proveedor'],
+        'documento': datos_generales['documento'],
         'fechaRegistro': str(datos_generales['fechaRegistro']),
         'estado': datos_generales['estado'],
         'detalles': detalles,

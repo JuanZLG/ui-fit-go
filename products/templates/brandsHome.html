@@ -125,7 +125,7 @@
             <div class="card-header" style="display: flex; justify-content: center; align-items:center;">
                 <span>
                     <a class="btn btn-success btn-icon-split btn-add" data-toggle="modal" data-target="#crearMarcaModal">
-                        <span class="icon">
+                        <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea una Marca">
                             <i class="fa-solid fa-plus" id="addicon"></i>
                         <span class="text">Agregar Marca</span>
                     </span>
@@ -159,7 +159,7 @@
                                 </button></td>
                                 <td>
                                     <a class="btn btn-sm btn-danger delete-button" data-id-marca="{{ mc.id_marca }}"
-                                style="height:27px;" data-toggle="tooltip" data-placement="right" title="Elimina esta marca"><i class="fa-solid fa-trash-can fa-sm"
+                                style="height:27px;" data-toggle="tooltip" data-placement="right" title="Eliminar Marca"><i class="fa-solid fa-trash-can fa-sm"
                                     style="color: #ffffff;"></i></a>
                                 </td>
                             </tr>
