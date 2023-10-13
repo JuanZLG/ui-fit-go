@@ -17,7 +17,7 @@
 <br>
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
-        <span>
+        <span data-toggle="tooltip" data-placement="top" title="Crea una Venta">
             <a href="{% url 'crear_venta' %}" class="btn btn-success btn-icon-split btn-add" id="am">
                 <span class="icon">
                     <i class="fa-solid fa-plus"></i>
@@ -25,9 +25,10 @@
                 </span>
             </a>
         </span>
-        <span class="d-flex align-items-end">
+        <span class="d-flex align-items-end" >
             <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger btn-dash" id="of">Generar Informe</button>
+            <button class="btn btn-danger btn-dash" id="of" data-toggle="tooltip" data-placement="top"
+            title="Descargar PDF con Registros">Generar Informe</button>
         </span>
     </div>
 </div>
@@ -58,6 +59,7 @@
                         <td>{{ venta.fechareg }}</td>
                         <td>
                             <button
+                                data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-venta-id="{{ venta.id_venta}}"
                                 data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
@@ -66,8 +68,10 @@
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm {% if venta.estado == 0 %}not-active-edit {% endif %}" id="editbutton"><i
-                                class="fa-solid fa-pen-to-square"></i></a>
-                            <button type="button" class="btn btn-sm btn-primary verVenta"
+                                class="fa-solid fa-pen-to-square" class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                                title="Editar Venta"></i></a>
+                            <button data-toggle="tooltip"
+                            data-placement="right" title="Ver Detalles" type="button" class="btn btn-sm btn-primary verVenta"
                                 data-venta-id="{{ venta.id_venta }}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>

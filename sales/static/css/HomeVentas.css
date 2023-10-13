@@ -184,10 +184,53 @@ tr.inactivo {
 
 .estadoVentaCircle.activo {
     background-color: #72d072;
+    position: relative;
+    cursor: pointer;
 }
 
-.estadoVentaCircle.inactivo {
+.estadoVentaCircle.activo::before {
+    content: "Activo";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #72d072;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.estadoVentaCircle.activo:hover::before {
+    opacity: 1;
+}
+
+
+.estadoVentaaCircle.inactivo {
     background-color: #ba4d4d;
+    position: relative;
+    cursor: pointer;
+}
+
+.estadoVentaaCircle.inactivo::before {
+    content: "Inactivo";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ba4d4d;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.estadoVentaCircle.inactivo:hover::before {
+    opacity: 1;
 }
 
 

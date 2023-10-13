@@ -50,6 +50,7 @@ def editar_venta(request, id_venta):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print("Datos recibidos en la solicitud POST:", data)
             documento = data.get('documento', '')
             totalVenta = data.get('totalVenta', 0)
             productos = data.get('productos', [])
