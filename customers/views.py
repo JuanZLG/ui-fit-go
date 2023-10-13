@@ -127,15 +127,12 @@ def editarCliente(request, cliente_id):
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
         try:
-            # Intenta obtener el objeto de departamento correspondiente al nombre
             departamento, created = Departamentos.objects.get_or_create(nombre_departamento=departamento_nombre)
 
-            # Intenta obtener el objeto de municipio correspondiente al nombre y al departamento
             municipio, created = Municipios.objects.get_or_create(nombre_municipio=municipio_nombre, id_departamento=departamento)
         except:
             return JsonResponse({'success': False, 'message': 'Error al crear departamento o municipio'})
 
-        # Actualiza los campos del cliente existente con los valores recibidos
         cliente.id_municipio = municipio
         cliente.documento = documento
         cliente.nombres = nombres
@@ -194,13 +191,9 @@ def verDetallesCliente(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
-
-
-
 def validar_documento(request):
     documento = request.GET.get('documento', '')
 
-    # Verificar si ya existe un cliente con el mismo documento
     cliente_existente = Clientes.objects.filter(documento=documento).exists()
 
     return JsonResponse({'existe': cliente_existente})
