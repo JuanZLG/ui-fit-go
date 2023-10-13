@@ -330,12 +330,11 @@ def editar_compra(request, id_compra):
 
                 for productoDatos in productos:
                     if detalle.id_detallecompra == productoDatos["idDetalle"]:
-
                         nueva_cantidad = productoDatos["cantidad"]
-                        diferencia =  detalle.cantidad - nueva_cantidad 
+                        diferencia = detalle.cantidad - nueva_cantidad
 
-                        # Solo actualizar el registro si el id del detalle existe
-                        detalle.cantidad == nueva_cantidad
+                        # Corrección: Usa "=" en lugar de "==" para asignar la nueva cantidad
+                        detalle.cantidad = nueva_cantidad
                         detalle.save()
 
                         if detalle.estado != productoDatos["estado"]:
@@ -349,7 +348,6 @@ def editar_compra(request, id_compra):
                         detalle.estado = productoDatos["estado"]
                         detalle.save()
                         producto.save()
-                        break
 
             for productoDatos in productos:
                 id_detalle = productoDatos["idDetalle"]
@@ -374,5 +372,3 @@ def editar_compra(request, id_compra):
     detalles = Detallecompra.objects.filter(id_compra=compra)
 
     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
-
-
