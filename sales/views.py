@@ -50,6 +50,7 @@ def editar_venta(request, id_venta):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print("Datos recibidos en la solicitud POST:", data)
             documento = data.get('documento', '')
             totalVenta = data.get('totalVenta', 0)
             productos = data.get('productos', [])
@@ -150,10 +151,10 @@ def buscar_cliente(request):
 
 def buscar_productos(request):
     q = request.GET.get("q", "")
-    productos = Productos.objects.filter(nombre_producto__icontains=q).values_list(
-        "nombre_producto", flat=True
-    )
-    return JsonResponse({"productos": list(productos)})
+    productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
+    productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
+    return JsonResponse({"productos": productos_json})
+
 
 
 def validar_cantidad(request):
@@ -190,10 +191,18 @@ def validar_producto(request):
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
     return JsonResponse({"existe": producto_existe})
 
-def existencia_producto(request):
-    nombre_producto = request.GET.get("nombre_producto", "")
-    producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
-    return JsonResponse({"existe": producto_existe})
+
+# def validar_producto(request):
+#     nombre_producto = request.GET.get("nombre_producto", "")
+#     producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+#     if producto is not None and producto.estado == 0:
+#         # El producto existe, pero su estado es 0
+#         return JsonResponse({"existe": False})
+#     else:
+#         # El producto existe o su estado no es 0
+#         return JsonResponse({"existe": producto is not None})
+
+
 
 def validar_cliente(request):
     documentoDato = request.GET.get("documentoDato", "")
@@ -233,6 +242,8 @@ def obtener_nombre(request):
         )
 
 
+
+
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         venta_id = request.GET.get('venta_id')
@@ -250,10 +261,10 @@ def cambiarEstado(request):
                 detalle.estado = 1  
                 producto.cantidad -= detalle.cantidad  
                 producto.save()  
-
             else:  
-                detalle.estado = 0  
-                producto.cantidad += detalle.cantidad 
+                if detalle.estado == 1:
+                    detalle.estado = 0
+                    producto.cantidad += detalle.cantidad 
                 producto.save()  
 
             detalle.save() 

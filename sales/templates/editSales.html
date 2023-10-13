@@ -55,9 +55,7 @@
                                     autocomplete="off" placeholder="Nombre del producto"
                                     value="{{producto.id_producto.nombre_producto}}" readonly>
                                 <span class="text-danger producto-error"></span>
-                                <div class="p-2">
-                                    <label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>
-                                </div>
+                                <div class="p-2 resultado-producto"></div>
                             </td>
                             <td>
                                 <div class="form-group">
@@ -237,90 +235,96 @@
 
         
 
+        
+
         /********** PRODUCTO ***********/
-        $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
+
         $(document).on("input", ".producto", function () {
             let input = $(this).val();
-            if (input.length >= 4) {
-                let currentRow = $(this).closest("tr");
+            let currentRow = $(this).closest("tr");
+            let suggestions = currentRow.find(".resultado-producto");
+
+            if (input.length >= 3) {
                 $.ajax({
                     url: "{% url 'buscar_productos' %}?q=" + input,
                     type: "GET",
                     success: function (data) {
-                        let suggestions = currentRow.find(".producto-suggestions");
                         suggestions.empty();
-                        data.productos = data.productos.map((producto) =>
-                            producto.toUpperCase()
-                        );
+
                         if (data.productos.length > 0) {
-                            let producSimilar1 = data.productos[0];
-                            let producSimilar2 = data.productos[1];
-                            let producSimilar3 = data.productos[2];
-                            suggestions.html(
-                                "<span class='resultado-sugerencia'>" + producSimilar1
-                            );
-                            if (data.productos.length > 1) {
-                                suggestions.append(
-                                    "</span><span class='resultado-sugerencia'>" +
-                                    producSimilar2 +
-                                    "</span>"
-                                );
-                            }
-                            if (data.productos.length > 2) {
-                                suggestions.append(
-                                    "</span><span class='resultado-sugerencia'>" +
-                                    producSimilar3 +
-                                    "</span>"
-                                );
-                            }
+                            data.productos.forEach(function (producto) {
+                                let $sugerencia = $("<span class='resultado-sugerencia'></span>");
+                                $sugerencia.text(producto.nombre_producto);
+                                suggestions.append($sugerencia);
+
+                                if (producto.estado === 0) {
+                                    $sugerencia.addClass("sugerencia-inhabilitado");
+                                }
+                            });
 
                             suggestions.addClass("sugerencia").show();
                         } else {
                             suggestions.hide();
-                            calcularTotalVenta()
+                            calcularTotalVenta();
                         }
+
+                        setTimeout(function () {
+                            suggestions.css("opacity", "1");
+                        }, 0);
+
+                        validarProducto(currentRow, input);
                     },
                     error: function () {
-                        currentRow.find(".producto-suggestions").empty().hide();
+                        suggestions.empty().hide();
                     },
                 });
             } else {
-                $(this).closest("tr").find(".producto-suggestions").empty().hide();
+                suggestions.empty().hide();
             }
         });
+
+        function validarProducto(currentRow, nombreProducto) {
+            $.ajax({
+                url: "{% url 'validar_producto' %}",
+                type: "GET",
+                data: {
+                    nombre_producto: nombreProducto,
+                },
+                success: function (data) {
+                    if (data.existe) {
+                        obtenerPrecioProducto(currentRow, nombreProducto);
+                    } else {
+                        currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
+                        calcularTotalVenta();
+                    }
+                },
+                error: function () {
+                    currentRow.find(".cantidad, .precioTotal").val("");
+                    calcularTotalVenta();
+                },
+            });
+        }
 
         $(document).on("click", function (event) {
-            if (
-                !$(event.target).closest(".producto").length &&
-                !$(event.target).closest(".producto-suggestions").length
-            ) {
-                $(".producto-suggestions").empty().hide();
+            if (!$(event.target).closest(".producto").length && !$(event.target).closest(".resultado-producto").length) {
+                $(".resultado-producto").empty().hide();
             }
         });
 
-        $(document).on(
-            "click",
-            ".producto-suggestions span.resultado-sugerencia",
-            function () {
-                let currentRow = $(this).closest("tr");
-                let nombreProducto = $(this).text();
-                nombreProducto =
-                    nombreProducto.charAt(0).toUpperCase() +
-                    nombreProducto.slice(1).toLowerCase();
-                currentRow.find(".producto").val(nombreProducto);
-
-                validarProducto(currentRow, nombreProducto);
-            }
-        );
-
-        $(document).on("click", ".producto-suggestions span", function () {
+        $(document).on("click", ".resultado-producto span.resultado-sugerencia", function () {
             let currentRow = $(this).closest("tr");
             let nombreProducto = $(this).text();
-            nombreProducto =
-                nombreProducto.charAt(0).toUpperCase() +
-                nombreProducto.slice(1).toLowerCase();
+            nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
             currentRow.find(".producto").val(nombreProducto);
-            currentRow.find(".producto-suggestions").empty().hide();
+            validarProducto(currentRow, nombreProducto);
+        });
+
+        $(document).on("click", ".resultado-sugerencia", function () {
+            let currentRow = $(this).closest("tr");
+            let nombreProducto = $(this).text();
+            nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
+            currentRow.find(".producto").val(nombreProducto);
+            currentRow.find(".resultado-producto").empty().hide();
             currentRow.find(".precioUnidad").removeClass("is-invalid");
         });
 
@@ -353,27 +357,7 @@
             unidadPrecio(currentRow);
         });
 
-        function validarProducto(currentRow, nombreProducto) {
-            $.ajax({
-                url: "{% url 'validar_producto' %}",
-                type: "GET",
-                data: {
-                    nombre_producto: nombreProducto,
-                },
-                success: function (data) {
-                    if (data.existe) {
-                        obtenerPrecioProducto(currentRow, nombreProducto);
-                    } else {
-                        currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
-                        calcularTotalVenta();
-                    }
-                },
-                error: function () {
-                    currentRow.find(".cantidad, .precioTotal").val("");
-                    calcularTotalVenta();
-                },
-            });
-        }
+       
 
         function formatearPrecios(valor) {
             valor = Math.round(valor * 100) / 100;
@@ -451,9 +435,7 @@
                 "<td>" +
                 '<input type="text" class="form-control producto" name="producto" id="producto" autocomplete="off" placeholder="Nombre del producto">' +
                 '<span class="text-danger producto-error" ></span>' +
-                '<div class="p-2">' +
-                '<label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>' +
-                "</div>" +
+                '<div class="p-2 resultado-producto"></div>' +
                 "</td>" +
                 "<td>" +
                 '<div class="form-group">' +
@@ -536,7 +518,7 @@
 
             if (!nombreClienteValue) {
                 $("#error-docu").text(
-                    "El campo del documento no puede estar vacío."
+                    "Este campo es obligatorio"
                 );
                 camposLlenos = false;
             } else if (!documentoValue) {
@@ -567,7 +549,7 @@
                     camposLlenos = false;
                 }
                 if (!productoValue) {
-                    row.find(".producto-error ").text("El campo del producto no puede estar vacío. Por favor, ingréselo correctamente.");
+                    row.find(".producto-error ").text("El campo producto debe estar correctamente escrito.");
                     camposLlenos = false;
                 }
 
@@ -582,7 +564,7 @@
                 if (productoValue && productoNombres[productoValue]) {
                     row
                         .find(".producto-error")
-                        .text("Este producto ya ha sido seleccionado anteriormente.");
+                        .text("El campo producto debe estar correctamente escrito.");
                     camposLlenos = false;
                 } else {
                     productoInput.removeClass("is-invalid");
@@ -635,7 +617,7 @@
                     fila.find(".error-cantidad").text("");
                 } else {
                     $this.addClass("is-invalid");
-                    fila.find(".error-cantidad").text("La cantidad supera el stock mínimo.").css("color", "red");
+                    fila.find(".error-cantidad").text("Supera el stock mínimo.").css("color", "red");
                 }
             });
         });

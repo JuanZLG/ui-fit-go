@@ -3,83 +3,26 @@
 {% block title %} Dashboard {% endblock %}
 
 {% block body %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <div class="container">
 
-<!-- Content Row -->
-<div class="row">
+    <!-- Content Row -->
+    <div class="row">
 
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100">
-            <div class="card-body px-5 py-1 d-flex align-items-center">
-                <div class="row no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Earnings (Monthly)
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100">
-            <div class="card-body px-5 py-1 d-flex align-items-center">
-                <div class="row no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Earnings (Monthly)
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100">
-            <div class="card-body px-5 py-1 d-flex align-items-center">
-                <div class="row no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Earnings (Monthly)
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-    <!-- Pending Requests Card Example -->
-    
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100">
-            <div class="card-body px-5 py-1 d-flex align-items-center">
-                <div class="row no-gutters">
-                    <div class="col d-flex justify-content-between">
-                        <div>
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100">
+                <div class="card-body px-5 py-1 d-flex align-items-center">
+                    <div class="row no-gutters">
+                        <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)
+                                Clientes Activos
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            <div id="clientes-activos" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -88,89 +31,338 @@
                 </div>
             </div>
         </div>
-    </div>
-    
 
-</div>
-
-<!-- Content Row -->
-
-<div class="row">
-
-    <!-- Area Chart -->
-    <div class="col-xl-8 col-lg-7">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100">
+                <div class="card-body px-5 py-1 d-flex align-items-center">
+                    <div class="row no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Clientes Inactivos
+                            </div>
+                            <div id="clientes-inactivos" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Pie Chart -->
-    <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+        <script>
+            function actualizarContadorClientes() {
+                $.ajax({
+                    url: "{% url 'contar_clientes_activos' %}",
+                    method: "GET",
+                    success: function (data) {
+                        const clientesActivos = data.clientes_activos;
+                        const clientesInactivos = data.clientes_inactivos;
+                        $("#clientes-activos").text(clientesActivos);
+                        $("#clientes-inactivos").text(clientesInactivos);
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener el número de clientes:', error);
+                    }
+                });
+            }
+
+            setInterval(actualizarContadorClientes, 5000);
+
+            actualizarContadorClientes();
+        </script>
+
+
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100">
+                <div class="card-body px-5 py-1 d-flex align-items-center">
+                    <div class="row no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total de Compras
+                            </div>
+                            <div id="total-compras" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                </div>
-                <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-info"></i> Referral
-                    </span>
+        </div>
+
+        <script>
+            function actualizarTotalCompras() {
+                $.ajax({
+                    url: "{% url 'calcular_total_compras' %}",
+                    method: "GET",
+                    success: function (data) {
+                        const totalCompras = data.total_compras;
+                        const totalComprasFormatted = totalCompras.toLocaleString('es-CO', {
+                            style: 'currency',
+                            currency: 'COP',
+                            minimumFractionDigits: 0, // Mínimo de decimales
+                            maximumFractionDigits: 0, // Máximo de decimales
+                        });
+
+                        $("#total-compras").text(totalComprasFormatted);
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener el total de compras:', error);
+                    }
+                });
+            }
+
+            // Actualiza el total de compras cada 5 segundos
+            setInterval(actualizarTotalCompras, 5000);
+
+            // Actualiza el total de compras al cargar la página
+            actualizarTotalCompras();
+        </script>
+
+
+
+
+
+
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100">
+                <div class="card-body px-5 py-1 d-flex align-items-center">
+                    <div class="row no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total de Ventas
+                            </div>
+                            <div id="total-ventas" class="h5 mb-0 font-weight-bold text-gray-800">Cargando...</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <script>
+            function actualizarTotalVentas() {
+                $.ajax({
+                    url: "{% url 'calcular_total_ventas' %}",
+                    method: "GET",
+                    success: function (data) {
+                        const totalVentas = data.total_ventas;
+                        const totalVentasFormatted = totalVentas.toLocaleString('es-CO', {
+                            style: 'currency',
+                            currency: 'COP',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                        });
+
+                        $("#total-ventas").text(totalVentasFormatted);
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener el total de ventas:', error);
+                    }
+                });
+            }
+
+            // Actualiza el total de ventas cada 5 segundos
+            setInterval(actualizarTotalVentas, 5000);
+
+            // Actualiza el total de ventas al cargar la página
+            actualizarTotalVentas();
+        </script>
+
+
+
+        <!-- Pending Requests Card Example -->
+
+
+
+
     </div>
 
+    <!-- Content Row -->
+
+    <div class="row">
+
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Compras y Ventas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="graficolindo"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var nuevoGrafico; // Declaración global para el gráfico
+
+            function actualizarGrafico() {
+                $.ajax({
+                    url: "{% url 'obtener_datos_ventas_y_compras' %}",
+                    method: "GET",
+                    success: function (data) {
+                        var ctx = document.getElementById("graficolindo").getContext('2d');
+
+                        // Destruir el gráfico anterior si existe
+                        if (nuevoGrafico) {
+                            nuevoGrafico.destroy();
+                        }
+
+                        nuevoGrafico = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: data.labels,
+                                datasets: [{
+                                        label: 'Ventas',
+                                        data: data.ventas,
+                                        backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                                        borderColor: 'rgba(78, 115, 223, 1)',
+                                        pointRadius: 3,
+                                        pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                                        pointBorderColor: 'rgba(78, 115, 223, 1)',
+                                    },
+                                    {
+                                        label: 'Compras',
+                                        data: data.compras,
+                                        backgroundColor: 'rgba(28, 200, 138, 0.05)',
+                                        borderColor: 'rgba(28, 200, 138, 1)',
+                                        pointRadius: 3,
+                                        pointBackgroundColor: 'rgba(28, 200, 138, 1)',
+                                        pointBorderColor: 'rgba(28, 200, 138, 1)',
+                                    },
+                                ],
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    x: {
+                                        grid: {
+                                            display: false
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'bottom'
+                                    },
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function (context) {
+                                                var label = context.dataset.label || '';
+                                                if (label) {
+                                                    label += ': ';
+                                                }
+                                                label += new Intl.NumberFormat('es-CO', {
+                                                    style: 'currency',
+                                                    currency: 'COP',
+                                                }).format(context.parsed.y);
+                                                return label;
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener los datos de ventas y compras:', error);
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                actualizarGrafico();
+                // Actualiza el gráfico cada 5 segundos
+            });
+        </script>
+
+
+
+
+<div class="col-xl-4 col-lg-5">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Productos Más Vendidos</h6>
+        </div>
+        <div class="card-body">
+            <div class="chart-pie pt-4 pb-2">
+                <canvas id="myPieChart" style="width: 100%; height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+  function actualizarGraficoProductos() {
+    // Limpiar el gráfico anterior si existe
+    if (window.myPieChart) {
+        window.myPieChart.destroy();
+    }
+
+    $.ajax({
+        url: "{% url 'obtener_top_productos' %}",
+        method: "GET",
+        success: function (data) {
+            var ctx = document.getElementById("myPieChart").getContext('2d');
+            var productos = data.productos; // Lista de nombres de productos
+            var cantidades = data.cantidades; // Lista de cantidades de productos
+
+            window.myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: productos,
+                    datasets: [{
+                        data: cantidades,
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'], // Colores personalizables
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var dataset = data.datasets[0];
+                                var total = dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
+                                    return previousValue + currentValue;
+                                });
+                                var currentValue = dataset.data[tooltipItem.index];
+                                var percentage = parseFloat(((currentValue / total) * 100).toFixed(2));
+                                return productos[tooltipItem.index] + ': ' + currentValue + ' unidades vendidas (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            });
+        },
+        error: function (error) {
+            console.error('Error al obtener los datos de los productos más vendidos:', error);
+        }
+    });
+}
+
+$(document).ready(function () {
+    console.log('Document ready');
+    actualizarGraficoProductos();
+});
+
+</script>
+     <!-- Pie Chart -->
+     
+        
+
+        </div>
+    </div>
 </div>
-</div>
+
 
 
 

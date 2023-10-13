@@ -335,7 +335,7 @@ def editar_compra(request, id_compra):
                         diferencia =  detalle.cantidad - nueva_cantidad 
 
                         # Solo actualizar el registro si el id del detalle existe
-                        detalle.cantidad == nueva_cantidad
+                        detalle.cantidad = nueva_cantidad
                         detalle.save()
 
                         if detalle.estado != productoDatos["estado"]:

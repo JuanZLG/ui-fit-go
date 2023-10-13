@@ -59,6 +59,7 @@
                         <td>{{ venta.fechareg }}</td>
                         <td>
                             <button
+                                data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-venta-id="{{ venta.id_venta}}"
                                 data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
@@ -67,8 +68,10 @@
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm {% if venta.estado == 0 %}not-active-edit {% endif %}" id="editbutton"><i
-                                class="fa-solid fa-pen-to-square"></i></a>
-                            <button type="button" class="btn btn-sm btn-primary verVenta"
+                                class="fa-solid fa-pen-to-square" class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                                title="Editar Venta"></i></a>
+                            <button data-toggle="tooltip"
+                            data-placement="right" title="Ver Detalles" type="button" class="btn btn-sm btn-primary verVenta"
                                 data-venta-id="{{ venta.id_venta }}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
@@ -149,9 +152,10 @@
                 </svg>
             </button>
         </div>
-        <div class="cont-detalle-header">
-            <p class="font-weight-bold">Fecha de venta: <span id="fechareg"></span></p>
-            <p class="font-weight-bold">Cliente: <span id="cliente"></span> <span class="ml-3" style="color: black;">Documento: </span> <span id="documento" class="font-weight-normal"></span> </p>
+        <div class="cont-detalle-header font-weight-bold">
+            <p class="float-right">Fecha de venta: <span id="fechareg"></span></p>
+            <p >Cliente: <span id="cliente"></span></p>
+            <p >Documento: <span id="documento"></span></p>
         </div>
         <div class="linea-detalle mb-2">
             <h3>Detalles de la Venta:</h3>
@@ -245,148 +249,6 @@
 
 
 </script>
-<style>
-    
 
 
-
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.833);
-    z-index: 100;
-    display: none;
-    animation: fadeInBack 0.3s ease-in-out;
-}
-
-.ventaDialog {
-    max-width: 70%;
-    width: 30%;
-    min-height: 10vh;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-    animation: fadeIn 0.3s ease-in-out;
-
-    margin: auto;
-    padding: 20px;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes fadeInBack {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.fadeOut {
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
-
-
-.ventaDialog .modal-container-header, .linea-detalle {
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.modal-container-header h2, .ventaDialog h3{
-    font-size: 1.125rem;
-    font-weight: 700;
-    gap: 8px;
-    text-align: center;
-}
-
-
-.cerrar-venta {
-    padding: 0;
-    border: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.15s ease;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.estadoVentaCircle {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-}
-
-.estadoVentaCircle.activo {
-    background-color: #72d072;
-    /* Color para estado activo */
-}
-
-.estadoVentaCircle.inactivo {
-    background-color: #ba4d4d;
-    /* Color para estado inactivo */
-}
-
-
-.cont-detalle-header {
-    padding: 20px;
-}
-
-.VentaDialog section p {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #222222;
-}
-
-.VentaDialog section p span {
-    color: rgb(99, 99, 99);
-}
-
-.table-detalles {
-    width: 100%;
-    max-width: 800px; 
-    overflow-y: auto; 
-}
-
-.table-detalles thead {
-    text-align: center;
-}
-
-
-
-.cont-detalle-total {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 10px;
-    margin-right: 10px;
-}
-
-
-</style>
 {% endblock %}

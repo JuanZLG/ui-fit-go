@@ -313,7 +313,7 @@
                 $("#fecharegCompra").text(compra.fechaRegistro);
                 $("#proveedorCompra").text(compra.proveedor);
 
-                $("#totalCompraCompra").text(formatearPrecios(compra.totalCompra));
+                $("#totalCompra").text(formatearPrecios(compra.totalCompra));
 
                 if (compra.estado == 'Activo') {
                     $(".estadoCompraCircle").addClass("activo").removeClass("inactivo");
