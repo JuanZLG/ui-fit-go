@@ -181,17 +181,26 @@
 
 
           if ($('.error-message').text() === '') {
-              $.ajax({
-                  type: 'POST',
-                  url: "{% url 'createAProduct' %}",
-                  data: $(this).serialize(),
-                  success: function (response) {
-                      if (response.success) {
-                          alert('Producto creado con éxito.');
+            $.ajax({
+              type: 'POST',
+              url: "{% url 'createAProduct' %}",
+              data: $(this).serialize(),
+              success: function (response) {
+                  if (response.success) {
+                      Swal.fire({
+                          title: 'Éxito',
+                          text: 'Producto creado con éxito',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 2000,
+                      });
+                      setTimeout(function () {
                           window.location.href = "{% url 'productos' %}";
-                      }
+                      }, 2000);
                   }
-              });
+              }
+          });
+          
           }
       });
     

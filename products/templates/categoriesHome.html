@@ -224,11 +224,19 @@
                 data: $('#category-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        alert("Se ha creado la categoría con éxito.");
-                        location.reload();
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Se ha creado la categoría con éxito',
+                            icon: 'success',
+                            showConfirmButton: false, 
+                            timer: 2000, 
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     }
                 }
-            });
+            });            
         }
 
     });

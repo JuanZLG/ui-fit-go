@@ -175,11 +175,20 @@
 
 <script>
     $(document).ready(function () {
-        $(".delete-button").click(function () {
-            var idToDelete = parseInt($(this).data("id-marca"));
-            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+    $(".delete-button").click(function () {
+        var idToDelete = parseInt($(this).data("id-marca"));
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-            if (confirm("¿Está seguro de eliminar esta marca?")) {
+        // Mostrar un modal de confirmación de SweetAlert2
+        Swal.fire({
+            title: 'Confirmación',
+            text: '¿Está seguro de eliminar esta marca?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     headers: {
                         "X-CSRFToken": csrfToken
@@ -193,12 +202,14 @@
                         location.reload();
                     },
                     error: function (error) {
-                      
+                        // Manejo de errores si es necesario
                     }
                 });
             }
         });
     });
+});
+
 </script>
     
 <div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -272,11 +283,20 @@ aria-hidden="true">
                 data: $('#marca-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        alert("Se ha creado la marca con éxito.");
-                        location.reload();
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Se ha creado la marca con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000, 
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000); 
                     }
                 }
             });
+            
         }
 
     });

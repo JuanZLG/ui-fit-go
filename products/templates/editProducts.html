@@ -193,16 +193,28 @@ $('#producto-form').submit(function (event) {
         return;
     }
     $.ajax({
-        type: 'POST',
-        url: "{% url 'editAProduct' Product.id_producto %}",
-        data: $(this).serialize(),
-        success: function (response) {
-            if (response.success) {
-                alert('Se ha modificado el producto con éxito.');
-                window.location.href = "{% url 'productos' %}";
-            }
-        }
-    });
+      type: 'POST',
+      url: "{% url 'editAProduct' Product.id_producto %}",
+      data: $(this).serialize(),
+      success: function (response) {
+          if (response.success) {
+              // Mostrar un modal de SweetAlert2 con el mensaje de éxito
+              Swal.fire({
+                  title: 'Éxito',
+                  text: 'Se ha modificado el producto con éxito',
+                  icon: 'success',
+                  showConfirmButton: false, // Oculta el botón "Aceptar"
+                  timer: 2000, // Duración del modal en milisegundos (en este caso, 2 segundos)
+              });
+  
+              // Después de 2 segundos, recargar la página
+              setTimeout(function () {
+                  window.location.href = "{% url 'productos' %}";
+              }, 2000); // Asegúrate de que el tiempo de redirección coincida con el tiempo de la alerta
+          }
+      }
+  });
+  
 });
 });
 </script>
