@@ -117,17 +117,12 @@
         $('#cliente-form').submit(function (event) {
             event.preventDefault();
             let errors = false;
-
-            // Validaciones en el lado del cliente para los campos que no han sido validados en tiempo real
-
             validarCampo($('#iNombres'));
             validarCampo($('#iApellidos'));
             validarCampo($('#iBarrio'));
             validarCampo($('#iDireccion'));
             validarCampo($('#departamento'));
             validarCampo($('#municipio'));
-
-            // Envía el formulario si no hay errores
             if ($('.error-message').text() === '') {
                 $.ajax({
                     type: 'POST',
@@ -135,12 +130,19 @@
                     data: $(this).serialize(),
                     success: function (response) {
                         if (response.success) {
-                            // Éxito: redirige o realiza acciones adicionales
-                            alert('Cliente creado con éxito.');
-                            window.location.href = "{% url 'Clientes' %}";
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Cliente creado con éxito',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000, 
+                            });
+                            setTimeout(function () {
+                                window.location.href = "{% url 'Clientes' %}";
+                            }, 2000); 
                         }
                     }
-                });
+                });                
             }
         });
 

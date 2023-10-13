@@ -303,10 +303,6 @@
             } else {
                 ocultarError($('#iApellidos'));
             }
-
-            // Otras validaciones personalizadas (agrega más según sea necesario)
-
-            // Verificar si hay errores antes de enviar el formulario
             if (!errors) {
                 $.ajax({
                     type: 'POST',
@@ -314,11 +310,19 @@
                     data: $(this).serialize(),
                     success: function (response) {
                         if (response.success) {
-                            alert('Cliente editado con éxito.');
-                            window.location.href = "{% url 'Clientes' %}";
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Cliente editado con éxito',
+                                icon: 'success',
+                                showConfirmButton: false, 
+                                timer: 2000,
+                            });
+                            setTimeout(function () {
+                                window.location.href = "{% url 'Clientes' %}";
+                            }, 2000); 
                         }
                     }
-                });
+                });                
             }
         });
     });
