@@ -1007,11 +1007,20 @@
             contentType: "application/json",
             success: function (response) {
                 if (response.success) {
-                    alert("Datos cambiados.");
-                    window.location.href = "{% url 'purchases' %}";
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Datos cambiados',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "{% url 'purchases' %}";
+                    }, 2000);
                 }
-            },
+            }
         });
+        
     });
 </script>
 {% endblock %}

@@ -827,20 +827,25 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function (response) {
-                    console.log(response);
-
                     if (response.success) {
-                        alert('Compra creada con éxito.');
-                        window.location.href = "{% url 'purchases' %}";
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Compra creada con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'purchases' %}";
+                        }, 2000);
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                     console.error("XHR Status:", status);
                     console.error("Error:", error);
-                    // Puedes mostrar un mensaje de error aquí si lo deseas
                 }
-            });
+            });            
         });
     });
 </script>
