@@ -94,10 +94,18 @@
                   url: "{% url 'createAUser' %}",
                   data: $(this).serialize(),
                   success: function (response) {
-                      if (response.success) {
-                          alert('Usuario Creado con Éxito.');
-                          window.location.href = "{% url 'usuarios' %}";
-                      }
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Usuario creado con éxito',
+                            icon: 'success',
+                            showConfirmButton: false, 
+                            timer: 2000,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'usuarios' %}";
+                        }, 2000);
+                    }
                   }
               });
           }
