@@ -12,7 +12,7 @@
 <body>
     <video autoplay muted loop id="video-fondo" style="width:100%">
         <source src="{% static 'img/sky.webm' %}" type="video/webm">
-        Tu navegador no admite la reproducción de videos HTML5.
+        EL navegador no admite la reproducción de videos.
       </video>
     {% comment %} <div class="wrapperLogus">
         <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
@@ -22,7 +22,7 @@
 
         <h1>Iniciar Sesión</h1>
         <br>
-        <center><img src={% static 'img/GIcon.png' %} style="width:40%;"></center>
+        <center><img id="cong" src={% static 'img/GIcon.png' %} style="width:40%;"></center>
         <form method="post" action="{% url 'login_view' %}">
             {% csrf_token %}
             <div class="input-box">
@@ -38,7 +38,7 @@
             <a href="#">¿Olvidaste tu contraseña?</a>
             </div>
         
-            <button type="submit" class="btn">Entrar</button>
+            <center><button type="submit" class="btn">Entrar</button></center>
         </form>
     </div>
       

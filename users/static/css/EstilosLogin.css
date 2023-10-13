@@ -100,8 +100,8 @@ body {
     text-decoration: underline;
 }
 
-.wrapper .btn {
-    width: 100%;
+.btn {
+    width: 50%;
     height: 45px;
     background: #fff;
     border: none;
@@ -112,6 +112,12 @@ body {
     font-size: 16px;
     color: #333;
     font-weight: 600;
+}
+
+.btn:hover{
+    background-color: transparent;
+    border: solid 2px white;
+    color:white;
 }
 
 .wrapperLogus {
@@ -125,6 +131,16 @@ body {
     height: 100%;
     object-fit: cover;
     animation: glitch 3s infinite;
+}
+
+#cong{
+    border: solid 2px white;
+    border-radius:50%
+}
+
+#cong:hover{
+    border:solid 4px magenta;
+    border-radius:50%;
 }
 
 @keyframes glitch {
