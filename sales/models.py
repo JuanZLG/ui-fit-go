@@ -18,7 +18,8 @@ class Productos(models.Model):
     nombre_producto = models.CharField(max_length=75)
     cantidad = models.IntegerField()
     precio = models.FloatField()
-
+    estado = models.IntegerField(default=1)  
+    
     class Meta:
         managed = False
         db_table = 'productos'

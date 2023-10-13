@@ -150,10 +150,10 @@ def buscar_cliente(request):
 
 def buscar_productos(request):
     q = request.GET.get("q", "")
-    productos = Productos.objects.filter(nombre_producto__icontains=q).values_list(
-        "nombre_producto", flat=True
-    )
-    return JsonResponse({"productos": list(productos)})
+    productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
+    productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
+    return JsonResponse({"productos": productos_json})
+
 
 
 def validar_cantidad(request):
@@ -190,10 +190,18 @@ def validar_producto(request):
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
     return JsonResponse({"existe": producto_existe})
 
-def existencia_producto(request):
-    nombre_producto = request.GET.get("nombre_producto", "")
-    producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
-    return JsonResponse({"existe": producto_existe})
+
+# def validar_producto(request):
+#     nombre_producto = request.GET.get("nombre_producto", "")
+#     producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+#     if producto is not None and producto.estado == 0:
+#         # El producto existe, pero su estado es 0
+#         return JsonResponse({"existe": False})
+#     else:
+#         # El producto existe o su estado no es 0
+#         return JsonResponse({"existe": producto is not None})
+
+
 
 def validar_cliente(request):
     documentoDato = request.GET.get("documentoDato", "")
