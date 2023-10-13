@@ -225,11 +225,19 @@ $(document).ready(function () {
                 data: $('#proveedor-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        alert('Proveedor creado con éxito.');
-                        window.location.href = "{% url 'proveedores' %}";
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Proveedor creado con éxito',
+                            icon: 'success',
+                            showConfirmButton: false, 
+                            timer: 2000,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'proveedores' %}";
+                        }, 2000);
                     }
                 }
-            });
+            });            
         }
 
     });

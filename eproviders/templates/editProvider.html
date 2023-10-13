@@ -182,15 +182,24 @@
             }
             $.ajax({
                 type: 'POST',
-                url: "{% url 'editarProveedor' proveedor.id_proveedor%}",
+                url: "{% url 'editarProveedor' proveedor.id_proveedor %}",
                 data: $(this).serialize(),
                 success: function (response) {
                     if (response.success) {
-                        alert('Proveedor editado con éxito.');
-                        window.location.href = "{% url 'proveedores' %}";
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Proveedor editado con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'proveedores' %}";
+                        }, 2000); 
                     }
                 }
             });
+            
         });
     });
 </script>
