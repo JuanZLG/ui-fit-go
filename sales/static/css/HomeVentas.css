@@ -17,25 +17,25 @@ table tbody.tbody {
     color: #000;
 }
 
-.btn-add {
-    padding: 0;
-    width: auto;
-    block-size: 6vh;
-    background-color: #85da85;
-    display: flex;
-    align-items: center;
+.btn-adder:hover{
+    color: #000;
+    background-color: #77B677;
+    border: solid 1px black;
 }
 
-.btn-add:hover {
-    background-color: #72d072;
+.btn-adder {
+    background-color: #85da85;
+    border: solid 1px black;
 }
 
 .btn-dash {
     background-color: #c55c5c;
+    color:black;
 }
 
 .btn-dash:hover {
-    background-color: #ba4d4d;
+    background-color: #D16060;
+    color:black
 }
 
 tr.inactivo {

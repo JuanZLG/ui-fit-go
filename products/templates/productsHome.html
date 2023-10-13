@@ -9,41 +9,39 @@
 </center>
 <br>
 <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex justify-content-between">
-        <div class="d-flex flex-row justify-content-between">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'createAProduct' %}" class="btn btn-success btn-icon-split btn-add">
-                    <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea un Producto">
-                        <i class="fa-solid fa-plus" id="addicon"></i>
-                        <span class="text">Agregar Producto</span>
-                    </span>
+                <a href="{% url 'createAProduct' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip" data-placement="top" title="Crear un Producto">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Producto</span>
                 </a>
+                    
             </span>
             <span class="mx-2">
-                <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
-                    <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea una Categoría">
-                        <i class="fa-solid fa-plus" id="addicon"></i>
-                        <span class="text">Agregar Categoria</span>
+                <a class="btn btn-light btn-add-category btn-lg" data-toggle="modal" data-target="#crearCategoriaModal">
+                    <span class="icon" data-toggle="tooltip" data-placement="top" title="Crear una Categoría">
+                        <i class="fas fa-tags" id="categoryicon"></i>
                     </span>
                 </a>
             </span>
 
             <span class="mx-2">
-                <a class="btn btn-dark btn-icon-split btn-add" data-toggle="modal" data-target="#crearMarcaModal">
-                    <span class="icon" data-toggle="tooltip" data-placement="right" title="Crea una Marca">
-                        <i class="fa-solid fa-plus" id="addicon"></i>
-                        <span class="text">Agregar Marca</span>
+                <a class="btn btn-light btn-add-brand btn-lg align-items-center" data-toggle="modal" data-target="#crearMarcaModal">
+                    <span class="icon mx-auto" data-toggle="tooltip" data-placement="top" title="Crear una Marca">
+                        <i class="fa-solid fa-inbox"></i>
                     </span>
                 </a>
             </span>
         </div>
 
-        <span class="d-flex align-items-end">
-            <h6 class="text-black font-weight-bold mr-2">Informes:</h6>
-            <button class="btn btn-danger btn-dash" data-toggle="tooltip" data-placement="right" title="Descargar PDF de Registros">Generar Informe</button>
-        </span>
+        <div class="d-flex align-items-center mx-2">
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            </a>
+        </div>
     </div>
 </div>
+
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
@@ -68,7 +66,7 @@
                 </thead>
                 <tbody>
                     {% for p in Products %}
-                    <tr>
+                    <tr class="{% if p.estado == 0 %}inactivo{% endif %}">
                         <td>{{p.id_categoria.nombre_categoria}}</td>
                         <td>{{p.id_marca.nombre_marca}}</td>
                         <td>{{p.nombre_producto}}</td>
@@ -166,24 +164,35 @@
     }
 
     /* Toco repetir codigo para cambiar el blanco */
-    .btn-add,
-    .btn-dash {
+    .btn-add{
         color: #000;
         font-weight: 600;
     }
 
-    .btn-add:hover,
-    .btn-dash:hover {
+    .btn-adder:hover{
         color: #000;
+        background-color: #77B677;
+        border: solid 1px black;
     }
 
-    .btn-add {
-        padding: 0;
-        width: auto;
-        block-size: 6vh;
+    .btn-adder {
         background-color: #85da85;
-        display: flex;
-        align-items: center;
+        border: solid 1px black;
+    }
+
+    .btn-add-brand,
+    .btn-add-category{
+        border: solid 1px black;
+    }
+
+    .btn-add-brand:hover{
+        border: solid 1px black;
+        background-color:#D6D6D6;
+    }
+
+    .btn-add-category:hover{
+        border: solid 1px black;
+        background-color:#D6D6D6;
     }
 
     .btn-add:hover {
@@ -192,10 +201,12 @@
 
     .btn-dash {
         background-color: #c55c5c;
+        color:black;
     }
 
     .btn-dash:hover {
-        background-color: #ba4d4d;
+        background-color: #D16060;
+        color:black
     }
 
     tr.inactivo {
@@ -274,9 +285,10 @@
         animation: fadeInBack 0.3s ease-in-out;
     }
 
+
     .productoDialog {
         max-width: 70%;
-        width: 30%;
+        width: 40%;
         min-height: 10vh;
         border: none;
         background-color: rgb(255, 255, 255);
@@ -285,6 +297,8 @@
         overflow: hidden;
         box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
         animation: fadeIn 0.3s ease-in-out;
+        margin: auto;
+        padding: 20px;
     }
 
     @keyframes fadeIn {
