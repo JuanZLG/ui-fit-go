@@ -10,13 +10,14 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <video autoplay muted loop id="video-fondo">
-        <source src="{% static 'img/cpunk.webm' %}" type="video/webm">
+    <video autoplay muted loop id="video-fondo" style="width:100%">
+        <source src="{% static 'img/sky.webm' %}" type="video/webm">
         Tu navegador no admite la reproducción de videos HTML5.
       </video>
-    <div class="wrapperLogus">
+    {% comment %} <div class="wrapperLogus">
         <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
-    </div>
+    </div> {% endcomment %}
+    
     <div class="wrapper">
 
         <h1>Iniciar Sesión</h1>
