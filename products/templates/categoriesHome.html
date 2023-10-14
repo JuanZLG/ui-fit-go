@@ -285,11 +285,20 @@
 
 <script>
     $(document).ready(function () {
-        $(".delete-button").click(function () {
-            var idToDelete = parseInt($(this).data("id-categoria"));
-            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+    $(".delete-button").click(function () {
+        var idToDelete = parseInt($(this).data("id-categoria"));
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-            if (confirm("¿Estás seguro de eliminar esta categoría?")) {
+        // Mostrar un modal de confirmación de SweetAlert2
+        Swal.fire({
+            title: 'Confirmación',
+            text: '¿Estás seguro de eliminar esta categoría?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     headers: {
                         "X-CSRFToken": csrfToken
@@ -298,17 +307,27 @@
                     data: {
                         idToDelete: idToDelete
                     },
-                    method: "POST", 
+                    method: "POST",
                     success: function (response) {
-                        location.reload();
+                        // Mostrar un modal de eliminación exitosa
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Categoría eliminada con éxito',
+                            icon: 'success',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
                     },
                     error: function (error) {
-                       
+                        // Manejo de errores si es necesario
                     }
                 });
             }
         });
     });
+});
 </script>
 
 
