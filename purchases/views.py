@@ -302,6 +302,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import json
 from .models import Compras, Detallecompra, Proveedores, Productos
+
 @csrf_exempt
 def editar_compra(request, id_compra):
     if request.method == 'POST':
@@ -330,30 +331,25 @@ def editar_compra(request, id_compra):
 
                 for productoDatos in productos:
                     if detalle.id_detallecompra == productoDatos["idDetalle"]:
-
                         nueva_cantidad = productoDatos["cantidad"]
-                        diferencia =  detalle.cantidad - nueva_cantidad 
+                        diferencia = detalle.cantidad - nueva_cantidad
 
-                        # Solo actualizar el registro si el id del detalle existe
+                        # Actualizar el registro existente
                         detalle.cantidad = nueva_cantidad
-                        detalle.save()
-
-                        if detalle.estado != productoDatos["estado"]:
-                            if detalle.estado == 1 and productoDatos["estado"] == 0:
-                                producto.cantidad -= nueva_cantidad
-                            elif detalle.estado == 0 and productoDatos["estado"] == 1:
-                                producto.cantidad += nueva_cantidad
-                        else:
-                            producto.cantidad = stock_actual[producto.nombre_producto] - diferencia
-
                         detalle.estado = productoDatos["estado"]
                         detalle.save()
+
+                        if detalle.estado == 1 and productoDatos["estado"] == 0:
+                            producto.cantidad -= diferencia
+                        elif detalle.estado == 0 and productoDatos["estado"] == 1:
+                            producto.cantidad += diferencia
+
                         producto.save()
-                        break
 
             for productoDatos in productos:
                 id_detalle = productoDatos["idDetalle"]
-                if not Detallecompra.objects.filter(id_detallecompra=id_detalle).exists():
+                if not id_detalle:
+                    # Este detalle de compra es nuevo, crea uno nuevo
                     nombre_producto = productoDatos["nombre"]
                     nueva_cantidad = productoDatos["cantidad"]
 
@@ -363,10 +359,19 @@ def editar_compra(request, id_compra):
                         producto.cantidad += nueva_cantidad
                         producto.save()
 
+                    detalle = Detallecompra.objects.create(
+                        id_compra=compra,
+                        id_producto=producto,
+                        cantidad=nueva_cantidad,
+                        precio_uni=productoDatos["precioUnidad"],
+                        precio_tot=productoDatos["precioTotal"],
+                        estado=productoDatos["estado"],
+                    )
+
             response_data = {'success': True}
         except Exception as e:
             response_data = {'success': False, 'error_message': str(e)}
-            print("Error en la vista editar_compra:", str(e))  # Imprimir cualquier error que ocurra
+            print("Error en la vista editar_compra:", str(e))
 
         return JsonResponse(response_data)
 
@@ -374,5 +379,6 @@ def editar_compra(request, id_compra):
     detalles = Detallecompra.objects.filter(id_compra=compra)
 
     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
+
 
 
