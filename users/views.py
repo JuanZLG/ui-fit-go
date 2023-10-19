@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from users.models import Roles, Permisos, Usuarios, Rolespermisos
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.views import View
+from django.urls import reverse_lazy
 
 def login_view(request):
     if request.method == "POST":
@@ -22,23 +24,44 @@ def login_view(request):
             return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
 
     return render(request, 'login.html')
+
+# Nuevo....
+
+# class LoginView(View):
+#     def get(self, request):
+#         # Render the login form
+#         return render(request, 'login.html')
+
+#     def post(self, request):
+#         correo = request.POST['correo']
+#         contrasena = request.POST['contrasena']
+#         user = authenticate(request, correo=correo, password=contrasena)
+#         if user is not None:
+#             login(request, user)
+#             return redirect(reverse_lazy('home'))  # Redirect to the desired URL after login
+#         else:
+#             # Handle login failure, display an error message, or redirect to the login page
+#             return render(request, 'login.html', {'error_message': 'Invalid login credentials'})
+
+from django.contrib.auth import login, authenticate
+from django.http import HttpResponse
+
 def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+    if request.method == 'POST':
+        correo = request.POST['correo']
+        contrasena = request.POST['contrasena']
+
+        user = authenticate(request, correo=correo, contrasena=contrasena)
+
         if user is not None:
             login(request, user)
-            return redirect('Entrance')
+            return HttpResponseRedirect('Entrance')  # Redirige al panel de control
         else:
-            return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
+            return HttpResponse("Credenciales incorrectas. Inténtalo de nuevo.")
 
-    return render(request, 'login.html')
+    return render(request, 'login.html')  # Reemplaza 'login.html' con tu plantilla de inicio de sesión
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
 def logout_view(request):
     logout(request)
     return redirect('login')
@@ -46,10 +69,6 @@ def logout_view(request):
 def Home(request):
     user = Usuarios.objects.all()
     return render(request, 'usersHome.html', {"Users":user}) 
-
-# def Home(request):
-#     user = Usuarios.objects.all()
-#     return render(request, 'algo.html', {"Users":user}) 
 
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

@@ -1,0 +1,94 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Manual de Usuario {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8" style="max-height: 100vh; overflow-y: auto;">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Paso a Paso: Ingresar al Sistema</h2>
+                    <p>Al ingresar a la página web, encontrará un formulario de Inicio de Sesión.</p>
+                    <ol>
+                        <li>Digite su nombre de usuario.</li>
+                        <li>Digite su contraseña.</li>
+                        <li>Haga clic en el botón "Entrar" para validar sus credenciales e iniciar sesión.</li>
+                        <li>En caso de error en los campos, asegúrese de ingresar credenciales válidas e intente de nuevo.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Paso a Paso: Terminar Sesión</h2>
+                    <ol>
+                        <li>Haga clic en su nombre de usuario en la esquina superior derecha.</li>
+                        <li>Seleccione "Cerrar Sesión" en el menú desplegable.</li>
+                        <li>Aparecerá una ventana flotante para que confirme si desea cerrar la sesión.</li>
+                        <li>Si desea cerrar sesión, haga clic en "Confirmar" para cerrar sesión, en caso contrario, haga clic en "Cancelar".</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Paso a Paso: Ver o Modificar Perfil</h2>
+                    <ol>
+                        <li>Haga clic en su nombre de usuario en la esquina superior derecha.</li>
+                        <li>Seleccione "Perfil" en el menú desplegable.</li>
+                        <li>Una vez en el apartado "Información de Perfil", verá la información de su cuenta de usuario.</li>
+                        <li>Si desea modificar su usuario, haga clic en el botón "Actualizar Perfil", realice sus cambios y seleccione "Guardar".</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Paso a Paso: Gestión de Usuarios</h2>
+                    <ol>
+                        <li>Inicie sesión en su cuenta.</li>
+                        <li>En caso de contar con el permiso de ingresar, en el menú lateral seleccione Usuarios y en los item desplegados haga clic en "Roles y Permisos".</li>
+                        <li>Una vez en el módulo, si desea agregar un usuario, haga clic en "Agregar Usuario" y diligencie completamente el formulario.</li>
+                        <li>Si desea modificar un usuario, en la tabla busque el registro a modificar (puede utilizar el campo de búsqueda en la parte superior de la tabla para buscar por nombre de usuario o correo) y seleccione el botón con el lápiz correspondiente a ese registro.</li>
+                        <li>Si desea cambiar el estado de un usuario, haga click al botón de la columna "Estado" que corresponda al usuario y podrá activar o desactivarlo según sea el caso.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title"></h2>
+                    <ol>
+                        <li>Inicie sesión en su cuenta.</li>
+                        <li>En caso de contar con el permiso de ingresar, en el menú lateral seleccione Usuarios y en los item desplegados haga clic en "Roles y Permisos".</li>
+                        <li>Una vez en el módulo, si desea agregar un usuario, haga clic en "Agregar Usuario" y diligencie completamente el formulario.</li>
+                        <li>Si desea modificar un usuario, en la tabla busque el registro a modificar (puede utilizar el campo de búsqueda en la parte superior de la tabla para buscar por nombre de usuario o correo) y seleccione el botón con el lápiz correspondiente a ese registro.</li>
+                        <li>Si desea cambiar el estado de un usuario, haga click al botón de la columna "Estado" que corresponda al usuario y podrá activar o desactivarlo según sea el caso.</li>
+                    </ol>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="col-lg-4">
+            <div class="cont-sidebar">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="#section1">Sección 1</a></li>
+                    <li class="list-group-item"><a href="#section2">Sección 2</a></li>
+                    <li class="list-group-item"><a href="#section3">Sección 3</a></li>
+                    <li class="list-group-item"><a href="#section4">Sección 4</a></li>
+                    <li class="list-group-item"><a href="#section5">Sección 5</a></li>
+                    <li class="list-group-item"><a href="#section6">Sección 6</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}

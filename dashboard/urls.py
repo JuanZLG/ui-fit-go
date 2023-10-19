@@ -5,6 +5,7 @@ from . import views
 urlpatterns=[
     path('', views.Entrance, name="entrada"),
     path('dashboard/', views.Home, name='mydashboard'),
+    path('guide/', views.UserGuide, name="guideser"),
     path('contar_clientes_activos/', views.contar_clientes_activos, name='contar_clientes_activos'),
     path('calcular_total_compras/', views.calcular_total_compras, name='calcular_total_compras'),
     path('calcular_total_ventas/', views.calcular_total_ventas, name='calcular_total_ventas'),
