@@ -37,13 +37,9 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <style>
-                .table-responsive{
-                overflow-y: auto;
-                max-height: 400px;
-            }
-            </style>
-            <table class="table table-bordered  mx-auto text-center" id="dataTable" cellspacing="3">
+            <table class="table table-bordered  mx-auto text-center" id="dataTable" cellspacing="3" style="overflow-y: auto;
+            max-height: 400px;">
+            
                 <thead class="theads">
                     <tr>
                         <th>Cliente</th>
@@ -130,6 +126,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>

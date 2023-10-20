@@ -8,6 +8,8 @@ def Entrance(request):
 def Home(request):
     return render(request, 'dashboard.html')
 
+def UserGuide(request):
+    return render(request, 'manual.html')
 
 from django.http import JsonResponse
 from .models import Compras, Ventas, Clientes, Proveedores

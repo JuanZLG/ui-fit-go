@@ -76,9 +76,9 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tf',
+        'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }
@@ -116,7 +116,12 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = 'entrada'
 
-# AUTH_USUARIOS_MODEL = 'users.Usuarios'
+# AUTH_USER_MODEL = 'users.Usuarios'
+
+# AUTHENTICATION_BACKENDS = [
+#     'users.backends.CustomAuthBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

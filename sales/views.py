@@ -5,7 +5,6 @@ import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
 from django.db.models import Q
 
-
 def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
