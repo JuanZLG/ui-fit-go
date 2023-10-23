@@ -405,10 +405,10 @@
 
             $("#error-proveedor").text("");
 
-            if (nombreProveedor.length >= 5) {
+            if (nombreProveedor.length >= 3) {
                 $.ajax({
                     url: "{% url 'buscar_proveedores'%}?q=" +
-                        nombreProveedor, // Reemplaza esto con la ruta correcta
+                        nombreProveedor, 
                     type: "GET",
                     success: function (data) {
                         if (data.resultados.length > 0) {

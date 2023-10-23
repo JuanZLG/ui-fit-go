@@ -4,373 +4,81 @@
 
 {% block body %}
 
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/StyleProv.css' %}">
+</head>
+
 <center>
     <h1 class="modtitles">Gestión de Proveedores</h1>
 </center>
 <br>
-<div class="card shadow mb-4">
+<div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'crearProveedor' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip" data-placement="top" title="Crear un Proveedor">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Proveedor</span>
+                <a href="{% url 'crearProveedor' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear un Proveedor">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Proveedor</span>
                 </a>
-                    
+
             </span>
         </div>
 
         <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
             </a>
         </div>
     </div>
 </div>
 <div class="card shadow mb-4">
     <div class="card-header py-4">
-        <div class="table-responsive">
-            <style>
-                .table-responsive{
-                overflow-y: auto;
-                max-height: 400px;
-            }
-            </style>
-            <table class="table table-bordered mx-auto text-center" id="dataTable">
-                <thead class="theads">
-                    <tr>
-                        <th>Nombre </th>
-                        <th>Teléfono</th>
-                        <th>Correo Electrónico</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for proveedor in proveedores %}
-                    <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
-                        <td>{{ proveedor.nombre_proveedor }}</td>
-                        <td>{{ proveedor.telefono }}</td>
-                        <td>{{ proveedor.correo }}</td>
-                        <td>
-                            <button
-                                class="cambiar-estado statusbutton mx-3 {% if proveedor.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
-                                data-proveedor-id="{{ proveedor.id_proveedor }}"
-                                data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
-                                {% if proveedor.estado == 1 %}
-                                Activo
-                                {% else %}
-                                Inactivo
-                                {% endif %}
-                            </button>
-                        </td>
-                        <td class="cell-actions">
-                            <a href="{% url 'editarProveedor' proveedor.id_proveedor %}" class="btn btn-sm"
-                                id="editarProveedor"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <button type="button" class="btn btn-sm btn-primary verProveedor"
-                                data-prov-id="{{ proveedor.id_proveedor }}">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table class="table table-bordered mx-auto text-center" id="dataTable">
+            <thead class="theads">
+                <tr>
+                    <th>Nombre </th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proveedor in proveedores %}
+                <tr class="{% if proveedor.estado == 0 %}inactivo{% endif %}">
+                    <td>{{ proveedor.nombre_proveedor }}</td>
+                    <td>{{ proveedor.telefono }}</td>
+                    <td>{{ proveedor.correo }}</td>
+                    <td>
+                        <button
+                            class="cambiar-estado statusbutton mx-3 {% if proveedor.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                            data-proveedor-id="{{ proveedor.id_proveedor }}" data-url-state="{% url 'cambiarEstadoProveedor'  %}"
+                            data-nuevo-estado="{% if proveedor.estado == 1 %}0{% else %}1{% endif %}">
+                            {% if proveedor.estado == 1 %}
+                            Activo
+                            {% else %}
+                            Inactivo
+                            {% endif %}
+                        </button>
+                    </td>
+                    <td>
+                        <a href="{% url 'editarProveedor' proveedor.id_proveedor %}" class="btn btn-sm mr-2"
+                            id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <button type="button" class="btn btn-sm btn-primary verProveedor ml-2"
+                            data-prov-id="{{ proveedor.id_proveedor }}" data-url-details="{% url 'verDetallesProveedor' %}">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $(".cambiar-estado").click(function () {
-            var proveedorId = $(this).data("proveedor-id");
-            var nuevoEstado = $(this).data("nuevo-estado");
-
-            Swal.fire({
-                title: 'Estado',
-                text: '¿Desea cambiar el estado de este registro?',
-                showCancelButton: true,
-                confirmButtonColor: '#419edd',
-                cancelButtonColor: '#ba4d4d',
-                confirmButtonText: 'Confirmar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{% url 'cambiarEstadoProveedor'  %}",
-                        data: {
-                            proveedor_id: proveedorId,
-                            nuevo_estado: nuevoEstado
-                        },
-                        method: "GET",
-                        success: function (response) {
-                            location.reload();
-                        }
-                    });
-                }
-            });
-        });
-    });
-</script>
-
-<style>
-    .table {
-        width: 80%;
-    }
-
-    table thead.theads {
-        text-align: center;
-        color: #fff;
-        background-color: #000;
-    }
-
-    .table thead tr th {
-        border: none;
-    }
-
-    table tbody.tbody {
-        text-align: center;
-    }
-
-
-    .modtitles {
-        font-size: 2em;
-        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: animarGradiente 3s linear infinite;
-        font-weight: bold;
-    }
-
-    .btn-add,
-    .btn-dash {
-        color: #000;
-        font-weight: 600;
-    }
-
-    .btn-dash:hover {
-        color: #000;
-    }
-
-    .btn-adder:hover{
-        color: #000;
-        background-color: #77B677;
-        border: solid 1px black;
-    }
-
-    .btn-adder {
-        background-color: #85da85;
-        border: solid 1px black;
-    }
-
-    .btn-dash {
-        background-color: #c55c5c;
-        color:black;
-    }
-
-    .btn-dash:hover {
-        background-color: #D16060;
-        color:black
-    }
-
-    tr.inactivo {
-        background-color: #67666629;
-        color: #676666;
-    }
-
-    .statusbutton {
-        width: 5rem;
-        border-radius: 3px;
-        border: none;
-    }
-
-    .statusbutton:hover {
-        opacity: 0.9;
-    }
-
-    #editarProveedor {
-        background-color: #FFFF99;
-        color: #000;
-        /* background-color: #3498db; */
-        border: none;
-        transition: transform 0.5s;
-
-    }
-
-    #detailsbutton {
-        background-color: #419edd;
-        color: #000;
-        /* background-color: #1e3799; */
-        border: none;
-        transition: transform 0.5s;
-    }
-
-    #editbutton:hover,
-    #detailsbutton:hover {
-        transform: scale(1.1);
-    }
-
-    .cell-actions {
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .active-status {
-        background-color: #95eea5;
-        color: #09711c;
-    }
-
-    .inactive-status {
-        background-color: #ec8080;
-        color: #8a0404;
-    }
-</style>
-
-
-<style>
-
-html {
-        box-sizing: border-box;
-    }
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.833);
-        z-index: 100;
-        display: none;
-        animation: fadeInBack 0.3s ease-in-out;
-    }
-
-   
-
-    
-.proveedorDialog {
-    max-width: 70%;
-    width: 40%;
-    min-height: 10vh;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-    animation: fadeIn 0.3s ease-in-out;
-    margin: auto;
-    padding: 20px;
-}
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes fadeInBack {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .fadeOut {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-
-
-    .proveedorDialog .modal-container-header {
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .proveedorDialog h2 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        gap: 8px;
-    }
-
-    .cerrar-proveedor {
-        padding: 0;
-        border: 0;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: 0.15s ease;
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-
-    .estadoProveedorCircle {
-        width: 1rem;
-        height: 1rem;
-        border-radius: 50%;
-    }
-
-    .estadoProveedorCircle.activo {
-        background-color: #72d072;
-    }
-
-    .estadoProveedorCircle.inactivo {
-        background-color: #ba4d4d;
-    }
-
-    .cont-identificacion {
-        padding: 5px;
-        color: #3c3636;
-        font-weight: 700;
-        border-bottom: 1px solid #ddd;
-
-    }
-    .seccion-detalles {
-        margin: 20px 0;
-        padding: 10px;
-        border: 1px solid #ddd;
-
-    } .seccion-detalles div {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .seccion-detalles div p {
-        margin: 8px;
-        font-weight: 600;
-    } .seccion-detalles div span {
-        color: #3c3636;
-    }
-    .informacion-adicional {
-        padding: 0 10px;
-        margin-top: 10px;
-        font-weight: 600;
-    } .informacion-adicional #informacion {
-        color: #3c3636;
-    }
-
-
-</style>
-
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-    crossorigin="anonymous"></script>
 
 <div class="modal-backdrop"></div>
 
@@ -388,8 +96,8 @@ html {
                 </svg>
             </button>
         </div>
-        <div id="identificacionRow" class="cont-identificacion">Identificación : <span
-                id="tipo" class="mr-2"></span><span id="identificacion"></span></div>
+        <div id="identificacionRow" class="cont-identificacion">Identificación : <span id="tipo"
+                class="mr-2"></span><span id="identificacion"></span></div>
         <section class="seccion-detalles">
             <div>
                 <p>Nombre del Proveedor: <span class="proveedor-info" id="nombreProveedor"></p>
@@ -407,69 +115,7 @@ html {
     </form>
 </dialog>
 
-<script>
-    $(document).ready(function () {
-        $(".verProveedor").click(function () {
-            var proveedorId = $(this).data("prov-id");
-            $.ajax({
-                url: "{% url 'verDetallesProveedor' %}",
-                data: {
-                    proveedor_id: proveedorId
-                },
-                method: "GET",
-                success: function (response) {
-                    var proveedor = response.success;
-                    $("#nombreProveedor").text(proveedor.nombre_proveedor);
-                    $("#telefonoProveedor").text(proveedor.telefono);
-                    $("#correoProveedor").text(proveedor.correo);
+<script src="{% static 'js/indexProv.js' %}"></script>
 
-                    if (proveedor.identificacion !== "") {
-                        $("#tipo").text(proveedor.tipo);
-                        $("#identificacion").text(proveedor.identificacion);
-                        $("#identificacionRow").show(); // Mostramos la fila de identificación
-                    } else {
-                        $("#identificacionRow").hide(); // Ocultamos la fila de identificación
-                    }
-
-                    if (proveedor.direccion !== "") {
-                        $("#direccion").text(proveedor.direccion);
-                        $("#direccionRow").show(); // Mostramos la fila de dirección
-                    } else {
-                        $("#direccionRow").hide(); // Ocultamos la fila de dirección
-                    }
-
-                    if (proveedor.informacion !== "") {
-                        $("#informacion").text(proveedor.informacion);
-                        $("#informacionRow").show(); // Mostramos la fila de dirección
-                    } else {
-                        $("#informacionRow").hide();
-                    }
-
-                    if (proveedor.estado == 1) {
-                        $(".estadoProveedorCircle").addClass("activo").removeClass("inactivo");
-                    } else {
-                        $(".estadoProveedorCircle").addClass("inactivo").removeClass("activo");
-                    }
-
-                    document.getElementById("verDetallesDialog").showModal();
-                    $(".proveedorDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
-                },
-            });
-        });
-
-        $("#cerrarDetallesProveedor").click(function () {
-            $(".proveedorDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
-            setTimeout(function () {
-                document.getElementById("verDetallesDialog").close();
-                $(".proveedorDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").removeClass("fadeOut");
-            }, 300);
-        });
-    });
-</script>
 
 {% endblock %}
