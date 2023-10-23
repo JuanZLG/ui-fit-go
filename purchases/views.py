@@ -305,15 +305,15 @@ def obtener_detalles_compra(request, compra_id):
 #     compra = Compras.objects.get(id_compra=id_compra)
 #     detalles = Detallecompra.objects.filter(id_compra=id_compra)
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
-from django.http import HttpResponse
-from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib.enums import TA_CENTER
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import Detallecompra, Compras
-from django.templatetags.static import static
 import os
 
 def formatear_precios(valor):
@@ -339,54 +339,68 @@ def generar_factura_pdf(request, compra_id):
 
     totalCompraFormateado = formatear_precios(totalCompra)
 
+    # Crear una respuesta de tipo PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename=factura_compra_{compra_id}.pdf'
 
-    buffer = BytesIO()
+    # Crear un objeto PDF
+    buffer = response
     doc = SimpleDocTemplate(buffer, pagesize=letter)
-    elements = []
 
     styles = getSampleStyleSheet()
 
-    # Información general
-    elements.append(Spacer(1, 24))
-    elements.append(Paragraph(f'Factura de Compra', styles['Title']))
-    elements.append(Spacer(1, 24))
+    # Contenido de la factura
+    elements = []
 
-    # Logo de la empresa (reemplaza 'logo.png' con la ruta correcta)
+    # Agregar la imagen de logo como un círculo
+    logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
+    logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
+    logo.drawHeight = 1.5 * inch
+    logo.drawWidth = 1.5 * inch
+    elements.append(logo)
 
+    # Línea roja
+    elements.append(Spacer(1, 6))
+    elements.append(Paragraph('Factura de Compra', styles['Title']))
+    elements.append(Spacer(1, 6))
+
+    centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
+
+    # Detalles de la factura en la parte superior izquierda
+    elements.append(Paragraph(f'<b>Proveedor:</b> {compra.id_proveedor.nombre_proveedor}', centered_style))
+    elements.append(Paragraph(f'<b>Documento/NIT:</b> {compra.id_proveedor.numero_documento_nit}', centered_style))
+    elements.append(Paragraph(f'<b>Fecha de Registro:</b> {compra.fechareg}', centered_style))
+
+    # Espacio entre detalles y tabla
     elements.append(Spacer(1, 12))
-    elements.append(Paragraph(f'Proveedor: {compra.id_proveedor.nombre_proveedor}', styles['Heading2']))
-    elements.append(Paragraph(f'Documento/NIT: {compra.id_proveedor.numero_documento_nit}', styles['Normal']))
-    elements.append(Paragraph(f'Fecha de Registro: {compra.fechareg}', styles['Normal']))
 
-    elements.append(Spacer(1, 24))
-
-    # Detalles de compra
+    # Detalles de compra (la tabla)
     data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
     data.extend(detalles)
+    data.append(["", "", "", totalCompraFormateado])  # Agrega el total al final
 
-    t = Table(data, colWidths=[280, 100, 80, 100])
+    # Ajustar el ancho de las columnas de la tabla
+    t = Table(data, colWidths=[180, 80, 60, 100])
     t.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.black),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey)
     ]))
 
     elements.append(t)
 
-    elements.append(Spacer(1, 24))
-    elements.append(Paragraph(f'Total de Compra: {totalCompraFormateado}', styles['Heading1']))
-
     doc.build(elements)
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
+
     return response
+
+
+
+
+
 
 
 

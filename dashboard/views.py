@@ -16,12 +16,21 @@ from .models import Compras, Ventas, Clientes, Proveedores
 from django.db.models import Sum
 
 
+# En tu archivo views.py
 
+
+
+
+from django.http import JsonResponse
+from .models import Clientes
 
 def contar_clientes_activos(request):
-    clientes_activos = Clientes.objects.filter(estado=1).count()
-    clientes_inactivos = Clientes.objects.filter(estado=0).count()
-    return JsonResponse({'clientes_activos': clientes_activos, 'clientes_inactivos': clientes_inactivos})
+    total_clientes = Clientes.objects.count()
+    print(total_clientes)
+    return JsonResponse({'total_clientes': total_clientes})
+
+
+
 
 
 
