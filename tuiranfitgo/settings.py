@@ -130,6 +130,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'tuiranfitgo', 'static'), 
     os.path.join(BASE_DIR, 'sales', 'static'),
+    os.path.join(BASE_DIR, 'eproviders', 'static'),
     os.path.join(BASE_DIR, 'users', 'static'),
     os.path.join(BASE_DIR, 'dashboard', 'static'),
 ]
