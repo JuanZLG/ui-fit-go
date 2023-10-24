@@ -41,14 +41,6 @@
               </div>
             </div>
             
-            <div class="col-md-12 mb-3">
-              <div class="form-group">
-                <label>Contraseña *</label>
-                <input type="password" class="form-control" id="iPassword" name="iPassword" placeholder="Ingrese una contraseña"/>
-                <div class="error-message" style="color:red;" id="iPassword-error"></div>
-              </div>
-            </div>
-    
               <div class="text-center">
                 <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
               </div>
@@ -65,11 +57,11 @@
   
 <script>
   $(document).ready(function () {
-      $('#iRole, #iNombre, #iCorreo, #iPassword').on('change', function () {
+      $('#iRole, #iNombre, #iCorreo').on('change', function () {
           validarCampo($(this));
       });
 
-      $('#iRole, #iNombre, #iCorreo, #iPassword').on('input', function () {
+      $('#iRole, #iNombre, #iCorreo').on('input', function () {
         const campo = $(this);
         const campoValue = campo.val();
 
@@ -86,7 +78,6 @@
           validarCampo($('#iRole'));
           validarNombreUsuario($('#iNombre'));
           validarCorreo($('#iCorreo'));
-          validarPassword($('#iPassword'));
 
           if ($('.error-message').text() === '') {
               $.ajax({
@@ -144,17 +135,6 @@
         }
     }
     
-      function validarPassword($campo) {
-        const valor = $campo.val();
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-        if (!valor) {
-            mostrarError($campo, 'Este campo es obligatorio.');
-        } else if (!passwordRegex.test(valor)) {
-            mostrarError($campo, 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.');
-        } else {
-            ocultarError($campo);
-        }
-    }
     
     function validarCorreo($campo) {
         const valor = $campo.val();

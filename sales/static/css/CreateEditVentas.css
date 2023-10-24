@@ -1,4 +1,4 @@
-.table, .cliente-item {
+.table {
     box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
 }
 
@@ -13,6 +13,8 @@
 
 .cont-total-venta {
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     justify-content: space-between;
     margin-top: 10px;
     padding: 20px;
@@ -103,7 +105,6 @@
 }
 .btn-agregar {
     width: 200px;
-    border: 1px solid #3c3636;
     color: #fff;
     font-weight: bold;
     background-color: #48484b;
@@ -120,13 +121,6 @@
 }
 
 
-
-.btn-agregar:active,
-.btn-agregar:active {
-    transform: scale(0.95);
-}
-
-
 .fa-trash-can {
     color: #a60202;
     font-size: 24px;
@@ -136,7 +130,7 @@
 
 
 .cont-princ-cliente {
-    margin: 0 auto;
+    margin: 10px auto;
     height: 160px;
     display: flex;
     gap: 10px;
@@ -155,6 +149,7 @@
 
 
 .resultado-cliente {
+    height: 160px;
     margin-left: 20px;
     width: 65%;
     display: flex;
@@ -162,10 +157,18 @@
     grid-gap: 5px; 
 }
 .cliente-item {
-    position: relative;
-    height: 50%;
-    background-color: #fff;
+    box-shadow: 4px 2px 14px #cccccc70;
+}
+.cliente-item {
+    width: 220px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
+    position: relative;
+    background-color: #fff;
 } 
 .cliente-item:hover {
     cursor: pointer;
@@ -199,13 +202,13 @@
 .cliente-info {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 5px;
 }
 .estadoClienteCircle {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.6rem;
+    height: 0.6rem;
 }
 
 .estadoClienteCircle.activo {
@@ -287,5 +290,9 @@
     opacity: 0.9;
 }
 
-
+.error-cantidad {
+    width: 100%;
+    left: 51%;
+    position: absolute;
+}
 

@@ -11,22 +11,25 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
-from django.contrib import messages
+from dotenv import load_dotenv
+import smtplib 
+import os
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import string
+import secrets
+from django.template.loader import get_template
 
 # def login_view(request):
 #     if request.method == "POST":
 #         username = request.POST.get('username')
 #         password = request.POST.get('password')
-
-#         try:
-#             # Validar las credenciales del usuario
-#             usuario = Usuarios.objects.get(correo=username, contrasena=password)
-#             # Iniciar sesión manualmente
-#             request.session['usuario_id'] = usuario.id_usuario
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
 #             return redirect('Entrance')
-#         except Usuarios.DoesNotExist:
-#             # Las credenciales son incorrectas
-#             messages.error(request, 'Credenciales incorrectas.')
+#         else:
+#             return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
 
 #     return render(request, 'login.html')
 
@@ -122,13 +125,67 @@ def createUser(request):
         id_rol = request.POST['iRole']
         nombre_usuario = request.POST['iNombre']
         correo = request.POST['iCorreo']
-        contrasena = request.POST['iPassword']
-        
+        contrasena = create_password()
+        pass_cryp = hash_password(contrasena)
         rl = Roles.objects.get(id_rol=id_rol)
+        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=pass_cryp)
+        send_email(nombre_usuario, contrasena, correo)
 
-        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
         return JsonResponse({'success': True})
-    return render(request, 'createUser.html', {"rols":roles})
+
+    return render(request, 'createUser.html', {"rols": roles})
+
+
+
+
+def send_email(user, password, email):
+    load_dotenv()
+    remitente = os.getenv("USER")
+    destinatario = email
+    asunto = "Bienvenido a nuestro sitio"
+
+    msg = MIMEMultipart()
+    msg["Subject"] = asunto
+    msg["From"] = remitente
+    msg["To"] = destinatario
+
+    template = get_template("email.html")
+    context = {
+        'user': user,
+        'password': password,
+        'email': email
+    }
+    html = template.render(context)
+
+    msg.attach(MIMEText(html, "html"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(remitente, os.getenv("PASS"))
+    
+    server.sendmail(remitente, destinatario, msg.as_string())
+    server.quit()
+
+
+
+def create_password(length=8):
+    characters = string.ascii_letters + string.digits
+    password = ""
+    for _ in range(length):
+        password += secrets.choice(characters)
+    return password
+
+
+import bcrypt
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed
+
+
+# FUNCION PARA DESENCRIPTAR CONSTRASEÑA Y VALIDAR - retorna true o false
+# def verify_password(stored_hash, input_password):
+#     return bcrypt.checkpw(input_password.encode("utf-8"), stored_hash )
+
 
 def editUser(request, id_usuario):
     roles = Roles.objects.all()

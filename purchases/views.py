@@ -165,6 +165,7 @@ def cambiarEstado(request):
         nuevo_estado = request.GET.get('nuevo_estado')
         
         compra = Compras.objects.get(id_compra=compra_id)
+        estado_anterior = compra.estado  # Guardar el estado anterior
         compra.estado = int(nuevo_estado)
         compra.save()
 
@@ -182,7 +183,14 @@ def cambiarEstado(request):
 
             detalle.save() 
         
-        return JsonResponse({'status': 'success'})
+        # Verificar si el estado se cambió de Inactivo (0) a Activo (1)
+        if estado_anterior == 0 and nuevo_estado == "1":
+            # Si el estado anterior era Inactivo y se intenta cambiar a Activo, 
+            # entonces no permitir el cambio
+            return JsonResponse({'status': 'error', 'message': 'No se puede cambiar de Inactivo a Activo.'})
+        else:
+            return JsonResponse({'status': 'success'})
+
 
 
 
@@ -297,88 +305,95 @@ def obtener_detalles_compra(request, compra_id):
 #     compra = Compras.objects.get(id_compra=id_compra)
 #     detalles = Detallecompra.objects.filter(id_compra=id_compra)
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
+from django.http import HttpResponse
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from django.shortcuts import get_object_or_404
+from .models import Detallecompra, Compras
+from django.templatetags.static import static
+import os
 
-from django.http import JsonResponse
-from django.shortcuts import render
-import json
-from .models import Compras, Detallecompra, Proveedores, Productos
+def formatear_precios(valor):
+    valor = round(valor, 2)
+    precio_formateado = '${:,.2f}'.format(valor)
+    return precio_formateado
 
-@csrf_exempt
-def editar_compra(request, id_compra):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            print("Datos recibidos en la solicitud POST:", data)
+def generar_factura_pdf(request, compra_id):
+    compra = get_object_or_404(Compras, id_compra=compra_id)
+    detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
 
-            proveedor_nombre = data.get('proveedor', '')
-            totalCompra = data.get('totalCompra', 0)
-            productos = data.get('productos', [])
+    totalCompra = 0
+    detalles = []
 
-            compra = Compras.objects.get(id_compra=id_compra)
+    for detalle in detalles_compra:
+        producto = detalle.id_producto.nombre_producto
+        precioUnitario = formatear_precios(detalle.precio_uni)
+        cantidad = detalle.cantidad
+        totalProducto = formatear_precios(detalle.precio_tot)
+        totalCompra += detalle.precio_tot
 
-            if proveedor_nombre:
-                proveedor = Proveedores.objects.get(nombre_proveedor=proveedor_nombre)
-                compra.id_proveedor = proveedor
-            compra.totalCompra = totalCompra
-            compra.save()
+        detalles.append([producto, precioUnitario, cantidad, totalProducto])
 
-            detalles = Detallecompra.objects.filter(id_compra=compra)
-            stock_actual = {}  # Inicializar el diccionario de stock
+    totalCompraFormateado = formatear_precios(totalCompra)
 
-            for detalle in detalles:
-                producto = detalle.id_producto
-                stock_actual.setdefault(producto.nombre_producto, producto.cantidad)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=factura_compra_{compra_id}.pdf'
 
-                for productoDatos in productos:
-                    if detalle.id_detallecompra == productoDatos["idDetalle"]:
-                        nueva_cantidad = productoDatos["cantidad"]
-                        diferencia = detalle.cantidad - nueva_cantidad
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
 
-                        # Actualizar el registro existente
-                        detalle.cantidad = nueva_cantidad
-                        detalle.estado = productoDatos["estado"]
-                        detalle.save()
+    styles = getSampleStyleSheet()
 
-                        if detalle.estado == 1 and productoDatos["estado"] == 0:
-                            producto.cantidad -= diferencia
-                        elif detalle.estado == 0 and productoDatos["estado"] == 1:
-                            producto.cantidad += diferencia
+    # Información general
+    elements.append(Spacer(1, 24))
+    elements.append(Paragraph(f'Factura de Compra', styles['Title']))
+    elements.append(Spacer(1, 24))
 
-                        producto.save()
+    # Logo de la empresa (reemplaza 'logo.png' con la ruta correcta)
 
-            for productoDatos in productos:
-                id_detalle = productoDatos["idDetalle"]
-                if not id_detalle:
-                    # Este detalle de compra es nuevo, crea uno nuevo
-                    nombre_producto = productoDatos["nombre"]
-                    nueva_cantidad = productoDatos["cantidad"]
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f'Proveedor: {compra.id_proveedor.nombre_proveedor}', styles['Heading2']))
+    elements.append(Paragraph(f'Documento/NIT: {compra.id_proveedor.numero_documento_nit}', styles['Normal']))
+    elements.append(Paragraph(f'Fecha de Registro: {compra.fechareg}', styles['Normal']))
 
-                    producto = Productos.objects.get(nombre_producto=nombre_producto)
+    elements.append(Spacer(1, 24))
 
-                    if producto:
-                        producto.cantidad += nueva_cantidad
-                        producto.save()
+    # Detalles de compra
+    data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
+    data.extend(detalles)
 
-                    detalle = Detallecompra.objects.create(
-                        id_compra=compra,
-                        id_producto=producto,
-                        cantidad=nueva_cantidad,
-                        precio_uni=productoDatos["precioUnidad"],
-                        precio_tot=productoDatos["precioTotal"],
-                        estado=productoDatos["estado"],
-                    )
+    t = Table(data, colWidths=[280, 100, 80, 100])
+    t.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
 
-            response_data = {'success': True}
-        except Exception as e:
-            response_data = {'success': False, 'error_message': str(e)}
-            print("Error en la vista editar_compra:", str(e))
+    elements.append(t)
 
-        return JsonResponse(response_data)
+    elements.append(Spacer(1, 24))
+    elements.append(Paragraph(f'Total de Compra: {totalCompraFormateado}', styles['Heading1']))
 
-    compra = Compras.objects.get(id_compra=id_compra)
-    detalles = Detallecompra.objects.filter(id_compra=compra)
+    doc.build(elements)
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
 
-    return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
+
+
+
+
+
+
 
 
 

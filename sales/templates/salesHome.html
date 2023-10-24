@@ -7,7 +7,6 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/HomeVentas.css' %}">
-    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 
 
@@ -15,20 +14,23 @@
     <h1 class="modtitles">Gestión de Ventas</h1>
 </center>
 <br>
-<div class="card shadow mb-4">
+<div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'crear_venta' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip" data-placement="top" title="Crear una Venta">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Venta</span>
+                <a href="{% url 'crear_venta' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear una Venta">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Venta</span>
                 </a>
-                    
             </span>
         </div>
 
         <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
             </a>
         </div>
     </div>
@@ -39,97 +41,39 @@
         <div class="table-responsive">
             <table class="table table-bordered  mx-auto text-center" id="dataTable" cellspacing="3" style="overflow-y: auto;
             max-height: 400px;">
-            
                 <thead class="theads">
                     <tr>
-                        <th>Cliente</th>
                         <th>Fecha de Registro</th>
-                        <th>Estado</th>
+                        <th>Cliente</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for venta in ventas %}
                     <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
-                        <td class="d-flex ">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>{{ venta.fechareg }}</td>
+                        <td class="d-flex">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>
-                            <button
-                                data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
-                                class="cambiar-estado statusbutton {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                            <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
+                                class="cambiar-estado statusbutton mr-2 {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-venta-id="{{ venta.id_venta}}"
-                                data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}">
+                                data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}" data-url-state="{% url 'cambiarEstadoVentas' %}">
                                 {% if venta.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
-                        </td>
-                        <td class="cell-actions">
-                            <a href="{% url 'editarVenta' venta.id_venta %}" class="btn btn-sm {% if venta.estado == 0 %}not-active-edit {% endif %}" id="editbutton"><i
-                                class="fa-solid fa-pen-to-square" class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
-                                title="Editar Venta"></i></a>
-                            <button data-toggle="tooltip"
-                            data-placement="right" title="Ver Detalles" type="button" class="btn btn-sm btn-primary verVenta"
-                                data-venta-id="{{ venta.id_venta }}">
+                            <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
+                                class="btn btn-sm btn-primary verVenta ml-2" data-venta-id="{{ venta.id_venta }}" data-url-details="{% url 'verDetallesVenta' %}" >
                                 <i class="fa-solid fa-eye"></i>
                             </button>
-                            <style>
-                                .not-active-edit { 
-                                    opacity: 0.5;
-                                    pointer-events: none; 
-                                    cursor: default; 
-                                } 
-
-                            </style>
                         </td>
-                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script>
-                            $(document).ready(function () {
-                                $(".cambiar-estado").click(function () {
-                                    let ventaId = $(this).data("venta-id");
-                                    let nuevoEstado = $(this).data("nuevo-estado");
-                                    let mensaje;
-                                    if (nuevoEstado === 0) {
-                                        mensaje = "¿Estás seguro de desactivar esta venta? Esto marcará la venta como inactiva y sumará las cantidades al stock de los productos relacionados.";
-                                    } else {
-                                        mensaje = "¿Estás seguro de activar esta venta? Esto marcará la venta como activa y restará las cantidades al stock de los productos relacionados.";
-                                    }
-                                    Swal.fire({
-                                        title: 'Estado',
-                                        text: mensaje,
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#419edd',
-                                        cancelButtonColor: '#ba4d4d',
-                                        confirmButtonText: 'Confirmar',
-                                        cancelButtonText: 'Cancelar'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            $.ajax({
-                                                url: "{% url 'cambiarEstadoVentas'  %}",
-                                                data: {
-                                                    venta_id: ventaId,
-                                                    nuevo_estado: nuevoEstado
-                                                },
-                                                method: "GET",
-                                                success: function (response) {
-                                                    location.reload();
-                                                },
-                                                error: function (error) {
-                                                }
-                                            });
-                                        }
-                                    });
-                                });
-                            });
-
-                        </script>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        </div>
     </div>
 </div>
+</div>
+
 
 
 
@@ -151,8 +95,8 @@
         </div>
         <div class="cont-detalle-header font-weight-bold">
             <p class="float-right">Fecha de venta: <span id="fechareg"></span></p>
-            <p >Cliente: <span id="cliente"></span></p>
-            <p >Documento: <span id="documento"></span></p>
+            <p>Cliente: <span id="cliente"></span></p>
+            <p>Documento: <span id="documento"></span></p>
         </div>
         <div class="linea-detalle mb-2">
             <h3>Detalles de la Venta:</h3>
@@ -163,7 +107,7 @@
                     <th style="width: 30%;">Producto</th>
                     <th style="width: 30%;">Precio Unitario</th>
                     <th style="width: 10%;">Cantidad</th>
-                    <th style="width: 30%;">Total del producto</th>
+                    <th style="width: 30%;">Total Producto</th>
                 </tr>
             </thead>
             <tbody id="modalDetallesVenta">
@@ -176,76 +120,7 @@
 </dialog>
 
 
-<script>
-    $(document).ready(function () {
-
-        function formatearPrecios(valor) {
-            valor = Math.round(valor * 100) / 100;
-            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            return '$ ' + precioFormateado;
-        }
-        
-        $(".verVenta").click(function () {
-            let venta_id = $(this).data("venta-id");
-            $.ajax({
-                url: "{% url 'verDetallesVenta' %}",
-                data: {
-                    venta_id: venta_id
-                },
-                method: "GET",
-                success: function (response) {
-                    var venta = response.success;
-                    console.log(venta)
-                    $("#fechareg").text(venta.fechareg);
-                    $("#cliente").text(venta.cliente);
-                    $("#documento").text(venta.documento);
-                    $("#totalVenta").text(formatearPrecios(venta.totalVenta));
-
-                    if (venta.estado == 1) {
-                        $(".estadoVentaCircle").addClass("activo").removeClass("inactivo");
-                    } else {
-                        $(".estadoVentaCircle").addClass("inactivo").removeClass("activo");
-                    }
-                    var detalles = venta.detalles;
-                    let detallesVentaHTML = "";
-                    for (let detalle of detalles) {
-                        const precioUnitario = formatearPrecios(detalle.precio_uni);
-                        const totalProducto = formatearPrecios(detalle.precio_tot);
-
-                        detallesVentaHTML += `
-                            <tr>
-                                <td>${detalle.producto}</td>
-                                <td>${precioUnitario}</td>
-                                <td>${detalle.cantidad}</td>
-                                <td>${totalProducto}</td> 
-                            </tr>
-                        `;
-                    }
-                    document.getElementById("modalDetallesVenta").innerHTML = detallesVentaHTML;
-
-            
-                    document.getElementById("verDetallesDialog").showModal();
-                    $(".ventaDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
-                }
-            });
-        });
-
-        $("#cerrarDetallesVenta").click(function () {
-            $(".ventaDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
-            setTimeout(function () {
-                document.getElementById("verDetallesDialog").close();
-                $(".ventaDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").removeClass("fadeOut");
-            }, 300);
-        });
-    });
-
-
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/indexSales.js' %}"></script>
 
 {% endblock %}

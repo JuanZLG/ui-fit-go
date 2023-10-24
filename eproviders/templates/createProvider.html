@@ -2,34 +2,16 @@
 {% block title %} Agregar Proveedor {% endblock %}
 {% block body %}
 
-<style>
-    .center-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 70vh;
-    }
-
-    .modtitles {
-        font-size: 2em;
-        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: animarGradiente 3s linear infinite;
-        font-weight: bold;
-        height:8.5vh;
-        padding:20px;
-    }
-</style>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/StyleProv.css' %}">
+</head>
 
 <div class="center-content mt-5">
     <br>
     <h1 class="modtitles">Agregar Proveedor</h1>
     <br>
-    <div class="mb-4 col-md-7 p-0 card shadow">
+    <div class="mb-4 col-md-11 p-0 card shadow">
         <div class="card-header py-4">
             <form id="proveedor-form" method="post" >
                 {% csrf_token %}
@@ -81,7 +63,7 @@
                     <textarea id="informacion" class="form-control" rows="3" cols="50" name="informacion" style="resize: none; max-height: 200px;"></textarea>
                 </div>
                 <div class="text-end mt-3">
-                    <button class="btn btn-success mx-auto" type="submit">Guardar</button>
+                    <button id="btnCrearProv" class="btn btn-success mx-auto" type="submit" data-url-crear="{% url 'crearProveedor' %}"  data-url-validar="{% url 'proveedor_unico' %}">Guardar</button>
                 </div>
             </form>
 
@@ -89,156 +71,139 @@
     </div>
 </div>
 
-<style>
- 
-
-    .select-tipo {
-        background-color: #ccc;
-        color: #000;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        height: 40px;
-        width: 100%;
-    }
-    .select-tipo option {
-        background-color: #fff;
-    }
-</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function () {
-    $("#nombre_proveedor, #telefono, #correo, #tipoIdentificacion, #identificacion, #direccion, #informacion").val("");
-});
-
 
     $(document).ready(function () {
-        // Función para validar que todos los campos estén llenos
-        function validarCamposObligatorios() {
-            let camposLlenos = true;
-            const nombreValue = $('#nombre_proveedor').val();
-            const telefonoValue = $('#telefono').val();
-            const correoValue = $('#correo').val();
-            const tipoIdentificacionValue = $('#tipoIdentificacion').val(); // Obtener valor del select
-            const identificacionValue = $('#identificacion').val(); // Obtener valor del input identificacion
 
-            if (!nombreValue) {
-                mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            }
-            if (!telefonoValue) {
-                mostrarError('#telefono', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!/^\d{10}$/.test(telefonoValue)) {
-                mostrarError('#telefono', 'Número inválido.');
-                camposLlenos = false;
-            }
-            if (!correoValue) {
-                mostrarError('#correo', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarFormatoCorreo(correoValue)) {
-                mostrarError('#correo', 'El formato del correo electrónico no es válido.');
-                camposLlenos = false;
-            }
+        $("#nombre_proveedor, #telefono, #correo, #tipoIdentificacion, #identificacion, #direccion, #informacion").val("");
+    function mostrarError(selector, mensaje) {
+        $(selector).addClass('is-invalid');
+        $(`${selector}-error`).text(mensaje).css('color', 'red');
+    }
 
-            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
-                mostrarError('#identificacion', 'Debe ingresar una identificación.');
-                camposLlenos = false;
-            } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
-                mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
-                camposLlenos = false;
-            } else {
-                $("#identificacion").removeClass("is-invalid")
-                $("#identificacion-error").text("")
-            }
+    function validarFormatoCorreo(correo) {
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailRegex.test(correo);
+    }
+    function validarCamposObligatorios() {
+        let camposLlenos = true;
+        const nombreValue = $('#nombre_proveedor').val();
+        const telefonoValue = $('#telefono').val();
+        const correoValue = $('#correo').val();
+        const tipoIdentificacionValue = $('#tipoIdentificacion').val(); // Obtener valor del select
+        const identificacionValue = $('#identificacion').val(); // Obtener valor del input identificacion
 
-            return camposLlenos;
+        if (!nombreValue) {
+            mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
+            camposLlenos = false;
+        }
+        if (!telefonoValue) {
+            mostrarError('#telefono', 'Este campo es obligatorio.');
+            camposLlenos = false;
+        } else if (!/^\d{10}$/.test(telefonoValue)) {
+            mostrarError('#telefono', 'Número inválido.');
+            camposLlenos = false;
+        }
+        if (!correoValue) {
+            mostrarError('#correo', 'Este campo es obligatorio.');
+            camposLlenos = false;
+        } else if (!validarFormatoCorreo(correoValue)) {
+            mostrarError('#correo', 'El formato del correo electrónico no es válido.');
+            camposLlenos = false;
         }
 
-
-        $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
-            const campo = $(this);
-            const campoValue = campo.val();
-
-            if (campoValue) {
-                campo.removeClass('is-invalid');
-                $(`#${campo.attr('id')}-error`).text('');
-            }
-        });
-
-
-
-        function mostrarError(selector, mensaje) {
-            $(selector).addClass('is-invalid');
-            $(`${selector}-error`).text(mensaje).css('color', 'red');
+        if (tipoIdentificacionValue !== '' && identificacionValue === '') {
+            mostrarError('#identificacion', 'Debe ingresar una identificación.');
+            camposLlenos = false;
+        } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
+            mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
+            camposLlenos = false;
+        } else {
+            $("#identificacion").removeClass("is-invalid")
+            $("#identificacion-error").text("")
         }
 
-        function validarFormatoCorreo(correo) {
-            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            return emailRegex.test(correo);
+        return camposLlenos;
+    }
+
+
+    $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
+        const campo = $(this);
+        const campoValue = campo.val();
+
+        if (campoValue) {
+            campo.removeClass('is-invalid');
+            $(`#${campo.attr('id')}-error`).text('');
         }
+    });
 
-
-        function validarProveedor(proveedor) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: "{% url 'proveedor_unico' %}",
-                    type: "GET",
-                    data: {
-                        proveedor: proveedor,
-                    },
-                    success: function (data) {
-                        if (data.existe) {
-                            resolve(true);
-                        } else {
-                            resolve(false);
-                        }
-                    }
-                });
-            });
-        }
-
-        $('#proveedor-form').submit(function (event) {
-            event.preventDefault();
-
-            if (!validarCamposObligatorios()) {
-                return;
-            }
-            prov = $("#nombre_proveedor").val()
-            validarProveedor(prov).then(function (existe) {
-                if (existe) {
-                    $("#nombre_proveedor").addClass("is-invalid");
-                    $("#nombre_proveedor-error").text("El proveedor " + prov + " ya existe").css("color", "red");
-                } else {
-                    $("#nombre_proveedor").removeClass("is-invalid");
-                    $("#nombre_proveedor-error").text("");
-                    enviarDatosProveedor();
-                }
-            });
-        });
-
-        function enviarDatosProveedor() {
+    
+    function validarProveedor(proveedor, url) {
+        return new Promise(function (resolve, reject) {
             $.ajax({
-                type: 'POST',
-                url: "{% url 'crearProveedor' %}",
-                data: $('#proveedor-form').serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Éxito',
-                            text: 'Proveedor creado con éxito',
-                            icon: 'success',
-                            showConfirmButton: false, 
-                            timer: 2000,
-                        });
-                        setTimeout(function () {
-                            window.location.href = "{% url 'proveedores' %}";
-                        }, 2000);
+                url: url,
+                type: "GET",
+                data: {
+                    proveedor: proveedor,
+                },
+                success: function (data) {
+                    if (data.existe) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
                     }
                 }
-            });            
+            });
+        });
+    }
+
+    $('#proveedor-form').submit(function (event) {
+        event.preventDefault();
+        let urlCrear = document.getElementById("btnCrearProv").getAttribute("data-url-crear");
+        let urlValidar = document.getElementById("btnCrearProv").getAttribute("data-url-validar");
+        //     <div class="text-end mt-3">
+        //     <button id="btnCrearProv" class="btn btn-success mx-auto" type="submit" data-url-crear="{% url 'crearProveedor' %}"  data-url-validar="{% url 'proveedor_unico' %}">Guardar</button>
+        // </div>
+        if (!validarCamposObligatorios()) {
+            return;
         }
+        prov = $("#nombre_proveedor").val()
+        validarProveedor(prov, urlValidar).then(function (existe) {
+            if (existe) {
+                $("#nombre_proveedor").addClass("is-invalid");
+                $("#nombre_proveedor-error").text("El proveedor " + prov + " ya existe").css("color", "red");
+            } else {
+                $("#nombre_proveedor").removeClass("is-invalid");
+                $("#nombre_proveedor-error").text("");
+                enviarDatosProveedor(urlCrear);
+            }
+        });
+    });
+
+    function enviarDatosProveedor(url) {
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: $('#proveedor-form').serialize(),
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Proveedor creado con éxito',
+                        icon: 'success',
+                        showConfirmButton: false, 
+                        timer: 2000,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "{% url 'proveedores' %}";
+                    }, 2000);
+                }
+            }
+        });            
+    }
+
 
     });
 </script>

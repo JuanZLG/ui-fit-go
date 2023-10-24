@@ -16,45 +16,50 @@
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="{% static 'https://fonts.googleapis.com' %}">
     <link rel="preconnect" href="{% static 'https://fonts.gstatic.com' %}" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/our-styles.css' %}" rel="stylesheet">
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css'%}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.min.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/help.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 
 <body id="page-top">
-<style>
-    body::-webkit-scrollbar {
-        -webkit-appearance: none;
-      }
-      
-      body::-webkit-scrollbar:vertical {
-        width:10px;
-      }
-      
-      body::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
-        display: none;
-      } 
-      
-      body::-webkit-scrollbar:horizontal {
-        height: 10px;
-      }
-      
-      body::-webkit-scrollbar-thumb {
-        background-color: lightgray;
-        border-radius: 20px;
-        border: 2px solid #f1f2f3;
-      }
-      
-      body::-webkit-scrollbar-track {
-        border-radius: 10px;  
-      }
-</style>
+    <style>
+        body::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
+
+        body::-webkit-scrollbar:vertical {
+            width: 10px;
+        }
+
+        body::-webkit-scrollbar-button:increment,
+        .contenedor::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        body::-webkit-scrollbar:horizontal {
+            height: 10px;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: lightgray;
+            border-radius: 20px;
+            border: 2px solid #f1f2f3;
+        }
+
+        body::-webkit-scrollbar-track {
+            border-radius: 10px;
+        }
+    </style>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -63,7 +68,9 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-icon"><img src="{% static 'img/gorille.png' %}" width="48%"></div>
+                <div class="sidebar-brand-icon">
+                    <img src="{% static 'img/gorille.png' %}" width="48%">
+                </div>
             </a>
 
             <!-- Divider -->
@@ -85,7 +92,8 @@
             </div>
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers"
+                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fa-solid fa-users"></i>
                     <span>Usuarios</span>
                 </a>
@@ -111,21 +119,24 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompras"aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompras"
+                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fa-solid fa-basket-shopping"></i>
                     <span>Compras</span>
                 </a>
-                <div id="collapseCompras" class="collapse" aria-labelledby="collapseTwo" data-parent="#accordionSidebar">
+                <div id="collapseCompras" class="collapse" aria-labelledby="collapseTwo"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'purchases' %}">Gestión de Compras</a>
                     </div>
                 </div>
             </li>
-            
+
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts" aria-expanded="true" aria-controls="collapseUtilities">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
+                    aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fa-solid fa-shop"></i>
-                        <span>Productos</span>
+                    <span>Productos</span>
                 </a>
                 <div id="collapseProducts" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
@@ -264,9 +275,10 @@
                         </li> -->
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1" data-toggle="tooltip" data-placement="left" title="Centro de Notificaciones">
+                        <li class="nav-item dropdown no-arrow mx-1" data-toggle="tooltip" data-placement="left"
+                            title="Centro de Notificaciones">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw" style="color:black"></i>
                                 <!-- Counter - Alerts -->
                                 <span class="badge badge-danger badge-counter">1</span>
@@ -310,7 +322,8 @@
                                         Spending Alert: We've noticed unusually high spending for your account.
                                     </div>
                                 </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Mostrar todas las alertas</a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Mostrar todas las
+                                    alertas</a>
                             </div>
                         </li>
 
@@ -421,14 +434,14 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     {% block body %}
-                    
+
                     {% endblock %}
                 </div>
                 <!-- /.container-fluid -->
-            
+
                 <!-- Separador de Contenidos -->
                 <div style="margin-top:150px"></div>
-                
+
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
@@ -488,7 +501,7 @@
 
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip({
-                    placement:'auto'
+                    placement: 'auto'
                 })
             })
 
@@ -497,28 +510,30 @@
 
     <script>$(document).ready(function () {
 
-        $('#dataTable').DataTable({
-            "language": {
-                "search": "Buscar:",
-                "searchPlaceholder": "Buscar registro",
-                "paginate": {
-                    "previous": "Anterior",
-                    "next": "Siguiente"
+            $('#dataTable').DataTable({
+                "language": {
+                    "search": "Buscar:",
+                    "searchPlaceholder": "Buscar registro",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente"
+                    },
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "info": "Mostrando _START_ al _END_ de _TOTAL_ registro(s)",
+                    "infoEmpty": "",
                 },
-                "lengthMenu": "Mostrar _MENU_ registros por página",
-                "info": "Mostrando _START_ al _END_ de _TOTAL_ registro(s)",
-                "infoEmpty": "",
-            },
-            "drawCallback": function (settings) {
-                $('#dataTable_paginate .paginate_button').removeClass('selected-page');
-                $(settings.nTable).find('.paginate_button.current').addClass('selected-page');
-            }
+                "drawCallback": function (settings) {
+                    $('#dataTable_paginate .paginate_button').removeClass('selected-page');
+                    $(settings.nTable).find('.paginate_button.current').addClass('selected-page');
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+        integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5"
+        crossorigin="anonymous"></script>
 
     <!-- Scripts de Nivel de Página -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
@@ -532,23 +547,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
-    
-        <!-- Core plugin JavaScript-->
-        <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-    
-        {% comment %} <!-- Custom scripts for all pages-->
-        <script src="js/sb-admin-2.min.js"></script> {% endcomment %}
-    
-        <!-- Page level plugins -->
-        <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-    
-        <!-- Page level custom scripts -->
-        <script src="{% static 'vendor/chart.js/chart-bar-demo.js' %}"></script>
-        <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-        <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-        <script src="{% static 'js/dashboard.js' %}"></script>
-    
-        
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    {% comment %} <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script> {% endcomment %}
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'vendor/chart.js/chart-bar-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+
+
 </body>
 
 </html>

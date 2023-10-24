@@ -102,7 +102,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': 'monitoc10',
+        'PASSWORD': '3127123250',
         'PORT': '3306'
     }
 }
@@ -158,6 +158,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'tuiranfitgo', 'static'), 
     os.path.join(BASE_DIR, 'sales', 'static'),
+    os.path.join(BASE_DIR, 'eproviders', 'static'),
     os.path.join(BASE_DIR, 'users', 'static'),
     os.path.join(BASE_DIR, 'dashboard', 'static'),
     os.path.join(BASE_DIR, 'products', 'static'),

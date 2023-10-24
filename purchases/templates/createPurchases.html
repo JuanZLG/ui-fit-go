@@ -58,7 +58,7 @@
                                     autocomplete="off" placeholder="Nombre del producto">
                                 <span class="error-message text-danger error-produ"></span>
                                 <div class="p-2">
-                                    <label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>
+                                    <label class="text-secondary me-2 mess-sugges-prod"></label>
                                 </div>
                             </td>
                             <td>
@@ -405,10 +405,10 @@
 
             $("#error-proveedor").text("");
 
-            if (nombreProveedor.length >= 5) {
+            if (nombreProveedor.length >= 3) {
                 $.ajax({
                     url: "{% url 'buscar_proveedores'%}?q=" +
-                        nombreProveedor, // Reemplaza esto con la ruta correcta
+                        nombreProveedor, 
                     type: "GET",
                     success: function (data) {
                         if (data.resultados.length > 0) {
@@ -654,7 +654,7 @@
             '<input type="text" class="form-control producto" name="producto" id="producto" autocomplete="off" placeholder="Nombre del producto">' +
             '<span class="error-message text-danger error-produ" ></span>' +
             '<div class="p-2">' +
-            '<label class="text-secondary me-2 mess-sugges-prod">Sugerencias:</label>' +
+            '<span class="text-secondary me-2 mess-sugges-prod"></span>' +
             '</div>' +
             '<span class="error-message producto-error"></span>' +
             '</td>' +

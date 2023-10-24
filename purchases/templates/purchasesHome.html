@@ -9,20 +9,24 @@
 </center>
 <br>
 
-<div class="card shadow mb-4">
+<div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'crear_compra' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip" data-placement="top" title="Crear una Compra">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Compra</span>
+                <a href="{% url 'crear_compra' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear una Compra">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Compra</span>
                 </a>
-                    
+
             </span>
         </div>
 
         <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
             </a>
         </div>
     </div>
@@ -59,23 +63,26 @@
                         <td>{{ compra.fechareg }}</td>
                         <td>
                             <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
-                                class="cambiar-estado-compra statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
-                                data-compra-id="{{ compra.id_compra }}"
-                                data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
-                                {% if compra.estado == 1 %}Activo{% else %}Inactivo{% endif %}
-                            </button>
+                            class="cambiar-estado-compra statusbutton {% if compra.estado == 1 %}active-status{% else %}inactive-status{% endif %} {% if compra.estado == 0 %}inactive-button{% endif %}"
+                            data-compra-id="{{ compra.id_compra }}"
+                            data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
+                            {% if compra.estado == 1 %}Activo{% else %}Inactivo{% endif %}
+                        </button>
+                        
+                        
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editarCompra' compra.id_compra %}" class="btn btn-sm" id="editbutton"><i
-                                    class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
-                                    title="Editar Compra"></i></a>
+                            <a href="{% url 'generar_factura_pdf' compra.id_compra %}" class="btn btn-sm"
+                                id="editbutton"><i class="fa-solid fa-download" data-toggle="tooltip"
+                                    data-placement="top" title="Descargar Compra"></i></a>
+
                             <a href="#" class="btn btn-sm btn-primary" id="editbutton{{ compra.id_compra }}"
                                 data-compra-id="{{ compra.id_compra }}"
                                 onclick="mostrarDetallesCompra({{ compra.id_compra }})" data-toggle="tooltip"
                                 data-placement="right" title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            
+
                         </td>
                     </tr>
                     {% endfor %}
@@ -88,54 +95,73 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $(".cambiar-estado-compra").click(function () {
-            let compraId = $(this).data("compra-id");
-            let nuevoEstado = $(this).data("nuevo-estado");
-            let mensaje;
-            if (nuevoEstado === 0) {
-                mensaje =
-                    "¿Estás seguro de desactivar esta compra? Esto marcará la compra como inactiva y restará las cantidades al stock de los productos relacionados.";
-            } else {
-                mensaje =
-                    "¿Estás seguro de activar esta compra? Esto marcará la compra como activa y sumara las cantidades al stock de los productos relacionados.";
-            }
+$(document).ready(function () {
+    // ...
 
-            Swal.fire({
-                title: 'Estado',
-                text: mensaje,
+    // Desactivar el botón si el estado es "Inactivo"
+    $(".cambiar-estado-compra.inactive-button").addClass("inactive-status");
 
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Confirmar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{% url 'cambiarEstadoCompra' %}",
-                        data: {
-                            compra_id: compraId,
-                            nuevo_estado: nuevoEstado
-                        },
-                        method: "GET",
-                        success: function (response) {
+    $(".cambiar-estado-compra").click(function () {
+        let compraId = $(this).data("compra-id");
+        let nuevoEstado = $(this).data("nuevo-estado");
+        let mensaje;
+        if (nuevoEstado === 0) {
+            mensaje =
+                "¿Estás seguro de desactivar esta compra? Esto marcará la compra como inactiva y restará las cantidades al stock de los productos relacionados.";
+        } else {
+            mensaje =
+                "¿Estás seguro de activar esta compra? Esto marcará la compra como activa y sumará las cantidades al stock de los productos relacionados.";
+        }
+
+        Swal.fire({
+            title: 'Estado',
+            text: mensaje,
+
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{% url 'cambiarEstadoCompra' %}",
+                    data: {
+                        compra_id: compraId,
+                        nuevo_estado: nuevoEstado
+                    },
+                    method: "GET",
+                    success: function (response) {
+                        if (response.status === 'error') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            });
+                        } else {
                             location.reload();
-                        },
-                        error: function (error) {
-                            // Handle error if needed
                         }
-                    });
-                }
-            });
+                    },
+                    error: function (error) {
+                        // Handle error if needed
+                    }
+                });
+            }
         });
     });
+});
+
 </script>
 
 
 </div>
 
 <style>
+    .inactive-button {
+    pointer-events: none;
+    opacity: 0.5; /* Puedes ajustar la opacidad a tu preferencia */
+}
+
     .table {
         width: 80%;
     }
@@ -173,7 +199,7 @@
         color: #000;
     }
 
-    .btn-adder:hover{
+    .btn-adder:hover {
         color: #000;
         background-color: #77B677;
         border: solid 1px black;
@@ -186,12 +212,12 @@
 
     .btn-dash {
         background-color: #c55c5c;
-        color:black;
+        color: black;
     }
 
     .btn-dash:hover {
         background-color: #D16060;
-        color:black
+        color: black
     }
 
     tr.inactivo {
