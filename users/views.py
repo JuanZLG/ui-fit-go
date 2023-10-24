@@ -11,19 +11,24 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
+from django.contrib import messages
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('Entrance')
-        else:
-            return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
+# def login_view(request):
+#     if request.method == "POST":
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
 
-    return render(request, 'login.html')
+#         try:
+#             # Validar las credenciales del usuario
+#             usuario = Usuarios.objects.get(correo=username, contrasena=password)
+#             # Iniciar sesión manualmente
+#             request.session['usuario_id'] = usuario.id_usuario
+#             return redirect('Entrance')
+#         except Usuarios.DoesNotExist:
+#             # Las credenciales son incorrectas
+#             messages.error(request, 'Credenciales incorrectas.')
+
+#     return render(request, 'login.html')
 
 # Nuevo....
 
@@ -43,31 +48,32 @@ def login_view(request):
 #             # Handle login failure, display an error message, or redirect to the login page
 #             return render(request, 'login.html', {'error_message': 'Invalid login credentials'})
 
-from django.contrib.auth import login, authenticate
-from django.http import HttpResponse
+# from django.contrib.auth import login, authenticate
+# from django.http import HttpResponse
 
-def login_view(request):
-    if request.method == 'POST':
-        correo = request.POST['correo']
-        contrasena = request.POST['contrasena']
+# def login_view(request):
+#     if request.method == 'POST':
+#         correo = request.POST['correo']
+#         contrasena = request.POST['contrasena']
 
-        user = authenticate(request, correo=correo, contrasena=contrasena)
+#         print(correo)
 
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect('Entrance')  # Redirige al panel de control
-        else:
-            return HttpResponse("Credenciales incorrectas. Inténtalo de nuevo.")
+#         if user is not None:
+#             login(request, user)
+#             return HttpResponseRedirect('Entrance')  # Redirige al panel de control
+#         else:
+#             return HttpResponse("Credenciales incorrectas. Inténtalo de nuevo.")
 
-    return render(request, 'login.html')  # Reemplaza 'login.html' con tu plantilla de inicio de sesión
+#     return render(request, 'login.html')  # Reemplaza 'login.html' con tu plantilla de inicio de sesión
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+# def logout_view(request):
+#     logout(request)
+#     return redirect('login')
 
 def Home(request):
     user = Usuarios.objects.all()
+    
     return render(request, 'usersHome.html', {"Users":user}) 
 
 def cambiarEstadoDeUsuario(request):
@@ -146,8 +152,6 @@ def editUser(request, id_usuario):
         return JsonResponse(response_data)    
     users = Usuarios.objects.get(id_usuario=id_usuario)
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
-
-
 
 
 def HomeRoles(request):

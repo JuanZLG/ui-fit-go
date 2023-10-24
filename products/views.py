@@ -1,13 +1,12 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Productos
 from django.urls import reverse
-import json
 from urllib.parse import parse_qs
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from products.models import Productos, Categorias, Marcas
-
 
 def Home(request):
     product = Productos.objects.all()
@@ -24,7 +23,7 @@ def brandHome(request):
 def createProduct(request):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
-    
+        
     if request.method == 'POST':
         nombre = request.POST['iNombre']
         descripcion = request.POST['iDescripcion']
@@ -35,12 +34,25 @@ def createProduct(request):
         precio = request.POST['iPrice']
         categoria = request.POST['iCategoria']
         marca = request.POST['iMarca']
+        iProductImg = request.FILES['iProductImg']
+        iInfoImg = request.FILES['iInfoImg']
+        
         
         m = Marcas.objects.get(id_marca=marca)
         c = Categorias.objects.get(id_categoria=categoria)
         
         precio = precio.replace(',', '').replace('.', '')
         precio = float(precio)
+        
+        print("Nombres de los campos en request.FILES:")
+        for field_name, file in request.FILES.items():
+            print(field_name)
+
+        # Verifica que los campos del formulario coincidan con los nombres esperados
+        if 'iProductImg' not in request.FILES:
+            print("Campo 'iProductImg' no encontrado en request.FILES")
+        if 'iInfoImg' not in request.FILES:
+            print("Campo 'iInfoImg' no encontrado en request.FILES")
         
         Productos.objects.create(
             id_categoria=c,
@@ -51,12 +63,15 @@ def createProduct(request):
             fechaven=fechavencimiento,
             sabor=sabor,
             presentacion=tamano,
-            precio=precio
+            precio=precio,
+            iProductImg=iProductImg,
+            iInfoImg=iInfoImg,
         )
         
         return JsonResponse({'success': True})
     
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
+
 
 def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
@@ -72,13 +87,15 @@ def editProduct(request, id_producto):
         flavor = request.POST['iSabor']
         services = request.POST['iServices']
         pPrice = request.POST['iPrice']
+        img = request.FILES
+        product = img['iProductImg']
+        info = img['iInfoImg']
         
         m = Marcas.objects.get(id_marca=brand)
         c = Categorias.objects.get(id_categoria=category)
         
-        # Elimina los puntos de miles y comas antes de convertir a float
-        pPrice = pPrice.replace(',', '').replace('.', '')  # Elimina puntos de miles y comas
-        pPrice = float(pPrice)  # Convierte el valor a float
+        pPrice = pPrice.replace(',', '').replace('.', '')
+        pPrice = float(pPrice)  
         
         Productos.objects.filter(id_producto=id_producto).update(
             id_categoria=c,
@@ -89,7 +106,9 @@ def editProduct(request, id_producto):
             cantidad=cant,
             sabor=flavor,
             presentacion=services,
-            precio=pPrice
+            precio=pPrice,
+            productimg=product,
+            infoimg=info
         )
         
         response_data = {'success': True}
@@ -97,7 +116,6 @@ def editProduct(request, id_producto):
     products = Productos.objects.get(id_producto=id_producto)
     products.precio = int(products.precio)
     return render(request, 'editProducts.html', {"Product": products, "marcas": marcas, "categorias": categorias})
- 
 
 def cambiarEstadoDeProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -124,7 +142,7 @@ def verDetallesProducto(request):
         if id_producto:
             try:
                 producto = Productos.objects.get(id_producto=id_producto)
-                # Si el producto se encuentra
+
                 data = {
                     'categoria': producto.id_categoria.nombre_categoria,
                     'marca': producto.id_marca.nombre_marca,
@@ -134,7 +152,9 @@ def verDetallesProducto(request):
                     'cantidad': producto.cantidad,
                     'sabor': producto.sabor,
                     'status': producto.estado,
-                    'servicios': producto.presentacion
+                    'servicios': producto.presentacion,
+                    'imagenproducto':producto.productimg,
+                    'imagennutri':producto.infoimg
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:
@@ -143,15 +163,6 @@ def verDetallesProducto(request):
             return JsonResponse({'status': 'error', 'message': 'ID de producto no proporcionado'})
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
-# def crearCategoria(request):
-#     if request.method == 'POST':
-#         nombre = request.POST['znombre']
-#         categoria = Categorias.objects.create(nombre_categoria=nombre)
-#         return JsonResponse({'success': True})
-#     return render(request, 'createProduct.html')
-
-# from .forms import CategoriaForm, MarcaForm
 
 def crear_categoria(request):
     categorias = Categorias.objects.all()
@@ -163,20 +174,6 @@ def crear_categoria(request):
     
     return render(request, 'productsHome.html', {'categorias': categorias})
 
-
-# def editar_categoria(request, categoria_id):
-#     categoria = get_object_or_404(Categorias, id_categoria=categoria_id)
-    
-#     if request.method == 'POST':
-#         form = CategoriaForm(request.POST, instance=categoria)
-#         if form.is_valid():
-#             form.save()
-#             return JsonResponse({'success': True})
-#     else:
-#         form = CategoriaForm(instance=categoria)
-    
-#     return render(request, 'categoriesHome.html', {'form': form, 'categoria': categoria})
-
 def crear_marca(request):
     marcas = Marcas.objects.all()
     if request.method == 'POST':
@@ -186,7 +183,6 @@ def crear_marca(request):
         return JsonResponse(response_data)
     
     return render(request, 'productsHome.html', {'marcas': marcas})
-
 
 def eliminar_categoria(request):
     if request.method == 'POST':

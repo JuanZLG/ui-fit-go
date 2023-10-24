@@ -28,9 +28,8 @@
 
 <div class="card shadow">
   <div class="container p-4">
-    <form class="form" id="producto-form" method="post">
+    <form id="producto-form" method="post" enctype="multipart/form-data" action=" {% url 'createAProduct' %} ">
       {% csrf_token %}
-      
       <div class="form-row">
         <div class="col-md-6 mb-3">
           <div class="form-group">
@@ -56,12 +55,32 @@
           </div>
         </div>
       </div>
-  
+      
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
       <div class="form-group">
         <label>Nombre *</label>
         <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
         <div class="error-message" style="color:red;" id="iNombre-error"></div>
       </div>
+    </div>
+
+    <div class="col-md-4 mb-3 mx-auto">
+      <div class="form-group">
+          <label for="price">Imagen del Producto *</label>
+              <input type="file" class="form-control" id="iProductImg" name="iProductImg"/>
+              <div class="error-message" id="iProductImg-error" style="color:red;"></div>
+          </div>
+    </div>
+
+    <div class="col-md-4 mb-3 mx-auto">
+      <div class="form-group">
+          <label for="iInfoImg">Imagen de Información Nutricional *</label>
+              <input type="file" class="form-control" id="iInfoImg" name="iInfoImg"/>
+              <div class="error-message" id="iInfoImg-error" style="color:red;"></div>
+          </div>
+    </div>
+    </div>
   
       <div class="form-group">
         <label for="descripcion">Descripción *</label>
@@ -109,11 +128,10 @@
             </div>
         </div>
     </div>
-    
-      
-    <div class="col-md-3 mb-3 mx-auto">
+
+    <div class="col-md-4 mb-3 mx-auto">
       <div class="form-group">
-          <label for="price">Precio del Producto *</label>
+          <label for="iPrice">Precio del Producto *</label>
           <div class="input-group">
               <div class="input-group-prepend">
                   <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
@@ -126,13 +144,11 @@
                   placeholder="Ingrese un precio"
                   oninput="formatPriceInput(this);"
                   value="{{ Product.precio }}"
-              >
+              />
           </div>
           <div class="error-message" id="iPrice-error" style="color:red;"></div>
       </div>
   </div>
-  
-  
   
       <div class="text-end">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
@@ -151,11 +167,11 @@
   
 <script>
   $(document).ready(function () {
-      $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice').on('change', function () {
+      $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iProductImg, #InfoImg').on('change', function () {
           validarCampo($(this));
       });
 
-      $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice').on('input', function () {
+      $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #ProductImg, #InfoImg').on('input', function () {
         const campo = $(this);
         const campoValue = campo.val();
 
@@ -178,7 +194,8 @@
           validarCampo($('#iSabor'));
           validarCampo($('#iServices'));
           validarCampo($('#iPrice'));
-
+          validarCampo($('#iProductImg'));
+          validarCampo($('#iInfoImg'));
 
           if ($('.error-message').text() === '') {
             $.ajax({
@@ -189,7 +206,7 @@
                   if (response.success) {
                       Swal.fire({
                           title: 'Éxito',
-                          text: 'Producto creado con éxito',
+                          text: 'Producto agregado con éxito',
                           icon: 'success',
                           showConfirmButton: false,
                           timer: 2000,
@@ -209,7 +226,6 @@
             const fechaValue = campo.val();
     
             if (fechaValue) {
-                // Validar que la fecha tenga el formato AAAA-MM-DD
                 if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
                     mostrarError(campo, 'El formato de la fecha no es correcto (AAAA-MM-DD).');
                     return;
