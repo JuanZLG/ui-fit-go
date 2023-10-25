@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import smtplib 
 import os
 from email.mime.multipart import MIMEMultipart
@@ -165,8 +165,6 @@ def send_email(user, password, email):
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
-
-
 def create_password(length=8):
     characters = string.ascii_letters + string.digits
     password = ""
@@ -174,8 +172,7 @@ def create_password(length=8):
         password += secrets.choice(characters)
     return password
 
-
-import bcrypt
+# import bcrypt
 def hash_password(password):
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
