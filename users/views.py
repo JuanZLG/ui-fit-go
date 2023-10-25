@@ -11,9 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
-
-
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import smtplib 
 import os
 from email.mime.multipart import MIMEMultipart
@@ -22,18 +20,18 @@ import string
 import secrets
 from django.template.loader import get_template
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('Entrance')
-        else:
-            return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
+# def login_view(request):
+#     if request.method == "POST":
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             return redirect('Entrance')
+#         else:
+#             return render(request, 'login.html', {'error': 'Credenciales incorrectas.'})
 
-    return render(request, 'login.html')
+#     return render(request, 'login.html')
 
 # Nuevo....
 
@@ -53,31 +51,32 @@ def login_view(request):
 #             # Handle login failure, display an error message, or redirect to the login page
 #             return render(request, 'login.html', {'error_message': 'Invalid login credentials'})
 
-from django.contrib.auth import login, authenticate
-from django.http import HttpResponse
+# from django.contrib.auth import login, authenticate
+# from django.http import HttpResponse
 
-def login_view(request):
-    if request.method == 'POST':
-        correo = request.POST['correo']
-        contrasena = request.POST['contrasena']
+# def login_view(request):
+#     if request.method == 'POST':
+#         correo = request.POST['correo']
+#         contrasena = request.POST['contrasena']
 
-        user = authenticate(request, correo=correo, contrasena=contrasena)
+#         print(correo)
 
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect('Entrance')  # Redirige al panel de control
-        else:
-            return HttpResponse("Credenciales incorrectas. Inténtalo de nuevo.")
+#         if user is not None:
+#             login(request, user)
+#             return HttpResponseRedirect('Entrance')  # Redirige al panel de control
+#         else:
+#             return HttpResponse("Credenciales incorrectas. Inténtalo de nuevo.")
 
-    return render(request, 'login.html')  # Reemplaza 'login.html' con tu plantilla de inicio de sesión
+#     return render(request, 'login.html')  # Reemplaza 'login.html' con tu plantilla de inicio de sesión
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+# def logout_view(request):
+#     logout(request)
+#     return redirect('login')
 
 def Home(request):
     user = Usuarios.objects.all()
+    
     return render(request, 'usersHome.html', {"Users":user}) 
 
 def cambiarEstadoDeUsuario(request):
@@ -166,8 +165,6 @@ def send_email(user, password, email):
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
-
-
 def create_password(length=8):
     characters = string.ascii_letters + string.digits
     password = ""
@@ -175,8 +172,7 @@ def create_password(length=8):
         password += secrets.choice(characters)
     return password
 
-
-import bcrypt
+# import bcrypt
 def hash_password(password):
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
@@ -210,8 +206,6 @@ def editUser(request, id_usuario):
         return JsonResponse(response_data)    
     users = Usuarios.objects.get(id_usuario=id_usuario)
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
-
-
 
 
 def HomeRoles(request):

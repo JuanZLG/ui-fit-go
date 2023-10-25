@@ -8,8 +8,6 @@ urlpatterns=[
     path('adduser', views.createUser, name="createAUser"),
     path('edituser/<int:id_usuario>/', views.editUser, name='editAUser'),
     path('Estado/', views.cambiarEstadoDeUsuario, name='cambiarEstadoDeUsuario'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', views.logout_view, name='logout'),
     path('Roles/', views.HomeRoles, name='HomeRoles'), 
     path('action-rol/', views.accion_rol, name="accion_rol"),
     path('obtener_datos/', views.obtener_datos, name='obtener_datos'),

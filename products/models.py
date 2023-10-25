@@ -1,7 +1,5 @@
-from sre_parse import CATEGORIES
+
 from django.db import models
-
-
 
 class Marcas(models.Model):
     id_marca = models.AutoField(primary_key=True)
@@ -32,6 +30,9 @@ class Productos(models.Model):
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField(default=1)
     precio = models.FloatField()
+    
+    iProductImg = models.ImageField(upload_to="media/", null=True)
+    iInfoImg = models.ImageField(upload_to="media/", null=True)
 
     class Meta:
         managed = False
