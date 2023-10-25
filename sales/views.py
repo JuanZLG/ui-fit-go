@@ -219,3 +219,97 @@ def detalles_venta(request):
             return JsonResponse({'status': 'error', 'message': 'ID de Venta no proporcionado'})
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
+
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib.enums import TA_CENTER
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from .models import Detalleventa, Ventas
+import os
+
+def formatear_precios(valor):
+    valor = round(valor, 2)
+    precio_formateado = '${:,.2f}'.format(valor)
+    return precio_formateado
+
+def generar_factura_pdf_venta(request, venta_id):
+    venta = get_object_or_404(Ventas, id_venta=venta_id)
+    detalles_venta = Detalleventa.objects.filter(id_venta=venta_id)
+
+    totalVenta = 0
+    detalles = []
+
+    for detalle in detalles_venta:
+        producto = detalle.id_producto.nombre_producto
+        precioUnitario = formatear_precios(detalle.precio_uni)
+        cantidad = detalle.cantidad
+        totalProducto = formatear_precios(detalle.precio_tot)
+        totalVenta += detalle.precio_tot
+
+        detalles.append([producto, precioUnitario, cantidad, totalProducto])
+
+    totalVentaFormateado = formatear_precios(totalVenta)
+
+    # Crear una respuesta de tipo PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=factura_venta_{venta.id_cliente.nombres}_{venta.id_cliente.apellidos}.pdf'
+
+
+    # Crear un objeto PDF
+    buffer = response
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+
+    styles = getSampleStyleSheet()
+
+    # Contenido de la factura
+    elements = []
+
+    # Agregar la imagen de logo como un círculo
+    logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
+    logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
+    logo.drawHeight = 1.5 * inch
+    logo.drawWidth = 1.5 * inch
+    elements.append(logo)
+
+    # Línea roja
+    elements.append(Spacer(1, 6))
+    elements.append(Paragraph('Factura de Venta', styles['Title']))
+    elements.append(Spacer(1, 6))
+
+    centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
+
+    # Detalles de la factura en la parte superior izquierda
+    elements.append(Paragraph(f'<b>Cliente:</b> {venta.id_cliente.nombres}', centered_style))
+    elements.append(Paragraph(f'<b>Documento:</b> {venta.id_cliente.documento}', centered_style))
+    elements.append(Paragraph(f'<b>Fecha de Registro:</b> {venta.fechareg}', centered_style))
+
+    # Espacio entre detalles y tabla
+    elements.append(Spacer(1, 12))
+
+    # Detalles de compra (la tabla)
+    data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
+    data.extend(detalles)
+    data.append(["", "", "", totalVentaFormateado])  # Agrega el total al final
+
+    # Ajustar el ancho de las columnas de la tabla
+    t = Table(data, colWidths=[180, 80, 60, 100])
+    t.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+    ]))
+
+    elements.append(t)
+
+    doc.build(elements)
+
+    return response

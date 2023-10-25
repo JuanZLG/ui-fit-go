@@ -341,7 +341,7 @@ def generar_factura_pdf(request, compra_id):
 
     # Crear una respuesta de tipo PDF
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=factura_compra_{compra_id}.pdf'
+    response['Content-Disposition'] = f'attachment; filename=factura_compra_{compra.id_proveedor.nombre_proveedor}_{compra.id_proveedor.numero_documento_nit}.pdf'
 
     # Crear un objeto PDF
     buffer = response
