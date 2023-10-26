@@ -198,28 +198,32 @@
           validarCampo($('#iInfoImg'));
 
           if ($('.error-message').text() === '') {
+            const formData = new FormData(this);
+      
             $.ajax({
               type: 'POST',
               url: "{% url 'createAProduct' %}",
-              data: $(this).serialize(),
+              data: formData, 
+              processData: false, 
+              contentType: false, 
               success: function (response) {
-                  if (response.success) {
-                      Swal.fire({
-                          title: 'Éxito',
-                          text: 'Producto agregado con éxito',
-                          icon: 'success',
-                          showConfirmButton: false,
-                          timer: 2000,
-                      });
-                      setTimeout(function () {
-                          window.location.href = "{% url 'productos' %}";
-                      }, 2000);
-                  }
-              }
-          });
-          
-          }
-      });
+                if (response.success) {
+                  Swal.fire({
+                    title: 'Éxito',
+                    text: 'Producto agregado con éxito',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000,
+                  });
+                  setTimeout(function () {
+                    window.location.href = "{% url 'productos' %}";
+                  }, 2000);
+                }
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.error(textStatus, errorThrown);
+      }
+    });
     
         $('#iFechaven').on('input', function () {
             const campo = $(this);

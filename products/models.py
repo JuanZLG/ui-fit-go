@@ -1,6 +1,7 @@
 
 from django.db import models
 
+
 class Marcas(models.Model):
     id_marca = models.AutoField(primary_key=True)
     nombre_marca = models.CharField(max_length=50)
@@ -31,9 +32,10 @@ class Productos(models.Model):
     estado = models.IntegerField(default=1)
     precio = models.FloatField()
     
-    iProductImg = models.ImageField(upload_to="media/", null=True)
-    iInfoImg = models.ImageField(upload_to="media/", null=True)
+    iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
+    iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'productos'
+        

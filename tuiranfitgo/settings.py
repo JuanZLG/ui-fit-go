@@ -165,8 +165,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'authenticator', 'static')
 ]
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# Ruta en el sistema de archivos donde se guardarán los archivos subidos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# URL base para servir archivos de medios (archivos subidos por los usuarios)
+MEDIA_URL = '/media/'
 
 CORS_ALLOW_ALL_ORIGINS = True
 

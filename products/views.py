@@ -7,6 +7,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from products.models import Productos, Categorias, Marcas
+import base64
+from django.http import HttpResponse
+from django.core.files.base import ContentFile
 
 def Home(request):
     product = Productos.objects.all()
@@ -44,11 +47,13 @@ def createProduct(request):
         precio = precio.replace(',', '').replace('.', '')
         precio = float(precio)
         
+        print(request.FILES)
+        print(request.POST)
+
         print("Nombres de los campos en request.FILES:")
         for field_name, file in request.FILES.items():
             print(field_name)
 
-        # Verifica que los campos del formulario coincidan con los nombres esperados
         if 'iProductImg' not in request.FILES:
             print("Campo 'iProductImg' no encontrado en request.FILES")
         if 'iInfoImg' not in request.FILES:
@@ -72,7 +77,6 @@ def createProduct(request):
     
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
 
-
 def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -87,17 +91,24 @@ def editProduct(request, id_producto):
         flavor = request.POST['iSabor']
         services = request.POST['iServices']
         pPrice = request.POST['iPrice']
-        img = request.FILES
-        product = img['iProductImg']
-        info = img['iInfoImg']
-        
+
         m = Marcas.objects.get(id_marca=brand)
         c = Categorias.objects.get(id_categoria=category)
-        
+
         pPrice = pPrice.replace(',', '').replace('.', '')
-        pPrice = float(pPrice)  
-        
-        Productos.objects.filter(id_producto=id_producto).update(
+        pPrice = float(pPrice)
+
+        # Comprueba si 'iProductImg' y 'iInfoImg' se enviaron en la solicitud
+        iProductImg = request.FILES.get('iProductImg', None)
+        iInfoImg = request.FILES.get('iInfoImg', None)
+
+        # Actualiza el registro de productos, pero solo si se enviaron archivos
+        productos = Productos.objects.filter(id_producto=id_producto)
+        if iProductImg:
+            productos.update(iProductImg=iProductImg)
+        if iInfoImg:
+            productos.update(iInfoImg=iInfoImg)
+        productos.update(
             id_categoria=c,
             id_marca=m,
             nombre_producto=name,
@@ -107,15 +118,28 @@ def editProduct(request, id_producto):
             sabor=flavor,
             presentacion=services,
             precio=pPrice,
-            productimg=product,
-            infoimg=info
         )
-        
+
         response_data = {'success': True}
-        return JsonResponse(response_data)    
+        return JsonResponse(response_data)
+
     products = Productos.objects.get(id_producto=id_producto)
     products.precio = int(products.precio)
+    
+    if products.iInfoImg:
+        if isinstance(products.iInfoImg, bytes):
+            products.iInfoImg_name = products.iInfoImg.split(b'/')[-1].decode('utf-8')
+        else:
+            products.iInfoImg_name = products.iInfoImg.name.split('/')[-1]
+    
+    if products.iProductImg:
+        if isinstance(products.iProductImg, bytes):
+            products.iProductImg_name = products.iProductImg.split(b'/')[-1].decode('utf-8')
+        else:
+            products.iProductImg_name = products.iProductImg.name.split('/')[-1]
+
     return render(request, 'editProducts.html', {"Product": products, "marcas": marcas, "categorias": categorias})
+
 
 def cambiarEstadoDeProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -135,6 +159,7 @@ def cambiarEstadoDeProducto(request):
 #     producto_existe = Productos.objects.filter(nombre_producto=producto).exists()
 #     return JsonResponse({"existe": producto_existe})
 
+
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_producto = request.GET.get('producto_id')
@@ -153,8 +178,8 @@ def verDetallesProducto(request):
                     'sabor': producto.sabor,
                     'status': producto.estado,
                     'servicios': producto.presentacion,
-                    'imagenproducto':producto.productimg,
-                    'imagennutri':producto.infoimg
+                    'imagenproducto': base64.b64encode(producto.iProductImg).decode('utf-8'),
+                    'imagennutri': base64.b64encode(producto.iInfoImg).decode('utf-8')
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:

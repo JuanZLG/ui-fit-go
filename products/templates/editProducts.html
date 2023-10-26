@@ -7,11 +7,11 @@
 
 <div class="card shadow mb-5" style="margin-bottom:7rem">
   <div class="container p-4">
-    <form class="form" id="producto-form" method="post">
+    <form class="form" id="producto-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       
       <div class="form-row">
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6">
           <div class="form-group">
             <label for="categoria">Categoría</label>
             <select class="form-select" aria-label="Default" name="iCategoria" id="iCategoria">
@@ -25,8 +25,8 @@
             <div class="error-message" id="iCategoria-error" style="color:red;"></div>
           </div>
         </div>
-
-        <div class="col-md-6 mb-3">
+    
+        <div class="col-md-6">
           <div class="form-group">
             <label>Marca</label>
             <select class="form-select" aria-label="Default select example" name="iMarca" id="iMarca">
@@ -41,52 +41,78 @@
           </div>
         </div>
       </div>
-  
-      <div class="form-group">
-        <label>Nombre *</label>
-        <input type="text" value="{{ Product.nombre_producto }}" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
-        <div class="error-message" id="iNombre-error" style="color:red;"></div>
-      </div>
-  
-      <div class="form-group">
-        <label for="descripcion">Descripción *</label>
-        <textarea class="form-control" id="iDescripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4">{{ Product.descripcion }}</textarea>
-        <div class="error-message" id="iDescripcion-error" style="color:red;"></div>
-      </div>
-  
+      
       <div class="form-row">
-        <div class="col-md-3 mb-3">
-            <div class="form-group">
-                <label>Fecha de Vencimiento *</label>
-                <input type="text" class="form-control" id="iFechaven" name="iFechaven" value="{{ Product.fechaven|date:'Y-m-d' }}" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
-                <div class="error-message" id="iFechaven-error" style="color:red;"></div>
-            </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" value="{{ Product.nombre_producto }}" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
+            <div class="error-message" id="iNombre-error" style="color:red;"></div>
+          </div>
+        </div>
+    
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="iProductImg">Imagen del Producto *</label>
+            <input type="file" class="form-control" id="iProductImg" name="iProductImg"/>
+            <p style="font-weight:bold;">Imagen Actual: ({{ Product.iProductImg_name }})</p>
+            <div class="error-message" id="iProductImg-error" style="color:red;"></div>
+          </div>
         </div>
       
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4">
           <div class="form-group">
-              <label for="cant">Cantidad *</label>
-              <div class="input-group">
-                  <input type="number" class="form-control" id="iCantidad" name="iCantidad" value="{{ Product.cantidad }}" placeholder="Número de Existencias" readonly />
-                  <span class="input-group-append">
-                      <button type="button" class="btn" style="color:black; background-color:transparent;" data-toggle="tooltip" data-placement="top" title="La cantidad de existencias solo se modifica acorde a la compra o venta de este producto.">
-                          <i class="fa-regular fa-circle-question fa-xs"></i>
-                      </button>
-                  </span>
-              </div>
-              <div class="error-message" style="color:red;" id="iCantidad-error"></div>
+            <label for="iInfoImg">Imagen de Información Nutricional *</label>
+            <input type="file" class="form-control" id="iInfoImg" name="iInfoImg"/>
+            <p style="font-weight:bold;">Imagen Actual: ({{ Product.iInfoImg_name }})</p>
+            <div class="error-message" id="iInfoImg-error" style="color:red;"></div>
           </div>
+        </div>
       </div>
-      
-        <div class="col-md-3 mb-3">
+    
+      <div class="form-row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="descripcion">Descripción *</label>
+            <textarea class="form-control" id="iDescripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4">{{ Product.descripcion }}</textarea>
+            <div class="error-message" id="iDescripcion-error" style="color:red;"></div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Fecha de Vencimiento *</label>
+            <input type="text" class="form-control" id="iFechaven" name="iFechaven" value="{{ Product.fechaven|date:'Y-m-d' }}" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
+            <div class="error-message" id="iFechaven-error" style="color:red;"></div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="cant">Cantidad *</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="iCantidad" name="iCantidad" value="{{ Product.cantidad }}" placeholder="Número de Existencias" readonly />
+              <span class="input-group-append">
+                <button type="button" class="btn" style="color:black; background-color:transparent;" data-toggle="tooltip" data-placement="top" title="La cantidad de existencias solo se modifica acorde a la compra o venta de este producto.">
+                  <i class="fa-regular fa-circle-question fa-xs"></i>
+                </button>
+              </span>
+            </div>
+            <div class="error-message" style="color:red;" id="iCantidad-error"></div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
           <div class="form-group">
             <label for="sabor">Sabor *</label>
             <input type="text" class="form-control" id="iSabor" name="iSabor" value="{{ Product.sabor }}" placeholder="Sabor"/>
             <div class="error-message" id="iSabor-error" style="color:red;"></div>
           </div>
         </div>
-      
-        <div class="col-md-3 mb-3">
+        
+        <div class="col-md-3">
           <div class="form-group">
             <label for="services">Presentación (LBs) *</label>
             <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Tamaño" value="{{ Product.presentacion }}"/>
@@ -94,33 +120,29 @@
           </div>
         </div>
       </div>
-
-      <div class="col-md-3 mb-3 mx-auto">
-        <div class="form-group">
+    
+      <div class="form-row">
+        <div class="col-md-3 mb-2 mx-auto">
+          <div class="form-group">
             <label for="price">Precio del Producto *</label>
             <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
-                </div>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="iPrice"
-                    name="iPrice"
-                    placeholder="Ingrese un precio"
-                    oninput="formatPriceInput(this);"
-                    value="{{ Product.precio }}"
-                >
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+              </div>
+              <input type="text" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio" oninput="formatPriceInput(this);" value="{{ Product.precio }}">
             </div>
             <div class="error-message" id="iPrice-error" style="color:red;"></div>
+          </div>
         </div>
-    </div>
-  
-      <div class="text-end">
-        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
       </div>
-
+    
+      <div class="form-row">
+        <div class="col-md-12 text-end">
+          <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+        </div>
+      </div>
     </form>
+    
   </div>
 </div>
 
@@ -133,7 +155,6 @@
   
 <script>
   $(document).ready(function () {
-  // Función para validar que todos los campos estén llenos
   function validarCamposLlenos() {
       let camposLlenos = true;
       const nombreValue = $('#iNombre').val();
@@ -143,6 +164,7 @@
       const saborValue = $('#iSabor').val();
       const presentacionValue = $('#iServices').val();
       const priceValue = $('#iPrice').val();
+   
 
       if (!nombreValue) {
           mostrarError('#iNombre', 'Este campo es obligatorio.');
@@ -179,43 +201,61 @@
         camposLlenos = false;
       }
      
+     
       return camposLlenos;
   }
   
-  function mostrarError(selector, mensaje) {
-    $(selector).addClass('is-invalid');
-    $(`${selector}-error`).text(mensaje);
-}
 
-$('#producto-form').submit(function (event) {
-    event.preventDefault();
-    if (!validarCamposLlenos()) {
-        return;
-    }
-    $.ajax({
-      type: 'POST',
-      url: "{% url 'editAProduct' Product.id_producto %}",
-      data: $(this).serialize(),
-      success: function (response) {
-          if (response.success) {
-              // Mostrar un modal de SweetAlert2 con el mensaje de éxito
-              Swal.fire({
-                  title: 'Éxito',
-                  text: 'Se ha modificado el producto con éxito',
-                  icon: 'success',
-                  showConfirmButton: false, // Oculta el botón "Aceptar"
-                  timer: 2000, // Duración del modal en milisegundos (en este caso, 2 segundos)
-              });
-  
-              // Después de 2 segundos, recargar la página
-              setTimeout(function () {
-                  window.location.href = "{% url 'productos' %}";
-              }, 2000); // Asegúrate de que el tiempo de redirección coincida con el tiempo de la alerta
-          }
+  function mostrarError(selector, mensaje) {
+      $(selector).addClass('is-invalid');
+      $(`${selector}-error`).text(mensaje);
+  }
+
+  $('#producto-form').submit(function (event) {
+      event.preventDefault();
+      if (!validarCamposLlenos()) {
+          return;
       }
+
+      var formData = new FormData(this);
+      // Obtener los archivos, si existen
+      var iProductImg = $('#iProductImg')[0].files[0];
+      var iInfoImg = $('#iInfoImg')[0].files[0];
+
+      // Agregar los archivos al formData solo si existen
+      if (iProductImg) {
+          formData.append('iProductImg', iProductImg);
+      }
+
+      if (iInfoImg) {
+          formData.append('iInfoImg', iInfoImg);
+      }
+
+      $.ajax({
+          type: 'POST',
+          url: "{% url 'editAProduct' Product.id_producto %}",
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+              if (response.success) {
+                  Swal.fire({
+                      title: 'Éxito',
+                      text: 'Se ha modificado el producto con éxito',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 2000,
+                  });
+                  setTimeout(function () {
+                      window.location.href = "{% url 'productos' %}";
+                  }, 2000);
+              }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+              console.error(textStatus, errorThrown);
+          }
+      });
   });
-  
-});
 });
 </script>
 
