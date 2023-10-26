@@ -60,8 +60,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.token) {
-                 
-                    window.location.href = 'Entrance';
+                    console.log("chimba")
+                    window.location.href = 'admin/home/';
                 } else {
                     console.error('Error:', data.error);
                 }

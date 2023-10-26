@@ -409,5 +409,3 @@ def generar_factura_pdf(request, compra_id):
 
 
 
-
-
