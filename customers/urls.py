@@ -7,13 +7,6 @@ urlpatterns = [
     path('agregarClientes/', views.agregarClientePost, name='agregarClientes'),
     path('editarCliente/<int:cliente_id>/', views.editarCliente, name='editarCliente'),
     path('ver_detalles_cliente/', views.verDetallesCliente, name='ver_detalles_cliente'),
-
-
     path('validar_documento/', views.validar_documento, name='validarDocumento'),
-
     path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoClientes'),
-
-
-
-
 ]

@@ -49,9 +49,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'tuiranfitgo.urls'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
@@ -61,6 +58,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
 }
 
@@ -100,9 +98,9 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tf',
+        'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }

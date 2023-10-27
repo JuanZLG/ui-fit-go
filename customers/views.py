@@ -1,25 +1,37 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
+from rest_framework.decorators import api_view, permission_classes
+# from rest_framework.permissions import IsAuthenticated
 from .models import Clientes, Municipios, Departamentos
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.db import IntegrityError
 
+import jwt
+from django.conf import settings
 
-# def home(request):
-#     clienteRegistrados = Clientes.objects.all()
-#     return render(request, "Plantilla.html", {"clientes": clienteRegistrados})
+def jwt_cookie_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        token = request.COOKIES.get('jwt_token')  # Esto me lee el token 
+        if not token:
+            return redirect('initerror')
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            #Espacio para mas comprobaciones si algo
+            request.user = payload
+        except jwt.ExpiredSignatureError:
+            return JsonResponse({'error': 'Token JWT caducado'}, status=401)
+        except jwt.DecodeError:
+            return JsonResponse({'error': 'Token JWT no válido'}, status=401)
 
+        return view_func(request, *args, **kwargs)
 
-# def Listica(request):
-#     clientes = Clientes.objects.all()  
-#     context = {'clientes': clientes} 
-#     return render(request, 'Plantilla.html', context)
+    return _wrapped_view
 
-
+@jwt_cookie_required
 def lista_clientes(request):
     clientes = Clientes.objects.all()
     context = {'clientes': clientes}  
     return render(request, 'customersHome.html', context)
-
 
 def ver_cliente(request, cliente_id):
     cliente = get_object_or_404(Clientes, id_cliente=cliente_id)
@@ -28,24 +40,12 @@ def ver_cliente(request, cliente_id):
         'nombres': cliente.nombres,
         'apellidos': cliente.apellidos,
         'celular': cliente.celular,
-        # Otros campos del cliente aquí
     }
     return JsonResponse({'cliente': cliente_data})
 
 def agregarCliente(request):
     municipios = Municipios.objects.all()  
     return render(request, 'createCustomer.html', {'municipios': municipios})
-
-
-from django.http import JsonResponse
-from django.shortcuts import render
-from customers.models import Clientes, Municipios, Departamentos
-
-from django.http import JsonResponse
-from .models import Clientes
-
-from django.http import JsonResponse
-from django.db import IntegrityError
 
 def agregarClientePost(request):
     if request.method == 'POST':
@@ -97,9 +97,6 @@ def agregarClientePost(request):
 
     municipios = Municipios.objects.all()
     return render(request, 'createCustomer.html', {'municipios': municipios})
-
-
-
 
 def redirigirEditar(request, cliente_id):
     cliente = Clientes.objects.get(id_cliente=cliente_id)

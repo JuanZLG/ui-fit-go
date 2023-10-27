@@ -10,6 +10,7 @@ class Usuarios(models.Model):
     contrasena = models.CharField(max_length=50)
     estado = models.IntegerField(default=1)
     
+ 
     class Meta:
         managed = False
         db_table = 'usuarios'

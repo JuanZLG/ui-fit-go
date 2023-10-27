@@ -14,8 +14,10 @@ from .utils import custom_jwt_payload_handler
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-def custom_get_username(user):
-    return user.correo
+# def custom_get_username(user):
+#     return user.correo
+
+# Login Bueno
 
 class loginmio(APIView):
     def get(self, request):
@@ -38,6 +40,29 @@ class loginmio(APIView):
                 return JsonResponse({'error': 'Credenciales incorrectas'}, status=400)
         except Usuarios.DoesNotExist:
             return JsonResponse({'error': 'Credenciales incorrectas'}, status=400)
+
+
+#Login Malo
+# from django.views.decorators.csrf import csrf_exempt
+# from django.contrib.auth import get_user_model
+
+# @csrf_exempt
+# def custom_login(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('correo')
+#         password = request.POST.get('contra')
+
+#         user = get_user_model().objects.filter(correo=email).first()
+
+#         if user and user.check_password(password):
+#             # Iniciar una sesión para el usuario
+#             request.session['user_id'] = user.id_usuario
+#             request.session.save()
+#             return JsonResponse({'message': 'Inicio de sesión exitoso'})
+#         else:
+#             return JsonResponse({'message': 'Credenciales incorrectas'}, status=401)
+    
+#     return render(request, 'login.html')
 
 
 # def verificar_permiso(usuario, permiso):
