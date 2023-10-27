@@ -415,6 +415,8 @@
             <p>Existencias: <span id="cantProd"></span></p>
             <p>Sabor: <span id="saborProd"></span></p>
             <p>Presentación: <span id="tamanoProd"></span><span> Libra(s)</span></p>
+            <p>Aspecto: <img src="data:image/jpeg;base64,{{ imagenproducto }}" alt="Imagen de Producto"></p>
+            <p>Info. Nutricional: <img src="data:image/png;base64,{{ imagennutri }}" alt="Imagen de Información Nutricional"></p>
         </section>
     </form>
 </dialog>
@@ -441,6 +443,7 @@
                     $("#cantProd").text(producto.cantidad);
                     $("#saborProd").text(producto.sabor);
                     $("#tamanoProd").text(producto.servicios);
+                    
 
                     if (producto.status == 1) {
                         $(".estadoProductoCircle").addClass("activo").removeClass("inactivo");

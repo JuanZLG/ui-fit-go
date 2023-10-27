@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0">
+    <title>TuiranFit</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/EstilosLogin.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <video autoplay muted loop id="video-fondo" style="width:100%">
+        <source src="{% static 'img/sky.webm' %}" type="video/webm">
+        EL navegador no admite la reproducción de videos.
+      </video>
+    {% comment %} <div class="wrapperLogus">
+        <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
+    </div> {% endcomment %}
+    
+    <div class="wrapper">
+
+        <h1>Iniciar Sesión</h1>
+        <br>
+        <center><img id="cong" src={% static 'img/GIcon.png' %} style="width:40%;"></center>
+        <form method="post" action="{% url 'login_view' %}" id="login-form">
+            {% csrf_token %}
+            <div class="input-box">
+                <input type="text" name="correo" placeholder="Correo Electrónico" required>
+                <box-icon type='solid' name='user'></box-icon>
+            </div>
+            <div class="input-box">
+                <input type="password" name="contra" placeholder="Contraseña" required>
+                <box-icon name='lock-alt' type='solid'></box-icon>
+            </div>
+            <div class="remember-forgot">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+            <center><button type="button" class="btn" id="login-button">Entrar</button></center>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById('login-button').addEventListener('click', function() {
+            var correo = document.querySelector('[name="correo"]').value;
+            var contra = document.querySelector('[name="contra"]').value;
+            var formData = {
+                correo: correo,
+                contra: contra
+            };
+        
+            fetch("{% url 'login_view' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    console.log("Token Cargado");
+                    setCookie('jwt_token', data.token, 30);
+                    window.location.href = 'admin/home/';
+                } else {
+                    console.error('Error:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }, 2000); 
+    
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function setCookie(name, value, daysToExpire) {
+            var date = new Date();
+            date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + "; " + expires;
+        }
+
+    </script>
+
+    <script>
+        var imgn = document.getElementById('logus');
+        
+        imgn.oncontextmenu = function(e) {
+            e.preventDefault();
+        };
+    </script>
+</body>
+</html>

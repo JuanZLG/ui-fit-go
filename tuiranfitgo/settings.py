@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 from django.urls import reverse_lazy
+from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +33,8 @@ INSTALLED_APPS = [
     'users',
     'dashboard',
     'page',
+    'authenticator',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -43,8 +47,27 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'tuiranfitgo.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
+SECRET_KEY = 'ClaveSuperSecretaJamasLaVeraNadie'
+
+
+JWT_PAYLOAD_HANDLER = 'authenticator.utils.custom_jwt_payload_handler'
+
 
 TEMPLATES = [
     {
@@ -58,6 +81,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  os.path.join(BASE_DIR, 'users', 'templates'),
                  os.path.join(BASE_DIR, 'page', 'templates'),
+                 os.path.join(BASE_DIR, 'authenticator', 'templates')
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -72,15 +96,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
-# settings.py
-
 
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '3127123250',
+        'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }
@@ -103,8 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -116,9 +136,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = 'entrada'
+# LOGIN_REDIRECT_URL = 'entrada'
 
-# AUTH_USER_MODEL = 'users.Usuarios'
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=1),
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'authenticator.auth.custom_get_username',
+}
+
+# AUTH_USER_MODEL = 'authenticator.Usuarios'
 
 # AUTHENTICATION_BACKENDS = [
 #     'users.backends.CustomAuthBackend',
@@ -136,7 +162,15 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'users', 'static'),
     os.path.join(BASE_DIR, 'dashboard', 'static'),
     os.path.join(BASE_DIR, 'page', 'static'),
+    os.path.join(BASE_DIR, 'products', 'static'),
+    os.path.join(BASE_DIR, 'authenticator', 'static')
 ]
+
+# Ruta en el sistema de archivos donde se guardarán los archivos subidos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# URL base para servir archivos de medios (archivos subidos por los usuarios)
+MEDIA_URL = '/media/'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -144,4 +178,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 

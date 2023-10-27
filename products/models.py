@@ -1,6 +1,5 @@
-from sre_parse import CATEGORIES
-from django.db import models
 
+from django.db import models
 
 
 class Marcas(models.Model):
@@ -32,7 +31,11 @@ class Productos(models.Model):
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField(default=1)
     precio = models.FloatField()
+    
+    iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
+    iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'productos'
+        

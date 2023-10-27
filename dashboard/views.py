@@ -24,18 +24,29 @@ def contar_clientes_activos(request):
     return JsonResponse({'clientes_activos': clientes_activos, 'clientes_inactivos': clientes_inactivos})
 
 
+from django.db.models import Sum
+from django.http import JsonResponse
+from django.db.models.functions import ExtractMonth  # Agrega esta importación
 
-def calcular_total_compras(request):
-    total_compras = Compras.objects.aggregate(total=Sum('totalCompra'))['total']
-    return JsonResponse({'total_compras': total_compras})
 
-  # Ajusta esto para que coincida con tu modelo de ventas
+def calcular_total_compras(request, year):
+    try:
+        # Filtra las compras por el año proporcionado
+        total_compras_por_mes = Compras.objects.filter(fechareg__year=year) \
+            .annotate(month=ExtractMonth('fechareg')) \
+            .values('month') \
+            .annotate(total=Sum('totalCompra'))
+
+        return JsonResponse({'total_compras_por_mes': list(total_compras_por_mes)})
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+
+
+
 
 def calcular_total_ventas(request):
-    # Calcula el total de ventas desde tu modelo
     total_ventas = Ventas.objects.aggregate(total_ventas=Sum('totalVenta'))['total_ventas'] 
     
-    # Devuelve el total de ventas en formato JSON
     return JsonResponse({'total_ventas': total_ventas})
 
 
@@ -93,19 +104,14 @@ def obtener_datos_ventas_y_compras(request):
 
     return JsonResponse(data)
 
-from django.http import JsonResponse
-from .models import Ventas  # Asegúrate de importar tu modelo de Ventas
-
-from django.http import JsonResponse
-from .models import Productos  # Asegúrate de importar tu modelo de Productos
 
 from django.http import JsonResponse
 from .models import Productos
 
-def obtener_top_productos(request):
+def obtener_todos_los_productos(request):
     try:
-        # Obtén los 3 productos más vendidos desde tu modelo Productos.
-        productos = Productos.objects.order_by('-cantidad')[:3]
+        # Consulta para obtener todos los productos y sus cantidades.
+        productos = Productos.objects.all()
 
         # Extrae los nombres de los productos y las cantidades en listas separadas.
         nombres_productos = [producto.nombre_producto for producto in productos]
@@ -119,21 +125,3 @@ def obtener_top_productos(request):
         return JsonResponse(data)
     except Exception as e:
         return JsonResponse({'error': str(e)})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

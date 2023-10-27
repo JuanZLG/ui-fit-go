@@ -4,85 +4,170 @@
 
 {% block body %}
 
-<div class="container">
+{% comment %} <center><h1 class="modtitles">Manual de Ayuda</h1></center> {% endcomment %}
+<head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/manual.css' %}">
+</head>
+<div class="container d-flex" style="flex-direction:flex-end; width:100%; margin-left:30px;">
     <div class="row">
-        <div class="col-lg-8" style="max-height: 100vh; overflow-y: auto;">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Paso a Paso: Ingresar al Sistema</h2>
-                    <p>Al ingresar a la página web, encontrará un formulario de Inicio de Sesión.</p>
-                    <ol>
-                        <li>Digite su nombre de usuario.</li>
-                        <li>Digite su contraseña.</li>
-                        <li>Haga clic en el botón "Entrar" para validar sus credenciales e iniciar sesión.</li>
-                        <li>En caso de error en los campos, asegúrese de ingresar credenciales válidas e intente de nuevo.</li>
-                    </ol>
-                </div>
+        <div  style="max-height: 100vh; overflow-y: auto; display:flex; gap:40px; flex-direction:column;">
+            <div>
+                <h1 id="gproviders">Gestionando la Información de los Proveedores</h1>
+                <a target='_blank'>Esta guía detalla como administrar la información de tus proveedores en el sistema.</a>
+            </div>
+            
+            <div><h2><a href="http://127.0.0.1:8000/admin/providers/">Acceder al Módulo</a></h2></div>
+
+            <div><h3>1. En la barra lateral izquierda, despliega "Proveedores" y has clic en "Gestión de Proveedores".</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/a71cdec2-f63b-4fcb-8064-2c46127b6372/8c4d6228-b24f-4cb9-aeec-79d556f4da6b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=31&mark-y=672&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MDMmaD0xNTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, despliega &quot;Proveedores&quot; y has clic en &quot;Gestión de Proveedores&quot;." />
             </div>
 
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Paso a Paso: Terminar Sesión</h2>
-                    <ol>
-                        <li>Haga clic en su nombre de usuario en la esquina superior derecha.</li>
-                        <li>Seleccione "Cerrar Sesión" en el menú desplegable.</li>
-                        <li>Aparecerá una ventana flotante para que confirme si desea cerrar la sesión.</li>
-                        <li>Si desea cerrar sesión, haga clic en "Confirmar" para cerrar sesión, en caso contrario, haga clic en "Cancelar".</li>
-                    </ol>
-                </div>
+            <div><h3>2. Una vez dentro, si deseas registrar un nuevo proveedor, has clic en "Agregar Proveedor".</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2228ba05-c2ef-4671-ab9f-23e8675a7e3b/32dc6991-0b1b-474c-9f82-49018f9bd17a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3670&fp-y=0.2935&fp-z=1.9915&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=358&mark-y=348&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00ODMmaD0xMzMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez dentro, si deseas registrar un nuevo proveedor, has clic en &quot;Agregar Proveedor&quot;." />
             </div>
 
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Paso a Paso: Ver o Modificar Perfil</h2>
-                    <ol>
-                        <li>Haga clic en su nombre de usuario en la esquina superior derecha.</li>
-                        <li>Seleccione "Perfil" en el menú desplegable.</li>
-                        <li>Una vez en el apartado "Información de Perfil", verá la información de su cuenta de usuario.</li>
-                        <li>Si desea modificar su usuario, haga clic en el botón "Actualizar Perfil", realice sus cambios y seleccione "Guardar".</li>
-                    </ol>
-                </div>
+            <div><h3>3. En el formulario, diligencia al menos los campos marcados con (*)</h3>
+            <p>Los campos sin (*) son opcionales</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/282467f1-0736-4e67-a549-434da947a48a/1676eac3-5a6b-45e8-883e-b76a2b055298.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el formulario, diligencia al menos los campos marcados con (*)" />
             </div>
 
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title">Paso a Paso: Gestión de Usuarios</h2>
-                    <ol>
-                        <li>Inicie sesión en su cuenta.</li>
-                        <li>En caso de contar con el permiso de ingresar, en el menú lateral seleccione Usuarios y en los item desplegados haga clic en "Roles y Permisos".</li>
-                        <li>Una vez en el módulo, si desea agregar un usuario, haga clic en "Agregar Usuario" y diligencie completamente el formulario.</li>
-                        <li>Si desea modificar un usuario, en la tabla busque el registro a modificar (puede utilizar el campo de búsqueda en la parte superior de la tabla para buscar por nombre de usuario o correo) y seleccione el botón con el lápiz correspondiente a ese registro.</li>
-                        <li>Si desea cambiar el estado de un usuario, haga click al botón de la columna "Estado" que corresponda al usuario y podrá activar o desactivarlo según sea el caso.</li>
-                    </ol>
-                </div>
+            <div><h3>4. Para los campos opcionales "Tipo de Documento" y "Número de Identificación" ten en cuenta si el proveedor es una persona o si se trata de una empresa.</h3>
+            <p>En caso de que sea una empresa, escoge la opción "NIT" y digita el número en el campo contiguo.</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/58224612-2f2e-46b1-b8cc-bae8dfb2391c/fc169692-1717-4ce3-b283-fd6b491578bf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Para los campos opcionales &quot;Tipo de Documento&quot; y &quot;Número de Identificación&quot; ten en cuenta si el proveedor es una persona o si se trata de una empresa." />
             </div>
 
-            <div class="card shadow">
-                <div class="card-body">
-                    <h2 class="card-title"></h2>
-                    <ol>
-                        <li>Inicie sesión en su cuenta.</li>
-                        <li>En caso de contar con el permiso de ingresar, en el menú lateral seleccione Usuarios y en los item desplegados haga clic en "Roles y Permisos".</li>
-                        <li>Una vez en el módulo, si desea agregar un usuario, haga clic en "Agregar Usuario" y diligencie completamente el formulario.</li>
-                        <li>Si desea modificar un usuario, en la tabla busque el registro a modificar (puede utilizar el campo de búsqueda en la parte superior de la tabla para buscar por nombre de usuario o correo) y seleccione el botón con el lápiz correspondiente a ese registro.</li>
-                        <li>Si desea cambiar el estado de un usuario, haga click al botón de la columna "Estado" que corresponda al usuario y podrá activar o desactivarlo según sea el caso.</li>
-                    </ol>
-                </div>
+            <div><h3>5. En el campo "Información Adicional", puedes añadir datos extra sobre tus proveedores.</h3>
+            <p>Por ejemplo, puedes escribir sobre el tipo de productos que ofrecen.</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/4032b682-9e60-4c5a-a0f9-817726a66a3f/0f83f3ee-d484-4f9a-abc6-b7f28187b68a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Información Adicional&quot;, puedes añadir datos extra sobre tus proveedores." />
             </div>
+
+            <div><h3>6. Una vez hayas diligenciado al menos los campos obligatorios y todo esté en orden, has clic en "Guardar" para validar la información y registrar a un nuevo proveedor.</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/059c6b62-b608-4d60-8913-cf340e5340c4/a149fbc9-f72c-48c6-9c94-5859e6d7e27d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=461&mark-y=226&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODEmaD0xNDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez hayas diligenciado al menos los campos obligatorios y todo esté en orden, has clic en &quot;Guardar&quot; para validar la información y registrar a un nuevo proveedor." />
+            </div>
+
+            <div><h3>7. Luego de registrar exitosamente a un proveedor, irás al entorno "Gestión de Proveedores", donde podrás visualizar el registro del nuevo proveedor.</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2776f45b-b1cc-4a29-a20f-74645b66a73e/0c38b6b7-4dfe-4dcf-a6d3-683c7f647d77.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego de registrar exitosamente a un proveedor, irás al entorno &quot;Gestión de Proveedores&quot;, donde podrás visualizar el registro del nuevo proveedor." />
+            </div>
+
+            <div><h3>8. Por defecto, el estado de un nuevo registro es "Activo". En caso de que hayas prescindido de los servicios de algún proveedor, podrás desactivarlo para que no interfiera en nuevas compras.</h3>
+            <p>Para cambiar de estado un registro, has clic en el Botón de Estado.</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/c9d3d6aa-4986-4229-bdb4-891a9f8dea50/a08ad8ad-ab97-48de-a69e-1c02cc79c242.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=806&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNDcmaD01NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Por defecto, el estado de un nuevo registro es &quot;Activo&quot;. En caso de que hayas prescindido de los servicios de algún proveedor, podrás desactivarlo para que no interfiera en nuevas compras." />
+            </div>
+
+            <div><h3>9. Luego, has clic en "Confirmar".</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dd1069d0-d734-43f5-9188-105002bf95e7/3299ae2e-00ac-40cd-9c53-c278041e93b3.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=337&mark-y=297&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzQmaD0xMjMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego, has clic en &quot;Confirmar&quot;." />
+            </div>
+
+            <div><h3>10. El proveedor estará Inactivo y pasará a un segundo plano en tu web.</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/8b40e64e-e855-488c-8294-575991d2ebd8/70602e18-d2ab-453c-a156-c63a1e63927f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=813&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTEmaD01NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El proveedor estará Inactivo y pasará a un segundo plano en tu web." />
+            </div>
+
+            <div><h3>11. Puedes visualizar a detalle la información de cada registro, haciendo clic en el botón azul.</h3>
+            <p>Se desplegará una ventana flotante con toda la información del registro.</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/732af0d6-186f-477d-8927-d0e2f24887c6/fcabab15-8219-47fe-9d64-6833fd23de42.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1086&mark-y=15&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MCZoPTY4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Puedes visualizar a detalle la información de cada registro, haciendo clic en el botón azul." />
+            </div>
+
+            <div><h3>12. Si deseas actualizar la información de un proveedor, para modificar el registro has clic en el Botón de Editar.</h3>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2fb2055f-aa7c-4ef8-8a62-20ebae0f7334/0677651d-ab6b-4036-9b25-45d628d1cfb6.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1010&mark-y=13&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz02NyZoPTY2JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si deseas actualizar la información de un proveedor, para modificar el registro has clic en el Botón de Editar." />
+            </div>
+
+            <div><h3>13. Serás redireccionado a un formulario como este, similar al de "Agregar Proveedor".</h3>
+            <p>Modifica los datos de los campos que desees actualizar y has clic en "Guardar".</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/68e095d6-8fc1-43b1-8f02-6186c14b1ef5/93698903-92b9-4a5d-9a61-b9d1f98ce0ea.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MzAmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Serás redireccionado a un formulario como este, similar al de &quot;Agregar Proveedor&quot;." />
+            </div>
+
+            <div><h3>14. En caso de que tengas muchos registros y necesites encontrar a uno en particular, utiliza la barra de búsqueda.</h3>
+            <p>Puedes hallar un proveedor utilizando cualquiera de sus datos, ya sea su nombre, su teléfono o su correo.</p>
+            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/78623405-aa66-4191-b4f1-7559aef7a801/29b3c01a-5af0-4c28-a6d7-6470108b4eaf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=920&mark-y=31&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTEmaD01MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de que tengas muchos registros y necesites encontrar a uno en particular, utiliza la barra de búsqueda." />
+            </div>
+
+            <br/>
+            <hr/>
             
         </div>
 
-        <div class="col-lg-4">
-            <div class="cont-sidebar">
-                <ul class="list-group">
-                    <li class="list-group-item"><a href="#section1">Sección 1</a></li>
-                    <li class="list-group-item"><a href="#section2">Sección 2</a></li>
-                    <li class="list-group-item"><a href="#section3">Sección 3</a></li>
-                    <li class="list-group-item"><a href="#section4">Sección 4</a></li>
-                    <li class="list-group-item"><a href="#section5">Sección 5</a></li>
-                    <li class="list-group-item"><a href="#section6">Sección 6</a></li>
-                </ul>
+    </div>
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-header" style="background-color:red">
+                <h6 class="text-center" style="margin-top:5px; color:white; font-weight:bold; font-size:25px">Secciones del Manual</h6>
             </div>
+            <ul class="list-group" style="border-radius:0;">
+                <li class="list-group-item collapsed">
+                    <center><a href="#" data-toggle="collapse" data-target="#collapseSec1" aria-expanded="false">Módulo de Proveedores</a></center>
+                    
+                    <div id="collapseSec1" class="collapse">
+                        <div class="custom-divider"></div>
+                        <ol>
+                            <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a href="#gproviders" class="collapse-item">Gestión de los Proveedores</a>
+                        </div>
+                    </li>
+                </ol>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <center><a href="#section2" data-toggle="collapse" data-target="#collapseSec2" aria-expanded="false">Sección 2</a></center>
+                    <div id="collapseSec2" class="collapse">
+                        <div class="custom-divider"></div>
+                        <ol>
+                            <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 2</a>
+                        </div>
+                    </li>
+                </ol>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <center><a href="#section3" data-toggle="collapse" data-target="#collapseSec3" aria-expanded="false" aria-controls="collapseTwo">Sección 3</a></center>
+                    <div id="collapseSec3" class="collapse" aria-labelledby="headingTwo">
+                        <div class="custom-divider"></div>
+                        <ol>
+                        <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 3</a>
+                        </div>
+                        </li>
+                        <li>
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 3.1</a>
+                            </div>
+                            </li>
+                        </ol>
+
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <center><a href="#section4" data-toggle="collapse" data-target="#collapseSec4" aria-expanded="false" aria-controls="collapseTwo">Sección 4</a></center>
+                    <div id="collapseSec4" class="collapse" aria-labelledby="headingTwo">
+                        <div class="custom-divider"></div>
+                        <ol>
+                            <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 4</a>
+                        </div>
+                    </li>
+                </ol>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <center><a href="#section5" data-toggle="collapse" data-target="#collapseSec5" aria-expanded="false" aria-controls="collapseTwo">Sección 5</a></center>
+                    <div id="collapseSec5" class="collapse" aria-labelledby="headingTwo">
+                        <div class="custom-divider"></div>
+                        <ol>
+                            <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 5</a>
+                        </div>
+                    </li>
+                </ol>
+                    </div>
+                </li>
+                
+            </ul>
         </div>
     </div>
 </div>
@@ -90,5 +175,22 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.list-group-item').click(function() {
+            var target = $($(this).find('[data-toggle="collapse"]').data('target'));
+
+            if (!target.hasClass('show')) {
+                $('.collapse').collapse('hide');
+            }
+
+            target.collapse('toggle');
+        });
+    });
+</script>
+
+
+
+    
 
 {% endblock %}

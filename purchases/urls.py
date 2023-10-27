@@ -13,5 +13,6 @@ urlpatterns = [
     path('obtener_detalles_compra/<int:compra_id>/', views.obtener_detalles_compra, name='obtener_detalles_compra'),
     path('generar_factura/<int:compra_id>/', views.generar_factura_pdf, name='generar_factura_pdf'),
 
+
     path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoCompra'),
 ]

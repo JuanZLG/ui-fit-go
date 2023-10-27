@@ -16,9 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let mensaje;
             if (nuevoEstado === "0") {
-                mensaje = "¿Estás seguro de desactivar esta venta? Esto marcará la venta como inactiva y sumará las cantidades al stock de los productos relacionados.";
+                mensaje = "¿Esta seguro de desactivar esta venta? Esto marcará la venta como inactiva permanentemente y devolverá al stock los productos relacionados. No podrá reactivarla.";
             } else {
-                mensaje = "¿Estás seguro de activar esta venta? Esto marcará la venta como activa y restará las cantidades al stock de los productos relacionados.";
+                mensaje = "¿Esta seguro de activar esta venta? Esto marcará la venta como activa y restará las cantidades al stock de los productos relacionados.";
             }
 
             Swal.fire({

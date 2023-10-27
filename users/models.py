@@ -1,9 +1,10 @@
 from django.db import models
-# from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 # from django.contrib.auth import authenticate, login
 # from django.shortcuts import render, redirect
 # from django.urls import reverse_lazy
 # from django.views import View
+
 
 # ------------------------------- Intento del 13 de Octubre, errores de relative_name -----------------------------------------
 
@@ -22,23 +23,41 @@ from django.db import models
 
 #         return self.create_user(correo, contrasena, **extra_fields)
 
-# class Usuarios(AbstractBaseUser, PermissionsMixin):
+class Rolespermisos(models.Model):
+    id_rolespermisos = models.AutoField(primary_key=True)
+    id_rol = models.ForeignKey('Roles', models.DO_NOTHING, db_column='id_rol')
+    id_permiso = models.ForeignKey('Permisos', models.DO_NOTHING, db_column='id_permiso')
+
+    class Meta:
+        managed = False
+        db_table = 'rolespermisos'
+
+class Roles(models.Model):
+    id_rol = models.AutoField(primary_key=True)
+    nombre_rol = models.CharField(max_length=40)
+
+    class Meta:
+        managed = False
+        db_table = 'roles'
+
+# class Usuarios(AbstractUser):
 #     correo = models.CharField(max_length=60, unique=True)
 #     nombre_usuario = models.CharField(max_length=60)
 #     id_rol = models.ForeignKey('Roles', models.DO_NOTHING, db_column='id_rol', related_name='usuarios_set')
 #     estado = models.IntegerField(default=1)
+#     contrasena = models.CharField(max_length=50)
+    
 #     is_active = models.BooleanField(default=True)
 #     is_staff = models.BooleanField(default=False)
 
-#     objects = CustomUserManager()
-
 #     USERNAME_FIELD = 'correo'
+#     PASSWORD_FIELD = 'contrasena'
 
 #     def __str__(self):
-#         return self.correo
+#         return self.correo, self.contrasena
 
-#     roles = models.ManyToManyField('Roles', related_name='usuarios', blank=True)
-#     custom_permissions = models.ManyToManyField('Permisos', related_name='usuarios_custom_permissions', blank=True)
+#     roles = models.ManyToManyField('Roles', related_name='roldeusuario', blank=True)
+#     custom_permissions = models.ManyToManyField('Permisos', related_name='permisosdeusuario', blank=True)
     
     
 # ---------------------------------Modelo Provisional----------------------------------
@@ -94,13 +113,7 @@ class Usuarios(models.Model):
 #     class Meta:
 #         verbose_name= 'Usuarios'
 
-class Roles(models.Model):
-    id_rol = models.AutoField(primary_key=True)
-    nombre_rol = models.CharField(max_length=40)
 
-    class Meta:
-        managed = False
-        db_table = 'roles'
 
 class Permisos(models.Model):
     id_permiso = models.AutoField(primary_key=True)
@@ -115,12 +128,4 @@ class Permisos(models.Model):
         managed = False
         db_table = 'permisos'
 
-class Rolespermisos(models.Model):
-    id_rolespermisos = models.AutoField(primary_key=True)
-    id_rol = models.ForeignKey('Roles', models.DO_NOTHING, db_column='id_rol')
-    id_permiso = models.ForeignKey('Permisos', models.DO_NOTHING, db_column='id_permiso')
-
-    class Meta:
-        managed = False
-        db_table = 'rolespermisos'
         
