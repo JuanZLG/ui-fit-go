@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brutality</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style-commons.css' %}">
+</head>
+
+<body>
+  <div class="main-menu" id="main-menu">
+
+  </div>
+
+  <header class="main-header">
+    <nav class="header-navigation">
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+      <a href="{% url 'pageHome' %}">
+        <img src="{% static 'img/gorille.png' %}" class="logo" alt="Logo de Brutálity">
+      </a>
+      <label class="hamburger">
+        <input type="checkbox" id="hamburgerCheckbox">
+        <svg viewBox="0 0 32 32">
+          <path class="line line-top-bottom"
+            d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22">
+          </path>
+          <path class="line" d="M7 16 27 16"></path>
+        </svg>
+      </label>
+    </nav>
+
+    <div class="info-section">
+      <h1 class="site-title">Brutálity</h1>
+      <p class="site-description">Los complementos que necesitas están aquí</p>
+    </div>
+    <div class="container-search">
+      <input placeholder="Realizar búsqueda..." type="text" name="search" class="search">
+    </div>
+  </header>
+
+
+
+  <div class="catalog-section home">
+    <span id="toggle-menu"><strong>Productos</strong><i class="fas fa-bars" style="margin-left: 12px;"></i></span>
+  </div>
+  <div id="menu-options" class="menu-options">
+
+  </div>
+
+  <section class="product-card-container">
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://fitnessys.com.co/wp-content/uploads/2022/09/BiProMass-proteina-megaplex-1.png"
+          alt="Product Image">
+      </div>
+      <div class="product-details">
+        <h3 class="product-title">BiPro MASS</h3>
+        <div class="product-price">
+          <span>$200.000</span>
+          <span class="product-search">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://benet.com.co/wp-content/uploads/2021/11/Bemet-Proteina-Alimento-en-Polvo-Bolsa.png"
+          alt="Product Image">
+      </div>
+      <div class="product-details">
+        <h3 class="product-title">Bénet Proteina</h3>
+        <div class="product-price">
+          <span>$200.000</span>
+          <span class="product-search">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://suplementos.b-cdn.net/creatinas/creatina-platinum.webp" alt="Product Image">
+      </div>
+      <div class="product-details">
+        <h3 class="product-title">Platinum Creatina</h3>
+        <div class="product-price">
+          <span>$200.000</span>
+          <span class="product-search">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <img src="https://suplementos.b-cdn.net/creatinas/creatina-platinum.webp" alt="Product Image">
+      </div>
+      <div class="product-details">
+        <h3 class="product-title">Platinum Creatina</h3>
+        <div class="product-price">
+          <span>$200.000</span>
+          <span class="product-search">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Brutálity</p>
+  </footer>
+</body>
+
+
+
+<script src="{% static 'js/pageIndex.js' %}"></script>
+
+</html>

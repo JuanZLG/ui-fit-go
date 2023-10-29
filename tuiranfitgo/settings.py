@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'sales',
     'users',
     'dashboard',
+    'page',
     'authenticator',
     'rest_framework',
 ]
@@ -79,6 +80,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'purchases', 'templates'),
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  os.path.join(BASE_DIR, 'users', 'templates'),
+                 os.path.join(BASE_DIR, 'page', 'templates'),
                  os.path.join(BASE_DIR, 'authenticator', 'templates')
                  ],
         'APP_DIRS': True,
@@ -159,6 +161,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'eproviders', 'static'),
     os.path.join(BASE_DIR, 'users', 'static'),
     os.path.join(BASE_DIR, 'dashboard', 'static'),
+    os.path.join(BASE_DIR, 'page', 'static'),
     os.path.join(BASE_DIR, 'products', 'static'),
     os.path.join(BASE_DIR, 'authenticator', 'static')
 ]
