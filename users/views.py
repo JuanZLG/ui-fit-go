@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from tuiranfitgo.views import jwt_cookie_required
 import smtplib 
 import os

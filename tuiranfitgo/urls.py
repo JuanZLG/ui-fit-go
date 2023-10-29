@@ -9,10 +9,9 @@ from . import views
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='/admin/', permanent=False)),
-    path('admin/', TemplateView.as_view(template_name='login.html'), name='login'),
-    path('Brutality/', include('page.urls')),
+    # path('', RedirectView.as_view(url='/admin/', permanent=False)),
     path('', include('authenticator.urls')),
+    path('Brutality/', include('page.urls')),
     path('admin/home/', include('dashboard.urls')),
     path('admin/users/', include('users.urls')),
     path('admin/products/', include('products.urls')),
