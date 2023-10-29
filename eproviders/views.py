@@ -5,13 +5,14 @@ import json
 from urllib.parse import parse_qs
 from django.views.decorators.http import require_POST
 from .models import Proveedores
+from tuiranfitgo.views import jwt_cookie_required
 
-
+@jwt_cookie_required
 def Home(request):
     proveedores = Proveedores.objects.all()
     return render(request, 'providersHome.html', {"proveedores":proveedores}) 
 
-
+@jwt_cookie_required
 def crearProveedor(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_proveedor')
@@ -39,7 +40,7 @@ def proveedor_unico(request):
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
 
-
+@jwt_cookie_required
 def editarProveedor(request, id_proveedor):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_proveedor')

@@ -17,7 +17,8 @@ urlpatterns = [
     path('admin/clients/', include('customers.urls')),  
     path('admin/sales/', include('sales.urls')),  
     path('admin/purchases/', include('purchases.urls')),
-    path('error/', views.error_view, name="initerror")
+    path('error/', views.error_view, name="initerror"),
+    path('logout/', views.logout_view, name='logout'),
 ]
 
 if settings.DEBUG:

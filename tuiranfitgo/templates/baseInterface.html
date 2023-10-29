@@ -398,14 +398,13 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-black-600 bold"
-                                    style="color:black;font:bolder">Bienvenido(a), {{ usuario_correo }}</span>
+                                <span id="nombre-usuario" class="mr-2 d-none d-lg-inline text-black-600 bold" style="color: black; font-weight: bolder">Bienvenido(a), </span>
                                 <img class="img-profile rounded-circle" src={% static 'img/usir.png' %}>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{% url 'myProfile' %}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
@@ -474,10 +473,10 @@
                         <span aria-hidden="true">x</span>
                     </button>
                 </div>
-                <div class="modal-body">Selecciona "Cerrar Sesión" si estas listo para terminar con tu sesión.</div>
+                <div class="modal-body">Selecciona "Cerrar Sesión" si estas listo para terminar con la sesión.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-primary" href="#">Cerrar Sesión</a>
+                    <a class="btn btn-danger" href="{% url 'logout' %}">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
@@ -506,13 +505,21 @@
 
         });
     </script>
-
+    <style>
+        #dataTable_paginate {
+            margin-top: 20px;
+        }
+        .dataTables_info {
+            margin-top: 8px; 
+        }
+        
+    </style>
     <script>$(document).ready(function () {
-
+        
             $('#dataTable').DataTable({
                 "language": {
                     "search": "Buscar:",
-                    "searchPlaceholder": "Buscar registro",
+                    "searchPlaceholder": "Buscar registro(s)",
                     "paginate": {
                         "previous": "Anterior",
                         "next": "Siguiente"
@@ -520,15 +527,31 @@
                     "lengthMenu": "Mostrar _MENU_ registros por página",
                     "info": "Mostrando _START_ al _END_ de _TOTAL_ registro(s)",
                     "infoEmpty": "",
+                    "infoFiltered": "(filtración de _MAX_ registros en total)"
                 },
+                "scrollY": "50vh",
+                "scrollX": "auto",
                 "drawCallback": function (settings) {
                     $('#dataTable_paginate .paginate_button').removeClass('selected-page');
                     $(settings.nTable).find('.paginate_button.current').addClass('selected-page');
                 }
             });
+            
         });
     </script>
 
+    <script>
+        function updateUsername() {
+            var token = getCookie('jwt_token');
+            if (token) {
+                var payload = JSON.parse(atob(token.split('.')[1]));
+                var nombreUsuarioElement = document.getElementById('nombre-usuario');
+                nombreUsuarioElement.textContent = 'Bienvenido(a), ' + payload.nombre_usuario;
+            }
+        }
+    
+        updateUsername();
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
         integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5"

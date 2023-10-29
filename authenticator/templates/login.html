@@ -62,6 +62,7 @@
                 if (data.token) {
                     console.log("Token Cargado");
                     setCookie('jwt_token', data.token, 30);
+                    
                     window.location.href = 'admin/home/';
                 } else {
                     console.error('Error:', data.error);
@@ -93,7 +94,6 @@
             var expires = "expires=" + date.toUTCString();
             document.cookie = name + "=" + value + "; " + expires;
         }
-
     </script>
 
     <script>

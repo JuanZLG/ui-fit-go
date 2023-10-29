@@ -1,31 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import IsAuthenticated
 from .models import Clientes, Municipios, Departamentos
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.db import IntegrityError
-
-import jwt
 from django.conf import settings
-
-def jwt_cookie_required(view_func):
-    def _wrapped_view(request, *args, **kwargs):
-        token = request.COOKIES.get('jwt_token')  # Esto me lee el token 
-        if not token:
-            return redirect('initerror')
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            #Espacio para mas comprobaciones si algo
-            request.user = payload
-        except jwt.ExpiredSignatureError:
-            return JsonResponse({'error': 'Token JWT caducado'}, status=401)
-        except jwt.DecodeError:
-            return JsonResponse({'error': 'Token JWT no válido'}, status=401)
-
-        return view_func(request, *args, **kwargs)
-
-    return _wrapped_view
+from tuiranfitgo.views import jwt_cookie_required
 
 @jwt_cookie_required
 def lista_clientes(request):

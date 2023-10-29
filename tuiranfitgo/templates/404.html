@@ -9,9 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Error de Sesión</title>
+    <title>Error</title>
     {% load static %}
-
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -72,11 +72,10 @@
                     <div class="text-center">
                         <center><img style="width:140px;" src="{% static 'img/GIcon.png' %}"></center>
                         <br>
-                        <div class="error mx-auto text-black" data-text="404">404</div>
+                        <div class="error mx-auto" data-text="404">404</div>
                         <p class="lead text-gray-800 mb-5">No se ha encontrado la dirección</p>
-                        
                         <p class="text-gray-500 mb-0">Al parecer tienes un glitch en la matrix...</p>
-                        <a href="{% url 'login_view' %}">&larr; Regresar a Iniciar Sesión</a>
+                        <a href="{% url 'login_view' %}">&larr; Regresar</a>
                     </div>
                     <hr>
                     <div style="height:15vh;">

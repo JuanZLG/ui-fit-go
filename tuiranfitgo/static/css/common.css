@@ -105,10 +105,10 @@ tr.inactivo {
     color: #09711c;
 }
 
-.inactive-status {
+/* .inactive-status {
     background-color: #ec8080;
     color: #8a0404;
     opacity: 0.5;
     pointer-events: none; 
     cursor: default; 
-}
+} */

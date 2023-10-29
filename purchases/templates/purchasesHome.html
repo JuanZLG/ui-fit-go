@@ -32,21 +32,10 @@
     </div>
 </div>
 
-<style>
-    .table {
-        width: 70%;
-    }
-</style>
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <style>
-                .table-responsive {
-                    overflow-y: auto;
-                    max-height: 400px;
-                }
-            </style>
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="90%" cellspacing="3">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="auto" cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Proveedor</th>
@@ -280,6 +269,9 @@
     .inactive-status {
         background-color: #ec8080;
         color: #8a0404;
+        opacity: 0.5;
+        pointer-events: none; 
+        cursor: default; 
     }
 </style>
 

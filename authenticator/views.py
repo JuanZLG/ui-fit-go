@@ -19,6 +19,9 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Login Bueno
 
+from rest_framework.response import Response
+from rest_framework import status
+
 class loginmio(APIView):
     def get(self, request):
         return render(request, 'login.html')
@@ -29,17 +32,21 @@ class loginmio(APIView):
         try:
             usuario = Usuarios.objects.get(correo=correo)
             usuario_data = serializers.serialize('python', [usuario])[0]['fields']
-            print(usuario_data)
+
             if usuario.contrasena == contrasena:
                 payload = custom_jwt_payload_handler(usuario_data)
-                print(payload)
+                print(usuario_data)
                 token = jwt_encode_handler(payload)
-                print(token)
-                return JsonResponse({'token': token})
+                response_data = {
+                    'token': token,
+                    'nombre_usuario': usuario_data['nombre_usuario'],
+                    'id_rol': usuario_data['id_rol']
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
             else:
-                return JsonResponse({'error': 'Credenciales incorrectas'}, status=400)
+                return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
-            return JsonResponse({'error': 'Credenciales incorrectas'}, status=400)
+            return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 #Login Malo

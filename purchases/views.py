@@ -1,20 +1,28 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
+from tuiranfitgo.views import jwt_cookie_required
+from .models import Compras, Detallecompra, Proveedores, Productos
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib.enums import TA_CENTER
+from django.http import HttpResponse
+import os
 import json
-import logging  # Importa el módulo de registro
+import logging 
 logger = logging.getLogger(__name__)
 from django.db.models import Q
 
-
-from .models import Compras, Detallecompra, Proveedores, Productos
-
+@jwt_cookie_required
 def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
-
 @csrf_exempt
+@jwt_cookie_required
 def crear_compra(request):
     if request.method == 'POST':
         try:
@@ -53,7 +61,6 @@ def crear_compra(request):
                     precio_tot=producto_datos['precioTotal']
                 )
 
-                # Incrementar la cantidad en stock del producto
                 producto.cantidad += producto_datos['cantidad']
                 producto.save()
 
@@ -69,9 +76,6 @@ def crear_compra(request):
             return JsonResponse({'error': 'Error al crear la compra. Intente nuevamente más tarde.'}, status=500)
 
     return render(request, 'createPurchases.html')
-
-
-
 
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
@@ -94,10 +98,6 @@ def buscar_proveedor(request):
     ]
 
     return JsonResponse({"resultados": resultados})
-
-
-
-from django.http import JsonResponse
 
 def buscar_productos(request):
     q = request.GET.get("q", "")
@@ -165,7 +165,7 @@ def cambiarEstado(request):
         nuevo_estado = request.GET.get('nuevo_estado')
         
         compra = Compras.objects.get(id_compra=compra_id)
-        estado_anterior = compra.estado  # Guardar el estado anterior
+        estado_anterior = compra.estado 
         compra.estado = int(nuevo_estado)
         compra.save()
 
@@ -183,18 +183,10 @@ def cambiarEstado(request):
 
             detalle.save() 
         
-        # Verificar si el estado se cambió de Inactivo (0) a Activo (1)
         if estado_anterior == 0 and nuevo_estado == "1":
-            # Si el estado anterior era Inactivo y se intenta cambiar a Activo, 
-            # entonces no permitir el cambio
             return JsonResponse({'status': 'error', 'message': 'No se puede cambiar de Inactivo a Activo.'})
         else:
             return JsonResponse({'status': 'success'})
-
-
-
-
-
 
 def obtener_detalles_compra(request, compra_id):
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
@@ -229,7 +221,6 @@ def obtener_detalles_compra(request, compra_id):
     }
 
     return JsonResponse(respuesta)
-
 
 # @csrf_exempt
 # def editar_compra(request, id_compra):
@@ -305,16 +296,6 @@ def obtener_detalles_compra(request, compra_id):
 #     compra = Compras.objects.get(id_compra=id_compra)
 #     detalles = Detallecompra.objects.filter(id_compra=id_compra)
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
-from reportlab.lib.enums import TA_CENTER
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from .models import Detallecompra, Compras
-import os
 
 def formatear_precios(valor):
     valor = round(valor, 2)
@@ -339,20 +320,18 @@ def generar_factura_pdf(request, compra_id):
 
     totalCompraFormateado = formatear_precios(totalCompra)
 
-    # Crear una respuesta de tipo PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename=factura_compra_{compra.id_proveedor.nombre_proveedor}_{compra.id_proveedor.numero_documento_nit}.pdf'
 
-    # Crear un objeto PDF
     buffer = response
     doc = SimpleDocTemplate(buffer, pagesize=letter)
 
     styles = getSampleStyleSheet()
 
-    # Contenido de la factura
+   
     elements = []
 
-    # Agregar la imagen de logo como un círculo
+   
     logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
     logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
     logo.drawHeight = 1.5 * inch

@@ -14,5 +14,6 @@ urlpatterns=[
     path('ver_detalles_usuario', views.verDetallesUsuario, name='ver_detalles_usuario'),
     path('rol_unico/', views.rol_unico, name='rol_unico'),
     path('remove/', views.eliminar_rol, name='eliminarRol'),
+    path('profile/', views.UserProfile, name="myProfile")
 ]
 
