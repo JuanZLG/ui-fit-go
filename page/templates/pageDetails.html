@@ -1,0 +1,49 @@
+{% extends "pageBase.html" %}
+{% block title %}Catálogo{% endblock %}
+
+
+{% block urls %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/details.css' %}">
+{% endblock %}
+
+{% block catalog-section %}{% endblock %}
+
+{% block body %}
+<section class="product-details">
+    <div class="container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="/media/landingproducts/products/{{ detalle.iProductImg_name }}" class="img-fluid" alt="Imagen 1">
+                </div>
+                <div class="swiper-slide">
+                    <img src="/media/landingproducts/nutritiondex/{{ detalle.iInfoImg_name }}" class="img-fluid" alt="Imagen 1">
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <h1 class="product-title">
+                    <strong> <span class="product-name">{{ detalle.nombre_producto }}</span> </strong>
+                </h1>
+                <h2 class="product-price my-3">
+                    <strong>
+                        ${{ detalle.precio|floatformat:"0" }}
+                    </strong>
+                </h2>
+                <div class="product-description mb-3"> {{ detalle.descripcion }}</div>
+                <ul class="product-options list-group list-group-flush my-4">
+                    <li><strong>Sabores:</strong> {{ detalle.sabor }}</li>
+                    <hr class="line-divider">
+                    <li><strong>Presentaciones por libras:</strong> {{ detalle.presentacion }}lbs</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.2.1/hamburgers.min.css"
+        integrity="sha512-+mlclc5Q/eHs49oIOCxnnENudJWuNqX5AogCiqRBgKnpoplPzETg2fkgBFVC6WYUVxYYljuxPNG8RE7yBy1K+g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style-commons.css' %}">
+    <script src="{% static 'js/pageIndex.js' %}"></script>
+    {% block urls %} {% endblock %}
+</head>
+
+<body>
+    <div class="main-menu" id="main-menu">
+        <ul class="menu-list">
+            <li class="menu-item" id="toggle-main-products">
+                Productos <i class="fas fa-chevron-down icon"></i>
+            </li>
+            <div id="main-options-products" class="menu-options main animate__animated animate__headShake">
+                <div class="menu-column">
+                    <a href="{% url 'pageDetails' %}" class="menu-option marck">Ver todo</a>
+                </div>
+                <ul class="categorias-list">
+                    {% for categoria in categorias %}
+                    <li class="categoria-item">{{ categoria.nombre_categoria }}:
+                        <ul class="productos-list">
+                            {% for producto in categoria.productos_set.all %}
+                            <li class="producto-item">{{ producto.nombre_producto }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr class="divider">
+            <li class="menu-item">
+                <a href="#" class="menu-link">
+                    <i class="fas fa-info-circle icon"></i> Sobre Brutality
+                </a>
+                <a href="#" class="menu-link">
+                    <i class="fas fa-shopping-cart icon"></i> ¿Cómo comprar?
+                </a>
+            </li>
+
+            <hr class="divider">
+            <li class="menu-item">
+                <span class="menu-title">Contáctanos</span>
+                <span class="menu-contact">
+                    <i class="fas fa-phone icon"></i> +57 3127123250
+                </span>
+                <span class="menu-contact">
+                    <i class="fas fa-envelope icon"></i> brutality@gmail.com
+                </span>
+            </li>
+            <hr class="divider">
+            <li class="login-item">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram icon"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp icon"></i></a>
+                </div>
+                <a href="#" class="login-button">Login</a>
+            </li>
+        </ul>
+    </div>
+
+    <header class="main-header">
+        <nav class="header-navigation">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <a href="{% url 'pageHome' %}" style="z-index: 999;">
+                <img src="{% static 'img/gorille.png' %}" class="logo" alt="Logo de Brutálity">
+            </a>
+            <label class="hamburger">
+                <input type="checkbox" id="hamburgerCheckbox">
+                <svg viewBox="0 0 32 32">
+                    <path class="line line-top-bottom"
+                        d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22">
+                    </path>
+                    <path class="line" d="M7 16 27 16"></path>
+                </svg>
+            </label>
+        </nav>
+        {% block extraHeader %}{% endblock %}
+        <div class="container-search">
+            <input placeholder="Realizar búsqueda..." type="text" name="search" class="search">
+        </div>
+    </header>
+
+    {% block catalog-section %}
+    <div class="catalog-section">
+        <select name="sort" id="sort" class="catalog-select">
+            <option value="best-sellers" class="sort-option">Más vendidos</option>
+            <option value="high-price" class="sort-option">Mayor precio</option>
+            <option value="low-price" class="sort-option">Menor precio</option>
+            <option value="high-price" class="sort-option">Alfabéticamente: A-Z</option>
+            <option value="high-price" class="sort-option">Alfabéticamente: Z-A</option>
+        </select>
+        <span id="toggle-menu"><strong>Productos</strong><i class="fas fa-chevron-down icon"></i></span>
+    </div>
+    <div id="menu-options" class="menu-options">
+        <div class="radio-inputs">
+            <label class="radio" data-option="1">
+                <input type="radio" name="radio">
+                <span class="name">Marcas</span>
+            </label>
+            <label class="radio" data-option="2">
+                <input type="radio" name="radio">
+                <span class="name">Categorias</span>
+            </label>
+
+            <label class="radio" data-option="3">
+                <input type="radio" name="radio" checked="">
+                <span class="name">Productos</span>
+            </label>
+        </div>
+        <div class="menu-column" data-option="1">
+            {% for m in marcas %}
+            <a href="#" class="menu-option">{{ m.nombre_marca }}</a>
+            {% endfor %}
+        </div>
+        <div class="menu-column" data-option="2">
+            {% for c in categorias %}
+            <a href="#" class="menu-option">{{ c.nombre_categoria }}</a>
+            {% endfor %}
+        </div>
+        <div class="menu-column" data-option="3">
+            {% for p in productos %}
+            <a href="#" class="menu-option">{{ p.nombre_producto }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+
+{% block body %}{% endblock %}
+
+<!-- 
+<footer>
+    <p>&copy; 2023 Brutálity</p>
+</footer> -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    let precioElements = document.querySelectorAll('.product-price');
+    precioElements.forEach(function (element) {
+        let precio = parseFloat(element.textContent.replace(/\./g, '').replace('$', '').replace(',', '.'));
+        if (!isNaN(precio)) {
+            var formattedPrecio = precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            element.textContent = "$" + formattedPrecio;
+        }
+    });
+</script>
+
+</html>

@@ -6,12 +6,12 @@ from urllib.parse import parse_qs
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from dotenv import load_dotenv
 from users.models import Roles, Permisos, Usuarios, Rolespermisos
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
-# from dotenv import load_dotenv
 import smtplib 
 import os
 from email.mime.multipart import MIMEMultipart
@@ -178,10 +178,6 @@ def hash_password(password):
     hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashed
 
-
-# FUNCION PARA DESENCRIPTAR CONSTRASEÑA Y VALIDAR - retorna true o false
-# def verify_password(stored_hash, input_password):
-#     return bcrypt.checkpw(input_password.encode("utf-8"), stored_hash )
 
 
 def editUser(request, id_usuario):

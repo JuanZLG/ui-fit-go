@@ -1,14 +1,17 @@
-{% extends "baseInterface.html" %} 
+{% extends "baseInterface.html" %}
 
-{% block title %}Agregar Producto{% endblock %} 
+{% block title %}Agregar Producto{% endblock %}
 
 {% block body %}
 
 <style>
   .tooltip-btn {
-    width: 30px; /* Ancho del botón */
-    height: 30px; /* Alto del botón */
-    font-size: 18px; /* Tamaño del texto */
+    width: 30px;
+    /* Ancho del botón */
+    height: 30px;
+    /* Alto del botón */
+    font-size: 18px;
+    /* Tamaño del texto */
     color: black;
     background-color: transparent;
     border: solid 1px black;
@@ -17,14 +20,16 @@
     justify-content: center;
     align-items: center;
   }
-  
+
   .question-mark {
     display: inline-block;
     width: 100%;
     text-align: center;
   }
 </style>
-<center><h1 class="h3 text-black-800 mb-4" style="font-weight:bold;">Agregar Producto</h1></center>
+<center>
+  <h1 class="h3 text-black-800 mb-4" style="font-weight:bold;">Agregar Producto</h1>
+</center>
 
 <div class="card shadow">
   <div class="container p-4">
@@ -42,7 +47,7 @@
             <div class="error-message" style="color:red;" id="iCategoria-error"></div>
           </div>
         </div>
-  
+
         <div class="col-md-6 mb-3">
           <div class="form-group">
             <label>Marca</label>
@@ -55,101 +60,100 @@
           </div>
         </div>
       </div>
-      
-    <div class="form-row">
+
+      <div class="form-row">
         <div class="col-md-4 mb-3">
-      <div class="form-group">
-        <label>Nombre *</label>
-        <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese el nombre del producto"/>
-        <div class="error-message" style="color:red;" id="iNombre-error"></div>
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" class="form-control" id="iNombre" name="iNombre"
+              placeholder="Ingrese el nombre del producto" />
+            <div class="error-message" style="color:red;" id="iNombre-error"></div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3 mx-auto">
+          <div class="form-group">
+            <label for="price">Imagen del Producto *</label>
+            <input type="file" class="form-control" id="iProductImg" name="iProductImg" />
+            <div class="error-message" id="iProductImg-error" style="color:red;"></div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3 mx-auto">
+          <div class="form-group">
+            <label for="iInfoImg">Imagen de Información Nutricional *</label>
+            <input type="file" class="form-control" id="iInfoImg" name="iInfoImg" />
+            <div class="error-message" id="iInfoImg-error" style="color:red;"></div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="col-md-4 mb-3 mx-auto">
-      <div class="form-group">
-          <label for="price">Imagen del Producto *</label>
-              <input type="file" class="form-control" id="iProductImg" name="iProductImg"/>
-              <div class="error-message" id="iProductImg-error" style="color:red;"></div>
-          </div>
-    </div>
-
-    <div class="col-md-4 mb-3 mx-auto">
-      <div class="form-group">
-          <label for="iInfoImg">Imagen de Información Nutricional *</label>
-              <input type="file" class="form-control" id="iInfoImg" name="iInfoImg"/>
-              <div class="error-message" id="iInfoImg-error" style="color:red;"></div>
-          </div>
-    </div>
-    </div>
-  
       <div class="form-group">
         <label for="descripcion">Descripción *</label>
-        <textarea class="form-control" id="iDescripcion" name="iDescripcion" style="resize: vertical; max-height: 200px;" rows="4"></textarea>
+        <textarea class="form-control" id="iDescripcion" name="iDescripcion"
+          style="resize: vertical; max-height: 200px;" rows="4"></textarea>
         <div class="error-message" style="color:red;" id="iDescripcion-error"></div>
       </div>
-  
+
       <div class="form-row">
         <div class="col-md-3 mb-3">
-            <div class="form-group">
-                <label>Fecha de Vencimiento *</label>
-                <input type="text" class="form-control" id="iFechaven" name="iFechaven" pattern="\d{4}-\d{2}-\d{2}" placeholder="AAAA-MM-DD" />
-                <div class="error-message" style="color:red;" id="iFechaven-error"></div>
-            </div>
+          <div class="form-group">
+            <label>Fecha de Vencimiento *</label>
+            <input type="text" class="form-control" id="iFechaven" name="iFechaven" pattern="\d{4}-\d{2}-\d{2}"
+              placeholder="AAAA-MM-DD" />
+            <div class="error-message" style="color:red;" id="iFechaven-error"></div>
+          </div>
         </div>
-    
-        <div class="col-md-3 mb-3">
-            <div class="form-group">
-                <label for="cant">Cantidad *</label>
-                <div class="input-group">
-                    <input type="number" class="form-control" id="iCantidad" name="iCantidad" value="0" placeholder="Número de Existencias" readonly />
-                    <span class="input-group-append">
-                        <button type="button" class="btn" style="color:black; background-color:transparent;" data-toggle="tooltip" data-placement="top" title="Si desea añadir existencias, puede hacerlo al registrar una compra de este producto en el apartado Gestión de Compras.">
-                            <i class="fa-regular fa-circle-question fa-xs"></i>
-                        </button>
-                    </span>
-                </div>
-                <div class="error-message" style="color:red;" id="iCantidad-error"></div>
-            </div>
-        </div>
-    
-        <div class="col-md-3 mb-3">
-            <div class="form-group">
-                <label for="sabor">Sabor *</label>
-                <input type="text" class="form-control" id="iSabor" name="iSabor" placeholder="Sabor" />
-                <div class="error-message" style="color:red;" id="iSabor-error"></div>
-            </div>
-        </div>
-    
-        <div class="col-md-3 mb-3">
-            <div class="form-group">
-                <label for="services">Presentación (LBs) *</label>
-                <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Tamaño" />
-                <div class="error-message" style="color:red;" id="iServices-error"></div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-4 mb-3 mx-auto">
-      <div class="form-group">
+        <div class="col-md-3 mb-3">
+          <div class="form-group">
+            <label for="cant">Cantidad *</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="iCantidad" name="iCantidad" value="0"
+                placeholder="Número de Existencias" readonly />
+              <span class="input-group-append">
+                <button type="button" class="btn" style="color:black; background-color:transparent;"
+                  data-toggle="tooltip" data-placement="top"
+                  title="Si desea añadir existencias, puede hacerlo al registrar una compra de este producto en el apartado Gestión de Compras.">
+                  <i class="fa-regular fa-circle-question fa-xs"></i>
+                </button>
+              </span>
+            </div>
+            <div class="error-message" style="color:red;" id="iCantidad-error"></div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="form-group">
+            <label for="sabor">Sabor *</label>
+            <input type="text" class="form-control" id="iSabor" name="iSabor" placeholder="Sabor" />
+            <div class="error-message" style="color:red;" id="iSabor-error"></div>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <div class="form-group">
+            <label for="services">Presentación (LBs) *</label>
+            <input type="text" class="form-control" id="iServices" name="iServices" placeholder="Tamaño" />
+            <div class="error-message" style="color:red;" id="iServices-error"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3 mx-auto">
+        <div class="form-group">
           <label for="iPrice">Precio del Producto *</label>
           <div class="input-group">
-              <div class="input-group-prepend">
-                  <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
-              </div>
-              <input
-                  type="text"
-                  class="form-control"
-                  id="iPrice"
-                  name="iPrice"
-                  placeholder="Ingrese un precio"
-                  oninput="formatPriceInput(this);"
-                  value="{{ Product.precio }}"
-              />
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+            </div>
+            <input type="text" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"
+              oninput="formatPriceInput(this);" value="{{ Product.precio }}" />
           </div>
           <div class="error-message" id="iPrice-error" style="color:red;"></div>
+        </div>
       </div>
-  </div>
-  
+
       <div class="text-end">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
       </div>
@@ -164,129 +168,130 @@
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+
 <script>
   $(document).ready(function () {
-      $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iProductImg, #InfoImg').on('change', function () {
-          validarCampo($(this));
-      });
+    $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iProductImg, #InfoImg').on('change', function () {
+      validarCampo($(this));
+    });
 
-      $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #ProductImg, #InfoImg').on('input', function () {
-        const campo = $(this);
-        const campoValue = campo.val();
+    $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #ProductImg, #InfoImg').on('input', function () {
+      const campo = $(this);
+      const campoValue = campo.val();
 
-        if (campoValue) {
-            campo.removeClass('is-invalid');
-            $(`#${campo.attr('id')}-error`).text('');
-        }
-      });
-
-      $('#producto-form').submit(function (event) {
-          event.preventDefault();
-          let errors = false;
-
-          validarCampo($('#iCategoria'));
-          validarCampo($('#iMarca'));
-          validarCampo($('#iNombre'));
-          validarCampo($('#iDescripcion'));
-          validarCampo($('#iFechaven'));
-          validarCampo($('#iCantidad'));
-          validarCampo($('#iSabor'));
-          validarCampo($('#iServices'));
-          validarCampo($('#iPrice'));
-          validarCampo($('#iProductImg'));
-          validarCampo($('#iInfoImg'));
-
-          if ($('.error-message').text() === '') {
-            const formData = new FormData(this);
-      
-            $.ajax({
-              type: 'POST',
-              url: "{% url 'createAProduct' %}",
-              data: formData, 
-              processData: false, 
-              contentType: false, 
-              success: function (response) {
-                if (response.success) {
-                  Swal.fire({
-                    title: 'Éxito',
-                    text: 'Producto agregado con éxito',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 2000,
-                  });
-                  setTimeout(function () {
-                    window.location.href = "{% url 'productos' %}";
-                  }, 2000);
-                }
-              },
-              error: function (jqXHR, textStatus, errorThrown) {
-                console.error(textStatus, errorThrown);
+      if (campoValue) {
+        campo.removeClass('is-invalid');
+        $(`#${campo.attr('id')}-error`).text('');
       }
     });
-    
-        $('#iFechaven').on('input', function () {
-            const campo = $(this);
-            const fechaValue = campo.val();
-    
-            if (fechaValue) {
-                if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
-                    mostrarError(campo, 'El formato de la fecha no es correcto (AAAA-MM-DD).');
-                    return;
-                }
-    
-                const [anno, mes, dia] = fechaValue.split('-').map(Number);
-  
-                if (mes < 1 || mes > 12) {
-                    mostrarError(campo, 'El mes (MM) debe estar entre 01 y 12.');
-                    return;
-                }
-    
-                if (dia < 1 || dia > 31) {
-                    mostrarError(campo, 'El día (DD) debe estar entre 01 y 31.');
-                    return;
-                }
 
-                ocultarError(campo);
+    $('#producto-form').submit(function (event) {
+      event.preventDefault();
+      let errors = false;
+
+      validarCampo($('#iCategoria'));
+      validarCampo($('#iMarca'));
+      validarCampo($('#iNombre'));
+      validarCampo($('#iDescripcion'));
+      validarCampo($('#iFechaven'));
+      validarCampo($('#iCantidad'));
+      validarCampo($('#iSabor'));
+      validarCampo($('#iServices'));
+      validarCampo($('#iPrice'));
+      validarCampo($('#iProductImg'));
+      validarCampo($('#iInfoImg'));
+
+      if ($('.error-message').text() === '') {
+        const formData = new FormData(this);
+
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'createAProduct' %}",
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            if (response.success) {
+              Swal.fire({
+                title: 'Éxito',
+                text: 'Producto agregado con éxito',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
+              });
+              setTimeout(function () {
+                window.location.href = "{% url 'productos' %}";
+              }, 2000);
             }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.error(textStatus, errorThrown);
+          }
         });
-    
 
-      function mostrarError($campo, mensaje) {
+        $('#iFechaven').on('input', function () {
+          const campo = $(this);
+          const fechaValue = campo.val();
+
+          if (fechaValue) {
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
+              mostrarError(campo, 'El formato de la fecha no es correcto (AAAA-MM-DD).');
+              return;
+            }
+
+            const [anno, mes, dia] = fechaValue.split('-').map(Number);
+
+            if (mes < 1 || mes > 12) {
+              mostrarError(campo, 'El mes (MM) debe estar entre 01 y 12.');
+              return;
+            }
+
+            if (dia < 1 || dia > 31) {
+              mostrarError(campo, 'El día (DD) debe estar entre 01 y 31.');
+              return;
+            }
+
+            ocultarError(campo);
+          }
+        });
+
+
+        function mostrarError($campo, mensaje) {
           $campo.addClass('is-invalid');
           $campo.siblings('.error-message').text(mensaje);
-      }
+        }
 
-      function ocultarError($campo) {
+        function ocultarError($campo) {
           $campo.removeClass('is-invalid');
           $campo.siblings('.error-message').text('');
-      }
+        }
 
-      function validarCampo($campo) {
+        function validarCampo($campo) {
           const valor = $campo.val();
           if (!valor) {
-              mostrarError($campo, 'Este campo es obligatorio.');
+            mostrarError($campo, 'Este campo es obligatorio.');
           } else {
-              ocultarError($campo);
+            ocultarError($campo);
           }
+        }
       }
-  });
+    });
+
 </script>
 
-<script>
-  function formatPriceInput(inputElement) {
+    function formatPriceInput(inputElement) {
 
       let unformattedValue = inputElement.value.replace(/[,.]/g, '');
-  
-  
+
+
       let formattedValue = '';
-  
+
       if (!isNaN(unformattedValue)) {
-          formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
       }
 
       inputElement.value = formattedValue;
-  }
-  </script>
-  
+    }
+</script>
+
 {% endblock %}

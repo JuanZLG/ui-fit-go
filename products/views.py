@@ -77,6 +77,8 @@ def createProduct(request):
     
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
 
+
+
 def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -137,6 +139,7 @@ def editProduct(request, id_producto):
             products.iProductImg_name = products.iProductImg.split(b'/')[-1].decode('utf-8')
         else:
             products.iProductImg_name = products.iProductImg.name.split('/')[-1]
+
 
     return render(request, 'editProducts.html', {"Product": products, "marcas": marcas, "categorias": categorias})
 
