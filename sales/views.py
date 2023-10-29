@@ -1,18 +1,17 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from tuiranfitgo.views import jwt_cookie_required
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
 from django.db.models import Q
 
+@jwt_cookie_required
 def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-
-from django.http import JsonResponse
-import json
-
+@jwt_cookie_required
 @csrf_exempt
 def crear_venta(request):
     if request.method == 'POST':
@@ -51,7 +50,6 @@ def crear_venta(request):
     return render(request, 'createSales.html', {'clientes': clientes})
 
     
-
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("q", "")
 
@@ -75,13 +73,11 @@ def buscar_cliente(request):
     return JsonResponse({"resultados": resultados})
 
 
-
 def buscar_productos(request):
     q = request.GET.get("q", "")
     productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
     productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
     return JsonResponse({"productos": productos_json})
-
 
 
 def validar_cantidad(request):
@@ -111,9 +107,6 @@ def buscar_documentos(request):
         {"documentos": list(documentos), "nombre_cliente": nombre_cliente}
     )
 
-
-
-
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
@@ -121,8 +114,6 @@ def validar_producto(request):
         return JsonResponse({"existe": False})
     else:
         return JsonResponse({"existe": producto is not None})
-
-
 
 def validar_cliente(request):
     documentoDato = request.GET.get("documentoDato", "")
@@ -143,7 +134,6 @@ def obtener_precio(request):
             status=400,
         )
 
-
 def obtener_nombre(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
@@ -160,9 +150,6 @@ def obtener_nombre(request):
             {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
             status=400,
         )
-
-
-
 
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

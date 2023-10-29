@@ -4,25 +4,30 @@ from .models import Productos
 from django.urls import reverse
 from urllib.parse import parse_qs
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from products.models import Productos, Categorias, Marcas
 import base64
-from django.http import HttpResponse
 from django.core.files.base import ContentFile
+from tuiranfitgo.views import jwt_cookie_required
 
+@jwt_cookie_required
 def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
 
+@jwt_cookie_required
 def catHome(request):
     categories = Categorias.objects.all()
     return render(request, 'categoriesHome.html', {"cats":categories}) 
 
+@jwt_cookie_required
 def brandHome(request):
     brands = Marcas.objects.all()
     return render(request, 'brandsHome.html', {"pbrands":brands}) 
 
+@jwt_cookie_required
 def createProduct(request):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -77,8 +82,7 @@ def createProduct(request):
     
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
 
-
-
+@jwt_cookie_required
 def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -100,11 +104,9 @@ def editProduct(request, id_producto):
         pPrice = pPrice.replace(',', '').replace('.', '')
         pPrice = float(pPrice)
 
-        # Comprueba si 'iProductImg' y 'iInfoImg' se enviaron en la solicitud
         iProductImg = request.FILES.get('iProductImg', None)
         iInfoImg = request.FILES.get('iInfoImg', None)
 
-        # Actualiza el registro de productos, pero solo si se enviaron archivos
         productos = Productos.objects.filter(id_producto=id_producto)
         if iProductImg:
             productos.update(iProductImg=iProductImg)
@@ -157,11 +159,6 @@ def cambiarEstadoDeProducto(request):
             return JsonResponse({'status': 'error', 'message': 'Producto no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-# def producto_unico(request):
-#     producto = request.GET.get("producto", "")
-#     producto_existe = Productos.objects.filter(nombre_producto=producto).exists()
-#     return JsonResponse({"existe": producto_existe})
-
 
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -192,6 +189,7 @@ def verDetallesProducto(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+@jwt_cookie_required
 def crear_categoria(request):
     categorias = Categorias.objects.all()
     if request.method == 'POST':
@@ -202,6 +200,7 @@ def crear_categoria(request):
     
     return render(request, 'productsHome.html', {'categorias': categorias})
 
+@jwt_cookie_required
 def crear_marca(request):
     marcas = Marcas.objects.all()
     if request.method == 'POST':

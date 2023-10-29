@@ -1,37 +1,30 @@
 from django.shortcuts import render
+from tuiranfitgo.views import jwt_cookie_required
+from django.http import JsonResponse
+from .models import Compras, Ventas, Clientes, Proveedores, Productos
+from django.db.models import Sum
+from django.db.models.functions import ExtractMonth
 
-# Create your views here.
-
+@jwt_cookie_required
 def Entrance(request):
     return render(request, 'tgoEntrance.html')
 
+@jwt_cookie_required
 def Home(request):
     return render(request, 'dashboard.html')
 
+@jwt_cookie_required
 def UserGuide(request):
     return render(request, 'manual.html')
-
-from django.http import JsonResponse
-from .models import Compras, Ventas, Clientes, Proveedores
-from django.db.models import Sum
-
-
-
 
 def contar_clientes_activos(request):
     clientes_activos = Clientes.objects.filter(estado=1).count()
     clientes_inactivos = Clientes.objects.filter(estado=0).count()
-    return JsonResponse({'clientes_activos': clientes_activos, 'clientes_inactivos': clientes_inactivos})
-
-
-from django.db.models import Sum
-from django.http import JsonResponse
-from django.db.models.functions import ExtractMonth  # Agrega esta importación
-
+    return JsonResponse({'clientes_activos': clientes_activos, 'clientes_inactivos': clientes_inactivos}) 
 
 def calcular_total_compras(request, year):
     try:
-        # Filtra las compras por el año proporcionado
+       
         total_compras_por_mes = Compras.objects.filter(fechareg__year=year) \
             .annotate(month=ExtractMonth('fechareg')) \
             .values('month') \
@@ -40,8 +33,6 @@ def calcular_total_compras(request, year):
         return JsonResponse({'total_compras_por_mes': list(total_compras_por_mes)})
     except Exception as e:
         return JsonResponse({'error': str(e)})
-
-
 
 
 def calcular_total_ventas(request):
@@ -103,10 +94,6 @@ def obtener_datos_ventas_y_compras(request):
         data['compras'].append(totals['total_compras'])
 
     return JsonResponse(data)
-
-
-from django.http import JsonResponse
-from .models import Productos
 
 def obtener_todos_los_productos(request):
     try:

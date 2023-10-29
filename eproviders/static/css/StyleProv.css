@@ -1,8 +1,8 @@
-.table {
-    width: 80%;
+.inactive-status {
+    background-color: #ef6d6d;
+    color: #8a0404;
+    opacity: 0.5;
 }
-
-
 
 .modal-backdrop {
     position: fixed;
@@ -15,7 +15,6 @@
     display: none;
     animation: fadeInBack 0.3s ease-in-out;
 }
-
 
 .proveedorDialog {
 max-width: 70%;

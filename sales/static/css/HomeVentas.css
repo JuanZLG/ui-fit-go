@@ -175,3 +175,10 @@
     gap: 10px;
 }
 
+.inactive-status {
+    background-color: #ec8080;
+    color: #8a0404;
+    opacity: 0.5;
+    pointer-events: none; 
+    cursor: default; 
+}

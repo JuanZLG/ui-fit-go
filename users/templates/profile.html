@@ -1,0 +1,35 @@
+{% extends "baseInterface.html" %}
+{% block title %} Mi Perfil {% endblock %}
+
+{% block body %}
+{% load static %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="text-align:center; font-weight:bold">Mi Perfil</div>
+                <div class="card-body">
+                    <center><img src="{% static 'img/usir.png' %}" style="width:10rem;"></center>
+                    <p><strong>Nombre de Usuario:</strong> {{ user.nombre_usuario }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ user.correo }}</p>
+                    <p id="userole"><strong>Rol:</strong>{{ user.id_rol }}</p>
+                    <p value="{% if user.estado == 1 %} Activo{% else %} Inactivo{% endif %}"><strong>Estado:</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateRole() {
+        var token = getCookie('jwt_token');
+        if (token) {
+            var usuario_data = JSON.parse(atob(token.split('.')[1]));
+            var rolElement = document.getElementById('userole');
+            rolElement.textContent = usuario_data.id_rol;
+        }
+    }
+
+    updateRole();
+</script>
+{% endblock %}
