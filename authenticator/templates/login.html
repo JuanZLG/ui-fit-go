@@ -28,11 +28,15 @@
             <div class="input-box">
                 <input type="text" name="correo" placeholder="Correo Electrónico" required>
                 <box-icon type='solid' name='user'></box-icon>
+                <center><div style="margin-top:4px; color:black" id="correo-error" class="text-danger"></div></center>
+                <center><div style="color:black;" id="user-error" class="text-danger"></div></center>
             </div>
             <div class="input-box">
                 <input type="password" name="contra" placeholder="Contraseña" required>
                 <box-icon name='lock-alt' type='solid'></box-icon>
+                <center><div style="margin-top:4px; color:red" id="contra-error" class="text-danger"></div></center>
             </div>
+            <br>
             <div class="remember-forgot">
                 <a href="#">¿Olvidaste tu contraseña?</a>
             </div>
@@ -42,34 +46,56 @@
     
     <script>
         document.getElementById('login-button').addEventListener('click', function() {
+            document.getElementById('user-error').textContent = '';
+            document.getElementById('correo-error').textContent = '';
+            document.getElementById('contra-error').textContent = '';
+    
             var correo = document.querySelector('[name="correo"]').value;
             var contra = document.querySelector('[name="contra"]').value;
             var formData = {
                 correo: correo,
                 contra: contra
             };
-        
-            fetch("{% url 'login_view' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.token) {
-                    console.log("Token Cargado");
-                    setCookie('jwt_token', data.token, 30);
-                    
-                    window.location.href = 'admin/home/';
-                } else {
-                    console.error('Error:', data.error);
-                }
-            })
-            
-        }, 2000); 
+    
+            if (!correo && !contra) {
+                displayError('correo', 'El correo es obligatorio');
+                displayError('contra', 'La contraseña es obligatoria');
+            } else if (!correo) {
+                displayError('correo', 'El correo es obligatorio');
+            } else if (!contra) {
+                displayError('contra', 'La contraseña es obligatoria');
+            } else {
+                // Realizar la solicitud al servidor
+                fetch("{% url 'login_view' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        console.log("Token Cargado");
+                        setCookie('jwt_token', data.token, 30);
+                        window.location.href = 'admin/home/';
+                    } else if (data.error === 'Usuario no Registrado') {
+                        displayError('user', 'No existe un usuario registrado con este correo');
+                    } else {
+                        displayError('correo', 'Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    displayError('correo', 'Error: ' + error);
+                });
+            }
+        });
+    
+        function displayError(field, message) {
+            var errorElement = document.getElementById(field + '-error');
+            errorElement.textContent = message;
+        }
     
         function getCookie(name) {
             var cookieValue = null;
@@ -85,7 +111,7 @@
             }
             return cookieValue;
         }
-
+    
         function setCookie(name, value, daysToExpire) {
             var date = new Date();
             date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000));
@@ -93,6 +119,8 @@
             document.cookie = name + "=" + value + "; " + expires;
         }
     </script>
+    
+    
 
     <script>
         var imgn = document.getElementById('logus');

@@ -11,7 +11,9 @@ urlpatterns = [
     path('obtener_precio/', views.obtener_precio, name='obtener_precio_producto_compras'),
     path('detalles_compra/<int:compra_id>/', views.detalles_compra, name='detalles_compra'),
     path('obtener_detalles_compra/<int:compra_id>/', views.obtener_detalles_compra, name='obtener_detalles_compra'),
-    path('generar_factura/<int:compra_id>/', views.generar_factura_pdf, name='generar_factura_pdf'),
+    path('generar_factura/<int:compra_id>/', views.generar_factura_pdf, name='generar_factura_pdf'),    
+    path('generar_informe_pdf/', views.generar_informe_pdf, name='generar_informe_pdf'),
+
 
 
     path('cambiarEstado/', views.cambiarEstado, name='cambiarEstadoCompra'),

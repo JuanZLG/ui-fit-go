@@ -46,7 +46,7 @@ class loginmio(APIView):
             else:
                 return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
-            return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 #Login Malo

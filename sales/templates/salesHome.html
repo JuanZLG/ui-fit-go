@@ -26,15 +26,101 @@
             </span>
         </div>
 
-        <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
-                title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text"
-                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
-            </a>
+        <a href="#" id="abrir-modal" class="btn btn-danger btn-dash btn-lg" data-toggle="modal" data-target="#miModal">
+            <i class="fa-solid fa-download mr-2"></i><span class="text"
+                style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+        </a>
+
+        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="miModalLabel">Generar Informe Ventas</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="generar-informe-form" method="POST" action="{% url 'generar_informe_pdf_ventas' %}">
+                            {% csrf_token %}
+                            <div id="calendario-contenedor">
+                                <p>Selecciona un rango de fechas:</p>
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de inicio"
+                                    class="date-input">
+                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de fin"
+                                    class="date-input">
+
+                                <button type="submit" id="generar-informe-button">Generar Informe</button>
+                                <p id="error-message" style="color: red; display: none;">Por favor, complete ambos
+                                    campos de fecha.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
+
+
+
     </div>
 </div>
+<style>
+    #generar-informe-button {
+        background-color: #007BFF;
+        color: #fff;
+        border: 2px solid #007BFF;
+        border-radius: 5px;
+        padding: 6px 12px; 
+        font-weight: bold;
+        font-size: 14px;
+        transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+        cursor: pointer;
+        position: absolute;
+        bottom: 10px;
+        right: 10px; 
+    }
+
+    #generar-informe-button:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    .date-input {
+        border: 2px solid #ccc;
+        padding: 8px;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+        outline: none;
+    }
+
+    #miModal .modal-dialog {
+    max-width: 70%;
+    width: 45%;
+    min-height: 35vh;
+    border: none;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+    position: absolute;
+    top: 35%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+    animation: fadeIn 0.3s ease-in-out;
+    padding: 20px;
+}
+
+
+    #calendario-contenedor {
+        max-height: 100%; 
+        overflow-y: auto; 
+    }
+</style>
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">

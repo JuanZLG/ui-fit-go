@@ -11,8 +11,8 @@ def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-# @jwt_cookie_required
 @csrf_exempt
+@jwt_cookie_required
 def crear_venta(request):
     if request.method == 'POST':
         try:
@@ -242,48 +242,39 @@ def generar_factura_pdf_venta(request, venta_id):
 
     totalVentaFormateado = formatear_precios(totalVenta)
 
-    # Crear una respuesta de tipo PDF
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=factura_venta_{venta.id_cliente.nombres}_{venta.id_cliente.apellidos}.pdf'
+    response['Content-Disposition'] = f'attachment; filename=Informe_venta_{venta.id_cliente.nombres}_{venta.id_cliente.apellidos}.pdf'
 
 
-    # Crear un objeto PDF
     buffer = response
     doc = SimpleDocTemplate(buffer, pagesize=letter)
 
     styles = getSampleStyleSheet()
 
-    # Contenido de la factura
     elements = []
 
-    # Agregar la imagen de logo como un círculo
     logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
     logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
     logo.drawHeight = 1.5 * inch
     logo.drawWidth = 1.5 * inch
     elements.append(logo)
 
-    # Línea roja
     elements.append(Spacer(1, 6))
-    elements.append(Paragraph('Factura de Venta', styles['Title']))
+    elements.append(Paragraph('Informe de Venta', styles['Title']))
     elements.append(Spacer(1, 6))
 
     centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
 
-    # Detalles de la factura en la parte superior izquierda
     elements.append(Paragraph(f'<b>Cliente:</b> {venta.id_cliente.nombres}', centered_style))
     elements.append(Paragraph(f'<b>Documento:</b> {venta.id_cliente.documento}', centered_style))
     elements.append(Paragraph(f'<b>Fecha de Registro:</b> {venta.fechareg}', centered_style))
 
-    # Espacio entre detalles y tabla
     elements.append(Spacer(1, 12))
 
-    # Detalles de compra (la tabla)
     data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
     data.extend(detalles)
-    data.append(["", "", "", totalVentaFormateado])  # Agrega el total al final
+    data.append(["", "", "", totalVentaFormateado])  
 
-    # Ajustar el ancho de las columnas de la tabla
     t = Table(data, colWidths=[180, 80, 60, 100])
     t.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.black),
@@ -300,3 +291,78 @@ def generar_factura_pdf_venta(request, venta_id):
     doc.build(elements)
 
     return response
+def generar_informe_pdf_ventas(request):
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        
+        ventas = Ventas.objects.filter(
+            fechareg__range=(fecha_inicio, fecha_fin),
+            estado=1
+        )
+
+        totalventa = 0
+        detalles = []
+
+        for venta in ventas:
+            Clientes = venta.id_cliente.nombres
+            documento_nit = venta.id_cliente.documento
+            fecha_registro = venta.fechareg
+            total_venta = formatear_precios(venta.totalVenta)
+            detalles.append([Clientes, documento_nit, fecha_registro, total_venta])
+            totalventa += venta.totalVenta
+
+        totalventaFormateado = formatear_precios(totalventa)
+
+        response = HttpResponse(content_type='application/force-download')
+        response['Content-Disposition'] = f'attachment; filename=informe_ventas.pdf'
+
+        buffer = response
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        styles = getSampleStyleSheet()
+
+        elements = []
+        logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
+        logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
+        logo.drawHeight = 1.5 * inch
+        logo.drawWidth = 1.5 * inch
+        elements.append(logo)
+
+        elements.append(Spacer(1, 6))
+        elements.append(Paragraph('Informe de Ventas', styles['Title']))
+        elements.append(Spacer(1, 6))
+        
+        periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
+        periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
+        
+        elements.append(periodo_paragraph)
+        elements.append(Spacer(1, 12))
+
+        data = [["Clientes", "Documento", "Fecha de Registro", "Total"]]
+        data.extend(detalles)
+        data.append(["", "", "", totalventaFormateado])
+
+        t = Table(data, colWidths=[180, 100, 100, 100])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+        ]))
+
+        elements.append(t)
+
+        try:
+            doc.build(elements)
+            print("PDF generado con éxito")
+            print(response)
+        except Exception as e:
+            print(f"Error al generar el PDF: {str(e)}")
+            return HttpResponse("No se pudo generar el PDF")
+
+        return response
+
+    return HttpResponse("No se ha enviado una solicitud POST")
