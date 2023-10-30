@@ -352,27 +352,22 @@ def generar_factura_pdf(request, compra_id):
     logo.drawWidth = 1.5 * inch
     elements.append(logo)
 
-    # Línea roja
     elements.append(Spacer(1, 6))
     elements.append(Paragraph('Informe de Compra', styles['Title']))
     elements.append(Spacer(1, 6))
 
     centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
 
-    # Detalles de la factura en la parte superior izquierda
     elements.append(Paragraph(f'<b>Proveedor:</b> {compra.id_proveedor.nombre_proveedor}', centered_style))
     elements.append(Paragraph(f'<b>Documento/NIT:</b> {compra.id_proveedor.numero_documento_nit}', centered_style))
     elements.append(Paragraph(f'<b>Fecha de Registro:</b> {compra.fechareg}', centered_style))
 
-    # Espacio entre detalles y tabla
     elements.append(Spacer(1, 12))
 
-    # Detalles de compra (la tabla)
     data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
     data.extend(detalles)
-    data.append(["", "", "", totalCompraFormateado])  # Agrega el total al final
+    data.append(["", "", "", totalCompraFormateado])  
 
-    # Ajustar el ancho de las columnas de la tabla
     t = Table(data, colWidths=[180, 80, 60, 100])
     t.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.black),
