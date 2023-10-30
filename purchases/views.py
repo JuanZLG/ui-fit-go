@@ -15,6 +15,8 @@ import json
 import logging 
 logger = logging.getLogger(__name__)
 from django.db.models import Q
+import qrcode
+
 
 @jwt_cookie_required
 def Home(request):
@@ -301,6 +303,18 @@ def formatear_precios(valor):
     valor = round(valor, 2)
     precio_formateado = '${:,.2f}'.format(valor)
     return precio_formateado
+def generar_qr_code(content):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(content)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    return img
+
 
 def generar_factura_pdf(request, compra_id):
     compra = get_object_or_404(Compras, id_compra=compra_id)
@@ -321,7 +335,7 @@ def generar_factura_pdf(request, compra_id):
     totalCompraFormateado = formatear_precios(totalCompra)
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=factura_compra_{compra.id_proveedor.nombre_proveedor}_{compra.id_proveedor.numero_documento_nit}.pdf'
+    response['Content-Disposition'] = f'attachment; filename=Informe_compra_{compra.id_proveedor.nombre_proveedor}_{compra.id_proveedor.numero_documento_nit}.pdf'
 
     buffer = response
     doc = SimpleDocTemplate(buffer, pagesize=letter)
@@ -340,7 +354,7 @@ def generar_factura_pdf(request, compra_id):
 
     # Línea roja
     elements.append(Spacer(1, 6))
-    elements.append(Paragraph('Factura de Compra', styles['Title']))
+    elements.append(Paragraph('Informe de Compra', styles['Title']))
     elements.append(Spacer(1, 6))
 
     centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
@@ -373,8 +387,94 @@ def generar_factura_pdf(request, compra_id):
     elements.append(t)
 
     doc.build(elements)
+    print(response)
 
     return response
+
+
+
+
+def generar_informe_pdf(request):
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        
+        compras = Compras.objects.filter(
+            fechareg__range=(fecha_inicio, fecha_fin),
+            estado=1
+        )
+
+        totalCompra = 0
+        detalles = []
+
+        for compra in compras:
+            proveedor = compra.id_proveedor.nombre_proveedor
+            documento_nit = compra.id_proveedor.numero_documento_nit
+            fecha_registro = compra.fechareg
+            total_compra = formatear_precios(compra.totalCompra)
+            detalles.append([proveedor, documento_nit, fecha_registro, total_compra])
+            totalCompra += compra.totalCompra
+
+        totalCompraFormateado = formatear_precios(totalCompra)
+
+        response = HttpResponse(content_type='application/force-download')
+        response['Content-Disposition'] = f'attachment; filename=informe_compras.pdf'
+
+        buffer = response
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        styles = getSampleStyleSheet()
+
+        elements = []
+        logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
+        logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
+        logo.drawHeight = 1.5 * inch
+        logo.drawWidth = 1.5 * inch
+        elements.append(logo)
+
+        elements.append(Spacer(1, 6))
+        elements.append(Paragraph('Informe de Compras', styles['Title']))
+        elements.append(Spacer(1, 6))
+        
+        # Estilo personalizado para el período de tiempo
+        periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
+        periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
+        
+        elements.append(periodo_paragraph)
+        elements.append(Spacer(1, 12))
+
+        data = [["Proveedor", "Documento/NIT", "Fecha de Registro", "Total"]]
+        data.extend(detalles)
+        data.append(["", "", "", totalCompraFormateado])
+
+        t = Table(data, colWidths=[180, 100, 100, 100])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+        ]))
+
+        elements.append(t)
+
+        try:
+            doc.build(elements)
+            print("PDF generado con éxito")
+            print(response)
+        except Exception as e:
+            print(f"Error al generar el PDF: {str(e)}")
+            return HttpResponse("No se pudo generar el PDF")
+
+        return response
+
+    return HttpResponse("No se ha enviado una solicitud POST")
+
+
+
+
+
 
 
 
