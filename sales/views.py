@@ -11,8 +11,8 @@ def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-@jwt_cookie_required
 @csrf_exempt
+@jwt_cookie_required
 def crear_venta(request):
     if request.method == 'POST':
         try:
