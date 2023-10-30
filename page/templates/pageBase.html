@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.2.1/hamburgers.min.css"
         integrity="sha512-+mlclc5Q/eHs49oIOCxnnENudJWuNqX5AogCiqRBgKnpoplPzETg2fkgBFVC6WYUVxYYljuxPNG8RE7yBy1K+g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -22,12 +21,17 @@
 </head>
 
 <body>
+
+    <a href="https://wa.me/+573006280468" target="_blank" class="whatsapp-button">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
     <div class="main-menu" id="main-menu">
         <ul class="menu-list">
             <li class="menu-item" id="toggle-main-products">
                 Productos <i class="fas fa-chevron-down icon"></i>
             </li>
-            <div id="main-options-products" class="menu-options main animate__animated animate__headShake">
+            <div id="main-options-products" class="menu-options main">
                 <div class="menu-column">
                     <a href="{% url 'pageDetails' %}" class="menu-option marck">Ver todo</a>
                 </div>
@@ -101,11 +105,10 @@
     {% block catalog-section %}
     <div class="catalog-section">
         <select name="sort" id="sort" class="catalog-select">
+            <option value="all" class="sort-option">Ver todo</option>
             <option value="best-sellers" class="sort-option">Más vendidos</option>
             <option value="high-price" class="sort-option">Mayor precio</option>
             <option value="low-price" class="sort-option">Menor precio</option>
-            <option value="high-price" class="sort-option">Alfabéticamente: A-Z</option>
-            <option value="high-price" class="sort-option">Alfabéticamente: Z-A</option>
         </select>
         <span id="toggle-menu"><strong>Productos</strong><i class="fas fa-chevron-down icon"></i></span>
     </div>
@@ -151,6 +154,7 @@
 <footer>
     <p>&copy; 2023 Brutálity</p>
 </footer> -->
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

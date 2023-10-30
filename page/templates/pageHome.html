@@ -2,8 +2,8 @@
 {% block title %}Brutality{% endblock %}
 
 {% block urls %}
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/cards.css' %}">
 {% endblock %}
 
 
@@ -27,17 +27,16 @@
 </div>
 
 <section class="product-card-container" id="product-container">
-  {% for producto in vendidos %}
+  {% for producto in productos %}
   <div class="product-card">
     <a href="{% url 'pageDetails' %}?producto_id={{ producto.id_producto }}">
       <div class="product-image">
-        <img class="img-fluid" width="100%" src="/media/landingproducts/products/{{ producto.iProductImg_name }}"
-          alt="{{ producto.iProductImg_name }}">
+        <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
       </div>
       <div class="product-details">
         <h3 class="product-title">{{ producto.nombre_producto }}</h3>
         <div class="product-description">
-          {{ producto.descripcion }}
+          <p>{{ producto.descripcion }}</p>
         </div>
         <div class="product-price">
           <span>${{ producto.precio|floatformat:"0" }}</span>
@@ -51,6 +50,45 @@
 
   {% endfor %}
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script>  
+  $("#sort").change(function () {
+    var selectedValue = $(this).val();
+    $.ajax({
+      url: "{% url 'filter_products' %}",
+      method: 'GET',
+      data: { sortOption: selectedValue },
+      success: function (data) {
+        if (data.success) {
+          $("#product-container").empty();
 
+          $.each(data.data, function (index, p) {
+            var productCard =
+              '<div class="product-card">' +
+              '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' + 
+              ' <div class="product-image">' +
+              '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+              '<div class="product-details">' +
+              '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
+              '<div class="product-description">' +
+              '<p>' + p.descripcion + '</p></div>' +
+              '<div class="product-price">' +
+              '<span>' + p.precio + '</span>' +
+              '<span class="product-search">' +
+              '<i class="fas fa-search"></i></span></div>' +
+              '</div ></a ></div >';
+
+            $("#product-container").append(productCard);
+          });
+        } else {
+          // Maneja los errores si es necesario
+        }
+      },
+      error: function (xhr, status, error) {
+      }
+    });
+  });
+
+</script>
 {% endblock %}

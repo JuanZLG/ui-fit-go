@@ -11,7 +11,7 @@ def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-@jwt_cookie_required
+# @jwt_cookie_required
 @csrf_exempt
 def crear_venta(request):
     if request.method == 'POST':
@@ -89,7 +89,7 @@ def validar_cantidad(request):
     return JsonResponse({"suficiente": True})
 
 
-           
+
 def buscar_documentos(request):
     q = request.GET.get("q", "")
     documentos = Clientes.objects.filter(documento__contains=q).values_list(

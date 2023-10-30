@@ -78,9 +78,8 @@ def createUser(request):
         nombre_usuario = request.POST['iNombre']
         correo = request.POST['iCorreo']
         contrasena = create_password()
-        pass_cryp = hash_password(contrasena)
         rl = Roles.objects.get(id_rol=id_rol)
-        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=pass_cryp)
+        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
         send_email(nombre_usuario, contrasena, correo)
 
         return JsonResponse({'success': True})
@@ -121,12 +120,6 @@ def create_password(length=8):
     for _ in range(length):
         password += secrets.choice(characters)
     return password
-
-import bcrypt
-def hash_password(password):
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
-    return hashed
 
 
 @jwt_cookie_required
