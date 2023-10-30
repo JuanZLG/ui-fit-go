@@ -403,9 +403,8 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span id="nombre-usuario" class="mr-2 d-none d-lg-inline text-black-600 bold"
-                                    style="color: black; font-weight: bolder">Bienvenido(a), </span>
-                                <img class="img-profile rounded-circle" src={% static 'img/usir.png' %}>
+                                <span id="nombre-usuario" class="mr-2 d-none d-lg-inline text-black-600 bold" style="color: black; font-weight: bolder">Bienvenido(a), {{ user.nombre_usuario }}</span>
+                                <img class="img-profile rounded-circle" src="{% static 'img/usir.png' %}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -547,7 +546,7 @@
         });
     </script>
 
-    <script>
+    <!-- <script>
         function updateUsername() {
             var token = getCookie('jwt_token');
             if (token) {
@@ -558,7 +557,7 @@
         }
 
         updateUsername();
-    </script>
+    </script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
         integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5" crossorigin="anonymous">

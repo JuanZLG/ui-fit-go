@@ -12,7 +12,7 @@
                     <center><img src="{% static 'img/usir.png' %}" style="width:10rem;"></center>
                     <p><strong>Nombre de Usuario:</strong> {{ user.nombre_usuario }}</p>
                     <p><strong>Correo Electrónico:</strong> {{ user.correo }}</p>
-                    <p id="userole"><strong>Rol:</strong>{{ user.id_rol }}</p>
+                    <p><strong>Rol:</strong>{{ user.nombre_rol }}</p>
                     <p value="{% if user.estado == 1 %} Activo{% else %} Inactivo{% endif %}"><strong>Estado:</strong></p>
                 </div>
             </div>
@@ -21,15 +21,31 @@
 </div>
 
 <script>
-    function updateRole() {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+<script>
+    function updateRoler() {
         var token = getCookie('jwt_token');
         if (token) {
-            var usuario_data = JSON.parse(atob(token.split('.')[1]));
-            var rolElement = document.getElementById('userole');
-            rolElement.textContent = usuario_data.id_rol;
+            var payload = JSON.parse(atob(token.split('.')[1]));
+            var Element = document.getElementById('roled');
+            Element.textContent = payload.id_rol;
         }
     }
 
-    updateRole();
+    updateRoler();
 </script>
 {% endblock %}
