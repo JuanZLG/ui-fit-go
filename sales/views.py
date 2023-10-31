@@ -1,16 +1,18 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from tuiranfitgo.views import jwt_cookie_required
+from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
 from django.db.models import Q
 
+@module_access_required('ventas')
 @jwt_cookie_required
 def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
+@module_access_required('ventas')
 @csrf_exempt
 @jwt_cookie_required
 def crear_venta(request):

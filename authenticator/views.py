@@ -35,7 +35,10 @@ class loginmio(APIView):
 
             if usuario.contrasena == contrasena:
                 payload = custom_jwt_payload_handler(usuario_data)
+                payload['id_rol'] = usuario_data['id_rol']
+
                 print(usuario_data)
+                print("payload:", payload)
                 token = jwt_encode_handler(payload)
                 response_data = {
                     'token': token,
@@ -47,6 +50,10 @@ class loginmio(APIView):
                 return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+
+
+        
 
 
 #Login Malo

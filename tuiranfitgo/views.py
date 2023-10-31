@@ -28,3 +28,47 @@ def logout_view(request):
     response = redirect('login_view') 
     response.delete_cookie('jwt_token')
     return response
+
+
+
+
+from functools import wraps
+from django.http import HttpResponseForbidden
+from users.models import Rolespermisos
+from rest_framework_simplejwt.tokens import Token
+import jwt  
+
+def module_access_required(module_name):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            token = request.COOKIES.get('jwt_token')
+
+            if token:
+                try:
+                    decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+                    print(decoded_token)
+
+                    user_id = decoded_token['id_rol']  
+
+                    print(f"Token: {token}")
+                    print(f"User ID: {user_id}")  
+
+                    user_role = user_id
+
+                    if Rolespermisos.objects.filter(id_rol=user_role, **{f'id_permiso__{module_name}': 1}).exists():
+                         return view_func(request, *args, **kwargs)
+                    else:
+                        print("No se encontraron permisos para este usuario en el modulo:", module_name, "de mierdaaa")
+
+
+                except Exception as e:
+                    print(f"Error: {e}") 
+            else:
+                print("Token no encontrado en las cookies.")
+
+            return HttpResponseForbidden("No tienes permiso para acceder a esta página.")
+        return _wrapped_view
+    return decorator
+
+

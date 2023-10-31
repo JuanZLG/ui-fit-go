@@ -5,13 +5,15 @@ import json
 from urllib.parse import parse_qs
 from django.views.decorators.http import require_POST
 from .models import Proveedores
-from tuiranfitgo.views import jwt_cookie_required
+from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
+@module_access_required('proveedores')
 @jwt_cookie_required
 def Home(request):
     proveedores = Proveedores.objects.all()
     return render(request, 'providersHome.html', {"proveedores":proveedores}) 
 
+@module_access_required('proveedores')
 @jwt_cookie_required
 def crearProveedor(request):
     if request.method == 'POST':
@@ -35,11 +37,14 @@ def crearProveedor(request):
         return JsonResponse({'success': True})
     return render(request, 'createProvider.html')
 
+@module_access_required('proveedores')
 def proveedor_unico(request):
     proveedor = request.GET.get("proveedor", "")
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
 
+
+@module_access_required('proveedores')
 @jwt_cookie_required
 def editarProveedor(request, id_proveedor):
     if request.method == 'POST':
@@ -65,7 +70,7 @@ def editarProveedor(request, id_proveedor):
     return render(request, 'editProvider.html', {"proveedor":proveedor}) 
 
 
-
+@module_access_required('proveedores')
 def cambiarEstadoProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')
@@ -81,7 +86,7 @@ def cambiarEstadoProveedor(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
-
+@module_access_required('proveedores')
 def verDetallesProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')

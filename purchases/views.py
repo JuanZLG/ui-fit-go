@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
-from tuiranfitgo.views import jwt_cookie_required
+from tuiranfitgo.views import jwt_cookie_required,module_access_required
 from .models import Compras, Detallecompra, Proveedores, Productos
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
@@ -17,13 +17,14 @@ logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
 
-
+@module_access_required('compras')
 @jwt_cookie_required
 def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
 @csrf_exempt
+@module_access_required('compras')
 @jwt_cookie_required
 def crear_compra(request):
     if request.method == 'POST':
