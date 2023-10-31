@@ -29,15 +29,46 @@ def logout_view(request):
     response.delete_cookie('jwt_token')
     return response
 
-# from django.http import JsonResponse
-# from .models import Notification
-
-# def get_notifications(request):
-#     notifications = Notification.objects.filter(is_read=False)
-#     notification_data = [{'message': notification.message, 'created_at': notification.created_at} for notification in notifications]
-#     return JsonResponse({'notifications': notification_data})
 
 
-# def notification_view(request):
-#     notifications = Notification.objects.filter(is_read=False, product__user=user).order_by('-created_at')
-#     return render(request, 'notifications.html', {'notifications': notifications})
+
+from functools import wraps
+from django.http import HttpResponseForbidden
+from users.models import Rolespermisos
+from rest_framework_simplejwt.tokens import Token
+import jwt  
+
+def module_access_required(module_name):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            token = request.COOKIES.get('jwt_token')
+
+            if token:
+                try:
+                    decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+                    print(decoded_token)
+
+                    user_id = decoded_token['id_rol']  
+
+                    print(f"Token: {token}")
+                    print(f"User ID: {user_id}")  
+
+                    user_role = user_id
+
+                    if Rolespermisos.objects.filter(id_rol=user_role, **{f'id_permiso__{module_name}': 1}).exists():
+                         return view_func(request, *args, **kwargs)
+                    else:
+                        print("No se encontraron permisos para este usuario en el modulo:", module_name, "de mierdaaa")
+
+
+                except Exception as e:
+                    print(f"Error: {e}") 
+            else:
+                print("Token no encontrado en las cookies.")
+
+            return HttpResponseForbidden("No tienes permiso para acceder a esta página.")
+        return _wrapped_view
+    return decorator
+
+

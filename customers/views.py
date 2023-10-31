@@ -5,8 +5,9 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.db import IntegrityError
 from django.conf import settings
-from tuiranfitgo.views import jwt_cookie_required
+from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
+@module_access_required('clientes')
 @jwt_cookie_required
 def lista_clientes(request):
     clientes = Clientes.objects.all()

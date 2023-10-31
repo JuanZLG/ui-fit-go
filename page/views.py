@@ -17,6 +17,8 @@ def Home(request):
     contexto = build_context(request)
     productos = contexto.get("productos", [])  
     for producto in productos:
+        precio_formateado = "{:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
+        producto.precio = precio_formateado
         producto.iProductImg_name = get_image_name(producto.iProductImg)
         producto.iInfoImg_name = get_image_name(producto.iInfoImg)
 
@@ -26,6 +28,8 @@ def Home(request):
 def pageDetails(request):
     producto_id = request.GET.get('producto_id')
     productoDetalle = Productos.objects.get(id_producto=producto_id)
+    precio_formateado = "{:,.2f}".format(productoDetalle.precio).rstrip('0').rstrip('.')
+    productoDetalle.precio = precio_formateado
     productoDetalle.iInfoImg_name = get_image_name(productoDetalle.iInfoImg)
     productoDetalle.iProductImg_name = get_image_name(productoDetalle.iProductImg)
     contexto = build_context(request, {"detalle": productoDetalle})
@@ -44,7 +48,6 @@ def get_image_name(image_field):
 
 
 def filter_products(request):
-    print(12323)
     option = request.GET.get('sortOption')
     if option == 'best-sellers':
         filtro = Productos.objects.annotate(
@@ -59,11 +62,32 @@ def filter_products(request):
 
     data = []
     for producto in filtro:
+        precio_formateado = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
+        print(precio_formateado)
         data.append({
             'id_producto': producto.id_producto,
             'nombre_producto': producto.nombre_producto,
             'descripcion': producto.descripcion,
-            'precio': producto.precio,
+            'precio': precio_formateado,
+            'iProductImg_name': get_image_name(producto.iProductImg),
+            'iInfoImg_name': get_image_name(producto.iInfoImg),
+        })
+
+    return JsonResponse({'success': True, 'data': data})
+
+
+def search_products(request):
+    buscar = request.GET.get('search')
+    productos = Productos.objects.filter(estado=1, nombre_producto=buscar)
+
+    data = []
+    for producto in productos:
+        precio_formateado = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
+        data.append({
+            'id_producto': producto.id_producto,
+            'nombre_producto': producto.nombre_producto,
+            'descripcion': producto.descripcion,
+            'precio': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
             'iInfoImg_name': get_image_name(producto.iInfoImg),
         })

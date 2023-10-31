@@ -27,7 +27,7 @@
                 </h1>
                 <h2 class="product-price my-3">
                     <strong>
-                        ${{ detalle.precio|floatformat:"0" }}
+                        ${{ detalle.precio }}
                     </strong>
                 </h2>
                 <div class="product-description mb-3"> {{ detalle.descripcion }}</div>
@@ -42,24 +42,4 @@
 </section>
 
 <body>
-
-
-
-
-    <script>
-        const swiper = new Swiper('.swiper-details', {
-            direction: 'horizontal',
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            scrollbar: {
-                el: '.swiper-scrollbar',
-            },
-        });
-    </script>
     {% endblock %}

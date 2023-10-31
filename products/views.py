@@ -10,23 +10,27 @@ from django.views.decorators.csrf import csrf_exempt
 from products.models import Productos, Categorias, Marcas
 import base64
 from django.core.files.base import ContentFile
-from tuiranfitgo.views import jwt_cookie_required
+from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
+@module_access_required('productos')
 @jwt_cookie_required
 def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
 
+@module_access_required('productos')
 @jwt_cookie_required
 def catHome(request):
     categories = Categorias.objects.all()
     return render(request, 'categoriesHome.html', {"cats":categories}) 
 
+@module_access_required('productos')
 @jwt_cookie_required
 def brandHome(request):
     brands = Marcas.objects.all()
     return render(request, 'brandsHome.html', {"pbrands":brands}) 
 
+@module_access_required('productos')
 @jwt_cookie_required
 def createProduct(request):
     marcas = Marcas.objects.all()
