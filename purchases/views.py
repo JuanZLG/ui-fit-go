@@ -104,15 +104,17 @@ def buscar_proveedor(request):
 
 def buscar_productos(request):
     q = request.GET.get("q", "")
-    productos = Productos.objects.filter(
-        nombre_producto__icontains=q,
-    ).values_list("nombre_producto", flat=True)
-    return JsonResponse({"productos": list(productos)})
+    productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
+    productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
+    return JsonResponse({"productos": productos_json})
 
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
-    producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
-    return JsonResponse({"existe": producto_existe})
+    producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
+    if producto is not None and producto.estado == 0:
+        return JsonResponse({"existe": False})
+    else:
+        return JsonResponse({"existe": producto is not None})
 
 def obtener_precio(request):
     nombre_producto = request.GET.get(
@@ -390,6 +392,15 @@ def generar_factura_pdf(request, compra_id):
 
 
 
+from io import BytesIO
+from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.units import inch
+from django.http import HttpResponse
+
 def generar_informe_pdf(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')
@@ -438,22 +449,32 @@ def generar_informe_pdf(request):
         elements.append(periodo_paragraph)
         elements.append(Spacer(1, 12))
 
-        data = [["Proveedor", "Documento/NIT", "Fecha de Registro", "Total"]]
-        data.extend(detalles)
-        data.append(["", "", "", totalCompraFormateado])
+        if compras:
+            data = [["Proveedor", "Documento/NIT", "Fecha de Registro", "Total"]]
+            data.extend(detalles)
+            data.append(["", "", "", totalCompraFormateado])
 
-        t = Table(data, colWidths=[180, 100, 100, 100])
-        t.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.grey)
-        ]))
+            t = Table(data, colWidths=[180, 100, 100, 100])
+            t.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+            ]))
 
-        elements.append(t)
+            elements.append(t)
+        else:
+            # Establecer el mensaje en rojo y centrado
+            mensaje_style = ParagraphStyle(
+                name='MensajeStyle',
+                alignment=TA_CENTER,
+                textColor=colors.red
+            )
+            mensaje = Paragraph("No se encontraron compras en el período de tiempo.", mensaje_style)
+            elements.append(mensaje)
 
         try:
             doc.build(elements)
@@ -466,6 +487,8 @@ def generar_informe_pdf(request):
         return response
 
     return HttpResponse("No se ha enviado una solicitud POST")
+
+
 
 
 

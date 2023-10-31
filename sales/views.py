@@ -293,6 +293,16 @@ def generar_factura_pdf_venta(request, venta_id):
     doc.build(elements)
 
     return response
+from io import BytesIO
+from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.units import inch
+from django.http import HttpResponse
+from django.db.models import Sum
+
 def generar_informe_pdf_ventas(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')
@@ -303,18 +313,7 @@ def generar_informe_pdf_ventas(request):
             estado=1
         )
 
-        totalventa = 0
-        detalles = []
-
-        for venta in ventas:
-            Clientes = venta.id_cliente.nombres
-            documento_nit = venta.id_cliente.documento
-            fecha_registro = venta.fechareg
-            total_venta = formatear_precios(venta.totalVenta)
-            detalles.append([Clientes, documento_nit, fecha_registro, total_venta])
-            totalventa += venta.totalVenta
-
-        totalventaFormateado = formatear_precios(totalventa)
+        totalventa = ventas.aggregate(Sum('totalVenta'))['totalVenta__sum'] or 0
 
         response = HttpResponse(content_type='application/force-download')
         response['Content-Disposition'] = f'attachment; filename=informe_ventas.pdf'
@@ -334,28 +333,46 @@ def generar_informe_pdf_ventas(request):
         elements.append(Paragraph('Informe de Ventas', styles['Title']))
         elements.append(Spacer(1, 6))
         
+        # Estilo personalizado para el período de tiempo
         periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
         periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
         
         elements.append(periodo_paragraph)
         elements.append(Spacer(1, 12))
 
-        data = [["Clientes", "Documento", "Fecha de Registro", "Total"]]
-        data.extend(detalles)
-        data.append(["", "", "", totalventaFormateado])
+        if ventas:
+            detalles = []
 
-        t = Table(data, colWidths=[180, 100, 100, 100])
-        t.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.grey)
-        ]))
+            for venta in ventas:
+                clientes = venta.id_cliente.nombres
+                documento_nit = venta.id_cliente.documento
+                fecha_registro = venta.fechareg
+                total_venta = formatear_precios(venta.totalVenta)
+                detalles.append([clientes, documento_nit, fecha_registro, total_venta])
 
-        elements.append(t)
+            totalventaFormateado = formatear_precios(totalventa)
+
+            data = [["Clientes", "Documento", "Fecha de Registro", "Total"]]
+            data.extend(detalles)
+            data.append(["", "", "", totalventaFormateado])
+
+            t = Table(data, colWidths=[180, 100, 100, 100])
+            t.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+            ]))
+
+            elements.append(t)
+        else:
+            # Cambiamos el color del mensaje a rojo y lo centramos
+            mensaje_style = ParagraphStyle(name='MensajeStyle', alignment=TA_CENTER, textColor=colors.red)
+            mensaje = Paragraph("No se encontraron ventas en el período de tiempo.", mensaje_style)
+            elements.append(mensaje)
 
         try:
             doc.build(elements)
@@ -368,3 +385,4 @@ def generar_informe_pdf_ventas(request):
         return response
 
     return HttpResponse("No se ha enviado una solicitud POST")
+

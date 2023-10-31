@@ -53,14 +53,13 @@
                     </thead>
                     <tbody>
                         <tr class="producto-row">
-                            <td class="p-2">
+                            <td class="p-2 celda-producto">
                                 <input type="text" class="form-control producto" name="producto" id="producto"
                                     autocomplete="off" placeholder="Nombre del producto">
-                                <span class="error-message text-danger error-produ"></span>
-                                <div class="p-2">
-                                    <label class="text-secondary me-2 mess-sugges-prod"></label>
-                                </div>
+                                <span class="text-danger producto-error"></span>
+                                <div class="p-2 resultado-producto"></div>
                             </td>
+
                             <td>
                                 <div class="form-group">
                                     <input type="text" class="form-control precioUnidad" id="precioUnidad"
@@ -100,12 +99,10 @@
 </div>
 
 <style>
-    /* Estilos para proveedores */
-    .table,
-    .cont-proveedor,
-    .cliente-item {
+    .table {
         box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01), 0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09), 0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
     }
+
 
     .producto-row {
         border-radius: 19px 19px 7px 7px;
@@ -115,37 +112,21 @@
         padding-top: 30px !important;
     }
 
-    .cont-total-proveedor,
     .cont-total-compra {
         display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
         justify-content: space-between;
         margin-top: 10px;
         padding: 20px;
         background-color: #F2f2f2;
     }
 
-    .inhabilitar-proveedor.inhabilitar,
-    .inhabilitar-compra.inhabilitar {
-        pointer-events: none;
-        opacity: 0.5;
-    }
-
-    .inhabilitar-proveedor,
-    .eliminar-proveedor,
-    .inhabilitar-compra,
-    .eliminar-compra {
-        position: relative;
-        padding: 10px;
-        text-align: center;
-        cursor: pointer;
-    }
-
-
-
     .inhabilitar-producto.inhabilitar {
         pointer-events: none;
         opacity: 0.5;
     }
+
 
     .inhabilitar-producto,
     .eliminar-producto {
@@ -189,30 +170,35 @@
     }
 
 
-
     .cont-crear-compra {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         margin-top: 50px;
         padding: 0 20px;
         background: transparent;
     }
 
+    .cont-crear-compra-crear {
+        display: flex;
+        justify-content: flex-end;
+        padding: 20px;
+    }
+
     .btn-crear {
-        width: 300px;
-        height: 50px;
+        width: 250px;
         color: #fff;
         font-weight: bold;
-        background-color: #26272d;
+        background-color: #222222;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     }
 
     .btn-crear:hover,
     .btn-omitir:hover,
-    .btn-revertir:hover {
-        background-color: #26272d;
+    .btn-revertir:hover,
+    .btn-agregar:hover {
         color: #fff;
         opacity: 0.9;
+        background-color: #48484b;
     }
 
     .btn-omitir {
@@ -229,16 +215,9 @@
 
     .btn-agregar {
         width: 200px;
-        border: 1px solid #3c3636;
         color: #fff;
         font-weight: bold;
         background-color: #48484b;
-    }
-
-    .btn-agregar:hover {
-        background-color: #26272d;
-        color: #f2f2f2;
-        opacity: 0.9;
     }
 
     #totalCompra {
@@ -248,25 +227,21 @@
 
     #totalCompra:focus {
         outline: 0 !important;
+
     }
 
-    .btn-agregar:active,
-    .btn-agregar:active {
-        transform: scale(0.95);
-    }
 
     .fa-trash-can {
         color: #a60202;
         font-size: 24px;
         display: block;
-        text-align: center;
+        text-align: center
     }
 
-    /* Estilos para proveedores */
+
     .cont-princ-proveedor {
-        margin: 0 auto;
-        box-shadow: 0 0 10px #ccc;
-        height: 140px;
+        margin: 10px auto;
+        height: 160px;
         display: flex;
         gap: 10px;
         align-items: center;
@@ -279,9 +254,12 @@
         flex-direction: column;
         padding: 20px;
         border-radius: 2px;
+        box-shadow: 0 0 10px #ccc;
     }
 
+
     .resultado-proveedor {
+        height: 160px;
         margin-left: 20px;
         width: 65%;
         display: flex;
@@ -290,10 +268,19 @@
     }
 
     .proveedor-item {
-        position: relative;
-        height: 50%;
-        background-color: #fff;
+        box-shadow: 4px 2px 14px #cccccc70;
+    }
+
+    .proveedor-item {
+        width: 220px;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         padding: 10px;
+        position: relative;
+        background-color: #fff;
     }
 
     .proveedor-item:hover {
@@ -302,7 +289,7 @@
     }
 
     .proveedor-item.inactivo::before {
-        content: "Proveedor inhabilitado";
+        content: "Cliente inhabilitado";
         position: absolute;
         background-color: #26272d;
         color: white;
@@ -328,14 +315,14 @@
     .proveedor-info {
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding: 5px;
     }
 
     .estadoProveedorCircle {
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0.6rem;
+        height: 0.6rem;
     }
 
     .estadoProveedorCircle.activo {
@@ -346,21 +333,58 @@
         background-color: #ba4d4d;
     }
 
-
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
+    /* CONFIRMAR ESTADO */
+    .cont-confirmacion-estado {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        display: none;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 230px;
+        z-index: 9999;
     }
 
-    .producto-suggestions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        padding: 0 10px;
-        text-align: center;
+    .confirmacion-estado {
+        background-color: #f2f2f2;
+        padding: 10px;
+
+    }
+
+    .confirmacion-estado a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .cont-confirmacion-estado p {
+        margin-bottom: 10px;
+    }
+
+    .btn-confirm,
+    .btn-cancel {
+        margin: 5px;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+        color: #fff;
+    }
+
+    .btn-confirm {
+        background-color: #222222;
+    }
+
+    .btn-cancel {
+        background-color: #ccc;
+    }
+
+    .resultado-producto,
+    #resultado-proveedor {
+        opacity: 0;
+        transition: opacity 300ms ease;
     }
 
     .resultado-sugerencia {
@@ -374,19 +398,20 @@
         font-size: 0.8rem;
     }
 
+    .sugerencia-inhabilitado {
+        background-color: #ba4d4d;
+        pointer-events: none;
+    }
+
     .resultado-sugerencia:hover {
         cursor: pointer;
         opacity: 0.9;
     }
 
-    table thead.theads {
-        text-align: center;
-        color: #fff;
-        background-color: #000000;
-    }
-
-    .table thead tr th {
-        border: none;
+    .error-cantidad {
+        width: 100%;
+        left: 51%;
+        position: absolute;
     }
 </style>
 
@@ -408,7 +433,7 @@
             if (nombreProveedor.length >= 3) {
                 $.ajax({
                     url: "{% url 'buscar_proveedores'%}?q=" +
-                        nombreProveedor, 
+                        nombreProveedor,
                     type: "GET",
                     success: function (data) {
                         if (data.resultados.length > 0) {
@@ -475,72 +500,97 @@
 
 
     /********** PRODUCTO ***********/
-    $(".mess-sugges-prod").after('<div class="producto-suggestions"></div>');
     $(document).on("input", ".producto", function () {
         let input = $(this).val();
-        if (input.length >= 4) {
-            let currentRow = $(this).closest("tr");
+        let currentRow = $(this).closest("tr");
+        let suggestions = currentRow.find(".resultado-producto");
+
+        if (input.length >= 3) {
             $.ajax({
-                url: "{% url 'buscar_productos_compras'%}?q=" + input,
+                url: "{% url 'buscar_productos_compras' %}?q=" + input,
                 type: "GET",
                 success: function (data) {
-                    let suggestions = currentRow.find(".producto-suggestions");
                     suggestions.empty();
-                    data.productos = data.productos.map(producto => producto.toUpperCase());
+
                     if (data.productos.length > 0) {
-                        let producSimilar1 = data.productos[0];
-                        let producSimilar2 = data.productos[1];
-                        let producSimilar3 = data.productos[2];
-                        suggestions.html("<span class='resultado-sugerencia'>" + producSimilar1);
-                        if (data.productos.length > 1) {
-                            suggestions.append("</span><span class='resultado-sugerencia'>" +
-                                producSimilar2 + "</span>")
-                        }
-                        if (data.productos.length > 2) {
-                            suggestions.append("</span><span class='resultado-sugerencia'>" +
-                                producSimilar3 + "</span>")
-                        }
+                        data.productos.forEach(function (producto) {
+                            let $sugerencia = $(
+                                "<span class='resultado-sugerencia'></span>");
+                            $sugerencia.text(producto.nombre_producto);
+                            suggestions.append($sugerencia);
+
+                            if (producto.estado === 0) {
+                                $sugerencia.addClass("sugerencia-inhabilitado");
+                            }
+                        });
 
                         suggestions.addClass("sugerencia").show();
                     } else {
                         suggestions.hide();
                         calcularTotalCompra();
                     }
+
+                    setTimeout(function () {
+                        suggestions.css("opacity", "1");
+                    }, 0);
+
+                    validarProductoCompras(currentRow, input);
                 },
                 error: function () {
-                    currentRow.find(".producto-suggestions").empty().hide();
-                }
+                    suggestions.empty().hide();
+                },
             });
         } else {
-            $(this).closest("tr").find(".producto-suggestions").empty().hide();
-            calcularTotalCompra();
+            suggestions.empty().hide();
         }
     });
+
+    function validarProducto(currentRow, nombreProducto) {
+        $.ajax({
+            url: "{% url 'validar_producto_compras' %}",
+            type: "GET",
+            data: {
+                nombre_producto: nombreProducto,
+            },
+            success: function (data) {
+                if (data.existe) {
+                    obtenerPrecioProductoCompras(currentRow, nombreProducto);
+                } else {
+                    currentRow.find(".cantidad, .precioTotal, .precioUnidad").val("");
+                    calcularTotalCompra();
+                }
+            },
+            error: function () {
+                currentRow.find(".cantidad, .precioTotal").val("");
+                calcularTotalCompra();
+            },
+        });
+    }
 
     $(document).on("click", function (event) {
-        if (!$(event.target).closest(".producto").length && !$(event.target).closest(".producto-suggestions")
+        if (!$(event.target).closest(".producto").length && !$(event.target).closest(".resultado-producto")
             .length) {
-            $(".producto-suggestions").empty().hide();
+            $(".resultado-producto").empty().hide();
         }
     });
 
-    $(document).on("click", ".producto-suggestions span.resultado-sugerencia", function () {
+    $(document).on("click", ".resultado-producto span.resultado-sugerencia", function () {
         let currentRow = $(this).closest("tr");
         let nombreProducto = $(this).text();
         nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
         currentRow.find(".producto").val(nombreProducto);
-
         validarProductoCompras(currentRow, nombreProducto);
     });
 
-    $(document).on("click", ".producto-suggestions span", function () {
+    $(document).on("click", ".resultado-sugerencia", function () {
         let currentRow = $(this).closest("tr");
         let nombreProducto = $(this).text();
         nombreProducto = nombreProducto.charAt(0).toUpperCase() + nombreProducto.slice(1).toLowerCase();
         currentRow.find(".producto").val(nombreProducto);
-        currentRow.find(".producto-suggestions").empty().hide();
-        currentRow.find('.precioUnidad').removeClass('is-invalid');
+        currentRow.find(".resultado-producto").empty().hide();
+        currentRow.find(".precioUnidad").removeClass("is-invalid");
     });
+
 
 
     /********** PRECIOS ***********/
@@ -856,7 +906,7 @@
                     console.error("XHR Status:", status);
                     console.error("Error:", error);
                 }
-            });            
+            });
         });
     });
 </script>
