@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'dashboard',
     'page',
     'authenticator',
-    'rest_framework',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -100,9 +100,9 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tuiranfitx',
+        'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '3127123250',
+        'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }

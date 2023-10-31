@@ -38,7 +38,6 @@ def agregarClientePost(request):
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
-        # Verificar si el documento ya existe en la base de datos
         if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 

@@ -28,3 +28,16 @@ def logout_view(request):
     response = redirect('login_view') 
     response.delete_cookie('jwt_token')
     return response
+
+# from django.http import JsonResponse
+# from .models import Notification
+
+# def get_notifications(request):
+#     notifications = Notification.objects.filter(is_read=False)
+#     notification_data = [{'message': notification.message, 'created_at': notification.created_at} for notification in notifications]
+#     return JsonResponse({'notifications': notification_data})
+
+
+# def notification_view(request):
+#     notifications = Notification.objects.filter(is_read=False, product__user=user).order_by('-created_at')
+#     return render(request, 'notifications.html', {'notifications': notifications})

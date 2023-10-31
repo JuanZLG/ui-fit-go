@@ -5,6 +5,7 @@ from tuiranfitgo.views import jwt_cookie_required
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos
 from django.db.models import Q
+# from .models import Notification
 
 @jwt_cookie_required
 def Home(request):
@@ -20,7 +21,7 @@ def crear_venta(request):
             documento = data.get('documento', '')
             totalVenta = data.get('totalVenta', '')
             productos = data.get('productos', [])
-
+            
             cliente = Clientes.objects.filter(documento=documento).first()
             venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
             for producto_datos in productos:

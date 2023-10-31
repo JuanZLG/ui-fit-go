@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let mensaje;
             if (nuevoEstado === "0") {
-                mensaje = "¿Esta seguro de desactivar esta venta? Esto marcará la venta como inactiva permanentemente y devolverá al stock los productos relacionados. No podrá reactivarla.";
+                mensaje = "¿Esta seguro de desactivar esta venta? Esto marcará la venta como inactiva y devolverá al stock los productos relacionados. No podrá reactivarla nuevamente.";
             } else {
                 mensaje = "¿Esta seguro de activar esta venta? Esto marcará la venta como activa y restará las cantidades al stock de los productos relacionados.";
             }

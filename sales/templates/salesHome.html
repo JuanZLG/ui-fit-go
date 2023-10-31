@@ -36,7 +36,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="miModalLabel">Generar Informe Ventas</h5>
+                        <h5 class="modal-title" id="miModalLabel">Generar Informe de Venta</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -46,9 +46,9 @@
                             {% csrf_token %}
                             <div id="calendario-contenedor">
                                 <p>Selecciona un rango de fechas:</p>
-                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de inicio"
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de Inicio"
                                     class="date-input">
-                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de fin"
+                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de Fin"
                                     class="date-input">
 
                                 <button type="submit" id="generar-informe-button">Generar Informe</button>
@@ -184,7 +184,7 @@
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoVentaCircle {% if venta.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
-            <h2>Información de la venta</h2>
+            <h2>Información de la Venta</h2>
             <button class="cerrar-venta" type="button" id="cerrarDetallesVenta">
                 <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 0h24v24H0z" fill="none"></path>

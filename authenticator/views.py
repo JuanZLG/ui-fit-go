@@ -33,6 +33,9 @@ class loginmio(APIView):
             usuario = Usuarios.objects.get(correo=correo)
             usuario_data = serializers.serialize('python', [usuario])[0]['fields']
 
+            if usuario.estado == 0:
+                return JsonResponse({'error': 'Usuario inactivo'}, status=401)
+
             if usuario.contrasena == contrasena:
                 payload = custom_jwt_payload_handler(usuario_data)
                 print(usuario_data)
@@ -44,7 +47,7 @@ class loginmio(APIView):
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'contrasena incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
 
