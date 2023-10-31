@@ -39,7 +39,7 @@
           <p>{{ producto.descripcion }}</p>
         </div>
         <div class="product-price">
-          <span>${{ producto.precio|floatformat:"0" }}</span>
+          <span>${{ producto.precio }}</span>
           <span class="product-search">
             <i class="fas fa-search"></i>
           </span>
@@ -52,9 +52,8 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>  
-  $("#sort").change(function () {
-    var selectedValue = $(this).val();
+<script>
+  function filterProducts(selectedValue) {
     $.ajax({
       url: "{% url 'filter_products' %}",
       method: 'GET',
@@ -66,7 +65,7 @@
           $.each(data.data, function (index, p) {
             var productCard =
               '<div class="product-card">' +
-              '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' + 
+              '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
               ' <div class="product-image">' +
               '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
               '<div class="product-details">' +
@@ -74,21 +73,73 @@
               '<div class="product-description">' +
               '<p>' + p.descripcion + '</p></div>' +
               '<div class="product-price">' +
-              '<span>' + p.precio + '</span>' +
+              '<span>' +p.precio+'</span>' +
               '<span class="product-search">' +
               '<i class="fas fa-search"></i></span></div>' +
               '</div ></a ></div >';
 
             $("#product-container").append(productCard);
           });
-        } else {
-          // Maneja los errores si es necesario
+        }
+      }
+    });
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("#sort").change(function () {
+      var selectedValue = $(this).val();
+      filterProducts(selectedValue);
+    });
+
+    $(document).on("input", ".search", function () {
+  let search = $(this).val();
+
+  if (search.length >= 3) {
+    $.ajax({
+      url: "{% url 'search_products' %}",
+      method: 'GET',
+      data: { search: search },
+      success: function (data) {
+        if (data.success) {
+          if (data.data.length > 0) {
+            $("#product-container").empty();
+            $.each(data.data, function (index, p) {
+              var productCard =
+                '<div class="product-card">' +
+                '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
+                ' <div class="product-image">' +
+                '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                '<div class="product-details">' +
+                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
+                '<div class="product-description">' +
+                '<p>' + p.descripcion + '</p></div>' +
+                '<div class="product-price">' +
+                '<span>' + p.precio + '</span>' +
+                '<span class="product-search">' +
+                '<i class="fas fa-search"></i></span></div>' +
+                '</div ></a ></div >';
+
+              $("#product-container").append(productCard);
+            });
+          } else {
+            $("#product-container").empty();
+            filterProducts($("#sort").val());
+          }
         }
       },
       error: function (xhr, status, error) {
       }
     });
-  });
+  } else {
+    $("#product-container").empty();
+    filterProducts($("#sort").val());
+  }
+});
 
+
+  })
 </script>
+
 {% endblock %}
