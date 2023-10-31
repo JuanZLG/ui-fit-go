@@ -27,7 +27,6 @@ class Productos(models.Model):
     nombre_producto = models.CharField(max_length=75)
     descripcion = models.CharField(max_length=400)
     cantidad = models.IntegerField()
-    fechaven = models.DateTimeField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField(default=1)
