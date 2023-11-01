@@ -3,11 +3,11 @@
 {% block title %}Clientes{% endblock %}
 
 {% block body %}
-  
-<center>
-    <h1 class="modtitles">Gestión de Clientes</h1>
-</center>
 <br>
+<center>
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Clientes</h1>
+</center>
+
 <div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
@@ -19,17 +19,17 @@
             </span>
         </div>
 
-        <div class="d-flex align-items-center mx-2">
+        {% comment %} <div class="d-flex align-items-center mx-2">
             <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
                 <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
             </a>
-        </div>
+        </div> {% endcomment %}
     </div>
 </div>
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto text-center" id="dataTable" cellspacing="3" width="auto">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" cellspacing="3" width="100%">
                 <thead class="theads">
                     <tr>
                         <th>Documento</th>

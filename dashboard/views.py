@@ -43,25 +43,24 @@ def calcular_total_ventas(request):
 
 import locale
 
-# Define el idioma y la ubicación para Colombia (español)
+
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
 
 def obtener_datos_ventas_y_compras(request):
-    # Obtén los datos de ventas y compras
+
     ventas = Ventas.objects.values('fechareg').annotate(total_ventas=Sum('totalVenta')).order_by('fechareg')
     compras = Compras.objects.values('fechareg').annotate(total_compras=Sum('totalCompra')).order_by('fechareg')
 
-    # Creamos un diccionario para almacenar los totales de ventas y compras por mes
     data = {
-        'labels': [],  # Lista para almacenar los meses
-        'ventas': [],  # Lista para almacenar las ventas
-        'compras': [],  # Lista para almacenar las compras
+        'labels': [], 
+        'ventas': [],  
+        'compras': [],  
     }
 
-    # Diccionario para realizar un seguimiento de los totales por mes
+    
     totals_por_mes = {}
 
-    # Procesar ventas
+
     for venta in ventas:
         fecha = venta['fechareg']
         mes_anio = fecha.strftime('%B %Y')
@@ -73,8 +72,7 @@ def obtener_datos_ventas_y_compras(request):
             }
         
         totals_por_mes[mes_anio]['total_ventas'] += venta['total_ventas']
-    
-    # Procesar compras
+
     for compra in compras:
         fecha = compra['fechareg']
         mes_anio = fecha.strftime('%B %Y')

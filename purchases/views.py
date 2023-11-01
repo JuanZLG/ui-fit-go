@@ -17,15 +17,15 @@ logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
 
-@module_access_required('compras')
 @jwt_cookie_required
+@module_access_required('compras')
 def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
 @csrf_exempt
-@module_access_required('compras')
 @jwt_cookie_required
+@module_access_required('compras')
 def crear_compra(request):
     if request.method == 'POST':
         try:
@@ -80,6 +80,7 @@ def crear_compra(request):
 
     return render(request, 'createPurchases.html')
 
+@jwt_cookie_required
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
@@ -102,6 +103,7 @@ def buscar_proveedor(request):
 
     return JsonResponse({"resultados": resultados})
 
+@jwt_cookie_required
 def buscar_productos(request):
     q = request.GET.get("q", "")
     productos = Productos.objects.filter(
@@ -109,11 +111,13 @@ def buscar_productos(request):
     ).values_list("nombre_producto", flat=True)
     return JsonResponse({"productos": list(productos)})
 
+@jwt_cookie_required
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto_existe = Productos.objects.filter(nombre_producto=nombre_producto).exists()
     return JsonResponse({"existe": producto_existe})
 
+@jwt_cookie_required
 def obtener_precio(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
@@ -128,6 +132,7 @@ def obtener_precio(request):
             status=400,
         )
 
+@jwt_cookie_required
 def obtener_nombre(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
@@ -145,6 +150,7 @@ def obtener_nombre(request):
             status=400,
         )
 
+@jwt_cookie_required
 def detalles_compra(request, compra_id):
     detalles = Detallecompra.objects.filter(id_compra=compra_id)
     detalles_data = []
@@ -162,6 +168,7 @@ def detalles_compra(request, compra_id):
 
     return JsonResponse({'detallecompra': detalles_data})
 
+@jwt_cookie_required
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         compra_id = request.GET.get('compra_id')
@@ -191,6 +198,7 @@ def cambiarEstado(request):
         else:
             return JsonResponse({'status': 'success'})
 
+@jwt_cookie_required
 def obtener_detalles_compra(request, compra_id):
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
 
@@ -300,6 +308,7 @@ def obtener_detalles_compra(request, compra_id):
 #     detalles = Detallecompra.objects.filter(id_compra=id_compra)
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
 
+@jwt_cookie_required
 def formatear_precios(valor):
     valor = round(valor, 2)
     precio_formateado = '${:,.2f}'.format(valor)
@@ -316,7 +325,7 @@ def generar_qr_code(content):
     img = qr.make_image(fill_color="black", back_color="white")
     return img
 
-
+@jwt_cookie_required
 def generar_factura_pdf(request, compra_id):
     compra = get_object_or_404(Compras, id_compra=compra_id)
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
@@ -387,9 +396,7 @@ def generar_factura_pdf(request, compra_id):
 
     return response
 
-
-
-
+@jwt_cookie_required
 def generar_informe_pdf(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')

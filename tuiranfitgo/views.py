@@ -6,6 +6,9 @@ from django.http import JsonResponse
 def error_view(request):  
     return render(request, '404.html') 
 
+def mixin_view(request):  
+    return render(request, '401Forbidden.html') 
+
 def jwt_cookie_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         token = request.COOKIES.get('jwt_token')  # Esto me lee el token 
@@ -29,9 +32,6 @@ def logout_view(request):
     response.delete_cookie('jwt_token')
     return response
 
-
-
-
 from functools import wraps
 from django.http import HttpResponseForbidden
 from users.models import Rolespermisos
@@ -47,28 +47,22 @@ def module_access_required(module_name):
             if token:
                 try:
                     decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-                    print(decoded_token)
-
-                    user_id = decoded_token['id_rol']  
-
-                    print(f"Token: {token}")
-                    print(f"User ID: {user_id}")  
-
+                    user_id = decoded_token['id_rol']
                     user_role = user_id
 
                     if Rolespermisos.objects.filter(id_rol=user_role, **{f'id_permiso__{module_name}': 1}).exists():
                          return view_func(request, *args, **kwargs)
                     else:
-                        print("No se encontraron permisos para este usuario en el modulo:", module_name, "de mierdaaa")
-
-
+                        print("No se encontraron permisos para este usuario en el modulo:", module_name)
+                        return redirect('mixint')
                 except Exception as e:
-                    print(f"Error: {e}") 
+                    print(f"Error: {e}")
             else:
                 print("Token no encontrado en las cookies.")
 
-            return HttpResponseForbidden("No tienes permiso para acceder a esta página.")
         return _wrapped_view
+
     return decorator
+
 
 

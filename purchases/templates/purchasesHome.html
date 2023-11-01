@@ -7,11 +7,10 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-
-<center>
-    <h1 class="modtitles">Gestión de Compras</h1>
-</center>
 <br>
+<center>
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Compras</h1>
+</center>
 
 <div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -177,7 +176,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="auto" cellspacing="3">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="3">
                 <thead class="theads">
                     <tr>
                         <th>Proveedor</th>
@@ -235,9 +234,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // ...
-
-        // Desactivar el botón si el estado es "Inactivo"
+       
         $(".cambiar-estado-compra.inactive-button").addClass("inactive-status");
 
         $(".cambiar-estado-compra").click(function () {
@@ -282,7 +279,7 @@
                             }
                         },
                         error: function (error) {
-                            // Handle error if needed
+                           
                         }
                     });
                 }
@@ -471,12 +468,12 @@
 
         $.ajax({
             url: "{% url 'obtener_detalles_compra' 0 %}".replace('0', compraId),
-            method: "GET", // Actualiza la URL según tu configuración
+            method: "GET",
 
             success: function (response) {
                 console.log("Respuesta del servidor:", response);
 
-                // Llena el modal con los detalles de la compra obtenidos del servidor
+
                 var compra = response;
                 $("#fecharegCompra").text(compra.fechaRegistro);
                 $("#proveedorCompra").text(compra.proveedor);
@@ -489,14 +486,13 @@
                     $(".estadoCompraCircle").addClass("inactivo").removeClass("activo");
                 }
 
-                // Llena la tabla de detalles de la compra
+       
                 let detallesCompraHTML = "";
-                let totalCompra = 0; // Variable para calcular el total de compra
+                let totalCompra = 0; 
 
                 for (let detalle of compra.detalles) {
                     console.log('Detalle:', detalle);
 
-                    // Convierte precioUnitario y totalProducto a números
                     const precioUnitario = formatearPrecios(detalle.precioUnitario);
                     const totalProducto = formatearPrecios(detalle.totalProducto);
 
@@ -510,26 +506,26 @@
                     `;
 
                     totalCompra += parseFloat(detalle
-                        .totalProducto); // Suma el total del producto al total de compra
+                        .totalProducto); 
                 }
 
                 document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
 
-                // Actualiza el "Total de Compra" con la suma calculada
+       
                 document.getElementById("totalCompraCompra").textContent = formatearPrecios(
-                    totalCompra); // Mostrar con 2 decimales
+                    totalCompra);
 
                 const modal = document.getElementById("verDetallesCompraDialog");
                 console.log("Modal obtenido:", modal);
 
-                // Abre el modal
+                // Esto abre el modal
                 modal.showModal();
                 const cerrarBoton = document.getElementById("cerrarDetallesCompra");
                 cerrarBoton.addEventListener("click", cerrarModal);
             },
             error: function (error) {
                 console.error('Error en la solicitud AJAX:', error);
-                // Maneja el error si es necesario
+                
             }
         });
     }

@@ -5,11 +5,11 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Error</title>
+    <title>Acceso Denegado</title>
     {% load static %}
     <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,6 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    {% comment %} <link href="{% static 'css/nopass.css' %}" rel="stylesheet"> {% endcomment %}
 
 </head>
 
@@ -70,23 +71,25 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class="text-center">
-                        <br>
-                        <center><img style="width:140px;" src="{% static 'img/GIcon.png' %}"></center>
-                        <br>
-                        <div class="error mx-auto" style="color:black" data-text="404">404</div>
-                        <p class="lead text-gray-800 mb-5" style="font-weight:bold;">Dirección no Encontrada</p>
-                        <p class="text-gray-500 mb-0">Daniel Perez...</p>
+                     
+                        <center><img style="width:200px;" src="{% static 'img/ex.webp' %}"></center>
+
+                        <div class="error mx-auto" style="color:black" data-text="403">403</div>
+                        <p class="lead text-gray-800 mb-5" style="font-weight:bold;">Acceso Denegado al Módulo</p>
+                        <p class="text-gray-500 mb-0">Permisos Insuficientes</p>
+                        
                     </div>
                     <hr>
                     <div class="text-center">
-                        <a href="{% url 'login_view' %}">&larr; Regresar</a>
+                        <a href="{% url 'mydashboard' %}">&larr; Regresar a Dashboard</a>
                     </div>
-                    <div style="height:20vh">
+                    <div style="height:18vh">
                         
                     </div>
                 </div>
                 <!-- /.container-fluid -->
             </div>
+        
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -117,17 +120,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-    <script>
-        
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
-
-        // document.addEventListener('touchmove', function(event) {
-        //     if (event.scale !== 1) { event.preventDefault(); }
-        // });
-    </script>
 </body>
 
 </html>

@@ -17,7 +17,7 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 # def custom_get_username(user):
 #     return user.correo
 
-# Login Bueno
+# Login Bueno 
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -53,11 +53,9 @@ class loginmio(APIView):
                 return Response({'error': 'contrasena incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
-        
 
-
-        
-
+def recuperaremail(request):
+    return render(request, 'email.html')
 
 #Login Malo
 # from django.views.decorators.csrf import csrf_exempt

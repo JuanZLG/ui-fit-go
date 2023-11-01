@@ -12,26 +12,28 @@ import base64
 from django.core.files.base import ContentFile
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
-@module_access_required('productos')
+
 @jwt_cookie_required
+@module_access_required('productos')
 def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
 
-@module_access_required('productos')
+
 @jwt_cookie_required
+@module_access_required('productos')
 def catHome(request):
     categories = Categorias.objects.all()
     return render(request, 'categoriesHome.html', {"cats":categories}) 
 
-@module_access_required('productos')
 @jwt_cookie_required
+@module_access_required('productos')
 def brandHome(request):
     brands = Marcas.objects.all()
     return render(request, 'brandsHome.html', {"pbrands":brands}) 
 
-@module_access_required('productos')
 @jwt_cookie_required
+@module_access_required('productos')
 def createProduct(request):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -87,6 +89,7 @@ def createProduct(request):
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
 
 @jwt_cookie_required
+@module_access_required('productos')
 def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()

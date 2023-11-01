@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/sales/', include('sales.urls')),  
     path('admin/purchases/', include('purchases.urls')),
     path('error/', views.error_view, name="initerror"),
+    path('unauthorized/', views.mixin_view, name="mixint"),
     path('logout/', views.logout_view, name='logout'),
 ]
 
