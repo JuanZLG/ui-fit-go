@@ -42,56 +42,47 @@ def calcular_total_ventas(request):
 
 
 import locale
+from django.db.models import Sum
+from django.http import JsonResponse
+from datetime import datetime, timedelta
+from .models import Ventas, Compras
 
 
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
 
 def obtener_datos_ventas_y_compras(request):
+    periodo = request.GET.get('periodo', 'semana')  # Obtén el periodo de la solicitud GET
 
-    ventas = Ventas.objects.values('fechareg').annotate(total_ventas=Sum('totalVenta')).order_by('fechareg')
-    compras = Compras.objects.values('fechareg').annotate(total_compras=Sum('totalCompra')).order_by('fechareg')
+    hoy = datetime.now().date()
+
+    if periodo == 'semana':
+        fecha_inicio = hoy - timedelta(days=hoy.weekday())
+        fecha_fin = hoy
+    elif periodo == 'mes':
+        primer_dia_del_mes = hoy.replace(day=1)
+        fecha_inicio = primer_dia_del_mes
+        fecha_fin = hoy
+    elif periodo == 'ano':
+        primer_dia_del_ano = hoy.replace(month=1, day=1)
+        fecha_inicio = primer_dia_del_ano
+        fecha_fin = hoy
+
+    ventas = Ventas.objects.filter(fechareg__range=[fecha_inicio, fecha_fin])
+    compras = Compras.objects.filter(fechareg__range=[fecha_inicio, fecha_fin])
+
+    total_ventas = ventas.aggregate(Sum('totalVenta'))['totalVenta__sum'] or 0
+    total_compras = compras.aggregate(Sum('totalCompra'))['totalCompra__sum'] or 0
 
     data = {
-        'labels': [], 
-        'ventas': [],  
-        'compras': [],  
+        'total_ventas': total_ventas,
+        'total_compras': total_compras,
     }
-
-    
-    totals_por_mes = {}
-
-
-    for venta in ventas:
-        fecha = venta['fechareg']
-        mes_anio = fecha.strftime('%B %Y')
-        
-        if mes_anio not in totals_por_mes:
-            totals_por_mes[mes_anio] = {
-                'total_ventas': 0,
-                'total_compras': 0,
-            }
-        
-        totals_por_mes[mes_anio]['total_ventas'] += venta['total_ventas']
-
-    for compra in compras:
-        fecha = compra['fechareg']
-        mes_anio = fecha.strftime('%B %Y')
-        
-        if mes_anio not in totals_por_mes:
-            totals_por_mes[mes_anio] = {
-                'total_ventas': 0,
-                'total_compras': 0,
-            }
-        
-        totals_por_mes[mes_anio]['total_compras'] += compra['total_compras']
-    
-    # Llenar los datos en el formato adecuado para Chart.js
-    for mes_anio, totals in totals_por_mes.items():
-        data['labels'].append(mes_anio.capitalize())  # Capitalizar el mes
-        data['ventas'].append(totals['total_ventas'])
-        data['compras'].append(totals['total_compras'])
+    print(data  )
 
     return JsonResponse(data)
+
+
+
 
 def obtener_todos_los_productos(request):
     try:

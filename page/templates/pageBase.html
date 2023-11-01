@@ -37,13 +37,13 @@
                 <div class="container-search">
                     <input placeholder="Realizar búsqueda..." type="text" name="search" class="search">
                 </div>
+                <!-- toggle -->
+                <div id="toggle-main-search" class="search-result"></div>
                 <div class="menu-item productos" id="toggle-main-products">
-                    Productos <i class="fas fa-chevron-down icon"></i>
+                    Suplementos <i class="fas fa-chevron-down icon"></i>
                 </div>
+                <!-- toggle -->
                 <div id="main-options-products" class="menu-options main">
-                    <div class="menu-column">
-                        <a href="{% url 'pageDetails' %}" class="menu-option marck">Ver todo</a>
-                    </div>
                     <ul class="categorias-list">
                         {% for categoria in categorias %}
                         <li class="categoria-item">{{ categoria.nombre_categoria }}:
@@ -58,6 +58,20 @@
                 </div>
             </li>
             <hr class="divider">
+            <li class="menu-item nav">
+                <div class="menu-item marcas" id="toggle-main-marcas">
+                    Marcas <i class="fas fa-chevron-down icon"></i>
+                </div>
+                <!-- toggle -->
+                <div id="main-options-marcas" class="menu-options main">
+                    <ul class="categorias-list">
+                        {% for marca in marcas %}
+                        <li class="categoria-item">{{ marca.nombre_marca }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            <hr class="divider">
             <li class="menu-item info">
                 <a href="#" class="menu-link">
                     <i class="fas fa-info-circle icon"></i> Sobre Brutality
@@ -65,14 +79,15 @@
                 <a href="#" class="menu-link">
                     <i class="fas fa-shopping-cart icon"></i> ¿Cómo comprar?
                 </a>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-instagram icon"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp icon"></i></a>
-                </div>
+
                 <span class="menu-contact">
                     <i class="fas fa-envelope icon"></i> brutality@gmail.com
                 </span>
                 <div class="login-item">
+                    <div class="social-icons">
+                        <a href="#" class="mx-2"><i class="fab fa-instagram icon"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp icon"></i></a>
+                    </div>
                     <a href="#" class="login-button">Login</a>
                 </div>
             </li>

@@ -104,27 +104,18 @@
       success: function (data) {
         if (data.success) {
           if (data.data.length > 0) {
-            $("#product-container").empty();
+            $("#toggle-main-search").empty();
             $.each(data.data, function (index, p) {
-              var productCard =
-                '<div class="product-card">' +
+              var productList =
+                '<div class="search-card">' +
                 '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
-                ' <div class="product-image">' +
-                '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                '<div class="product-details">' +
-                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-                '<div class="product-description">' +
-                '<p>' + p.descripcion + '</p></div>' +
-                '<div class="product-price">' +
-                '<span>' + p.precio + '</span>' +
-                '<span class="product-search">' +
-                '<i class="fas fa-search"></i></span></div>' +
-                '</div ></a ></div >';
-
-              $("#product-container").append(productCard);
+                '<div class="search-image">' +
+                '<img class="img-fluid" src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                '<h3 class="search-title">' + p.nombre_producto + '</h3></a></div >';
+              $("#toggle-main-search").append(productList);
             });
           } else {
-            $("#product-container").empty();
+            $("#toggle-main-search").empty();
             filterProducts($("#sort").val());
           }
         }
