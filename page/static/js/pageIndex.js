@@ -8,19 +8,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   // Despliegue de menu productos ----------------------- 
+  // Despliegue de menú productos ----------------------- 
   const toggleMenu = document.getElementById('toggle-menu');
   const menuOptions = document.getElementById('menu-options');
 
   const toggleMenuProducts = document.getElementById('toggle-main-products');
-  const mainOptionsMain = document.getElementById('main-options-products');
+  const OptionsProductsMain = document.getElementById('main-options-products');
+  const iconProducts = toggleMenuProducts.querySelector('.icon'); 
+
+  const toggleMenumarcas = document.getElementById('toggle-main-marcas');
+  const OptionsMarcasMain = document.getElementById('main-options-marcas');
+  const iconMarcas = toggleMenumarcas.querySelector('.icon'); 
 
   toggleMenu.addEventListener('click', function () {
     menuOptions.classList.toggle('is-active');
   });
+
   toggleMenuProducts.addEventListener('click', function () {
-    mainOptionsMain.classList.toggle('is-active');
+    OptionsProductsMain.classList.toggle('is-active');
+
+    iconProducts.classList.toggle('fa-chevron-up');
+    iconProducts.classList.toggle('fa-chevron-down');
   });
 
+  toggleMenumarcas.addEventListener('click', function () {
+    OptionsMarcasMain.classList.toggle('is-active');
+
+    iconMarcas.classList.toggle('fa-chevron-up');
+    iconMarcas.classList.toggle('fa-chevron-down');
+  });
 
 
   // Opciones de menu productos ----------------------- 
