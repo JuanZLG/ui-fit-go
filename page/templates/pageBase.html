@@ -38,7 +38,9 @@
                     <input placeholder="Realizar búsqueda..." type="text" name="search" class="search">
                 </div>
                 <!-- toggle -->
-                <div id="toggle-main-search" class="search-result"></div>
+                <div class="search-result-cont">
+                    <div id="toggle-main-search" class="search-result"></div>
+                </div>
                 <div class="menu-item productos" id="toggle-main-products">
                     Suplementos <i class="fas fa-chevron-down icon"></i>
                 </div>
@@ -171,6 +173,42 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    $(document).on("input", ".search", function () {
+        let search = $(this).val();
+
+        if (search.length >= 2) {
+            $.ajax({
+                url: "{% url 'search_products' %}",
+                method: 'GET',
+                data: { search: search },
+                success: function (data) {
+                    if (data.success) {
+                        if (data.data.length > 0) {
+                            $("#toggle-main-search").empty();
+                            $.each(data.data, function (index, p) {
+                                $("#toggle-main-search").addClass("is-active");
+                                var productList =
+                                    '<div class="search-card">' +
+                                    '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
+                                    '<div class="search-image">' +
+                                    '<img class="img-fluid" src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                                    '<p class="search-title">' + p.nombre_producto + '</p></a></div >';
+                                $("#toggle-main-search").append(productList);
+                            });
+                        } else {
+                            $("#toggle-main-search").empty();
+                            $("#toggle-main-search").removeClass("is-active");
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        } else {
+            $("#product-container").empty();
+            $("#toggle-main-search").removeClass("is-active");
+        }
+    });
 
 </script>
 

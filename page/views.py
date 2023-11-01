@@ -75,10 +75,13 @@ def filter_products(request):
 
     return JsonResponse({'success': True, 'data': data})
 
-
+from django.db.models import Q
 def search_products(request):
     buscar = request.GET.get('search')
-    productos = Productos.objects.filter(estado=1, nombre_producto=buscar)
+    productos = Productos.objects.filter(
+        Q(estado=1),
+        Q(nombre_producto__icontains=buscar)
+    )
 
     data = []
     for producto in productos:

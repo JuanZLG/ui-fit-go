@@ -73,7 +73,7 @@
               '<div class="product-description">' +
               '<p>' + p.descripcion + '</p></div>' +
               '<div class="product-price">' +
-              '<span>' +p.precio+'</span>' +
+              '<span>' + p.precio + '</span>' +
               '<span class="product-search">' +
               '<i class="fas fa-search"></i></span></div>' +
               '</div ></a ></div >';
@@ -93,41 +93,6 @@
       filterProducts(selectedValue);
     });
 
-    $(document).on("input", ".search", function () {
-  let search = $(this).val();
-
-  if (search.length >= 3) {
-    $.ajax({
-      url: "{% url 'search_products' %}",
-      method: 'GET',
-      data: { search: search },
-      success: function (data) {
-        if (data.success) {
-          if (data.data.length > 0) {
-            $("#toggle-main-search").empty();
-            $.each(data.data, function (index, p) {
-              var productList =
-                '<div class="search-card">' +
-                '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
-                '<div class="search-image">' +
-                '<img class="img-fluid" src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                '<h3 class="search-title">' + p.nombre_producto + '</h3></a></div >';
-              $("#toggle-main-search").append(productList);
-            });
-          } else {
-            $("#toggle-main-search").empty();
-            filterProducts($("#sort").val());
-          }
-        }
-      },
-      error: function (xhr, status, error) {
-      }
-    });
-  } else {
-    $("#product-container").empty();
-    filterProducts($("#sort").val());
-  }
-});
 
 
   })
