@@ -14,10 +14,6 @@ from .utils import custom_jwt_payload_handler
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-# def custom_get_username(user):
-#     return user.correo
-
-# Login Bueno
 
 from rest_framework.response import Response
 from rest_framework import status
