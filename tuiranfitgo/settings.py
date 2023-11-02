@@ -102,7 +102,7 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',
         'NAME':'tuiranfit',
         'USER': 'root',
-        'PASSWORD': '3127123250',
+        'PASSWORD': 'administrador',
         'PORT': '3306'
     }
 }
@@ -180,3 +180,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.tu-servidor-smtp.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = 'danielperezbedoya382@gmail.com'
+EMAIL_HOST_PASSWORD = 'daniel123$' 
