@@ -21,11 +21,8 @@
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Compra</span>
                 </a>
-
             </span>
         </div>
-
-     
         <a href="#" id="abrir-modal" class="btn btn-danger btn-dash btn-lg" data-toggle="modal" data-target="#miModal">
             <i class="fa-solid fa-download mr-2"></i><span class="text"
                 style="font-weight: 600; font-size: 16px;">Generar Informe</span>
@@ -60,12 +57,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
     </div>
 </div>
 <style>
@@ -123,13 +114,6 @@
 </style>
 
 
-
-
-
-
-
-
-
 <script>
     $(document).ready(function () {
         $("#miModal").on("hidden.bs.modal", function (e) {
@@ -159,24 +143,10 @@
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="3">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="3" style="border-radius:10px;">
                 <thead class="theads">
                     <tr>
                         <th>Proveedor</th>
@@ -198,8 +168,6 @@
                                 data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if compra.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
-
-
                         </td>
                         <td class="cell-actions">
                             {% if compra.estado == 1 %}
@@ -220,8 +188,6 @@
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                         </td>
-
-
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -295,7 +261,6 @@
     .inactive-button {
         pointer-events: none;
         opacity: 0.5;
-        /* Puedes ajustar la opacidad a tu preferencia */
     }
 
     .table {
@@ -305,7 +270,7 @@
     table thead.theads {
         text-align: center;
         color: white;
-        background-color: #222222;
+        background-color: black;
     }
 
     table tbody.tbody {
@@ -411,6 +376,33 @@
         opacity: 0.5;
         pointer-events: none;
         cursor: default;
+    }
+
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+    
+    ::-webkit-scrollbar:vertical {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-button:increment,
+    .contenedor::-webkit-scrollbar-button {
+        display: none;
+    }
+    
+    ::-webkit-scrollbar:horizontal {
+        height: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: lightgray;
+        border-radius: 20px;
+        border: 2px solid #f1f2f3;
+    }
+    
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
     }
 </style>
 

@@ -52,8 +52,8 @@ def cambiarEstadoDeUsuario(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
-@jwt_cookie_required
-@module_access_required('usuarios')
+# @jwt_cookie_required
+# @module_access_required('usuarios')
 def verDetallesUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -96,7 +96,7 @@ def createUser(request):
 
     return render(request, 'createUser.html', {"rols": roles})
 
-@jwt_cookie_required
+# @jwt_cookie_required
 # @module_access_required('usuarios')
 def send_email(user, password, email):
     load_dotenv()
@@ -125,7 +125,7 @@ def send_email(user, password, email):
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
-@jwt_cookie_required
+# @jwt_cookie_required
 # @module_access_required('usuarios')
 def create_password(length=8):
     characters = string.ascii_letters + string.digits
@@ -263,6 +263,7 @@ def rol_unico(request):
     rol_existe = Roles.objects.filter(nombre_rol=nombre_rol).exists()
     print(rol_existe)
     return JsonResponse({"existe": rol_existe})
+
 
 @jwt_cookie_required
 @module_access_required('usuarios')

@@ -7,20 +7,21 @@
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Modificar Cliente</h1>
 </center>
 
-<div class="card shadow">
-    <div class="container p-4">
+<div class="container d-flex justify-content-center">
+<div class="card shadow" style="width:60%">
+    <div class="container p-5 pb-4">
         <form id="cliente-form" method="post">
             {% csrf_token %}
             <input type="hidden" name="cliente_id" value="{{ cliente.id_cliente }}">
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label for="iDocumento">Documento *</label>
                     <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
                         value="{{ cliente.documento }}" minlength="8" maxlength="10">
                     <div class="error-message" id="iDocumento-error" style="color:red;"></div>
                     <div class="info-message" id="iDocumento-info"></div>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-8">
                     <label for="iNombres">Nombres *</label>
                     <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres"
                         value="{{ cliente.nombres }}">
@@ -42,20 +43,7 @@
                     <div class="info-message" id="iCelular-info"></div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="iBarrio">Barrio *</label>
-                    <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio"
-                        value="{{ cliente.barrio }}">
-                    <div class="error-message" id="iBarrio-error" style="color:red;"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="iDireccion">Dirección *</label>
-                    <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección"
-                        value="{{ cliente.direccion }}">
-                    <div class="error-message" id="iDireccion-error" style="color:red;"></div>
-                </div>
-            </div>
+
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="departamento">Departamento *</label>
@@ -75,7 +63,23 @@
                 </div>
             </div>
 
-            <div class="text-end">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="iBarrio">Barrio *</label>
+                    <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio"
+                        value="{{ cliente.barrio }}">
+                    <div class="error-message" id="iBarrio-error" style="color:red;"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="iDireccion">Dirección *</label>
+                    <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección"
+                        value="{{ cliente.direccion }}">
+                    <div class="error-message" id="iDireccion-error" style="color:red;"></div>
+                </div>
+            </div>
+            
+
+            <div class="text-center" style="margin-top: 10px;">
                 <button class="btn btn-success" type="submit" id="submit-button" disabled>Guardar</button>
             </div>
         </form>

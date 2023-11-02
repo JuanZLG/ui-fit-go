@@ -27,14 +27,14 @@
         <form method="post" action="{% url 'login_view' %}" id="login-form">
             {% csrf_token %}
             <div class="input-box">
-                <input type="email" name="correo" placeholder="Correo Electrónico" required>
+                <input type="email" name="correo" placeholder="Correo Electrónico" autocomplete="address-line1">
                 <box-icon type='solid' name='user'></box-icon>
                 <center><div style="margin-top:5px;" id="correo-error" class="text-with-shadow"></div></center>
                 <center><div style="margin-top:5px; " id="user-error" class="text-with-shadow"></div></center>
                 <center><div style="margin-top:5px;" id="status-error" class="text-with-shadow"></div></center>
             </div>
             <div class="input-box">
-                <input type="password" name="contra" placeholder="Contraseña" required>
+                <input type="password" name="contra" placeholder="Contraseña" autocomplete="current-password">
                 <box-icon name='lock-alt' type='solid'></box-icon>
                 <center><div style="margin-top:5px;" id="contra-error" class="text-with-shadow"></div></center>
                 <center><div style="margin-top:5px;" id="cvalid-error" class="text-with-shadow"></div></center>

@@ -39,11 +39,7 @@
             </span>
         </div>
 
-        <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
-            </a>
-        </div>
+       
     </div>
 </div>
 
@@ -58,7 +54,7 @@
                         <th>Marca</th>
                         <th>Producto</th>
                         <th data-toggle="tooltip" data-placement="top" title="Stock del Producto">Existencias</th>
-                        <th data-toggle="tooltip" data-placement="top" title="Valor Unitario">Precio</th>
+                        <th data-toggle="tooltip" data-placement="top" title="Valor de Compra">Precio</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -70,7 +66,7 @@
                         <td>{{p.id_marca.nombre_marca}}</td>
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
-                        <td class="precio-format">{{ p.precio|floatformat:"0" }}</td>
+                        <td><span>$ </span><span class="precio-format">{{ p.precio|floatformat:"0" }}</span></td>
                         <td>
                             <button data-toggle="tooltip" data-placement="top" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton mx-3 {% if p.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
@@ -141,7 +137,7 @@
 
 <div class="modal-backdrop"></div>
 
-<dialog id="verDetalleDialog" class="productoDialog dragHandle">
+<dialog id="verDetalleDialog" class="productoDialog dragHandle" style="width:25%">
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoProductoCircle"></div>
@@ -164,8 +160,7 @@
             <p>Existencias: <span id="cantProd"></span></p>
             <p>Sabor: <span id="saborProd"></span></p>
             <p>Presentación: <span id="tamanoProd"></span><span> Libra(s)</span></p>
-            <p>Aspecto: <img src="data:image/jpeg;base64,{{ imagenproducto }}" alt="Imagen de Producto"></p>
-            <p>Info. Nutricional: <img src="data:image/png;base64,{{ imagennutri }}" alt="Imagen de Información Nutricional"></p>
+            <p>Precio al Público:<span> $</span> <span id="preventa" class="precio-format"></span></p>
         </section>
     </form>
 </dialog>
@@ -186,6 +181,14 @@
                     $("#catProd").text(producto.categoria);
                     $("#brandProd").text(producto.marca);
                     $("#descProd").text(producto.descripcion);
+                    console.log(producto.precio_pub)
+                    var formattedPrecio = formatoNumero(producto.precio_pub);
+                    $("#preventa").text(formattedPrecio);
+
+                    function formatoNumero(numero) {
+                        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    }
+                    
                     var fechaVen = new Date(producto.fechaven);
                     var fechaFormateada = fechaVen.getFullYear() + '-' + (fechaVen.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaVen.getDate().toString().padStart(2, '0');
                     $("#fechavenProd").text(fechaFormateada);
@@ -199,6 +202,8 @@
                     } else {
                         $(".estadoProductoCircle").addClass("inactivo").removeClass("activo");
                     }
+
+                    
                     
                     document.getElementById("verDetalleDialog").showModal();
                     $(".productoDialog").addClass("fadeIn");
@@ -220,6 +225,20 @@
         });
     });
 
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var precioElements = document.querySelectorAll('.precio-format');
+
+        precioElements.forEach(function(element) {
+            var precio = parseFloat(element.textContent);
+            if (!isNaN(precio)) {
+                var formattedPrecio = precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                element.textContent = formattedPrecio;
+            }
+        });
+    });
 </script>
 
 <div class="modal fade" id="crearCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -384,19 +403,6 @@ aria-hidden="true">
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var precioElements = document.querySelectorAll('.precio-format');
-
-        precioElements.forEach(function(element) {
-            var precio = parseFloat(element.textContent);
-            if (!isNaN(precio)) {
-                var formattedPrecio = precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                element.textContent = formattedPrecio;
-            }
-        });
-    });
-</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

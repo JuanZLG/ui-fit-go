@@ -124,7 +124,7 @@
       <div class="form-row">
         <div class="col-md-3 mb-2 mx-auto">
           <div class="form-group">
-            <label for="price">Precio del Producto *</label>
+            <label for="price">Precio de Compra *</label>
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
@@ -134,10 +134,23 @@
             <div class="error-message" id="iPrice-error" style="color:red;"></div>
           </div>
         </div>
+
+        <div class="col-md-3 mb-2 mx-auto">
+          <div class="form-group">
+            <label for="iPubPrice">Precio al Público *</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:red">$</span>
+              </div>
+              <input type="text" class="form-control" id="iPubPrice" name="iPubPrice" placeholder="Ingrese un precio al público" oninput="formatPriceInput(this);" value="{{ Product.precio_pub }}">
+            </div>
+            <div class="error-message" id="iPubPrice-error" style="color:red;"></div>
+          </div>
+        </div>
       </div>
     
       <div class="form-row">
-        <div class="col-md-12 text-end">
+        <div class="col-md-12 text-center">
           <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
         </div>
       </div>
@@ -164,6 +177,7 @@
       const saborValue = $('#iSabor').val();
       const presentacionValue = $('#iServices').val();
       const priceValue = $('#iPrice').val();
+      const pubpriceValue = $('#iPubPrice').val();
    
 
       if (!nombreValue) {
@@ -200,7 +214,11 @@
         mostrarError('#iPrice', 'Este campo es obligatorio.');
         camposLlenos = false;
       }
-     
+      
+      if (!pubpriceValue) {
+        mostrarError('#iPubPrice', 'Este campo es obligatorio.');
+        camposLlenos = false;
+      }
      
       return camposLlenos;
   }
@@ -218,11 +236,11 @@
       }
 
       var formData = new FormData(this);
-      // Obtener los archivos, si existen
+  
       var iProductImg = $('#iProductImg')[0].files[0];
       var iInfoImg = $('#iInfoImg')[0].files[0];
 
-      // Agregar los archivos al formData solo si existen
+  
       if (iProductImg) {
           formData.append('iProductImg', iProductImg);
       }
@@ -269,9 +287,10 @@
       }
 
       inputElement.value = formattedValue;
+
+      
   }
 
-  // Ejecutar la función al cargar la página
   document.addEventListener('DOMContentLoaded', function() {
       let priceInputs = document.querySelectorAll('.form-control[name="iPrice"]');
 
@@ -279,6 +298,14 @@
           formatPriceInput(input);
       });
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    let pricepInputs = document.querySelectorAll('.form-control[name="iPubPrice"]');
+
+    pricepInputs.forEach(function(input) {
+        formatPriceInput(input);
+    });
+});
 </script>
 
 

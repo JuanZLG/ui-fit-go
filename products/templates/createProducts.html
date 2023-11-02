@@ -140,9 +140,10 @@
         </div>
       </div>
 
+      <div class="form-row">
       <div class="col-md-4 mb-3 mx-auto">
         <div class="form-group">
-          <label for="iPrice">Precio del Producto *</label>
+          <label for="iPrice">Precio de Compra *</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
@@ -154,7 +155,22 @@
         </div>
       </div>
 
-      <div class="text-end">
+      <div class="col-md-4 mb-3 mx-auto">
+        <div class="form-group">
+          <label for="iPubPrice">Precio al Público *</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:red">$</span>
+            </div>
+            <input type="text" class="form-control" id="iPubPrice" name="iPubPrice" placeholder="Ingrese un precio de venta"
+              oninput="formatPriceInput(this);" value="{{ Product.precio_pub }}" />
+          </div>
+          <div class="error-message" id="iPubPrice-error" style="color:red;"></div>
+        </div>
+      </div>
+    </div>
+
+      <div class="text-center p-2">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
       </div>
 
@@ -190,11 +206,11 @@
       }
     }
 
-    $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iProductImg, #InfoImg').on('change', function () {
+    $('#iCategoria, #iMarca, #iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iPubPrice, #iProductImg, #InfoImg').on('change', function () {
       validarCampo($(this));
     });
 
-    $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #ProductImg, #InfoImg').on('input', function () {
+    $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iPubPrice, #ProductImg, #InfoImg').on('input', function () {
       const campo = $(this);
       const campoValue = campo.val();
 
@@ -217,6 +233,7 @@
       validarCampo($('#iSabor'));
       validarCampo($('#iServices'));
       validarCampo($('#iPrice'));
+      validarCampo($('#iPubPrice'));
       validarCampo($('#iProductImg'));
       validarCampo($('#iInfoImg'));
 
@@ -283,7 +300,6 @@
     function formatPriceInput(inputElement) {
 
       let unformattedValue = inputElement.value.replace(/[,.]/g, '');
-
 
       let formattedValue = '';
 

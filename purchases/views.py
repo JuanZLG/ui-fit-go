@@ -310,7 +310,7 @@ def obtener_detalles_compra(request, compra_id):
 #     detalles = Detallecompra.objects.filter(id_compra=id_compra)
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
 
-@jwt_cookie_required
+
 def formatear_precios(valor):
     valor = round(valor, 2)
     precio_formateado = '${:,.2f}'.format(valor)
@@ -327,7 +327,7 @@ def generar_qr_code(content):
     img = qr.make_image(fill_color="black", back_color="white")
     return img
 
-@jwt_cookie_required
+
 def generar_factura_pdf(request, compra_id):
     compra = get_object_or_404(Compras, id_compra=compra_id)
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
@@ -398,7 +398,6 @@ def generar_factura_pdf(request, compra_id):
 
     return response
 
-@jwt_cookie_required
 def generar_informe_pdf(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')
@@ -440,7 +439,6 @@ def generar_informe_pdf(request):
         elements.append(Paragraph('Informe de Compras', styles['Title']))
         elements.append(Spacer(1, 6))
         
-        # Estilo personalizado para el período de tiempo
         periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
         periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
         
@@ -465,7 +463,7 @@ def generar_informe_pdf(request):
 
             elements.append(t)
         else:
-            # Establecer el mensaje en rojo y centrado
+       
             mensaje_style = ParagraphStyle(
                 name='MensajeStyle',
                 alignment=TA_CENTER,

@@ -9,7 +9,7 @@
     table thead.theads {
         text-align: center;
         color: white;
-        background-color: #222222;
+        background-color: black;
     }
 
     table tbody.tbody {
@@ -156,7 +156,7 @@
             <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%"
                 cellspacing="1">
                 <thead class="theads">
-                    <tr >
+                    <tr>
                         <th>Rol</th>
                         <th>Nombre de Usuario</th>
                         <th>Correo</th>
@@ -172,7 +172,7 @@
                         <td>{{u.correo}}</td>
                         <td>
                             <button
-                                class="cambiar-estado statusbutton mx-3 {% if u.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
+                                class="cambiar-estado statusbutton mx-auto {% if u.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-usuario-id="{{ u.id_usuario }}"
                                 data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}" data-toggle="tooltip" data-placement="right" title="Cambiar de Estado">
                                 {% if u.estado == 1 %}
@@ -185,8 +185,8 @@
                         <td class="cell-actions">
                             <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm" id="editbutton" data-toggle="tooltip" data-placement="right" title="Modificar Usuario"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                            <button type="button" class="btn btn-sm btn-primary verUsuario"
-                                data-usu-id="{{ u.id_usuario }}" data-toggle="tooltip" data-placement="right" title="Ver Detalles">
+                            <button type="button" class="btn btn-sm btn-primary verUsuario {% if u.estado == 0 %}disabled{% endif %}"
+                                data-usu-id="{{ u.id_usuario }}" data-toggle="tooltip" data-placement="right" title="Ver Detalles" {% if not u.id_rol.nombre_rol and u.estado == 1 %}disabled{% endif %}>
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                             </a>
