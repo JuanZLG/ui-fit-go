@@ -47,48 +47,5 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-  function filterProducts(selectedValue) {
-    $.ajax({
-      url: "{% url 'filter_products' %}",
-      method: 'GET',
-      data: { sortOption: selectedValue },
-      success: function (data) {
-        if (data.success) {
-          $("#product-container").empty();
-
-          $.each(data.data, function (index, p) {
-            var productCard =
-              '<div class="product-card">' +
-              '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
-              ' <div class="product-image">' +
-              '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-              '<div class="product-details">' +
-              '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-              '<div class="product-description">' +
-              '<p>' + p.descripcion + '</p></div>' +
-              '<div class="product-price">' +
-              '<span>' + p.precio + '</span>' +
-              '<span class="product-search">' +
-              '<i class="fas fa-search"></i></span></div>' +
-              '</div ></a ></div >';
-
-            $("#dynamic-title").text(p.dynamicTitle);
-            $("#product-container").append(productCard);
-          });
-        }
-      }
-    });
-  }
-</script>
-
-<script>
-  $(document).ready(function () {
-    $("#sort").change(function () {
-      selectedValue = $(this).val();
-      filterProducts(selectedValue);
-    });
-  })
-</script>
 
 {% endblock %}

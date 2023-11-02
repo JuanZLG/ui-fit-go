@@ -45,7 +45,6 @@
                 </div>
                 <div class="menu-item productos mt-1" id="toggle-submain-products">
                     Suplementos
-                    <!-- <i class="fas fa-arrow-right"></i> -->
                 </div>
             </li>
             <hr class="divider">
@@ -244,25 +243,59 @@
 
 
 </script>
-<!-- 
+
 <script>
-    const menuListItems = document.querySelectorAll('.menu-list-item');
-
-    menuListItems.forEach((menuItem) => {
-        menuItem.addEventListener('click', function () {
-            const itemName = menuItem.textContent;
-            const tipo = menuItem.getAttribute('data-tipo');
-
-            $.ajax({
-                url: '#',
-                type: 'POST',
-                data: { itemName: itemName, tipo: tipo },
-                success: function (response) {
-                    console.log('Tipo:', tipo);
-                }
+    function filterProducts(selectedValue, tipo = "main") {
+      $.ajax({
+        url: "{% url 'filter_products' %}",
+        method: 'GET',
+        data: { sortOption: selectedValue },
+        success: function (data) {
+          if (data.success) {
+            $("#product-container").empty();
+  
+            $.each(data.data, function (index, p) {
+              var productCard =
+                '<div class="product-card">' +
+                '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
+                ' <div class="product-image">' +
+                '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                '<div class="product-details">' +
+                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
+                '<div class="product-description">' +
+                '<p>' + p.descripcion + '</p></div>' +
+                '<div class="product-price">' +
+                '<span>' + p.precio + '</span>' +
+                '<span class="product-search">' +
+                '<i class="fas fa-search"></i></span></div>' +
+                '</div ></a ></div >';
+  
+              $("#dynamic-title").text(p.dynamicTitle);
+              $("#product-container").append(productCard);
             });
+          }
+        }
+      });
+    }
+  </script>
+  
+  <script>
+    $(document).ready(function () {
+      $("#sort").change(function () {
+        selectedValue = $(this).val();
+        filterProducts(selectedValue);
+      });
+
+      const menuListItems = document.querySelectorAll('.menu-list-item');
+
+      menuListItems.forEach((menuItem) => {
+          menuItem.addEventListener('click', function () {
+              const itemName = menuItem.textContent;
+              const tipo = menuItem.getAttribute('data-tipo');
+              filterProducts(itemName, tipo);
+
         });
     });
-</script> -->
-
+    })
+  </script>
 </html>

@@ -406,12 +406,37 @@ options-submain-products::-webkit-scrollbar-track {
   height: 200px;
 }
 
-.productos-list {
+.options-menu-list.productos {
+  margin: 10px 0;
+  font-weight: bold;
   list-style: none; 
 }
-
 .menu-list-item {
-  margin-bottom: 5px;
+  font-weight: 500;
+  padding: 10px 0;
+  list-style: none;
+  transition: all 0.1s ease-in-out;
+  position: relative;
+}
+
+.menu-list-item::before {
+  content: ''; 
+  display: inline-block;
+  width: 0; 
+  margin-right: 15px; 
+  color: #ccc; 
+  transition: all 0.2s ease-in-out; 
+}
+
+.menu-list-item:hover::before {
+  content: '\2192'; 
+  width: 10px; 
+}
+
+.menu-list-item:hover {
+  cursor: pointer;
+  transform: scale(1.070);
+  color: #ccc;
 }
 
 /*------------------------------------------------*/

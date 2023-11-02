@@ -103,7 +103,7 @@ def editProduct(request, id_producto):
         c = Categorias.objects.get(id_categoria=category)
 
         pPrice = pPrice.replace(',', '').replace('.', '')
-        # pPrice = float(pPrice)
+        pPrice = int(pPrice)
 
         precioven = precioven.replace(',', '').replace('.', '')
         # precioven = float(precioven)
@@ -137,10 +137,8 @@ def editProduct(request, id_producto):
         return JsonResponse(response_data)
 
     products = Productos.objects.get(id_producto=id_producto)
-    products.precio = int(products.precio)
-
-    products = Productos.objects.get(id_producto=id_producto)
     products.precio_pub = int(products.precio_pub)
+    products.precio = int(products.precio)
     
     if products.iInfoImg:
         if isinstance(products.iInfoImg, bytes):
