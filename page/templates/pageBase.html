@@ -77,10 +77,10 @@
         </div>
         <ul id="main-options-products" class="options-menu-list productos">
             {% for categoria in categorias %}
-            <li class="categoria-item">{{ categoria.nombre_categoria }}:
-                <ul class="productos-list">
+            <li>{{ categoria.nombre_categoria }}:
+                <ul>
                     {% for producto in categoria.productos_set.all %}
-                    <li class="producto-item">{{ producto.nombre_producto }}</li>
+                    <li class="menu-list-item" data-tipo="producto">{{ producto.nombre_producto }}</li>
                     {% endfor %}
                 </ul>
             </li>
@@ -92,7 +92,7 @@
         </div>
         <ul id="main-options-marcas" class="options-menu-list marcas">
             {% for marca in marcas %}
-            <li class="categoria-item">{{ marca.nombre_marca }}</li>
+            <li class="menu-list-item" data-tipo="marca">{{ marca.nombre_marca }}</li>
             {% endfor %}
         </ul>
         <hr class="divider">
@@ -101,7 +101,7 @@
         </div>
         <ul id="main-options-categorias" class="options-menu-list categorias">
             {% for categoria in categorias %}
-            <li class="categoria-item">{{ categoria.nombre_categoria }}</li>
+            <li class="menu-list-item" data-tipo="categoria">{{ categoria.nombre_categoria }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -208,6 +208,22 @@
     const iconMarcas = toggleMarcas.querySelector("i");
     const iconCategorias = toggleCategorias.querySelector("i");
 
+    const closeSubMainOptions = document.getElementById('close-submain-options');
+
+    closeSubMainOptions.addEventListener('click', function () {
+        // Cerrar opciones
+        mainOptionsProductos.classList.remove("is-active");
+        mainOptionsMarcas.classList.remove("is-active");
+        mainOptionsCategorias.classList.remove("is-active");
+        // Volver iconos a su estado original
+        iconProductos.classList.remove("fa-chevron-up");
+        iconProductos.classList.add("fa-chevron-down");
+        iconMarcas.classList.remove("fa-chevron-up");
+        iconMarcas.classList.add("fa-chevron-down");
+        iconCategorias.classList.remove("fa-chevron-up");
+        iconCategorias.classList.add("fa-chevron-down");
+    });
+
     function toggleActiveClass(element, iconElement) {
         element.classList.toggle("is-active");
         iconElement.classList.toggle("fa-chevron-up");
@@ -226,6 +242,27 @@
         toggleActiveClass(mainOptionsCategorias, iconCategorias);
     });
 
+
 </script>
+<!-- 
+<script>
+    const menuListItems = document.querySelectorAll('.menu-list-item');
+
+    menuListItems.forEach((menuItem) => {
+        menuItem.addEventListener('click', function () {
+            const itemName = menuItem.textContent;
+            const tipo = menuItem.getAttribute('data-tipo');
+
+            $.ajax({
+                url: '#',
+                type: 'POST',
+                data: { itemName: itemName, tipo: tipo },
+                success: function (response) {
+                    console.log('Tipo:', tipo);
+                }
+            });
+        });
+    });
+</script> -->
 
 </html>
