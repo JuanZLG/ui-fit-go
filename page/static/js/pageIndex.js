@@ -8,21 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   // Despliegue de menu productos ----------------------- 
-  // Despliegue de menú productos ----------------------- 
-  const toggleMenu = document.getElementById('toggle-menu');
-  const menuOptions = document.getElementById('menu-options');
-
   const toggleMenuProducts = document.getElementById('toggle-main-products');
   const OptionsProductsMain = document.getElementById('main-options-products');
-  const iconProducts = toggleMenuProducts.querySelector('.icon'); 
+  const iconProducts = toggleMenuProducts.querySelector('.icon');
 
   const toggleMenumarcas = document.getElementById('toggle-main-marcas');
   const OptionsMarcasMain = document.getElementById('main-options-marcas');
-  const iconMarcas = toggleMenumarcas.querySelector('.icon'); 
+  const iconMarcas = toggleMenumarcas.querySelector('.icon');
 
-  toggleMenu.addEventListener('click', function () {
-    menuOptions.classList.toggle('is-active');
-  });
 
   toggleMenuProducts.addEventListener('click', function () {
     OptionsProductsMain.classList.toggle('is-active');
@@ -82,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-
-
+  
 
 });  

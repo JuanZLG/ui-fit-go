@@ -8,19 +8,26 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
 {% endblock %}
 
-{% block catalog-section %}{% endblock %}
+{% block catalog-section %}
+<a href="{% url 'pageHome' %}" class="btn btn-link text-decoration-none p-2" style="color: #000;"> 
+    <i class="fas fa-arrow-circle-left mx-2"></i> Volver al inicio
+</a>
+{% endblock %}
 
 {% block body %}
+
+
+
 <section class="product-details">
     <div class="container">
         <swiper-container class="mySwiper" keyboard="true" space-between="30" pagination="true"
-            pagination-clickable="true" navigation="true" loop="true" >
+            pagination-clickable="true" navigation="true" loop="true">
             <swiper-slide><img src="/media/landingproducts/products/{{ detalle.iProductImg_name }}" class="img-fluid"
                     alt="Imagen"></swiper-slide>
             <swiper-slide><img src="/media/landingproducts/nutritiondex/{{ detalle.iInfoImg_name }}" class="img-fluid"
                     alt="Imagen"></swiper-slide>
         </swiper-container>
-        <div class="row" >
+        <div class="row">
             <div class="col-lg-6 mb-4 mt-4">
                 <h1 class="product-title">
                     <strong> <span class="product-name">{{ detalle.nombre_producto }}</span> </strong>

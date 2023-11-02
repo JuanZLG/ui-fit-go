@@ -106,8 +106,34 @@
   flex-direction: column;
 }
 
+/* Estilo para el icono "X" */
+.search-clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+  color: #000; 
+  display: none; 
+}
+
 .container-search {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.search {
+  width: 100%;
+  height: 35px;
+  padding: 12px 30px 12px 12px; 
+  outline: none;
+  border: 2px solid #f2f2f2;
+  border-radius: 5px;
+}
+
+.search:valid + .search-clear-icon {
+  display: block;
 }
 
 .search {
@@ -129,7 +155,9 @@
 }
 .search-result-cont {
   width: 100%;
+  background-color: red;
 }
+
 .search-result {
   background-color: #fff;
   display: flex;

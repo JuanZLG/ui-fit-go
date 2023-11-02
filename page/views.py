@@ -46,24 +46,28 @@ def get_image_name(image_field):
     return "No Image"
 
 
-
 def filter_products(request):
     option = request.GET.get('sortOption')
+    dynamicTitle = ""
+
     if option == 'best-sellers':
         filtro = Productos.objects.annotate(
             total_vendido=Sum('detalleventa__cantidad')
         ).filter(estado=1, total_vendido__gt=0).order_by('-total_vendido')
+        dynamicTitle = "Productos Más Vendidos"
     elif option == 'high-price':
         filtro = Productos.objects.filter(estado=1).order_by('-precio')
+        dynamicTitle = "Productos de Mayor Precio"
     elif option == 'low-price':
         filtro = Productos.objects.filter(estado=1).order_by('precio')
+        dynamicTitle = "Productos de Menor Precio"
     else:
         filtro = Productos.objects.filter(estado=1).all()
+        dynamicTitle = "Todos los Productos"
 
     data = []
     for producto in filtro:
         precio_formateado = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
-        print(precio_formateado)
         data.append({
             'id_producto': producto.id_producto,
             'nombre_producto': producto.nombre_producto,
@@ -71,9 +75,11 @@ def filter_products(request):
             'precio': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
             'iInfoImg_name': get_image_name(producto.iInfoImg),
+            'dynamicTitle': dynamicTitle
         })
 
     return JsonResponse({'success': True, 'data': data})
+
 
 from django.db.models import Q
 def search_products(request):

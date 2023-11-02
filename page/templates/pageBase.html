@@ -35,9 +35,10 @@
             </li>
             <li class="menu-item nav">
                 <div class="container-search">
-                    <input placeholder="Realizar búsqueda..." type="text" name="search" class="search">
+                    <input placeholder="Realizar búsqueda..." type="text" name="search" class="search"
+                        id="search-input">
+                    <i class="fas fa-times search-clear-icon" id="search-clear"></i>
                 </div>
-                <!-- toggle -->
                 <div class="search-result-cont">
                     <div id="toggle-main-search" class="search-result"></div>
                 </div>
@@ -124,38 +125,9 @@
             <option value="high-price" class="sort-option">Mayor precio</option>
             <option value="low-price" class="sort-option">Menor precio</option>
         </select>
-        <span id="toggle-menu"><strong>Productos</strong><i class="fas fa-chevron-down icon"></i></span>
-    </div>
-    <div id="menu-options" class="menu-options">
-        <div class="radio-inputs">
-            <label class="radio" data-option="1">
-                <input type="radio" name="radio">
-                <span class="name">Marcas</span>
-            </label>
-            <label class="radio" data-option="2">
-                <input type="radio" name="radio">
-                <span class="name">Categorias</span>
-            </label>
-
-            <label class="radio" data-option="3">
-                <input type="radio" name="radio" checked="">
-                <span class="name">Productos</span>
-            </label>
-        </div>
-        <div class="menu-column" data-option="1">
-            {% for m in marcas %}
-            <a href="#" class="menu-option">{{ m.nombre_marca }}</a>
-            {% endfor %}
-        </div>
-        <div class="menu-column" data-option="2">
-            {% for c in categorias %}
-            <a href="#" class="menu-option">{{ c.nombre_categoria }}</a>
-            {% endfor %}
-        </div>
-        <div class="menu-column" data-option="3">
-            {% for p in productos %}
-            <a href="#" class="menu-option">{{ p.nombre_producto }}</a>
-            {% endfor %}
+        <div class="view-options">
+            <a href="#" aria-label="detalle de la lista de productos" id="list"><i class="fas fa-th-list fa-lg"></i></a>
+            <a href="#" aria-label="lista productos" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
         </div>
     </div>
     {% endblock %}
@@ -164,10 +136,10 @@
 
 {% block body %}{% endblock %}
 
-<!-- 
+
 <footer>
     <p>&copy; 2023 Brutálity</p>
-</footer> -->
+</footer>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -200,16 +172,20 @@
                             $("#toggle-main-search").removeClass("is-active");
                         }
                     }
-                },
-                error: function (xhr, status, error) {
                 }
             });
         } else {
-            $("#product-container").empty();
+            $("#toggle-main-search").empty();
             $("#toggle-main-search").removeClass("is-active");
         }
     });
 
+    $("#search-clear").on("click", function () {
+        $("#search-input").val("");
+        $("#toggle-main-search").empty();
+        $("#toggle-main-search").removeClass("is-active");
+    });
 </script>
+
 
 </html>
