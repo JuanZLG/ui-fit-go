@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/purchases/', include('purchases.urls')),
     path('error/', views.error_view, name="initerror"),
     path('logout/', views.logout_view, name='logout'),
+    path('authenticator/', include('authenticator.urls')),
 ]
 
 if settings.DEBUG:

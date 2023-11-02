@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recuperar Contraseña</title>
+</head>
+<body>
+    <h1>Recuperar Contraseña</h1>
+    <p>Ingresa tu dirección de correo electrónico para recuperar tu contraseña.</p>
+
+    {% if error_message %}
+    <p class="error">{{ error_message }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="correo">Correo Electrónico:</label>
+        <input type="email" name="correo" required>
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
+
