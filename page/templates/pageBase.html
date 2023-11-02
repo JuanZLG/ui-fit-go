@@ -27,48 +27,25 @@
     </a>
 
     <div class="main-menu" id="main-menu">
-        <ul class="menu-list">
+        <ul class="main-menu-list">
             <li class="menu-item logo">
-                <a href="{% url 'pageHome' %}" style="z-index: 999;">
+                <a href="{% url 'pageHome' %}">
                     <img src="{% static 'img/gorille.png' %}" class="logo" alt="Logo de Brutálity">
                 </a>
             </li>
             <li class="menu-item nav">
                 <div class="container-search">
-                    <input placeholder="Realizar búsqueda..." type="text" name="search" class="search">
+                    <input placeholder="Realizar búsqueda..." type="text" name="search" class="search"
+                        id="search-input">
+                    <i class="fas fa-times search-clear-icon" id="search-clear"></i>
                 </div>
                 <!-- toggle -->
-                <div id="toggle-main-search" class="search-result"></div>
-                <div class="menu-item productos" id="toggle-main-products">
-                    Suplementos <i class="fas fa-chevron-down icon"></i>
+                <div class="search-result-cont">
+                    <div id="toggle-main-search" class="search-result"></div>
                 </div>
-                <!-- toggle -->
-                <div id="main-options-products" class="menu-options main">
-                    <ul class="categorias-list">
-                        {% for categoria in categorias %}
-                        <li class="categoria-item">{{ categoria.nombre_categoria }}:
-                            <ul class="productos-list">
-                                {% for producto in categoria.productos_set.all %}
-                                <li class="producto-item">{{ producto.nombre_producto }}</li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </li>
-            <hr class="divider">
-            <li class="menu-item nav">
-                <div class="menu-item marcas" id="toggle-main-marcas">
-                    Marcas <i class="fas fa-chevron-down icon"></i>
-                </div>
-                <!-- toggle -->
-                <div id="main-options-marcas" class="menu-options main">
-                    <ul class="categorias-list">
-                        {% for marca in marcas %}
-                        <li class="categoria-item">{{ marca.nombre_marca }}</li>
-                        {% endfor %}
-                    </ul>
+                <div class="menu-item productos mt-1" id="toggle-submain-products">
+                    Suplementos
+                    <!-- <i class="fas fa-arrow-right"></i> -->
                 </div>
             </li>
             <hr class="divider">
@@ -91,6 +68,41 @@
                     <a href="#" class="login-button">Login</a>
                 </div>
             </li>
+        </ul>
+    </div>
+    <div id="options-submain-products" class="menu-options">
+        <i class="fas fa-arrow-left cerrar-icon" id="close-submain-options"></i>
+        <div class="menu-options-item" id="toggle-main-productos">
+            Productos <i class="fas fa-chevron-down"></i>
+        </div>
+        <ul id="main-options-products" class="options-menu-list productos">
+            {% for categoria in categorias %}
+            <li>{{ categoria.nombre_categoria }}:
+                <ul>
+                    {% for producto in categoria.productos_set.all %}
+                    <li class="menu-list-item" data-tipo="producto">{{ producto.nombre_producto }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        <hr class="divider">
+        <div class="menu-options-item" id="toggle-main-marcas">
+            Marcas <i class="fas fa-chevron-down"></i>
+        </div>
+        <ul id="main-options-marcas" class="options-menu-list marcas">
+            {% for marca in marcas %}
+            <li class="menu-list-item" data-tipo="marca">{{ marca.nombre_marca }}</li>
+            {% endfor %}
+        </ul>
+        <hr class="divider">
+        <div class="menu-options-item" id="toggle-main-categorias">
+            Categorias <i class="fas fa-chevron-down"></i>
+        </div>
+        <ul id="main-options-categorias" class="options-menu-list categorias">
+            {% for categoria in categorias %}
+            <li class="menu-list-item" data-tipo="categoria">{{ categoria.nombre_categoria }}</li>
+            {% endfor %}
         </ul>
     </div>
 
@@ -122,38 +134,9 @@
             <option value="high-price" class="sort-option">Mayor precio</option>
             <option value="low-price" class="sort-option">Menor precio</option>
         </select>
-        <span id="toggle-menu"><strong>Productos</strong><i class="fas fa-chevron-down icon"></i></span>
-    </div>
-    <div id="menu-options" class="menu-options">
-        <div class="radio-inputs">
-            <label class="radio" data-option="1">
-                <input type="radio" name="radio">
-                <span class="name">Marcas</span>
-            </label>
-            <label class="radio" data-option="2">
-                <input type="radio" name="radio">
-                <span class="name">Categorias</span>
-            </label>
-
-            <label class="radio" data-option="3">
-                <input type="radio" name="radio" checked="">
-                <span class="name">Productos</span>
-            </label>
-        </div>
-        <div class="menu-column" data-option="1">
-            {% for m in marcas %}
-            <a href="#" class="menu-option">{{ m.nombre_marca }}</a>
-            {% endfor %}
-        </div>
-        <div class="menu-column" data-option="2">
-            {% for c in categorias %}
-            <a href="#" class="menu-option">{{ c.nombre_categoria }}</a>
-            {% endfor %}
-        </div>
-        <div class="menu-column" data-option="3">
-            {% for p in productos %}
-            <a href="#" class="menu-option">{{ p.nombre_producto }}</a>
-            {% endfor %}
+        <div class="view-options">
+            <a href="#" aria-label="detalle de la lista de productos" id="list"><i class="fas fa-th-list fa-lg"></i></a>
+            <a href="#" aria-label="lista productos" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
         </div>
     </div>
     {% endblock %}
@@ -162,16 +145,124 @@
 
 {% block body %}{% endblock %}
 
-<!-- 
+
 <footer>
     <p>&copy; 2023 Brutálity</p>
-</footer> -->
+</footer>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    $(document).on("input", ".search", function () {
+        let search = $(this).val();
+
+        if (search.length >= 2) {
+            $.ajax({
+                url: "{% url 'search_products' %}",
+                method: 'GET',
+                data: { search: search },
+                success: function (data) {
+                    if (data.success) {
+                        if (data.data.length > 0) {
+                            $("#toggle-main-search").empty();
+                            $.each(data.data, function (index, p) {
+                                $("#toggle-main-search").addClass("is-active");
+                                var productList =
+                                    '<div class="search-card">' +
+                                    '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
+                                    '<div class="search-image">' +
+                                    '<img class="img-fluid" src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                                    '<p class="search-title">' + p.nombre_producto + '</p></a></div >';
+                                $("#toggle-main-search").append(productList);
+                            });
+                        } else {
+                            $("#toggle-main-search").empty();
+                            $("#toggle-main-search").removeClass("is-active");
+                        }
+                    }
+                }
+            });
+        } else {
+            $("#toggle-main-search").empty();
+            $("#toggle-main-search").removeClass("is-active");
+        }
+    });
+
+    $("#search-clear").on("click", function () {
+        $("#search-input").val("");
+        $("#toggle-main-search").empty();
+        $("#toggle-main-search").removeClass("is-active");
+    });
+</script>
+
+<script>
+    const toggleProductos = document.getElementById("toggle-main-productos");
+    const toggleMarcas = document.getElementById("toggle-main-marcas");
+    const toggleCategorias = document.getElementById("toggle-main-categorias");
+    const mainOptionsProductos = document.getElementById("main-options-products");
+    const mainOptionsMarcas = document.getElementById("main-options-marcas");
+    const mainOptionsCategorias = document.getElementById("main-options-categorias");
+
+    const iconProductos = toggleProductos.querySelector("i");
+    const iconMarcas = toggleMarcas.querySelector("i");
+    const iconCategorias = toggleCategorias.querySelector("i");
+
+    const closeSubMainOptions = document.getElementById('close-submain-options');
+
+    closeSubMainOptions.addEventListener('click', function () {
+        // Cerrar opciones
+        mainOptionsProductos.classList.remove("is-active");
+        mainOptionsMarcas.classList.remove("is-active");
+        mainOptionsCategorias.classList.remove("is-active");
+        // Volver iconos a su estado original
+        iconProductos.classList.remove("fa-chevron-up");
+        iconProductos.classList.add("fa-chevron-down");
+        iconMarcas.classList.remove("fa-chevron-up");
+        iconMarcas.classList.add("fa-chevron-down");
+        iconCategorias.classList.remove("fa-chevron-up");
+        iconCategorias.classList.add("fa-chevron-down");
+    });
+
+    function toggleActiveClass(element, iconElement) {
+        element.classList.toggle("is-active");
+        iconElement.classList.toggle("fa-chevron-up");
+        iconElement.classList.toggle("fa-chevron-down");
+    }
+
+    toggleProductos.addEventListener("click", function () {
+        toggleActiveClass(mainOptionsProductos, iconProductos);
+    });
+
+    toggleMarcas.addEventListener("click", function () {
+        toggleActiveClass(mainOptionsMarcas, iconMarcas);
+    });
+
+    toggleCategorias.addEventListener("click", function () {
+        toggleActiveClass(mainOptionsCategorias, iconCategorias);
+    });
+
 
 </script>
+<!-- 
+<script>
+    const menuListItems = document.querySelectorAll('.menu-list-item');
+
+    menuListItems.forEach((menuItem) => {
+        menuItem.addEventListener('click', function () {
+            const itemName = menuItem.textContent;
+            const tipo = menuItem.getAttribute('data-tipo');
+
+            $.ajax({
+                url: '#',
+                type: 'POST',
+                data: { itemName: itemName, tipo: tipo },
+                success: function (response) {
+                    console.log('Tipo:', tipo);
+                }
+            });
+        });
+    });
+</script> -->
 
 </html>

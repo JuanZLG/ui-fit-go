@@ -19,7 +19,6 @@
   line-height: 40px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
   cursor: pointer;
-  z-index: 999;
   transition: transform 0.1s ease-in-out;
 }
 
@@ -32,7 +31,7 @@
 .hamburger {
   padding: 0;
   cursor: pointer;
-  z-index: 999;
+  z-index: 2;
 }
 
 .hamburger input {
@@ -75,17 +74,16 @@
   position: fixed;
   top: 0;
   left: 100%;
-  z-index: 999;
   display: block;
   transition: left 0.3s ease-in-out;
+  z-index: 2;
 }
 
 .main-menu.is-active {
   left: 0;
 }
 
-.menu-list {
-  height: 100%;
+.main-menu-list {
   list-style: none;
   padding: 0 20px;
   display: flex;
@@ -106,8 +104,34 @@
   flex-direction: column;
 }
 
+/* Estilo para el icono "X" */
+.search-clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+  color: #000; 
+  display: none; 
+}
+
 .container-search {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.search {
+  width: 100%;
+  height: 35px;
+  padding: 12px 30px 12px 12px; 
+  outline: none;
+  border: 2px solid #f2f2f2;
+  border-radius: 5px;
+}
+
+.search:valid + .search-clear-icon {
+  display: block;
 }
 
 .search {
@@ -128,36 +152,60 @@
   box-shadow: 0px 0px 20px #383636;
 }
 
+
 .search-result {
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 200px;
+  position: absolute;
+  left: 30px;
+  width: 85%;
+  max-height: 0; 
+  overflow-y: hidden; 
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #f0f0f0;
+  transition: max-height 0.5s ease-in-out; 
+  z-index: 999;
+  margin: 0;
+  padding: 0;
 }
+
+.search-result.is-active {
+  max-height: 300px; 
+  border-bottom: 2px solid #ccc;
+}
+
+
+/* Resto de tu CSS... */
+
+
 .search-card a {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
-  background-color: #222222;
-  color: #fff;
+  text-decoration: none;
   width: 100%;
-  height: 80px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #000;
+  transition: all .500ms ease-in;
 }
-
+.search-card a:hover {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
 .search-card .search-image {
-  width: 40px;
+  width: 30px;
 }
 
-.menu-item.productos, .menu-item.marcas {
-  justify-content: space-between;
-  padding: 10px;
+.search-card .search-title {
+  margin: auto 0;
 }
 
 
 .divider {
   margin: 0;
+  margin-bottom: 10px;
   background: #ccc;
 }
 
@@ -217,6 +265,7 @@
   background-color: #000;
   color: #fff;
   padding-bottom: 10px;
+
 }
 
 .header-navigation {
@@ -288,7 +337,7 @@
   color: #000;
 }
 
-/* CATALOG MENU ----------------------- */
+/* MENU DE OPCIONES PRINCIAL  ----------------------- */
 #toggle-menu {
   cursor: pointer;
 }
@@ -297,8 +346,53 @@
   color: #222222;
   padding: 5px;
 }
-.menu-options {
-  background-color: #FFF;
+
+#options-submain-products {
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 100%;
+  transition: right 0.3s ease-in-out;
+  z-index: 999;
+  color: #fff;
+  padding: 80px 20px;
+  overflow-y: scroll;
+}
+
+#options-submain-products.is-active {
+  right: 0;
+}
+
+#options-submain-products .cerrar-icon {
+  position: absolute;
+  font-size: 30px;
+  top: 30px;
+  right: 15px;
+}
+
+/* Estilos para la barra de desplazamiento */
+options-submain-products::-webkit-scrollbar {
+  width: 6px; /
+}
+
+options-submain-products::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+options-submain-products::-webkit-scrollbar-track {
+  background-color: #f0f0f0; 
+}
+
+.menu-options-item {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu-options .options-menu-list {
   width: 100%;
   height: 0;
   overflow-y: scroll;
@@ -308,48 +402,15 @@
   display: block;
 }
 
-.menu-options.is-active {
+.menu-options .options-menu-list.is-active {
   height: 200px;
-  border-bottom: 2px solid #ccc;
 }
-
-
-
-/* Estilos para la barra de desplazamiento */
-.menu-options::-webkit-scrollbar {
-  width: 6px; /
-}
-
-.menu-options::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 5px;
-}
-
-.menu-options::-webkit-scrollbar-track {
-  background-color: #f0f0f0; 
-}
-
-.categorias-list {
-  list-style: none;
-  margin-top: 10px;
-  padding: 10px;
-}
-
-/* MENU DE OPCIONES PRINCIAL */
-.menu-options.main {
-  background-color: #000;
-  position: relative;
-  width: 100%;
-  border: none;
-}
-
-
 
 .productos-list {
   list-style: none; 
 }
 
-.producto-item {
+.menu-list-item {
   margin-bottom: 5px;
 }
 
@@ -410,16 +471,7 @@
   font-weight: 600;
 }
 
-/* ------------------------------------- */
-
-
-/* MAIN MENU PRODUCT*/
-.categoria-item {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-}
-
-
+/* ------------------------------------- *
 
 /* PAGE CATALOG --------------- */
 .catalog-select {

@@ -7,37 +7,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  // Despliegue de menu productos ----------------------- 
-  // Despliegue de menú productos ----------------------- 
-  const toggleMenu = document.getElementById('toggle-menu');
-  const menuOptions = document.getElementById('menu-options');
+// Despliegue de menu productos -----------------------
 
-  const toggleMenuProducts = document.getElementById('toggle-main-products');
-  const OptionsProductsMain = document.getElementById('main-options-products');
-  const iconProducts = toggleMenuProducts.querySelector('.icon'); 
+const togglesSubmenuProducts = document.getElementById('toggle-submain-products');
+const closeSubMainOptions = document.getElementById('close-submain-options');
+const OptionsProductsMain = document.getElementById('options-submain-products');
 
-  const toggleMenumarcas = document.getElementById('toggle-main-marcas');
-  const OptionsMarcasMain = document.getElementById('main-options-marcas');
-  const iconMarcas = toggleMenumarcas.querySelector('.icon'); 
+togglesSubmenuProducts.addEventListener('click', function () {
+  OptionsProductsMain.classList.toggle('is-active');
+});
 
-  toggleMenu.addEventListener('click', function () {
-    menuOptions.classList.toggle('is-active');
-  });
-
-  toggleMenuProducts.addEventListener('click', function () {
-    OptionsProductsMain.classList.toggle('is-active');
-
-    iconProducts.classList.toggle('fa-chevron-up');
-    iconProducts.classList.toggle('fa-chevron-down');
-  });
-
-  toggleMenumarcas.addEventListener('click', function () {
-    OptionsMarcasMain.classList.toggle('is-active');
-
-    iconMarcas.classList.toggle('fa-chevron-up');
-    iconMarcas.classList.toggle('fa-chevron-down');
-  });
-
+closeSubMainOptions.addEventListener('click', function () {
+  OptionsProductsMain.classList.toggle('is-active');
+});
 
   // Opciones de menu productos ----------------------- 
   const radioInputs = document.querySelectorAll('.radio input');
@@ -82,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-
-
+  // Opciones SubMenu ----------------------- 
 
 });  
