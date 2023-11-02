@@ -27,9 +27,9 @@
     </a>
 
     <div class="main-menu" id="main-menu">
-        <ul class="menu-list">
+        <ul class="main-menu-list">
             <li class="menu-item logo">
-                <a href="{% url 'pageHome' %}" style="z-index: 999;">
+                <a href="{% url 'pageHome' %}">
                     <img src="{% static 'img/gorille.png' %}" class="logo" alt="Logo de Brutálity">
                 </a>
             </li>
@@ -39,39 +39,13 @@
                         id="search-input">
                     <i class="fas fa-times search-clear-icon" id="search-clear"></i>
                 </div>
+                <!-- toggle -->
                 <div class="search-result-cont">
                     <div id="toggle-main-search" class="search-result"></div>
                 </div>
-                <div class="menu-item productos" id="toggle-main-products">
-                    Suplementos <i class="fas fa-chevron-down icon"></i>
-                </div>
-                <!-- toggle -->
-                <div id="main-options-products" class="menu-options main">
-                    <ul class="categorias-list">
-                        {% for categoria in categorias %}
-                        <li class="categoria-item">{{ categoria.nombre_categoria }}:
-                            <ul class="productos-list">
-                                {% for producto in categoria.productos_set.all %}
-                                <li class="producto-item">{{ producto.nombre_producto }}</li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </li>
-            <hr class="divider">
-            <li class="menu-item nav">
-                <div class="menu-item marcas" id="toggle-main-marcas">
-                    Marcas <i class="fas fa-chevron-down icon"></i>
-                </div>
-                <!-- toggle -->
-                <div id="main-options-marcas" class="menu-options main">
-                    <ul class="categorias-list">
-                        {% for marca in marcas %}
-                        <li class="categoria-item">{{ marca.nombre_marca }}</li>
-                        {% endfor %}
-                    </ul>
+                <div class="menu-item productos mt-1" id="toggle-submain-products">
+                    Suplementos
+                    <!-- <i class="fas fa-arrow-right"></i> -->
                 </div>
             </li>
             <hr class="divider">
@@ -94,6 +68,41 @@
                     <a href="#" class="login-button">Login</a>
                 </div>
             </li>
+        </ul>
+    </div>
+    <div id="options-submain-products" class="menu-options">
+        <i class="fas fa-arrow-left cerrar-icon" id="close-submain-options"></i>
+        <div class="menu-options-item" id="toggle-main-productos">
+            Productos <i class="fas fa-chevron-down"></i>
+        </div>
+        <ul id="main-options-products" class="options-menu-list productos">
+            {% for categoria in categorias %}
+            <li class="categoria-item">{{ categoria.nombre_categoria }}:
+                <ul class="productos-list">
+                    {% for producto in categoria.productos_set.all %}
+                    <li class="producto-item">{{ producto.nombre_producto }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        <hr class="divider">
+        <div class="menu-options-item" id="toggle-main-marcas">
+            Marcas <i class="fas fa-chevron-down"></i>
+        </div>
+        <ul id="main-options-marcas" class="options-menu-list marcas">
+            {% for marca in marcas %}
+            <li class="categoria-item">{{ marca.nombre_marca }}</li>
+            {% endfor %}
+        </ul>
+        <hr class="divider">
+        <div class="menu-options-item" id="toggle-main-categorias">
+            Categorias <i class="fas fa-chevron-down"></i>
+        </div>
+        <ul id="main-options-categorias" class="options-menu-list categorias">
+            {% for categoria in categorias %}
+            <li class="categoria-item">{{ categoria.nombre_categoria }}</li>
+            {% endfor %}
         </ul>
     </div>
 
@@ -187,5 +196,36 @@
     });
 </script>
 
+<script>
+    const toggleProductos = document.getElementById("toggle-main-productos");
+    const toggleMarcas = document.getElementById("toggle-main-marcas");
+    const toggleCategorias = document.getElementById("toggle-main-categorias");
+    const mainOptionsProductos = document.getElementById("main-options-products");
+    const mainOptionsMarcas = document.getElementById("main-options-marcas");
+    const mainOptionsCategorias = document.getElementById("main-options-categorias");
+
+    const iconProductos = toggleProductos.querySelector("i");
+    const iconMarcas = toggleMarcas.querySelector("i");
+    const iconCategorias = toggleCategorias.querySelector("i");
+
+    function toggleActiveClass(element, iconElement) {
+        element.classList.toggle("is-active");
+        iconElement.classList.toggle("fa-chevron-up");
+        iconElement.classList.toggle("fa-chevron-down");
+    }
+
+    toggleProductos.addEventListener("click", function () {
+        toggleActiveClass(mainOptionsProductos, iconProductos);
+    });
+
+    toggleMarcas.addEventListener("click", function () {
+        toggleActiveClass(mainOptionsMarcas, iconMarcas);
+    });
+
+    toggleCategorias.addEventListener("click", function () {
+        toggleActiveClass(mainOptionsCategorias, iconCategorias);
+    });
+
+</script>
 
 </html>
