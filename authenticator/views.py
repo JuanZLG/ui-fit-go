@@ -12,6 +12,9 @@ import json
 from .utils import custom_jwt_payload_handler
 from authenticator.models import Usuarios
 from django.core.mail import send_mail
+from django.template.loader import get_template
+from django.http import HttpResponse
+from django.core.exceptions import MultipleObjectsReturned
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -50,24 +53,15 @@ class loginmio(APIView):
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
         
 
-# authenticator/views.py
-from django.shortcuts import render
-from authenticator.models import Usuarios
-from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 def olvide_contrasena(request):
-    error_message = None
-
     if request.method == 'POST':
         correo = request.POST.get('correo')
         try:
-            # Verificar si el correo existe en la base de datos
             usuario = Usuarios.objects.get(correo=correo)
 
-            # Lógica para generar un token o enlace para restablecer la contraseña
             reset_link = "http://tu-sitio.com/restablecer-contrasena/" + usuario.correo + "/token/"
-
-            # Lógica para enviar el correo de recuperación
             send_mail(
                 'Recuperar Contraseña',
                 f'Para restablecer tu contraseña, haz clic en este enlace: {reset_link}',
@@ -75,13 +69,17 @@ def olvide_contrasena(request):
                 [correo],
                 fail_silently=False,
             )
-            return render(request, 'olvide_contrasena_exito.html')
+            return render(request, 'olvide_contrasena_exito.html', {'correo': correo})
 
-        except Usuarios.DoesNotExist:
+        except ObjectDoesNotExist:
             error_message = 'El correo no existe'
+            return render(request, 'olvide_contrasena.html', {'error_message': error_message, 'correo': correo})
 
-    return render(request, 'olvide_contrasena.html', {'error_message': error_message})
+        except MultipleObjectsReturned:
+            error_message = 'Se encontraron múltiples usuarios con el mismo correo'
+            return render(request, 'olvide_contrasena.html', {'error_message': error_message, 'correo': correo})
 
+    return render(request, 'olvide_contrasena.html')
 
 
 def olvide_contrasena_exito(request):

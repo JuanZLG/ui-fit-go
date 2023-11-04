@@ -6,17 +6,16 @@
 <body>
     <h1>Recuperar Contraseña</h1>
     <p>Ingresa tu dirección de correo electrónico para recuperar tu contraseña.</p>
-
-    {% if error_message %}
-    <p class="error">{{ error_message }}</p>
-    {% endif %}
-
-    <form method="post">
+    <form method="post" action="{% url 'olvide_contrasena' %}">
+        {% if error_message %}
+          <div style="color: red;">{{ error_message }}</div>
+        {% endif %}
         {% csrf_token %}
-        <label for="correo">Correo Electrónico:</label>
-        <input type="email" name="correo" required>
-        <button type="submit">Enviar</button>
-    </form>
+        <label for="correo">Correo electrónico:</label>
+        <input type="text" name="correo" id="correo">
+        <input type="submit" value="Enviar">
+    </form>   
 </body>
 </html>
+
 
