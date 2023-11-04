@@ -24,77 +24,6 @@
 </head>
 
 <body>
-    <div class="bg-loader">
-        <div class="loader"></div>
-    </div>
-    <style>
-        .bg-loader {
-            display: none;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            position: fixed;
-            top: 0;
-            left: 0;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .loader {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(0, 0, 0, .1);
-            border-left-color: transparent;
-            border-radius: 50%;
-            z-index: 1000;
-        }
-
-        .bg-loader.is-active {  
-            display: flex;
-        }
-
-        .loader {
-            border: 4px solid #000;
-            border-left-color: transparent;
-            width: 36px;
-            height: 36px;
-        }
-
-        .loader {
-            border: 4px solid #000;
-            border-left-color: transparent;
-            width: 36px;
-            height: 36px;
-            animation: spin89345 1s linear infinite;
-        }
-
-        @keyframes spin89345 {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-    <script>
-        function showLoader() {
-            // Encuentra el elemento del cargador
-            var loader = document.querySelector('.bg-loader');
-
-            // Añade la clase 'is-active' al cargador para mostrarlo
-            loader.classList.add('is-active');
-
-            // Espera 2 segundos, luego quita la clase 'is-active' para ocultar el cargador
-            setTimeout(function () {
-                loader.classList.remove('is-active');
-            }, 2000);
-        }
-
-    </script>
     <a href="https://wa.me/+573006280468" target="_blank" class="whatsapp-button">
         <i class="fab fa-whatsapp"></i>
     </a>
@@ -152,7 +81,8 @@
             <li>{{ categoria.nombre_categoria }}:
                 <ul>
                     {% for producto in categoria.productos_set.all %}
-                    <li class="menu-list-item productDetailsButton" data-id="{{ producto.id_producto }}">
+                    <li class="menu-list-item"
+                        onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 200)">
                         {{ producto.nombre_producto }}
                     </li>
                     {% endfor %}
@@ -167,7 +97,7 @@
         </div>
         <ul id="main-options-marcas" class="options-menu-list marcas">
             {% for marca in marcas %}
-            <li class="menu-list-item" data-tipo="Marcas">{{ marca.nombre_marca }}</li>
+            <li class="menu-list-item" data-id-filter="marca-{{ marca.id_marca }}">{{ marca.nombre_marca }}</li>
             {% endfor %}
         </ul>
         <hr class="divider">
@@ -176,7 +106,7 @@
         </div>
         <ul id="main-options-categorias" class="options-menu-list categorias">
             {% for categoria in categorias %}
-            <li class="menu-list-item" data-tipo="Categorias">{{ categoria.nombre_categoria }}</li>
+            <li class="menu-list-item" data-id-filter="categoria-{{ categoria.id_categoria }}">{{ categoria.nombre_categoria }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -204,6 +134,7 @@
     {% block catalog-section %}
     <div class="catalog-section">
         <select name="sort" id="sort" class="catalog-select">
+            <option value="defect" class="sort-option">Por defecto</option>
             <option value="all" class="sort-option">Ver todo</option>
             <option value="best-sellers" class="sort-option">Más vendidos</option>
             <option value="high-price" class="sort-option">Mayor precio</option>
@@ -217,7 +148,9 @@
     {% endblock %}
 </body>
 
-
+<div class="product-featured">
+    <h3 class="title" id="dynamic-title" data-id-filter="producto-0">Suplementos</h3>
+</div>
 {% block body %}{% endblock %}
 
 
@@ -298,8 +231,9 @@
                                 $("#search-input").val("");
                                 $("#toggle-main-search").empty();
                                 $("#toggle-main-search").removeClass("is-active");
-                                cargarDetalle(id_producto);
-                                showLoader()
+                                setTimeout(function () {
+                                    cargarDetalle(id_producto);
+                                }, 200);
                             });
                         } else {
                             $("#toggle-main-search").empty();
@@ -389,7 +323,7 @@
 </script>
 
 <script>
-    function filterProducts(valor, tipo = "Productos") {
+    function filterProducts(valor, tipo = "productos") {
         $.ajax({
             url: "{% url 'filter_products' %}",
             method: 'GET',
@@ -414,6 +348,7 @@
                             '</div ></div >';
 
                         $("#dynamic-title").text(p.dynamicTitle);
+                        $("#dynamic-title").data("id-filter", p.identificador);
                         $("#product-container").append(productCard);
                     });
                     $('.productDetailsButton').click(function () {
@@ -428,26 +363,24 @@
 <script>
     function closeMains() {
         document.getElementById('options-submain-products').classList.remove('is-active');
+        document.getElementById('main-menu').classList.remove('is-active');
+        const checkbox = document.getElementById("hamburgerCheckbox");
+        checkbox.checked = false;
         toggleCloseSubMain()
-
-        setTimeout(function () {
-            document.getElementById('main-menu').classList.remove('is-active');
-            const checkbox = document.getElementById("hamburgerCheckbox");
-            checkbox.checked = false;
-        }, 1000);
     }
     $(document).ready(function () {
         $("#sort").change(function () {
-            selectedValue = $(this).val();
-            filterProducts(selectedValue);
+            let selectedValue = $(this).val();
+            if (selectedValue == "defect") location.reload();
+            const tipo = $("#dynamic-title").data('id-filter');
+            filterProducts(selectedValue, tipo);
         });
-
         const menuListItems = document.querySelectorAll('.menu-list-item');
 
         menuListItems.forEach((menuItem) => {
             menuItem.addEventListener('click', function () {
                 const itemName = menuItem.textContent;
-                const tipo = menuItem.getAttribute('data-tipo');
+                const tipo = menuItem.getAttribute('data-id-filter');
                 filterProducts(itemName, tipo);
                 closeMains()
             });
@@ -472,10 +405,11 @@
 </style>
 <script>
 
-    $('.productDetailsButton').click(function () {
+    $('.productDetailsButton').off('click').click(function () {
         id_producto = $(this).data("id")
         cargarDetalle(id_producto);
     });
+
     let css = '.custom-close-button { border: none !important; color: black !important; }',
         head = document.head || document.getElementsByTagName('head')[0],
         style = document.createElement('style');

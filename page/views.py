@@ -1,16 +1,19 @@
+import re
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from .models import Productos, Marcas, Categorias, Detalleventa, Ventas
 from django.db.models import Sum
+from django.db.models import Count
 
 def build_context(request, extra_context=None):
     context = {}
     context["productos"] =  Productos.objects.filter(estado=1).all()
-    context["marcas"] = Marcas.objects.all()
-    context["categorias"] = Categorias.objects.all()
+    context["marcas"] = Marcas.objects.annotate(num_productos=Count('productos')).filter(num_productos__gt=0)
+    context["categorias"] = Categorias.objects.annotate(num_productos=Count('productos')).filter(num_productos__gt=0)
     if extra_context:
         context.update(extra_context)
     return context
+
 
 
 def Home(request):
@@ -58,36 +61,47 @@ def get_image_name(image_field):
             return image_field.name
     return "No Image"
 
-
 def filter_products(request):
     valor = request.GET.get('valor')
     tipo = request.GET.get('tipo')
     dynamicTitle = ""
+    productos = None
 
-    if tipo == 'Marcas':
-        filtro = Productos.objects.filter(id_marca__nombre_marca=valor, estado=1)
-        dynamicTitle = f"Marca {valor}"
-    elif tipo == 'Categorias':
-        filtro = Productos.objects.filter(id_categoria__nombre_categoria=valor, estado=1)
-        dynamicTitle = valor
-    else:
-        if valor == 'best-sellers':
-            filtro = Productos.objects.annotate(
+    if re.match(r'^marca-\d+$', tipo):
+        id_marca = tipo.split('-')[1]
+        productos = Productos.objects.filter(id_marca=id_marca)
+        marca = Marcas.objects.get(id_marca=id_marca) 
+        dynamicTitle = marca.nombre_marca
+    elif re.match(r'^categoria-\d+$', tipo):
+        id_categoria = tipo.split('-')[1]
+        productos = Productos.objects.filter(id_categoria=id_categoria)
+        categoria = Categorias.objects.get(id_categoria=id_categoria) 
+        dynamicTitle = categoria.nombre_categoria
+    elif re.match(r'^producto-\d+$', tipo):
+        productos = Productos.objects.filter(estado=1).all()
+        dynamicTitle = "Suplementos"
+
+    if productos:
+        if valor == "best-sellers":
+            productos = productos.annotate(
                 total_vendido=Sum('detalleventa__cantidad')
-            ).filter(estado=1, total_vendido__gt=0).order_by('-total_vendido')
-            dynamicTitle = "Productos Más Vendidos"
-        elif valor == 'high-price':
-            filtro = Productos.objects.filter(estado=1).order_by('-precio')
-            dynamicTitle = "Productos de Mayor Precio"
-        elif valor == 'low-price':
-            filtro = Productos.objects.filter(estado=1).order_by('precio')
-            dynamicTitle = "Productos de Menor Precio"
+            ).filter(estado=1).order_by('-total_vendido')
+            dynamicTitle += " - Más populares"
+        elif valor == "high-price":
+            productos = productos.filter(estado=1).order_by('-precio')
+            dynamicTitle += " - Mayor precio"
+        elif valor == "low-price":
+            productos = productos.filter(estado=1).order_by('precio')
+            dynamicTitle += " - Menor Precio"
         else:
-            filtro = Productos.objects.filter(estado=1).all()
-            dynamicTitle = "Todos los Productos"
+            productos = productos.filter(estado=1)
+
+    # if not productos:
+    #     productos = Productos.objects.filter(estado=1).all()
+    #     dynamicTitle = "Todos los Productos"
 
     data = []
-    for producto in filtro:
+    for producto in productos:
         precio_formateado = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
         data.append({
             'id_producto': producto.id_producto,
@@ -96,7 +110,8 @@ def filter_products(request):
             'precio': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
             'iInfoImg_name': get_image_name(producto.iInfoImg),
-            'dynamicTitle': dynamicTitle
+            'dynamicTitle': dynamicTitle,
+            'identificador': tipo
         })
 
     return JsonResponse({'success': True, 'data': data})

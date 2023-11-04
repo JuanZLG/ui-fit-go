@@ -17,10 +17,6 @@
 
 
 {% block body %}
-<div class="product-featured">
-  <h3 class="title" id="dynamic-title">Todos los productos</h3>
-</div>
-
 <section class="product-card-container" id="product-container">
   {% for producto in productos %}
   <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
