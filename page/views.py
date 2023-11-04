@@ -24,6 +24,7 @@ def Home(request):
 
     return render(request, 'pageHome.html', contexto)
 
+from django.http import JsonResponse
 
 def pageDetails(request):
     producto_id = request.GET.get('producto_id')
@@ -32,8 +33,20 @@ def pageDetails(request):
     productoDetalle.precio = precio_formateado
     productoDetalle.iInfoImg_name = get_image_name(productoDetalle.iInfoImg)
     productoDetalle.iProductImg_name = get_image_name(productoDetalle.iProductImg)
-    contexto = build_context(request, {"detalle": productoDetalle})
-    return render(request, 'pageDetails.html', contexto)
+    
+    # Construye un diccionario con los datos del producto
+    response_data = {
+        'nombre_producto': productoDetalle.nombre_producto,
+        'precio': productoDetalle.precio,
+        'descripcion': productoDetalle.descripcion,
+        'sabor': productoDetalle.sabor,
+        'presentacion': productoDetalle.presentacion,
+        'iInfoImg_name': productoDetalle.iInfoImg_name,
+        'iProductImg_name': productoDetalle.iProductImg_name
+    }
+    
+    return JsonResponse(response_data)
+
 
 
 
@@ -47,23 +60,31 @@ def get_image_name(image_field):
 
 
 def filter_products(request):
-    option = request.GET.get('sortOption')
+    valor = request.GET.get('valor')
+    tipo = request.GET.get('tipo')
     dynamicTitle = ""
 
-    if option == 'best-sellers':
-        filtro = Productos.objects.annotate(
-            total_vendido=Sum('detalleventa__cantidad')
-        ).filter(estado=1, total_vendido__gt=0).order_by('-total_vendido')
-        dynamicTitle = "Productos Más Vendidos"
-    elif option == 'high-price':
-        filtro = Productos.objects.filter(estado=1).order_by('-precio')
-        dynamicTitle = "Productos de Mayor Precio"
-    elif option == 'low-price':
-        filtro = Productos.objects.filter(estado=1).order_by('precio')
-        dynamicTitle = "Productos de Menor Precio"
+    if tipo == 'Marcas':
+        filtro = Productos.objects.filter(id_marca__nombre_marca=valor, estado=1)
+        dynamicTitle = f"Marca {valor}"
+    elif tipo == 'Categorias':
+        filtro = Productos.objects.filter(id_categoria__nombre_categoria=valor, estado=1)
+        dynamicTitle = valor
     else:
-        filtro = Productos.objects.filter(estado=1).all()
-        dynamicTitle = "Todos los Productos"
+        if valor == 'best-sellers':
+            filtro = Productos.objects.annotate(
+                total_vendido=Sum('detalleventa__cantidad')
+            ).filter(estado=1, total_vendido__gt=0).order_by('-total_vendido')
+            dynamicTitle = "Productos Más Vendidos"
+        elif valor == 'high-price':
+            filtro = Productos.objects.filter(estado=1).order_by('-precio')
+            dynamicTitle = "Productos de Mayor Precio"
+        elif valor == 'low-price':
+            filtro = Productos.objects.filter(estado=1).order_by('precio')
+            dynamicTitle = "Productos de Menor Precio"
+        else:
+            filtro = Productos.objects.filter(estado=1).all()
+            dynamicTitle = "Todos los Productos"
 
     data = []
     for producto in filtro:

@@ -23,29 +23,27 @@
 
 <section class="product-card-container" id="product-container">
   {% for producto in productos %}
-  <div class="product-card">
-    <a href="{% url 'pageDetails' %}?producto_id={{ producto.id_producto }}">
-      <div class="product-image">
-        <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
+  <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
+    <div class="product-image">
+      <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
+    </div>
+    <div class="product-details">
+      <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+      <div class="product-description">
+        <p>{{ producto.descripcion }}</p>
       </div>
-      <div class="product-details">
-        <h3 class="product-title">{{ producto.nombre_producto }}</h3>
-        <div class="product-description">
-          <p>{{ producto.descripcion }}</p>
-        </div>
-        <div class="product-price">
-          <span>${{ producto.precio }}</span>
-          <span class="product-search">
-            <i class="fas fa-search"></i>
-          </span>
-        </div>
+      <div class="product-price">
+        <span>${{ producto.precio }}</span>
+        <span class="product-search">
+          <i class="fas fa-search"></i>
+        </span>
       </div>
-    </a>
+    </div>
   </div>
 
   {% endfor %}
 </section>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 {% endblock %}

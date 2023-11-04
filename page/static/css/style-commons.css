@@ -179,8 +179,7 @@
 /* Resto de tu CSS... */
 
 
-.search-card a {
-  text-decoration: none;
+.search-card {
   width: 100%;
   display: flex;
   gap: 15px;
@@ -190,7 +189,7 @@
   color: #000;
   transition: all .500ms ease-in;
 }
-.search-card a:hover {
+.search-card:hover {
   background-color: #f2f2f2;
   cursor: pointer;
 }

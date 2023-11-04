@@ -6,22 +6,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/1.2.1/hamburgers.min.css"
-        integrity="sha512-+mlclc5Q/eHs49oIOCxnnENudJWuNqX5AogCiqRBgKnpoplPzETg2fkgBFVC6WYUVxYYljuxPNG8RE7yBy1K+g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style-commons.css' %}">
     <script src="{% static 'js/pageIndex.js' %}"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
     {% block urls %} {% endblock %}
 </head>
 
 <body>
+    <div class="bg-loader">
+        <div class="loader"></div>
+    </div>
+    <style>
+        .bg-loader {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
 
+        .loader {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 0, 0, .1);
+            border-left-color: transparent;
+            border-radius: 50%;
+            z-index: 1000;
+        }
+
+        .bg-loader.is-active {  
+            display: flex;
+        }
+
+        .loader {
+            border: 4px solid #000;
+            border-left-color: transparent;
+            width: 36px;
+            height: 36px;
+        }
+
+        .loader {
+            border: 4px solid #000;
+            border-left-color: transparent;
+            width: 36px;
+            height: 36px;
+            animation: spin89345 1s linear infinite;
+        }
+
+        @keyframes spin89345 {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        function showLoader() {
+            // Encuentra el elemento del cargador
+            var loader = document.querySelector('.bg-loader');
+
+            // Añade la clase 'is-active' al cargador para mostrarlo
+            loader.classList.add('is-active');
+
+            // Espera 2 segundos, luego quita la clase 'is-active' para ocultar el cargador
+            setTimeout(function () {
+                loader.classList.remove('is-active');
+            }, 2000);
+        }
+
+    </script>
     <a href="https://wa.me/+573006280468" target="_blank" class="whatsapp-button">
         <i class="fab fa-whatsapp"></i>
     </a>
@@ -79,11 +152,14 @@
             <li>{{ categoria.nombre_categoria }}:
                 <ul>
                     {% for producto in categoria.productos_set.all %}
-                    <li class="menu-list-item" data-tipo="producto">{{ producto.nombre_producto }}</li>
+                    <li class="menu-list-item productDetailsButton" data-id="{{ producto.id_producto }}">
+                        {{ producto.nombre_producto }}
+                    </li>
                     {% endfor %}
                 </ul>
             </li>
             {% endfor %}
+
         </ul>
         <hr class="divider">
         <div class="menu-options-item" id="toggle-main-marcas">
@@ -91,7 +167,7 @@
         </div>
         <ul id="main-options-marcas" class="options-menu-list marcas">
             {% for marca in marcas %}
-            <li class="menu-list-item" data-tipo="marca">{{ marca.nombre_marca }}</li>
+            <li class="menu-list-item" data-tipo="Marcas">{{ marca.nombre_marca }}</li>
             {% endfor %}
         </ul>
         <hr class="divider">
@@ -100,7 +176,7 @@
         </div>
         <ul id="main-options-categorias" class="options-menu-list categorias">
             {% for categoria in categorias %}
-            <li class="menu-list-item" data-tipo="categoria">{{ categoria.nombre_categoria }}</li>
+            <li class="menu-list-item" data-tipo="Categorias">{{ categoria.nombre_categoria }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -153,6 +229,48 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    function cargarDetalle(id_producto) {
+        $.ajax({
+            url: '{% url "pageDetails" %}',
+            data: {
+                'producto_id': id_producto
+            },
+            dataType: 'json',
+            success: function (data) {
+                Swal.fire({
+                    html: `
+      <div>
+        <swiper-container class="mySwiper" keyboard="true" space-between="30" pagination="true"
+            pagination-clickable="true" navigation="true" loop="true">
+            <swiper-slide><a href="/media/landingproducts/products/${data.iProductImg_name}" data-lightbox="image-1"><img src="/media/landingproducts/products/${data.iProductImg_name}" class="img-fluid"
+                alt="Imagen"></a></swiper-slide>
+            <swiper-slide><a href="/media/landingproducts/nutritiondex/${data.iInfoImg_name}" data-lightbox="image-1"><img src="/media/landingproducts/nutritiondex/${data.iInfoImg_name}" class="img-fluid"
+                alt="Imagen"></a></swiper-slide>
+        </swiper-container>
+            <div class="col-lg-12 mb-4 mt-4" style="text-align:left;">
+                <h2 class="my-3"> ${data.nombre_producto} <strong>${data.precio}</strong></h2>
+                <div class="mb-3" style="max-height: 100px; height: auto;overflow-y: scroll;"> ${data.descripcion}</div>
+                <hr >
+                <ul class="list-group list-group-flush mt-4">
+                    <li><strong>Sabores:</strong> ${data.sabor}</li>
+                    <hr >
+                    <li><strong>Presentaciones por libras:</strong> ${data.presentacion}lbs</li>
+                </ul>
+            </div>
+      </div>
+    `,
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    customClass: {
+                        closeButton: 'custom-close-button'
+                    }
+                })
+            }
+        });
+    }
+</script>
+<script>
+
     $(document).on("input", ".search", function () {
         let search = $(this).val();
 
@@ -168,12 +286,20 @@
                             $.each(data.data, function (index, p) {
                                 $("#toggle-main-search").addClass("is-active");
                                 var productList =
-                                    '<div class="search-card">' +
-                                    '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
+                                    '<div class="search-card productDetailsButton" data-id="' + p.id_producto + '">' +
                                     '<div class="search-image">' +
                                     '<img class="img-fluid" src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                                    '<p class="search-title">' + p.nombre_producto + '</p></a></div >';
+                                    '<p class="search-title">' + p.nombre_producto + '</p></div >';
                                 $("#toggle-main-search").append(productList);
+                            });
+                            $('.productDetailsButton').click(function () {
+                                id_producto = $(this).data("id")
+                                closeMains()
+                                $("#search-input").val("");
+                                $("#toggle-main-search").empty();
+                                $("#toggle-main-search").removeClass("is-active");
+                                cargarDetalle(id_producto);
+                                showLoader()
                             });
                         } else {
                             $("#toggle-main-search").empty();
@@ -209,7 +335,7 @@
 
     const closeSubMainOptions = document.getElementById('close-submain-options');
 
-    closeSubMainOptions.addEventListener('click', function () {
+    function toggleCloseSubMain() {
         // Cerrar opciones
         mainOptionsProductos.classList.remove("is-active");
         mainOptionsMarcas.classList.remove("is-active");
@@ -221,81 +347,149 @@
         iconMarcas.classList.add("fa-chevron-down");
         iconCategorias.classList.remove("fa-chevron-up");
         iconCategorias.classList.add("fa-chevron-down");
-    });
+    }
+    function resetSortSelect() {
+        const sortSelect = document.getElementById('sort');
+        sortSelect.value = 'all';
+    }
+    closeSubMainOptions.addEventListener('click', () => toggleCloseSubMain());
 
-    function toggleActiveClass(element, iconElement) {
+    function toggleActiveClass(element, iconElement, otherElements, otherIcons) {
+        // Desactiva todas las opciones
+        otherElements.forEach((otherElement) => {
+            otherElement.classList.remove("is-active");
+        });
+        // Restaura los íconos a su estado original
+        otherIcons.forEach((otherIcon) => {
+            otherIcon.classList.remove("fa-chevron-up");
+            otherIcon.classList.add("fa-chevron-down");
+        });
+
+        // Activa la opción seleccionada
         element.classList.toggle("is-active");
         iconElement.classList.toggle("fa-chevron-up");
         iconElement.classList.toggle("fa-chevron-down");
     }
 
     toggleProductos.addEventListener("click", function () {
-        toggleActiveClass(mainOptionsProductos, iconProductos);
+        toggleActiveClass(mainOptionsProductos, iconProductos, [mainOptionsMarcas, mainOptionsCategorias], [iconMarcas, iconCategorias]);
+        resetSortSelect();
     });
 
     toggleMarcas.addEventListener("click", function () {
-        toggleActiveClass(mainOptionsMarcas, iconMarcas);
+        toggleActiveClass(mainOptionsMarcas, iconMarcas, [mainOptionsProductos, mainOptionsCategorias], [iconProductos, iconCategorias]);
+        resetSortSelect();
     });
 
     toggleCategorias.addEventListener("click", function () {
-        toggleActiveClass(mainOptionsCategorias, iconCategorias);
+        toggleActiveClass(mainOptionsCategorias, iconCategorias, [mainOptionsProductos, mainOptionsMarcas], [iconProductos, iconMarcas]);
+        resetSortSelect();
     });
-
 
 </script>
 
 <script>
-    function filterProducts(selectedValue, tipo = "main") {
-      $.ajax({
-        url: "{% url 'filter_products' %}",
-        method: 'GET',
-        data: { sortOption: selectedValue },
-        success: function (data) {
-          if (data.success) {
-            $("#product-container").empty();
-  
-            $.each(data.data, function (index, p) {
-              var productCard =
-                '<div class="product-card">' +
-                '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
-                ' <div class="product-image">' +
-                '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                '<div class="product-details">' +
-                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-                '<div class="product-description">' +
-                '<p>' + p.descripcion + '</p></div>' +
-                '<div class="product-price">' +
-                '<span>' + p.precio + '</span>' +
-                '<span class="product-search">' +
-                '<i class="fas fa-search"></i></span></div>' +
-                '</div ></a ></div >';
-  
-              $("#dynamic-title").text(p.dynamicTitle);
-              $("#product-container").append(productCard);
-            });
-          }
-        }
-      });
-    }
-  </script>
-  
-  <script>
-    $(document).ready(function () {
-      $("#sort").change(function () {
-        selectedValue = $(this).val();
-        filterProducts(selectedValue);
-      });
+    function filterProducts(valor, tipo = "Productos") {
+        $.ajax({
+            url: "{% url 'filter_products' %}",
+            method: 'GET',
+            data: { valor: valor, tipo: tipo },
+            success: function (data) {
+                if (data.success) {
+                    $("#product-container").empty();
 
-      const menuListItems = document.querySelectorAll('.menu-list-item');
+                    $.each(data.data, function (index, p) {
+                        var productCard =
+                            '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
+                            '<div class="product-image">' +
+                            '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                            '<div class="product-details">' +
+                            '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
+                            '<div class="product-description">' +
+                            '<p>' + p.descripcion + '</p></div>' +
+                            '<div class="product-price">' +
+                            '<span>' + p.precio + '</span>' +
+                            '<span class="product-search">' +
+                            '<i class="fas fa-search"></i></span></div>' +
+                            '</div ></div >';
 
-      menuListItems.forEach((menuItem) => {
-          menuItem.addEventListener('click', function () {
-              const itemName = menuItem.textContent;
-              const tipo = menuItem.getAttribute('data-tipo');
-              filterProducts(itemName, tipo);
-
+                        $("#dynamic-title").text(p.dynamicTitle);
+                        $("#product-container").append(productCard);
+                    });
+                    $('.productDetailsButton').click(function () {
+                        id_producto = $(this).data("id")
+                        cargarDetalle(id_producto);
+                    });
+                }
+            }
         });
-    });
+    }
+</script>
+<script>
+    function closeMains() {
+        document.getElementById('options-submain-products').classList.remove('is-active');
+        toggleCloseSubMain()
+
+        setTimeout(function () {
+            document.getElementById('main-menu').classList.remove('is-active');
+            const checkbox = document.getElementById("hamburgerCheckbox");
+            checkbox.checked = false;
+        }, 1000);
+    }
+    $(document).ready(function () {
+        $("#sort").change(function () {
+            selectedValue = $(this).val();
+            filterProducts(selectedValue);
+        });
+
+        const menuListItems = document.querySelectorAll('.menu-list-item');
+
+        menuListItems.forEach((menuItem) => {
+            menuItem.addEventListener('click', function () {
+                const itemName = menuItem.textContent;
+                const tipo = menuItem.getAttribute('data-tipo');
+                filterProducts(itemName, tipo);
+                closeMains()
+            });
+        });
     })
-  </script>
+</script>
+
+<style>
+    swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+
+
+    swiper-slide img {
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+<script>
+
+    $('.productDetailsButton').click(function () {
+        id_producto = $(this).data("id")
+        cargarDetalle(id_producto);
+    });
+    let css = '.custom-close-button { border: none !important; color: black !important; }',
+        head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+
+    head.appendChild(style);
+
+    style.type = 'text/css';
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+
+</script>
+
+
 </html>
