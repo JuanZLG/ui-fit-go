@@ -1,20 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
-  
-  
-  window.addEventListener('resize', function() {
-    var width = window.innerWidth;
-    var breakpoint = 768;
-    if (width >= breakpoint) {
-        document.querySelector('.mobile-header').style.display = 'none';
-        document.querySelector('.desktop-header').style.display = 'block';
-    } else {
-        document.querySelector('.mobile-header').style.display = 'block';
-        document.querySelector('.desktop-header').style.display = 'none';
-    }
+  let toggleComprar = document.getElementById('toggle-comprar');
+  let menuComprar = document.getElementById('menu-comprar');
+
+  let toggleInfo = document.getElementById('toggle-info');
+  let menuInfo = document.getElementById('menu-info');
+
+  toggleComprar.addEventListener('mouseover', function () {
+      menuComprar.classList.add('show');
   });
-  window.dispatchEvent(new Event('resize'));
-  
-  
+
+  toggleComprar.addEventListener('mouseout', function () {
+      menuComprar.classList.remove('show');
+  });
+
+  toggleInfo.addEventListener('mouseover', function () {
+      menuInfo.classList.add('show');
+  });
+
+  toggleInfo.addEventListener('mouseout', function () {
+      menuInfo.classList.remove('show');
+  });
   // Barra principal ----------------------- 
   let main = document.getElementById("main-menu");
   document.getElementById("hamburgerCheckbox").addEventListener("click", function () {
