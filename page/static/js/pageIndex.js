@@ -1,6 +1,21 @@
-// Barra principal ----------------------- 
 document.addEventListener('DOMContentLoaded', function () {
-
+  
+  
+  window.addEventListener('resize', function() {
+    var width = window.innerWidth;
+    var breakpoint = 768;
+    if (width >= breakpoint) {
+        document.querySelector('.mobile-header').style.display = 'none';
+        document.querySelector('.desktop-header').style.display = 'block';
+    } else {
+        document.querySelector('.mobile-header').style.display = 'block';
+        document.querySelector('.desktop-header').style.display = 'none';
+    }
+  });
+  window.dispatchEvent(new Event('resize'));
+  
+  
+  // Barra principal ----------------------- 
   let main = document.getElementById("main-menu");
   document.getElementById("hamburgerCheckbox").addEventListener("click", function () {
     main.classList.toggle("is-active");
