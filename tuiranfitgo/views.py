@@ -3,6 +3,48 @@ import jwt
 from django.conf import settings
 from django.http import JsonResponse
 
+
+
+
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.http import JsonResponse
+from products.models import Productos
+
+
+from django.http import JsonResponse
+from .models import Productos
+
+def verificar_notificaciones(request):
+    mensaje = []
+
+    productos_pocos = Productos.objects.filter(cantidad__lt=3)
+    productos_muchos = Productos.objects.filter(cantidad__gt=12)
+
+    if productos_pocos.exists():
+        for producto in productos_pocos:
+            mensaje.append(f"Pocos {producto.nombre_producto} en inventario ({producto.cantidad} disponibles).")
+
+    if productos_muchos.exists():
+        for producto in productos_muchos:
+            mensaje.append(f"Inventario con alta cantidad de {producto.nombre_producto} ({producto.cantidad} disponibles).")
+
+    if mensaje:
+        # Si hay mensajes, devuelve solo el primer mensaje (puedes ajustar esto según tus necesidades)
+        return JsonResponse({"mensaje": mensaje[0]})
+    else:
+        # Si no hay mensajes, devuelve un mensaje en blanco
+        return JsonResponse({"mensaje": ""})
+
+
+
+
+
+
+
+
+
 def error_view(request):  
     return render(request, '404.html') 
 

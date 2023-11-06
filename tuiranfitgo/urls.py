@@ -22,6 +22,8 @@ urlpatterns = [
     path('error/', views.error_view, name="initerror"),
     path('logout/', views.logout_view, name='logout'),
     path('authenticator/', include('authenticator.urls')),
+    path('verificar-notificaciones/', views.verificar_notificaciones, name='verificar_notificaciones'),
+
 ]
 
 if settings.DEBUG:
