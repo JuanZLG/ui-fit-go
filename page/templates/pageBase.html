@@ -310,7 +310,7 @@
             alt="Imagen"></a></swiper-slide>
     </swiper-container>
         <div class="col-lg-12 mb-4 mt-4" style="text-align:left;">
-            <h2 class="my-3"> ${data.nombre_producto} <strong>${data.precio}</strong></h2>
+            <h2 class="my-3"> ${data.nombre_producto} <strong>${data.precio_pub}</strong></h2>
             <div class="mb-3" style="max-height: 100px; height: auto;overflow-y: scroll;"> ${data.descripcion}</div>
             <hr >
             <ul class="list-group list-group-flush mt-4">
@@ -403,7 +403,7 @@
                                 '<div class="product-description">' +
                                 '<p>' + p.descripcion + '</p></div>' +
                                 '<div class="product-price">' +
-                                '<span>' + p.precio + '</span>' +
+                                '<span>' + p.precio_pub + '</span>' +
                                 '<span class="product-search">' +
                                 '<i class="fas fa-search"></i></span></div>' +
                                 '</div ></div >';

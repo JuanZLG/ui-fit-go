@@ -20,8 +20,8 @@ def Home(request):
     contexto = build_context(request)
     productos = contexto.get("productos", [])  
     for producto in productos:
-        precio_formateado = "{:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
-        producto.precio = precio_formateado
+        precio_formateado = "{:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
+        producto.precio_pub = precio_formateado
         producto.iProductImg_name = get_image_name(producto.iProductImg)
         producto.iInfoImg_name = get_image_name(producto.iInfoImg)
 
@@ -32,15 +32,15 @@ from django.http import JsonResponse
 def pageDetails(request):
     producto_id = request.GET.get('producto_id')
     productoDetalle = Productos.objects.get(id_producto=producto_id)
-    precio_formateado = "{:,.2f}".format(productoDetalle.precio).rstrip('0').rstrip('.')
-    productoDetalle.precio = precio_formateado
+    precio_formateado = "{:,.2f}".format(productoDetalle.precio_pub).rstrip('0').rstrip('.')
+    productoDetalle.precio_pub = precio_formateado
     productoDetalle.iInfoImg_name = get_image_name(productoDetalle.iInfoImg)
     productoDetalle.iProductImg_name = get_image_name(productoDetalle.iProductImg)
     
     # Construye un diccionario con los datos del producto
     response_data = {
         'nombre_producto': productoDetalle.nombre_producto,
-        'precio': productoDetalle.precio,
+        'precio_pub': productoDetalle.precio_pub,
         'descripcion': productoDetalle.descripcion,
         'sabor': productoDetalle.sabor,
         'presentacion': productoDetalle.presentacion,
@@ -88,10 +88,10 @@ def filter_products(request):
             ).filter(estado=1).order_by('-total_vendido')
             dynamicTitle += " - Más populares"
         elif valor == "high-price":
-            productos = productos.filter(estado=1).order_by('-precio')
+            productos = productos.filter(estado=1).order_by('-precio_pub')
             dynamicTitle += " - Mayor precio"
         elif valor == "low-price":
-            productos = productos.filter(estado=1).order_by('precio')
+            productos = productos.filter(estado=1).order_by('precio_pub')
             dynamicTitle += " - Menor Precio"
         else:
             productos = productos.filter(estado=1)
@@ -102,12 +102,12 @@ def filter_products(request):
 
     data = []
     for producto in productos:
-        precio_formateado = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
+        precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         data.append({
             'id_producto': producto.id_producto,
             'nombre_producto': producto.nombre_producto,
             'descripcion': producto.descripcion,
-            'precio': precio_formateado,
+            'precio_pub': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
             'iInfoImg_name': get_image_name(producto.iInfoImg),
             'dynamicTitle': dynamicTitle,
@@ -127,12 +127,12 @@ def search_products(request):
 
     data = []
     for producto in productos:
-        precio_formateado = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
+        precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         data.append({
             'id_producto': producto.id_producto,
             'nombre_producto': producto.nombre_producto,
             'descripcion': producto.descripcion,
-            'precio': precio_formateado,
+            'precio_pub': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
             'iInfoImg_name': get_image_name(producto.iInfoImg),
         })

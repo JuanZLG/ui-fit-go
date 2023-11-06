@@ -124,7 +124,8 @@
 
 @media screen and (min-width: 768px) {
     .product-card-container {
-        background: #fff;
+        height: 600px;
+        overflow-y: scroll;
         grid-template-columns: repeat(4, 1fr);
         row-gap: 40px;
     }

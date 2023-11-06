@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
-from sales.models import Clientes, Detalleventa, Ventas, Productos
+from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias
 from django.db.models import Q
 # from .models import Notification
 
@@ -50,7 +50,7 @@ def crear_venta(request):
             return JsonResponse(response_data, status=400)
     
     clientes = Clientes.objects.all()
-    return render(request, 'createSales.html', {'clientes': clientes})
+    return render(request, 'prueba.html', {'clientes': clientes})
 
     
 def buscar_cliente(request):
@@ -387,3 +387,43 @@ def generar_informe_pdf_ventas(request):
 
     return HttpResponse("No se ha enviado una solicitud POST")
 
+
+
+
+def buscar_productos(request):
+    q = request.GET.get("q", "")
+
+    productos = Productos.objects.filter(
+        Q(nombre_producto__icontains=q )
+    )
+
+    resultados = []
+    for producto in productos:
+        precio_formateado_compra = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
+        precio_formateado_venta = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
+        ganancia = producto.precio - producto.precio_pub
+        ganancia_formateada = "${:,.2f}".format(ganancia).rstrip('0').rstrip('.')
+
+        resultados.append({
+            'id_producto': producto.id_producto,
+            'estado': producto.estado,
+            'nombre_producto': producto.nombre_producto,
+            'cantidad': producto.cantidad,
+            'descripcion': producto.descripcion,
+            'precio_compra': precio_formateado_compra,
+            'precio_venta': precio_formateado_venta,
+            'precio_ganancia': ganancia_formateada,
+            'marca': producto.id_marca.nombre_marca,
+            'categoria': producto.id_categoria.nombre_categoria,
+            'presentacion': get_image_name(producto.iProductImg),
+        })
+
+    return JsonResponse({"resultados": resultados})
+
+def get_image_name(image_field):
+    if image_field:
+        if isinstance(image_field, bytes):
+            return image_field.decode('utf-8')
+        else:
+            return image_field.name
+    return "No Image"

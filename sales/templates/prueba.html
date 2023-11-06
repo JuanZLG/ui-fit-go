@@ -1,0 +1,269 @@
+{% extends "baseInterface.html" %}
+{% block title %}Agregar Venta{% endblock %}
+{% block body %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/prueba.css' %}">
+</head>
+<section class="venta-section">
+    <h1 class="venta-title">Agregar Venta</h1>
+    <div class="venta-container">
+        <div class="cliente-container">
+            <div class="cliente-header">
+                <label class="cliente-label">Cliente *</label>
+                <label id="cont-docu"></label>
+            </div>
+            <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+                placeholder="Ingrese el nombre del cliente">
+            <div class="error-container">
+                <span class="error-text" id="error-docu"></span>
+            </div>
+        </div>
+        <div class="resultado-container">
+            <ul id="resultado-cliente">
+            </ul>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        let listadoClientes = $("#resultado-cliente");
+
+        $("#nombreCliente").on("input", function () {
+            let nombreCliente = $(this).val();
+
+            listadoClientes.show();
+            $("#cont-docu").empty()
+            $("#nombreCliente").removeClass("is-valid")
+
+            if (nombreCliente.length >= 3) {
+                $.ajax({
+                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
+                    type: "GET",
+                    success: function (data) {
+                        listadoClientes.empty();
+                        listadoClientes.removeClass("show");
+
+                        if (data.resultados.length > 0) {
+                            for (let i = 0; i < data.resultados.length; i++) {
+                                listadoClientes.addClass("show");
+                                let documento = data.resultados[i].documento;
+                                let nomClienteDato = data.resultados[i].nombre_cliente;
+                                let estadoCliente = data.resultados[i].estado;
+
+                                let itemLista = `
+                                <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}">
+                                    <div>
+                                    <span id="nombreDato">${nomClienteDato}</span> -
+                                    <span id="documentoDato">${documento}</span>
+                                    </div>
+                                        ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                </li>
+                            `;
+
+                                listadoClientes.append(itemLista);
+                            }
+                        }
+                    },
+                });
+            } else {
+                listadoClientes.removeClass("show");
+                listadoClientes.empty();
+            }
+        });
+
+        listadoClientes.on("click", ".cliente-item", function () {
+            if (!$(this).hasClass("inactivo")) {
+                let nombreApellido = $(this).find("#nombreDato").text();
+                let documento = $(this).find("#documentoDato").text();
+
+                $("#error-docu").text("")
+                let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
+                $("#cont-docu").html(identificacionCompleta);
+
+                $("#nombreCliente").val(nombreApellido).addClass("is-valid");
+                listadoClientes.hide();
+            }
+        });
+    });
+
+</script>
+
+
+
+<section class="col-md-12 mb-4 product-section">
+    <div class="product-content">
+        <div class="product-header">
+            <label class="producto-label">Ingreso de productos *</label>
+            <p>Encuentra todos tus productos y finaliza las ventas de una forma fácil</p>
+        </div>
+        <div class="product-inputs">
+            <div class="search-container">
+                <input type="search" class="form-control product-search" id="buscarProducto">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <div class="number-input">
+                <button onclick="decrement()" id="decrement">-</button>
+                <input class="quantity" min="1" name="quantity" value="1" type="number" autocomplete="off" step="1"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                <button onclick="increment()" id="increment">+</button>
+            </div>
+            <input type="button" value="Verificar" class="form-control product-button">
+        </div>
+    </div>
+    <div class="resultado-container">
+        <ul id="resultado-producto">
+        </ul>
+    </div>
+</section>
+
+<script>
+    function increment() {
+        let input = document.querySelector('.quantity');
+        input.value = parseInt(input.value) + 1;
+    }
+
+    function decrement() {
+        let input = document.querySelector('.quantity');
+        if (input.value > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+</script>
+<section class="product-table-section">
+    <table class="table">
+        <thead class="text-center">
+            <tr>
+                <th class="product-column">Producto</th>
+                <th class="price-column">Precio Compra Unidad</th>
+                <th class="price-column">Precio Venta Unidad</th>
+                <th class="price-column">Total Ganancia</th>
+                <th class="total-column">TOTAL</th>
+                <th class="icon-column"></th>
+            </tr>
+        </thead>
+        <tbody id="producto-tbody">
+        </tbody>
+    </table>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+        let listadoProductos = $("#resultado-producto");
+
+        $("#buscarProducto").on("input", function () {
+            let buscarProducto = $(this).val();
+
+            listadoProductos.show();
+
+            if (buscarProducto.length >= 3) {
+                $.ajax({
+                    url: "{% url 'buscar_productos' %}?q=" + buscarProducto,
+                    type: "GET",
+                    success: function (data) {
+                        listadoProductos.empty();
+                        listadoProductos.removeClass("show");
+
+                        if (data.resultados.length > 0) {
+                            resultadosBusqueda = data.resultados;
+                            for (let i = 0; i < data.resultados.length; i++) {
+                                listadoProductos.addClass("show");
+                                let estadoProducto = data.resultados[i].estado;
+                                let producto = data.resultados[i].nombre_producto;
+                                let img = data.resultados[i].presentacion;
+                                let cantidad = data.resultados[i].cantidad;
+
+                                let itemLista = `
+                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
+                                    <div class="product-details-container">
+                                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                                        <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span id="nombreDato">${producto}</span></br>
+                                        ${estadoProducto === 0 ? '<span style="color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                    </div>
+                                </li>
+                            `;
+
+                                listadoProductos.append(itemLista);
+                            }
+                        }
+                    },
+                });
+            } else {
+                listadoProductos.removeClass("show");
+                listadoProductos.empty();
+            }
+        });
+
+        listadoProductos.on("click", ".producto-item", function () {
+            if (!$(this).hasClass("inactivo")) {
+                listadoProductos.hide();
+                $("#buscarProducto").val("");
+                let index = $(this).index();
+                let productoClickeado = resultadosBusqueda[index];
+                agregarFila(productoClickeado)
+            } else {
+                alert("Este producto esta inhabilitado")
+            }
+        });
+    });
+
+    function agregarFila(producto) {
+        let tbody = $("#producto-tbody");
+
+        let estadoProducto = producto.estado;
+        let marca = producto.marca;
+        let categoria = producto.categoria;
+        let nombre_producto = producto.nombre_producto;
+        let img = producto.presentacion;
+        let cantidad = producto.cantidad;
+        let precio_venta = producto.precio_venta;
+        let precio_compra = producto.precio_compra;
+        let precio_ganancia = producto.precio_ganancia;
+
+        let itemFila = `
+    <tr class="producto-row">
+        <td class="p-2 celda-producto">
+            <div class="product-info">
+                <div class="product-details-container">
+                    <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                    <ul class="product-details">
+                        <li><strong>${nombre_producto}</strong></li>
+                        <li><strong>Marca:</strong>${marca}</li>
+                        <li><strong>Categoria:</strong>${categoria}</li>
+                        <li><strong>Precio:</strong><span class="ml-2 text-danger font-weight-bold">${precio_venta}</span></li>
+                        <li class="number-input mt-3">
+                            <button onclick="decrement()" id="decrement">-</button>
+                            <input class="quantity" min="1" name="quantity" value="1" type="number" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                            <button onclick="increment()" id="increment">+</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+        <td> ${precio_compra} </td>
+        <td> ${precio_venta} </td>
+        <td> ${precio_ganancia} </td>
+        <td> $500.000 </td>
+        <td> 
+            <i class="fas fa-trash"></i>
+            <div class="product-update">
+                <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
+            </div>
+        </td>
+    </tr>
+    `;
+
+        tbody.append(itemFila);
+    }
+
+</script>
+
+
+{% endblock %}
