@@ -32,6 +32,9 @@ def Home(request):
 def UserProfile(request):  
     return render(request, 'profile.html') 
 
+
+
+
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')

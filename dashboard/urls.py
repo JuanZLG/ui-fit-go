@@ -7,8 +7,7 @@ urlpatterns=[
     path('dashboard/', views.Home, name='mydashboard'),
     path('guide/', views.UserGuide, name="guideser"),
     path('contar_clientes_activos/', views.contar_clientes_activos, name='contar_clientes_activos'),
-    path('calcular_total_compras/<int:year>/', views.calcular_total_compras, name='calcular_total_compras'),
-    path('calcular_total_ventas/', views.calcular_total_ventas, name='calcular_total_ventas'),
+    path('calcular_total_compras_y_ventas/', views.calcular_total_compras_y_ventas, name='calcular_total_compras_y_ventas'),
     path('obtener_datos_ventas_y_compras/', views.obtener_datos_ventas_y_compras, name='obtener_datos_ventas_y_compras'),
     path('obtener_todos_los_productos/', views.obtener_todos_los_productos, name='obtener_todos_los_productos'),
 
