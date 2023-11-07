@@ -53,10 +53,13 @@
 #resultado-cliente {
     width: 100%;
 }
+
 #resultado-producto {
     width: 63%;
 }
-#resultado-cliente, #resultado-producto {
+
+#resultado-cliente,
+#resultado-producto {
     font-size: 0.875rem;
     background-color: #fff;
     display: flex;
@@ -74,7 +77,8 @@
     padding-left: 15px;
 }
 
-#resultado-cliente.show, #resultado-producto.show {
+#resultado-cliente.show,
+#resultado-producto.show {
     max-height: 150px;
     border-bottom: 2px solid #ccc;
 }
@@ -91,14 +95,19 @@
     font-weight: 500;
     transition: all .1s ease-in-out;
 }
+
 .producto-item {
     padding-right: 30px;
 }
-.cliente-item.inactivo, .producto-item.inactivo {
+
+.cliente-item.inactivo,
+.producto-item.inactivo {
     opacity: 0.8 !important;
     color: #222222 !important;
 }
-.cliente-item:hover, .producto-item.inactivo {
+
+.cliente-item:hover,
+.producto-item.inactivo {
     cursor: pointer;
     color: #000;
     transform: scale(1.01);
@@ -118,7 +127,6 @@
 .product-section {
     box-shadow: 4px 2px 14px #cccccc70;
     border-radius: 10px;
-
 }
 
 .product-content {
@@ -134,6 +142,16 @@
     display: grid;
     grid-template-columns: 1fr 120px 200px;
     gap: 20px;
+}
+
+#btnAgregar {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+#btnAgregar.is-active {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .search-container {
@@ -176,6 +194,7 @@ input[type="number"] {
     border-radius: 5px;
     overflow: hidden;
     height: 40px;
+    max-width: 140px;
 }
 
 .number-input button {
@@ -197,7 +216,7 @@ input[type="number"] {
     padding: 10px;
 }
 
-.product-button {
+.product-button, .agregar-venta-button{
     border: none;
     background-color: #72d072 !important;
     font-weight: 500;
@@ -208,14 +227,34 @@ input[type="number"] {
 }
 
 .product-table-section {
+    height: auto;
+    max-height: 680px;
+    overflow: hidden;
     box-shadow: 4px 2px 14px #cccccc70;
     padding: 20px !important;
+}
+.producto-cont-descuento {
+    width: 100%;
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: end;
+}
+
+#tabla-ventas {
+    height: 500px;
+    overflow-y: auto;
+    padding-right: 30px;
+    display: none;
+}
+
+#tabla-ventas.show {
+    display: block;
 }
 
 .product-table-section .table thead th,
 .table tbody td {
     text-align: center;
-    vertical-align: middle;
+    padding-top: 40px;
 }
 
 .product-info {
@@ -226,13 +265,20 @@ input[type="number"] {
 .product-details-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 }
 
 .product-details-container img {
-    object-fit: cover;
+    object-fit: contain;
+    width: 50px;
     max-height: 80px;
 }
+
+.product-info .product-details-container .cont-img,
+.product-info .product-details-container .cont-img img {
+    width: 100%;
+}
+
 
 
 .product-details {
@@ -241,43 +287,82 @@ input[type="number"] {
 }
 
 .product-details li:first-child {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin-bottom: 5px;
 }
 
+
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.input-wrapper .descuento {
+    color: rgb(48, 48, 163);
+    font-weight: bold;
+    width: 50px;
+    height: 30px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.input-wrapper .percent-sign {
+    color: rgb(48, 48, 163);
+    font-weight: bold;
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.precio_diferencia_descuento {
+    color: rgb(48, 48, 163);
+    display: block;
+}
 .product-column {
-    width: 30%;
+    width: 30% !important;
+    vertical-align: middle !important;
 }
 
 .price-column {
-    width: 15%;
-}
+    width: 10% !important;
+    vertical-align: middle !important;
 
+}
+/* 
+#wrapper {
+    height: auto !important;
+    background-color: red !important;
+} */
 .total-column {
-    width: 15%;
+    width: 10% !important;
+    vertical-align: middle !important;
 }
 
 .icon-column {
     width: 2%;
 }
 
-.product-update {
-    position: relative;
-    background-color: red;
-    display: flex;
-    margin: auto 0;
-    justify-content: end;
-}
 
-.product-update .product-update-button {
+.product-update-button {
+    pointer-events: none;
+    opacity: 0.5;
     font-weight: 500;
     padding: 5px 15px;
     border: none;
     background-color: rgb(247, 247, 99) !important;
     height: 40px;
-    position: absolute;
-    top: 0;
 }
-.product-update .product-update-button:active {
+
+.product-update-button.is-active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.product-update-button:active {
     transform: scale(0.97);
+}
+
+.eliminar-fila:hover {
+    cursor: pointer;
+    transform: scale(1.080);
 }

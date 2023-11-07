@@ -399,10 +399,7 @@ def buscar_productos(request):
 
     resultados = []
     for producto in productos:
-        precio_formateado_compra = "${:,.2f}".format(producto.precio).rstrip('0').rstrip('.')
-        precio_formateado_venta = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
-        ganancia = producto.precio - producto.precio_pub
-        ganancia_formateada = "${:,.2f}".format(ganancia).rstrip('0').rstrip('.')
+        precio_ganancia = producto.precio_pub - producto.precio 
 
         resultados.append({
             'id_producto': producto.id_producto,
@@ -410,9 +407,9 @@ def buscar_productos(request):
             'nombre_producto': producto.nombre_producto,
             'cantidad': producto.cantidad,
             'descripcion': producto.descripcion,
-            'precio_compra': precio_formateado_compra,
-            'precio_venta': precio_formateado_venta,
-            'precio_ganancia': ganancia_formateada,
+            'precio_compra': producto.precio,
+            'precio_venta': producto.precio_pub,
+            'precio_ganancia': precio_ganancia,
             'marca': producto.id_marca.nombre_marca,
             'categoria': producto.id_categoria.nombre_categoria,
             'presentacion': get_image_name(producto.iProductImg),

@@ -96,10 +96,6 @@ def filter_products(request):
         else:
             productos = productos.filter(estado=1)
 
-    # if not productos:
-    #     productos = Productos.objects.filter(estado=1).all()
-    #     dynamicTitle = "Todos los Productos"
-
     data = []
     for producto in productos:
         precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
