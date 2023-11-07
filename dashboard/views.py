@@ -22,50 +22,74 @@ def contar_clientes_activos(request):
     clientes_inactivos = Clientes.objects.filter(estado=0).count()
     return JsonResponse({'clientes_activos': clientes_activos, 'clientes_inactivos': clientes_inactivos}) 
 
-def calcular_total_compras(request, year):
+from django.db.models import Sum
+from django.http import JsonResponse
+from django.db.models.functions import ExtractMonth
+from django.utils import timezone
+
+def calcular_total_compras_y_ventas(request):
     try:
-       
-        total_compras_por_mes = Compras.objects.filter(fechareg__year=year) \
+        # Obtén el año actual
+        current_year = timezone.now().year
+        # Obtén el mes actual
+        current_month = timezone.now().month
+
+        # Filtra las compras del año actual y mes actual
+        total_compras_por_mes = Compras.objects.filter(fechareg__year=current_year, fechareg__month=current_month) \
             .annotate(month=ExtractMonth('fechareg')) \
             .values('month') \
-            .annotate(total=Sum('totalCompra'))
+            .annotate(total_compras=Sum('totalCompra'))
 
-        return JsonResponse({'total_compras_por_mes': list(total_compras_por_mes)})
+        # Filtra las ventas del año actual y mes actual
+        total_ventas_por_mes = Ventas.objects.filter(fechareg__year=current_year, fechareg__month=current_month) \
+            .annotate(month=ExtractMonth('fechareg')) \
+            .values('month') \
+            .annotate(total_ventas=Sum('totalVenta'))
+
+        return JsonResponse({
+            'total_compras_por_mes': list(total_compras_por_mes),
+            'total_ventas_por_mes': list(total_ventas_por_mes)
+        })
     except Exception as e:
         return JsonResponse({'error': str(e)})
 
 
-def calcular_total_ventas(request):
-    total_ventas = Ventas.objects.aggregate(total_ventas=Sum('totalVenta'))['total_ventas'] 
-    
-    return JsonResponse({'total_ventas': total_ventas})
 
-
-import locale
 from django.db.models import Sum
 from django.http import JsonResponse
 from datetime import datetime, timedelta
 from .models import Ventas, Compras
 
+<<<<<<< HEAD
+from django.db.models import Sum
+from django.http import JsonResponse
+from datetime import datetime, timedelta
+from .models import Ventas, Compras
+=======
 
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
+>>>>>>> ff683485e985d2ebfeb9af609cdd137983438509
 
 def obtener_datos_ventas_y_compras(request):
-    periodo = request.GET.get('periodo', 'semana')  # Obtén el periodo de la solicitud GET
-
+    periodo = request.GET.get('periodo', 'semana')
     hoy = datetime.now().date()
 
     if periodo == 'semana':
-        fecha_inicio = hoy - timedelta(days=hoy.weekday())
-        fecha_fin = hoy
+        # Calcular el inicio de la última semana
+        ultimo_dia_semana_pasada = hoy - timedelta(days=(hoy.weekday() + 1) % 7)
+        fecha_inicio = ultimo_dia_semana_pasada - timedelta(days=6)
+        fecha_fin = ultimo_dia_semana_pasada
+        etiqueta_semana = f'Última semana del {fecha_inicio.strftime("%d/%m/%Y")} al {fecha_fin.strftime("%d/%m/%Y")}'
     elif periodo == 'mes':
         primer_dia_del_mes = hoy.replace(day=1)
         fecha_inicio = primer_dia_del_mes
         fecha_fin = hoy
+        etiqueta_semana = fecha_inicio.strftime('%b %Y')
     elif periodo == 'ano':
         primer_dia_del_ano = hoy.replace(month=1, day=1)
         fecha_inicio = primer_dia_del_ano
         fecha_fin = hoy
+        etiqueta_semana = fecha_inicio.strftime('%Y')
 
     ventas = Ventas.objects.filter(fechareg__range=[fecha_inicio, fecha_fin])
     compras = Compras.objects.filter(fechareg__range=[fecha_inicio, fecha_fin])
@@ -73,13 +97,31 @@ def obtener_datos_ventas_y_compras(request):
     total_ventas = ventas.aggregate(Sum('totalVenta'))['totalVenta__sum'] or 0
     total_compras = compras.aggregate(Sum('totalCompra'))['totalCompra__sum'] or 0
 
+    # Formatea los totales de ventas y compras
+    total_ventas_formatted = "{:,.0f}".format(total_ventas)
+    total_compras_formatted = "{:,.0f}".format(total_compras)
+
+    # Convierte los valores en números enteros en lugar de números de punto flotante
+    total_ventas = int(total_ventas)
+    total_compras = int(total_compras)
+
     data = {
-        'total_ventas': total_ventas,
-        'total_compras': total_compras,
+        'total_ventas': total_ventas_formatted,
+        'total_compras': total_compras_formatted,
+        'labels': [etiqueta_semana],
+        'ventas': [total_ventas],
+        'compras': [total_compras],
     }
-    print(data  )
 
     return JsonResponse(data)
+
+
+
+
+
+
+
+
 
 
 

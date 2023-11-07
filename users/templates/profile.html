@@ -12,13 +12,16 @@
                     <center><img src="{% static 'img/usir.png' %}" style="width:10rem;"></center>
                     <p><strong>Nombre de Usuario:</strong> {{ user.nombre_usuario }}</p>
                     <p><strong>Correo Electrónico:</strong> {{ user.correo }}</p>
-                    <p><strong>Rol:</strong>{{ user.nombre_rol }}</p>
-                    <p value="{% if user.estado == 1 %} Activo{% else %} Inactivo{% endif %}"><strong>Estado:</strong></p>
+                    <p><strong>Rol:</strong> {{ user.id_rol }}</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 
 <script>
     function getCookie(name) {

@@ -34,8 +34,10 @@ INSTALLED_APPS = [
     'dashboard',
     'page',
     'authenticator',
-    'rest_framework'
+    'rest_framework',
+    'tuiranfitgo'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

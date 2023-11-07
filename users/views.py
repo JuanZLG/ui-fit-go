@@ -36,8 +36,13 @@ def UserProfile(request):
     return render(request, 'profile.html') 
 
 
+<<<<<<< HEAD
+
+
+=======
 @jwt_cookie_required
 @module_access_required('usuarios')
+>>>>>>> ff683485e985d2ebfeb9af609cdd137983438509
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
