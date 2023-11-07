@@ -12,26 +12,28 @@ import base64
 from django.core.files.base import ContentFile
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
-@module_access_required('productos')
+
 @jwt_cookie_required
+@module_access_required('productos')
 def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
 
-@module_access_required('productos')
+
 @jwt_cookie_required
+@module_access_required('productos')
 def catHome(request):
     categories = Categorias.objects.all()
     return render(request, 'categoriesHome.html', {"cats":categories}) 
 
-@module_access_required('productos')
 @jwt_cookie_required
+@module_access_required('productos')
 def brandHome(request):
     brands = Marcas.objects.all()
     return render(request, 'brandsHome.html', {"pbrands":brands}) 
 
-@module_access_required('productos')
 @jwt_cookie_required
+@module_access_required('productos')
 def createProduct(request):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -44,6 +46,7 @@ def createProduct(request):
         sabor = request.POST['iSabor']
         tamano = request.POST['iServices']
         precio = request.POST['iPrice']
+        precioven = request.POST['iPubPrice']
         categoria = request.POST['iCategoria']
         marca = request.POST['iMarca']
         iProductImg = request.FILES['iProductImg']
@@ -56,18 +59,9 @@ def createProduct(request):
         precio = precio.replace(',', '').replace('.', '')
         precio = float(precio)
         
-        print(request.FILES)
-        print(request.POST)
+        precioven = precioven.replace(',', '').replace('.', '')
+        precioven = float(precioven)
 
-        print("Nombres de los campos en request.FILES:")
-        for field_name, file in request.FILES.items():
-            print(field_name)
-
-        if 'iProductImg' not in request.FILES:
-            print("Campo 'iProductImg' no encontrado en request.FILES")
-        if 'iInfoImg' not in request.FILES:
-            print("Campo 'iInfoImg' no encontrado en request.FILES")
-        
         Productos.objects.create(
             id_categoria=c,
             id_marca=m,
@@ -78,6 +72,7 @@ def createProduct(request):
             sabor=sabor,
             presentacion=tamano,
             precio=precio,
+            precio_pub=precioven,
             iProductImg=iProductImg,
             iInfoImg=iInfoImg,
         )
@@ -87,6 +82,7 @@ def createProduct(request):
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
 
 @jwt_cookie_required
+@module_access_required('productos')
 def editProduct(request, id_producto):
     marcas = Marcas.objects.all()
     categorias = Categorias.objects.all()
@@ -101,17 +97,25 @@ def editProduct(request, id_producto):
         flavor = request.POST['iSabor']
         services = request.POST['iServices']
         pPrice = request.POST['iPrice']
+        precioven = request.POST['iPubPrice']
 
         m = Marcas.objects.get(id_marca=brand)
         c = Categorias.objects.get(id_categoria=category)
 
         pPrice = pPrice.replace(',', '').replace('.', '')
-        pPrice = float(pPrice)
+        pPrice = int(pPrice)
+
+        precioven = precioven.replace(',', '').replace('.', '')
+        # precioven = float(precioven)
 
         iProductImg = request.FILES.get('iProductImg', None)
         iInfoImg = request.FILES.get('iInfoImg', None)
 
         productos = Productos.objects.filter(id_producto=id_producto)
+
+        
+        # products.precio = '{:,.0f}'.format(products.precio)
+
         if iProductImg:
             productos.update(iProductImg=iProductImg)
         if iInfoImg:
@@ -126,12 +130,14 @@ def editProduct(request, id_producto):
             sabor=flavor,
             presentacion=services,
             precio=pPrice,
+            precio_pub=precioven
         )
 
         response_data = {'success': True}
         return JsonResponse(response_data)
 
     products = Productos.objects.get(id_producto=id_producto)
+    products.precio_pub = int(products.precio_pub)
     products.precio = int(products.precio)
     
     if products.iInfoImg:
@@ -182,8 +188,7 @@ def verDetallesProducto(request):
                     'sabor': producto.sabor,
                     'status': producto.estado,
                     'servicios': producto.presentacion,
-                    'imagenproducto': base64.b64encode(producto.iProductImg).decode('utf-8'),
-                    'imagennutri': base64.b64encode(producto.iInfoImg).decode('utf-8')
+                    'precio_pub': producto.precio_pub,
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:

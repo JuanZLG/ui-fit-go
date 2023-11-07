@@ -3,13 +3,14 @@
 {% block title %} Agregar Usuario {% endblock %} 
 
 {% block body %}
-<center><h1 class="h3 text-gray-800 mb-4">Agregar Usuario</h1></center>
-
+<br>
+<center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Usuario</h1></center>
+<br>
 <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-6">
         <div class="card shadow">
-          <div class="card-body p-4">
+          <div class="card-body p-5 pb-4">
             <form class="form" id="usuario-form" method="post">
               {% csrf_token %}
 
@@ -28,7 +29,7 @@
             <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Nombre de Usuario *</label>
-                <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese un nombre de usuario"/>
+                <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese un nombre de usuario" autocomplete="off" autocorrect="off" autocapitalize="none"/>
                 <div class="error-message" style="color:red;" id="iNombre-error"></div>
               </div>
             </div>
@@ -36,15 +37,14 @@
             <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Correo *</label>
-                <input type="text" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido"/>
+                <input type="text" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" autocomplete="off" autocorrect="off" autocapitalize="none"/>
                 <div class="error-message" style="color:red;" id="iCorreo-error"></div>
               </div>
             </div>
-            
+            <br>
               <div class="text-center">
                 <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
               </div>
-    
             </form>
           </div>
         </div>

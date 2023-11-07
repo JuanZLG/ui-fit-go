@@ -3,8 +3,9 @@
 {% block title %} Modificar Usuario {% endblock %} 
 
 {% block body %}
-<center><h1 class="h3 text-black-800 mb-4">Modificar Usuario</h1></center>
-
+<br>
+<center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Modificar Usuario</h1></center>
+<br>
 <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-6">
@@ -34,16 +35,16 @@
       
       <div class="form-group">
         <label>Correo *</label>
-        <input type="text" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" value="{{ people.correo }}"/>
+        <input type="email" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" value="{{ people.correo }}" autocomplete="off" autocorrect="off" autocapitalize="none"/>
         <div class="error-message" style="color:red;" id="iCorreo-error"></div>
       </div>
 
       <div class="form-group">
         <label>Contraseña *</label>
-        <input type="password" class="form-control" id="iPassword" name="iPassword" placeholder="Ingrese una contraseña" value="{{ people.contrasena }}"/>
+        <input type="password" class="form-control" id="iPassword" name="iPassword" placeholder="Ingrese una contraseña"  value="{{ people.contrasena }}" autocomplete="new-password"/>
         <div class="error-message" style="color:red;" id="iPassword-error"></div>
       </div>
-  
+
       <div class="text-center">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
       </div>
@@ -54,6 +55,15 @@
 </div>
 </div>
 </div>
+
+{% comment %} <script>
+  var form = document.getElementById("usuario-form");
+
+  form.addEventListener("submit", function (event) {
+      form.email.setCustomValidity("");
+      form.password.setCustomValidity("");
+  });
+</script> {% endcomment %}
 
 <script>
   var fechaActual = new Date().toISOString().split("T")[0];

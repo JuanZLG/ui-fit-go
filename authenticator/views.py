@@ -16,6 +16,10 @@ from django.core.mail import send_mail
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
+# def custom_get_username(user):
+#     return user.correo
+
+# Login Bueno 
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,6 +35,9 @@ class loginmio(APIView):
             usuario = Usuarios.objects.get(correo=correo)
             usuario_data = serializers.serialize('python', [usuario])[0]['fields']
 
+            if usuario.estado == 0:
+                return JsonResponse({'error': 'Usuario inactivo'}, status=401)
+
             if usuario.contrasena == contrasena:
                 payload = custom_jwt_payload_handler(usuario_data)
                 payload['id_rol'] = usuario_data['id_rol']
@@ -45,7 +52,7 @@ class loginmio(APIView):
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'contrasena incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
         

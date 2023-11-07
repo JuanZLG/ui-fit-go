@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -70,15 +70,18 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class="text-center">
+                        <br>
                         <center><img style="width:140px;" src="{% static 'img/GIcon.png' %}"></center>
                         <br>
-                        <div class="error mx-auto" data-text="404">404</div>
-                        <p class="lead text-gray-800 mb-5">No se ha encontrado la dirección</p>
-                        <p class="text-gray-500 mb-0">Al parecer tienes un glitch en la matrix...</p>
-                        <a href="{% url 'login_view' %}">&larr; Regresar</a>
+                        <div class="error mx-auto" style="color:black" data-text="404">404</div>
+                        <p class="lead text-gray-800 mb-5" style="font-weight:bold;">Dirección no Encontrada</p>
+                        <p class="text-gray-500 mb-0">Daniel Perez...</p>
                     </div>
                     <hr>
-                    <div style="height:15vh;">
+                    <div class="text-center">
+                        <a href="{% url 'login_view' %}">&larr; Regresar</a>
+                    </div>
+                    <div style="height:20vh">
                         
                     </div>
                 </div>
@@ -90,7 +93,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>&copy; TuiranFit - 2023</span>
+                        <span style="font-size:16px;">&copy; TuiranFit - 2023</span>
                     </div>
                 </div>
             </footer>
@@ -114,6 +117,17 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <script>
+        
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+
+        // document.addEventListener('touchmove', function(event) {
+        //     if (event.scale !== 1) { event.preventDefault(); }
+        // });
+    </script>
 </body>
 
 </html>

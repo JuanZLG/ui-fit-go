@@ -15,7 +15,6 @@ body {
     background-size: cover;
     background-position: center;
     max-zoom: 100%;
-
 }
 
 #video-fondo {
@@ -29,17 +28,19 @@ body {
     z-index: -1;
     object-fit: cover;
   }
-  
 
 .wrapper {
     width: 520px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(5px);
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
     color: #fff;
     border-radius: 10px;
     padding: 40px 40px;
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .wrapper h1 {
@@ -48,7 +49,7 @@ body {
 }
 
 .wrapper .input-box {
-    position: relative;
+    align-self: center;
     width: 100%;
     height: 50px;
     margin: 30px 0;
@@ -57,27 +58,52 @@ body {
 .input-box input {
     width: 100%;
     height: 100%;
-    background: transparent;
+    background-color: transparent;
     border: none;
     outline: none;
     border: 2px solid white;
     border-radius: 40px;
-    font-size: 16px;
+    font-size:medium;
     color: #fff;
     padding: 20px 45px 20px 20px;
 }
+
+.text-with-shadow {
+    color: white;
+    text-shadow: 3px 3px 50px black;
+    font-weight: bold;
+}
+
+/* Para los campos de texto autocompletados */
+.input-box:-webkit-autofill,
+.input-box:-webkit-autofill:hover,
+.input-box:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    background-clip: content-box, border-box;
+}
+
+
+
+/* Para los campos de contraseñas autocompletados */
+.input-box:-webkit-autofill-password,
+.input-box:-webkit-autofill-password:hover,
+.input-box:-webkit-autofill-password:focus {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    background-clip: content-box, border-box;
+}
+
 
 .input-box input::placeholder {
     color: #fff;
 }
 
-.input-box i {
+/* .input-box i {
     position: absolute;
     right: 20px;
     top: 50%;
     transform:  translateY(-50%);
     font-size: 20px;
-}
+} */
 
 .wrapper .remember-forgot {
     display: flex;

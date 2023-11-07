@@ -7,11 +7,10 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-
-<center>
-    <h1 class="modtitles">Gestión de Compras</h1>
-</center>
 <br>
+<center>
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Compras</h1>
+</center>
 
 <div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -22,11 +21,8 @@
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Compra</span>
                 </a>
-
             </span>
         </div>
-
-     
         <a href="#" id="abrir-modal" class="btn btn-danger btn-dash btn-lg" data-toggle="modal" data-target="#miModal">
             <i class="fa-solid fa-download mr-2"></i><span class="text"
                 style="font-weight: 600; font-size: 16px;">Generar Informe</span>
@@ -61,12 +57,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
     </div>
 </div>
 <style>
@@ -124,13 +114,6 @@
 </style>
 
 
-
-
-
-
-
-
-
 <script>
     $(document).ready(function () {
         $("#miModal").on("hidden.bs.modal", function (e) {
@@ -160,24 +143,10 @@
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="auto" cellspacing="3">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="3" style="border-radius:10px;">
                 <thead class="theads">
                     <tr>
                         <th>Proveedor</th>
@@ -199,8 +168,6 @@
                                 data-nuevo-estado="{% if compra.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if compra.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
-
-
                         </td>
                         <td class="cell-actions">
                             {% if compra.estado == 1 %}
@@ -221,8 +188,6 @@
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                         </td>
-
-
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -235,9 +200,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // ...
-
-        // Desactivar el botón si el estado es "Inactivo"
+       
         $(".cambiar-estado-compra.inactive-button").addClass("inactive-status");
 
         $(".cambiar-estado-compra").click(function () {
@@ -246,7 +209,7 @@
             let mensaje;
             if (nuevoEstado === 0) {
                 mensaje =
-                    "¿Estás seguro de desactivar esta compra? Esto marcará la compra como inactiva y restará las cantidades al stock de los productos relacionados.";
+                    "¿Esta seguro de desactivar esta venta? Esto marcará la compra como inactiva y restará al stock los productos relacionados. No podrá reactivarla nuevamente.";
             } else {
                 mensaje =
                     "¿Estás seguro de activar esta compra? Esto marcará la compra como activa y sumará las cantidades al stock de los productos relacionados.";
@@ -282,7 +245,7 @@
                             }
                         },
                         error: function (error) {
-                            // Handle error if needed
+                           
                         }
                     });
                 }
@@ -298,7 +261,6 @@
     .inactive-button {
         pointer-events: none;
         opacity: 0.5;
-        /* Puedes ajustar la opacidad a tu preferencia */
     }
 
     .table {
@@ -308,7 +270,7 @@
     table thead.theads {
         text-align: center;
         color: white;
-        background-color: #222222;
+        background-color: black;
     }
 
     table tbody.tbody {
@@ -415,6 +377,33 @@
         pointer-events: none;
         cursor: default;
     }
+
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+    
+    ::-webkit-scrollbar:vertical {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-button:increment,
+    .contenedor::-webkit-scrollbar-button {
+        display: none;
+    }
+    
+    ::-webkit-scrollbar:horizontal {
+        height: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: lightgray;
+        border-radius: 20px;
+        border: 2px solid #f1f2f3;
+    }
+    
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
+    }
 </style>
 
 <div class="modal-backdrop"></div>
@@ -471,12 +460,12 @@
 
         $.ajax({
             url: "{% url 'obtener_detalles_compra' 0 %}".replace('0', compraId),
-            method: "GET", // Actualiza la URL según tu configuración
+            method: "GET",
 
             success: function (response) {
                 console.log("Respuesta del servidor:", response);
 
-                // Llena el modal con los detalles de la compra obtenidos del servidor
+
                 var compra = response;
                 $("#fecharegCompra").text(compra.fechaRegistro);
                 $("#proveedorCompra").text(compra.proveedor);
@@ -489,14 +478,13 @@
                     $(".estadoCompraCircle").addClass("inactivo").removeClass("activo");
                 }
 
-                // Llena la tabla de detalles de la compra
+       
                 let detallesCompraHTML = "";
-                let totalCompra = 0; // Variable para calcular el total de compra
+                let totalCompra = 0; 
 
                 for (let detalle of compra.detalles) {
                     console.log('Detalle:', detalle);
 
-                    // Convierte precioUnitario y totalProducto a números
                     const precioUnitario = formatearPrecios(detalle.precioUnitario);
                     const totalProducto = formatearPrecios(detalle.totalProducto);
 
@@ -510,26 +498,26 @@
                     `;
 
                     totalCompra += parseFloat(detalle
-                        .totalProducto); // Suma el total del producto al total de compra
+                        .totalProducto); 
                 }
 
                 document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
 
-                // Actualiza el "Total de Compra" con la suma calculada
+       
                 document.getElementById("totalCompraCompra").textContent = formatearPrecios(
-                    totalCompra); // Mostrar con 2 decimales
+                    totalCompra);
 
                 const modal = document.getElementById("verDetallesCompraDialog");
                 console.log("Modal obtenido:", modal);
 
-                // Abre el modal
+                // Esto abre el modal
                 modal.showModal();
                 const cerrarBoton = document.getElementById("cerrarDetallesCompra");
                 cerrarBoton.addEventListener("click", cerrarModal);
             },
             error: function (error) {
                 console.error('Error en la solicitud AJAX:', error);
-                // Maneja el error si es necesario
+                
             }
         });
     }

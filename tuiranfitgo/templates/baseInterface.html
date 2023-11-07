@@ -207,9 +207,9 @@
             <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
+            {% comment %} <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+            </div> {% endcomment %}
 
             <!-- Sidebar Message -->
             <!-- <div class="sidebar-card d-none d-lg-flex">
@@ -499,7 +499,7 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <div class="container-fluid content-area">
                     {% block body %}
 
                     {% endblock %}
@@ -510,6 +510,7 @@
                 <div style="margin-top:150px"></div>
 
                 <!-- Footer -->
+                {% block footer %}
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
@@ -517,6 +518,8 @@
                         </div>
                     </div>
                 </footer>
+                {% endblock %}
+
             </div>
             <!-- Fin del Contenido Principal... -->
         </div>
@@ -599,7 +602,7 @@
                     "infoEmpty": "",
                     "infoFiltered": "(filtración de _MAX_ registros en total)"
                 },
-                "scrollY": "50vh",
+                "scrollY": "40vh",
                 "scrollX": "auto",
                 "drawCallback": function (settings) {
                     $('#dataTable_paginate .paginate_button').removeClass('selected-page');

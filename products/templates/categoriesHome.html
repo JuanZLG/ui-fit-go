@@ -98,9 +98,9 @@
         color: #8a0404;
     }
 </style>
-
+<br>
 <center>
-    <h1 class="modtitles">Categorías de Producto</h1>
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Categorías de Producto</h1>
 </center>
 <br>
 <div class="card mb-4">
@@ -118,11 +118,10 @@
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="auto">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%">
                 <thead class="theads">
                     <tr>
                         <th>Nombre de la Categoría</th>
-                        <th style="color:red;">Estado</th>
                         <th>Accion(es)</th>
                     </tr>
                 </thead>
@@ -130,11 +129,8 @@
                     {% for ct in cats %}
                     <tr>
                         <td>{{ ct.nombre_categoria }}</td>
-                        <td>
-                            <button class="cambiar-estado statusbutton mx-3 active-status">Activo
-                            </button>
-                        </td>
-                        <td>
+                        
+                        <td class="cellactions">
                             <a class="btn btn-sm btn-danger delete-button" data-id-categoria="{{ ct.id_categoria }}"
                                 style="height:27px;" data-toggle="tooltip" data-placement="right" title="Eliminar Categoría"><i class="fa-solid fa-trash-can fa-sm"
                                     style="color: #ffffff;"></i></a>

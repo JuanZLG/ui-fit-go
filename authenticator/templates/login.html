@@ -11,9 +11,10 @@
 </head>
 <body>
     <video autoplay muted loop id="video-fondo" style="width:100%">
-        <source src="{% static 'img/sky.webm' %}" type="video/webm">
+        <source src="{% static 'img/grid.mp4' %}" type="video/mp4">
         EL navegador no admite la reproducción de videos.
       </video>
+      {% comment %} <img src="{% static 'img/' %}" id="video-fondo"> {% endcomment %}
     {% comment %} <div class="wrapperLogus">
         <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
     </div> {% endcomment %}
@@ -26,15 +27,17 @@
         <form method="post" action="{% url 'login_view' %}" id="login-form">
             {% csrf_token %}
             <div class="input-box">
-                <input type="text" name="correo" placeholder="Correo Electrónico" required>
+                <input type="email" name="correo" placeholder="Correo Electrónico" autocomplete="address-line1">
                 <box-icon type='solid' name='user'></box-icon>
-                <center><div style="margin-top:4px; color:black" id="correo-error" class="text-danger"></div></center>
-                <center><div style="color:black;" id="user-error" class="text-danger"></div></center>
+                <center><div style="margin-top:5px;" id="correo-error" class="text-with-shadow"></div></center>
+                <center><div style="margin-top:5px; " id="user-error" class="text-with-shadow"></div></center>
+                <center><div style="margin-top:5px;" id="status-error" class="text-with-shadow"></div></center>
             </div>
             <div class="input-box">
-                <input type="password" name="contra" placeholder="Contraseña" required>
+                <input type="password" name="contra" placeholder="Contraseña" autocomplete="current-password">
                 <box-icon name='lock-alt' type='solid'></box-icon>
-                <center><div style="margin-top:4px; color:red" id="contra-error" class="text-danger"></div></center>
+                <center><div style="margin-top:5px;" id="contra-error" class="text-with-shadow"></div></center>
+                <center><div style="margin-top:5px;" id="cvalid-error" class="text-with-shadow"></div></center>
             </div>
             <br>
             <div class="remember-forgot">
@@ -49,6 +52,8 @@
             document.getElementById('user-error').textContent = '';
             document.getElementById('correo-error').textContent = '';
             document.getElementById('contra-error').textContent = '';
+            document.getElementById('status-error').textContent = '';
+            document.getElementById('cvalid-error').textContent = '';
     
             var correo = document.querySelector('[name="correo"]').value;
             var contra = document.querySelector('[name="contra"]').value;
@@ -65,7 +70,7 @@
             } else if (!contra) {
                 displayError('contra', 'La contraseña es obligatoria');
             } else {
-                // Realizar la solicitud al servidor
+
                 fetch("{% url 'login_view' %}", {
                     method: 'POST',
                     headers: {
@@ -82,6 +87,10 @@
                         window.location.href = 'admin/home/';
                     } else if (data.error === 'Usuario no Registrado') {
                         displayError('user', 'No existe un usuario registrado con este correo');
+                    } else if (data.error === 'Usuario inactivo'){
+                        displayError('status', 'El usuario asociado a este correo esta inactivo')
+                    } else if ( data.error === 'contrasena incorrecta'){
+                        displayError('cvalid', 'La contraseña es incorrecta')
                     } else {
                         displayError('correo', 'Error: ' + data.error);
                     }
@@ -119,8 +128,6 @@
             document.cookie = name + "=" + value + "; " + expires;
         }
     </script>
-    
-    
 
     <script>
         var imgn = document.getElementById('logus');
@@ -128,6 +135,11 @@
         imgn.oncontextmenu = function(e) {
             e.preventDefault();
         };
+    </script>
+
+    <script>
+        var video = document.getElementById("video-fondo");
+        video.playbackRate = 0.75;
     </script>
 </body>
 </html>

@@ -1,43 +1,45 @@
-// Barra principal ----------------------- 
 document.addEventListener('DOMContentLoaded', function () {
+  let toggleComprar = document.getElementById('toggle-comprar');
+  let menuComprar = document.getElementById('menu-comprar');
 
+  let toggleInfo = document.getElementById('toggle-info');
+  let menuInfo = document.getElementById('menu-info');
+
+  toggleComprar.addEventListener('mouseover', function () {
+      menuComprar.classList.add('show');
+  });
+
+  toggleComprar.addEventListener('mouseout', function () {
+      menuComprar.classList.remove('show');
+  });
+
+  toggleInfo.addEventListener('mouseover', function () {
+      menuInfo.classList.add('show');
+  });
+
+  toggleInfo.addEventListener('mouseout', function () {
+      menuInfo.classList.remove('show');
+  });
+  // Barra principal ----------------------- 
   let main = document.getElementById("main-menu");
   document.getElementById("hamburgerCheckbox").addEventListener("click", function () {
     main.classList.toggle("is-active");
   });
 
 
-  // Despliegue de menu productos ----------------------- 
-  // Despliegue de menú productos ----------------------- 
-  const toggleMenu = document.getElementById('toggle-menu');
-  const menuOptions = document.getElementById('menu-options');
+// Despliegue de menu productos -----------------------
 
-  const toggleMenuProducts = document.getElementById('toggle-main-products');
-  const OptionsProductsMain = document.getElementById('main-options-products');
-  const iconProducts = toggleMenuProducts.querySelector('.icon'); 
+const togglesSubmenuProducts = document.getElementById('toggle-submain-products');
+const closeSubMainOptions = document.getElementById('close-submain-options');
+const OptionsProductsMain = document.getElementById('options-submain-products');
 
-  const toggleMenumarcas = document.getElementById('toggle-main-marcas');
-  const OptionsMarcasMain = document.getElementById('main-options-marcas');
-  const iconMarcas = toggleMenumarcas.querySelector('.icon'); 
+togglesSubmenuProducts.addEventListener('click', function () {
+  OptionsProductsMain.classList.toggle('is-active');
+});
 
-  toggleMenu.addEventListener('click', function () {
-    menuOptions.classList.toggle('is-active');
-  });
-
-  toggleMenuProducts.addEventListener('click', function () {
-    OptionsProductsMain.classList.toggle('is-active');
-
-    iconProducts.classList.toggle('fa-chevron-up');
-    iconProducts.classList.toggle('fa-chevron-down');
-  });
-
-  toggleMenumarcas.addEventListener('click', function () {
-    OptionsMarcasMain.classList.toggle('is-active');
-
-    iconMarcas.classList.toggle('fa-chevron-up');
-    iconMarcas.classList.toggle('fa-chevron-down');
-  });
-
+closeSubMainOptions.addEventListener('click', function () {
+  OptionsProductsMain.classList.toggle('is-active');
+});
 
   // Opciones de menu productos ----------------------- 
   const radioInputs = document.querySelectorAll('.radio input');
@@ -82,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-
-
+  // Opciones SubMenu ----------------------- 
 
 });  

@@ -31,6 +31,8 @@ class Productos(models.Model):
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField(default=1)
     precio = models.FloatField()
+    precio_pub = models.FloatField()
+    
     
     iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
     iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)

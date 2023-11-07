@@ -20,6 +20,7 @@ class Categorias(models.Model):
         managed = False
         db_table = 'categorias'
 
+
 class Productos(models.Model):
     id_producto = models.AutoField(primary_key=True)
     id_categoria = models.ForeignKey(Categorias, models.DO_NOTHING, db_column='id_categoria')
@@ -27,18 +28,20 @@ class Productos(models.Model):
     nombre_producto = models.CharField(max_length=75)
     descripcion = models.CharField(max_length=400)
     cantidad = models.IntegerField()
+    fechaven = models.DateTimeField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField(default=1)
     precio = models.FloatField()
-
+    precio_pub = models.FloatField()
+    
     iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
     iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'productos'
-
+        
 
 
 class Detalleventa(models.Model):

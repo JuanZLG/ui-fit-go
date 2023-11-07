@@ -7,13 +7,15 @@ from django.db import IntegrityError
 from django.conf import settings
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
-@module_access_required('clientes')
 @jwt_cookie_required
+@module_access_required('clientes')
 def lista_clientes(request):
     clientes = Clientes.objects.all()
     context = {'clientes': clientes}  
     return render(request, 'customersHome.html', context)
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def ver_cliente(request, cliente_id):
     cliente = get_object_or_404(Clientes, id_cliente=cliente_id)
     cliente_data = {
@@ -24,10 +26,14 @@ def ver_cliente(request, cliente_id):
     }
     return JsonResponse({'cliente': cliente_data})
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def agregarCliente(request):
     municipios = Municipios.objects.all()  
     return render(request, 'createCustomer.html', {'municipios': municipios})
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def agregarClientePost(request):
     if request.method == 'POST':
         documento = request.POST.get('iDocumento')
@@ -39,7 +45,6 @@ def agregarClientePost(request):
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
-        # Verificar si el documento ya existe en la base de datos
         if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
@@ -79,14 +84,15 @@ def agregarClientePost(request):
     municipios = Municipios.objects.all()
     return render(request, 'createCustomer.html', {'municipios': municipios})
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def redirigirEditar(request, cliente_id):
     cliente = Clientes.objects.get(id_cliente=cliente_id)
     municipios = Municipios.objects.all()  
     return render(request, 'editCustomer.html', {'cliente': cliente, 'municipios': municipios})
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Clientes, Departamentos, Municipios
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def editarCliente(request, cliente_id):
     cliente = get_object_or_404(Clientes, id_cliente=cliente_id)
 
@@ -125,6 +131,8 @@ def editarCliente(request, cliente_id):
 
     return render(request, 'editCustomer.html', {'cliente': cliente, 'departamento_registrado': cliente.id_municipio.id_departamento.nombre_departamento, 'municipio_registrado': cliente.id_municipio.nombre_municipio})
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         cliente_id = request.GET.get('cliente_id')
@@ -141,6 +149,8 @@ def cambiarEstado(request):
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+@jwt_cookie_required
+@module_access_required('clientes')
 def verDetallesCliente(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_cliente = request.GET.get('cliente_id')
@@ -168,7 +178,7 @@ def verDetallesCliente(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-
+@module_access_required('clientes')
 def validar_documento(request):
     documento = request.GET.get('documento', '')
 

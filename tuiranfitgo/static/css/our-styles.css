@@ -78,6 +78,10 @@
     gap: 10px;
 }
 
+.content-area {
+    margin-left: 260px; /* Deja espacio para el sidebar */
+    padding: 20px; /* O el valor que desees */
+}
 
 .dataTables_paginate .paginate_button.current {
     background-color: black;
