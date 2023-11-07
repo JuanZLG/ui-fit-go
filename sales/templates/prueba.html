@@ -1,0 +1,490 @@
+{% extends "baseInterface.html" %}
+{% block title %}Agregar Venta{% endblock %}
+{% block body %}
+
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/prueba.css' %}">
+</head>
+<section class="venta-section">
+    <h1 class="venta-title">Agregar Venta</h1>
+    <div class="venta-container">
+        <div class="cliente-container">
+            <div class="cliente-header">
+                <label class="cliente-label">Cliente *</label>
+                <label id="cont-docu"></label>
+            </div>
+            <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+                placeholder="Ingrese el nombre del cliente">
+            <div class="error-container">
+                <span class="error-text" id="error-docu"></span>
+            </div>
+        </div>
+        <div class="resultado-container">
+            <ul id="resultado-cliente">
+            </ul>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        let listadoClientes = $("#resultado-cliente");
+
+        $("#nombreCliente").on("input", function () {
+            let nombreCliente = $(this).val();
+
+            listadoClientes.show();
+            $("#cont-docu").empty()
+            $("#nombreCliente").removeClass("is-valid")
+
+            if (nombreCliente.length >= 3) {
+                $.ajax({
+                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
+                    type: "GET",
+                    success: function (data) {
+                        listadoClientes.empty();
+                        listadoClientes.removeClass("show");
+
+                        if (data.resultados.length > 0) {
+                            for (let i = 0; i < data.resultados.length; i++) {
+                                listadoClientes.addClass("show");
+                                let documento = data.resultados[i].documento;
+                                let nomClienteDato = data.resultados[i].nombre_cliente;
+                                let estadoCliente = data.resultados[i].estado;
+
+                                let itemLista = `
+                                <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}">
+                                    <div>
+                                    <span id="nombreDato">${nomClienteDato}</span> -
+                                    <span id="documentoDato">${documento}</span>
+                                    </div>
+                                        ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                </li>
+                            `;
+
+                                listadoClientes.append(itemLista);
+                            }
+                        }
+                    },
+                });
+            } else {
+                listadoClientes.removeClass("show");
+                listadoClientes.empty();
+            }
+        });
+
+        listadoClientes.on("click", ".cliente-item", function () {
+            if (!$(this).hasClass("inactivo")) {
+                let nombreApellido = $(this).find("#nombreDato").text();
+                let documento = $(this).find("#documentoDato").text();
+
+                $("#error-docu").text("")
+                let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
+                $("#cont-docu").html(identificacionCompleta);
+
+                $("#nombreCliente").val(nombreApellido).addClass("is-valid");
+                listadoClientes.hide();
+            }
+        });
+    });
+
+</script>
+
+
+
+<section class="col-md-12 mb-4 product-section">
+    <div class="product-content">
+        <div class="product-header">
+            <label class="producto-label">Ingreso de productos *</label>
+            <p>Encuentra todos tus productos y finaliza las ventas de una forma fácil</p>
+        </div>
+        <div class="product-inputs">
+            <div class="search-container">
+                <input type="search" class="form-control product-search" id="buscarProducto">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <div class="number-input">
+                <button onclick="decrement(this)" id="decrement">-</button>
+                <input class="quantity" min="1" name="quantity" value="1" type="number" autocomplete="off" step="1"
+                    id="cantidad-ingresada"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                <button onclick="increment(this)" id="increment">+</button>
+            </div>
+            <input type="button" value="Verificar" class="form-control product-button" id="btnAgregar">
+        </div>
+    </div>
+    <div class="resultado-container">
+        <ul id="resultado-producto">
+        </ul>
+    </div>
+</section>
+
+<section class="product-table-section">
+    <label class="producto-label">Registro de Ventas </label></br>
+    <span>Aquí se acumularán los productos seleccionados para la venta</span>
+    <table class="table" id="tabla-ventas">
+        <thead class="text-center">
+            <tr>
+                <th class="product-column">Producto</th>
+                <th class="price-column">Precio Compra (Unidad)</th>
+                <th class="price-column">Precio Venta (Unidad)</th>
+                <th class="price-column">Margen total de Ganancia</th>
+                <th class="total-column">TOTAL VENTA</th>
+                <th class="icon-column"></th>
+            </tr>
+        </thead>
+        <tbody id="producto-tbody">
+        </tbody>
+    </table>
+    <div class="producto-cont-descuento">
+        <span class="mx-3">Aplicar descuento a la venta</span>
+        <div class="input-wrapper">
+            <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
+            <span class="percent-sign">%</span>
+        </div>
+    </div>
+</section>
+
+
+<div style="text-align: end; width: 100%; margin-top: 30px;">
+    <input type="button" value="Ver resumen" id="boton-resumen">
+    <input type="submit" value="Guardar venta" class="boton-guardar">
+</div>
+
+<div class="resumen-pedido">
+    <h4 class="titulo-resumen">RESUMEN DE TU PEDIDO</h4>
+    <div class="grid-resumen">
+        <div class="resumen-productos">
+            <h6 class="titulo-seccion"><i class="fas fa-box-open mr-1 mb-3"></i>TOTAL PRODUCTOS</h6>
+            <ul>
+                <li class="linea-resumen"><span>Total precio compra</span> <span class="valor-derecha">$3000.000</span>
+                </li>
+            </ul>
+        </div>
+        <div class="resumen-descuentos">
+            <h6 class="titulo-seccion"><i class="fas fa-gift mr-1 mb-3"></i>DESCUENTOS</h6>
+            <ul>
+                <li class="linea-descuento"><span>Producto xx</span> <span class="valor-derecha">50% - $20.000</span>
+                </li>
+                <li class="linea-descuento"><span>Muscle xx</span> <span class="valor-derecha">20% - $15.000</span></li>
+                <li class="linea-descuento"><span>Fat indusha ccxx max</span> <span class="valor-derecha">20% -
+                        $15.000</span></li>
+            </ul>
+        </div>
+        <div class="resumen-venta">
+            <h6 class="titulo-seccion"><i class="fas fa-dollar-sign mr-1 mb-3"></i>TOTAL VENTA</h6>
+            <ul>
+                <li class="linea-resumen"><span>Total precio venta</span> <span class="valor-derecha">$3000.000</span>
+                </li>
+            </ul>
+        </div>
+        <div class="resumen-ganancia">
+            <h6 class="titulo-seccion"><i class="fas fa-coins mr-1 mb-3"></i>TU GANANCIA</h63>
+                <ul>
+                    <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
+                </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('boton-resumen').addEventListener('click', function (event) {
+        document.querySelector(".resumen-pedido").classList.toggle("show");
+    });
+</script>
+<style>
+    .resumen-pedido {
+        display: none;
+        margin: 50px;
+        width: auto;
+        max-width: 80%;
+        background-color: aliceblue;
+        border-radius: 10px;
+        padding: 15px 20px;
+        float: right;
+    }
+
+    .resumen-pedido.show {
+        display: block;
+    }
+
+    .titulo-resumen {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .grid-resumen {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 60px;
+        padding: 30px;
+    }
+
+    .titulo-seccion {
+        color: rgb(22, 22, 88);
+    }
+
+    .linea-resumen,
+    .linea-descuento {
+        border-bottom: 2px dotted #222222;
+        padding: 5px 0;
+    }
+
+    .valor-derecha {
+        font-weight: bold;
+        float: right;
+        margin-left: 30px;
+    }
+
+    .valor-total {
+        color: rgb(22, 22, 88);
+    }
+
+    .boton-guardar {
+        width: 200px;
+        padding: 10px;
+        background-color: #222222;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+
+{% block footer %}
+{% endblock %}
+
+<script>
+    $(document).ready(function () {
+        let listadoProductos = $("#resultado-producto");
+        var productoSeleccionado
+        $("#buscarProducto").on("input", function () {
+            let buscarProducto = $(this).val();
+            $("#buscarProducto").removeClass("is-valid");
+            $("#btnAgregar").removeClass("is-active")
+            $(".search-icon").show()
+
+            listadoProductos.show();
+
+            if (buscarProducto.length >= 3) {
+                $.ajax({
+                    url: "{% url 'buscar_productos' %}?q=" + buscarProducto,
+                    type: "GET",
+                    success: function (data) {
+                        listadoProductos.empty();
+                        listadoProductos.removeClass("show");
+
+                        if (data.resultados.length > 0) {
+                            resultadosBusqueda = data.resultados;
+                            for (let i = 0; i < data.resultados.length; i++) {
+                                listadoProductos.addClass("show");
+                                let estadoProducto = data.resultados[i].estado;
+                                let producto = data.resultados[i].nombre_producto;
+                                let img = data.resultados[i].presentacion;
+                                let cantidad = data.resultados[i].cantidad;
+
+                                let itemLista = `
+                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
+                                    <div class="product-details-container">
+                                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                                        <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
+                                    </div>
+                                    <div class="text-end">
+                                        <span id="nombreDato">${producto}</span></br>
+                                        ${estadoProducto === 0 ? '<span style="color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                    </div>
+                                </li>
+                            `;
+
+                                listadoProductos.append(itemLista);
+                            }
+                        }
+                    },
+                });
+            } else {
+                listadoProductos.removeClass("show");
+                listadoProductos.empty();
+            }
+        });
+
+        listadoProductos.on("click", ".producto-item", function () {
+            if (!$(this).hasClass("inactivo")) {
+                listadoProductos.hide();
+                let index = $(this).index();
+                productoSeleccionado = resultadosBusqueda[index];
+                $("#buscarProducto").val(productoSeleccionado.nombre_producto).addClass("is-valid");
+                $(".search-icon").hide()
+                $("#btnAgregar").addClass("is-active")
+            } else {
+                alert("Este producto esta inhabilitado")
+            }
+        });
+
+        function productoExiste(id_producto) {
+            let existe = false;
+            $("#tabla-ventas tr.producto-row").each(function () {
+                if ($(this).data('id-producto') == id_producto) {
+                    existe = true;
+                    return false;
+                }
+            });
+            return existe;
+        }
+
+        $("#btnAgregar").click(function () {
+            if (productoSeleccionado) {
+                if (productoExiste(productoSeleccionado.id_producto)) {
+                    alert('El producto ya existe en la lista de productos');
+                    return;
+                }
+                $("#buscarProducto").val("").removeClass("is-valid");
+                $(".search-icon").show()
+                productoSeleccionado.cantidadSeleccionada = parseInt($("#cantidad-ingresada").val(), 10);
+                $("#cantidad-ingresada").val("1")
+                agregarFila(productoSeleccionado)
+                productoSeleccionado = null;
+                $("#btnAgregar").removeClass("is-active")
+                $("#tabla-ventas").addClass("show");
+            }
+        });
+
+
+        $(document).on("input", ".cantidad-fila, .descuento", function () {
+            let fila = $(this).closest("tr.producto-row");
+            fila.find(".product-update-button").addClass("is-active");
+        });
+
+
+        $(document).on("click", ".eliminar-fila", function () {
+            $(this).closest("tr.producto-row").remove();
+            if ($("#tabla-ventas tr.producto-row").length < 1) {
+                $("#tabla-ventas").removeClass("show");
+            }
+        });
+
+
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$' + precioFormateado;
+        }
+        $(document).on("click", ".product-update-button", function () {
+            $(this).removeClass("is-active");
+            let fila = $(this).closest("tr.producto-row");
+            let descuento = parseFloat(fila.find(".descuento").val().replace(/[%]/g, '')) / 100;
+            let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
+            let precio_venta = parseFloat(fila.data("precio-venta").replace(/[$,.]/g, ''));
+            let precio_compra = parseFloat(fila.find(".precio_compra").text().replace(/[$,.]/g, ''));
+            let precio_venta_final = precio_venta;
+            let precio_descuento = 0;
+
+            if (!isNaN(descuento) && descuento > 0) {
+                precio_descuento = precio_venta * descuento;
+                precio_venta_final = precio_venta - precio_descuento;
+            }
+
+            let precio_ganancia = formatearPrecios(cantidad_seleccionada * (precio_venta_final - precio_compra));
+            let total_venta = formatearPrecios(precio_venta_final * cantidad_seleccionada);
+            let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
+            let descuento_html = ""
+            if (descuento > 0) {
+                descuento_html = "<span class='precio_diferencia_descuento'>- (" + formatearPrecios(precio_descuento) + ")</span>";
+            } else {
+                fila.find(".descuento").val("0")
+            }
+
+            fila.find(".precio_venta").html(precio_venta_con_descuento + descuento_html);
+            fila.find(".total_ganancia").text(precio_ganancia);
+            fila.find(".total_venta").text(total_venta);
+        });
+
+
+
+
+        function calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada) {
+            let ganancia_total = formatearPrecios(precio_ganancia * cantidad_seleccionada);
+            let total_venta = formatearPrecios(precio_venta * cantidad_seleccionada);
+            precio_venta = formatearPrecios(precio_venta);
+            return { ganancia_total, total_venta, precio_venta };
+        }
+
+        function agregarFila(producto) {
+            let tbody = $("#producto-tbody");
+
+            let id_producto = producto.id_producto;
+            let estadoProducto = producto.estado;
+            let marca = producto.marca;
+            let categoria = producto.categoria;
+            let nombre_producto = producto.nombre_producto;
+            let img = producto.presentacion;
+            let cantidad = producto.cantidad;
+            let precio_venta = producto.precio_venta
+            let precio_compra = formatearPrecios(producto.precio_compra)
+            let precio_ganancia = producto.precio_ganancia
+            let cantidad_seleccionada = producto.cantidadSeleccionada
+            let precios = calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada);
+
+            let itemFila = `
+    <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
+        <td class="p-2 celda-producto">
+            <div class="product-info">
+                <div class="product-details-container">
+                    <div class="cont-img">
+                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                    </div>
+                    <ul class="product-details">
+                        <li><strong>${nombre_producto}</strong></li>
+                        <li><strong class="mr-2">Marca:</strong>${marca}</li>
+                        <li class="d-flex justify-content-between">
+                            <span> <strong class="mr-2">Categoria:</strong>${categoria}</span>
+                            <div class="input-wrapper">
+                                <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
+                                <span class="percent-sign">%</span>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3">
+                            <div class="number-input mt-3">
+                                <button onclick="decrement(this)" id="decrement">-</button>
+                                <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                                <button onclick="increment(this)" id="increment">+</button>
+                            </div>   
+                            <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+        <td class="precio_compra"> ${precio_compra} </td>
+        <td class="precio_venta"> ${precios.precio_venta} </td>
+        <td class="total_ganancia"> ${precios.ganancia_total} </td>
+        <td class="total_venta"> ${precios.total_venta} </td>
+        <td class="eliminar-fila"> 
+            <i class="fas fa-trash"></i>
+        </td>
+    </tr>
+    `;
+            tbody.append(itemFila);
+        }
+    });
+
+</script>
+
+
+<script>
+
+    function increment(button) {
+        let input = button.parentNode.querySelector('.quantity');
+        input.value = parseInt(input.value) + 1;
+        $(input).trigger('input');
+    }
+
+    function decrement(button) {
+        let input = button.parentNode.querySelector('.quantity');
+        if (input.value > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+        $(input).trigger('input');
+    }
+</script>
+{% endblock %}

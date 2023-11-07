@@ -1,6 +1,26 @@
-// Barra principal ----------------------- 
 document.addEventListener('DOMContentLoaded', function () {
+  let toggleComprar = document.getElementById('toggle-comprar');
+  let menuComprar = document.getElementById('menu-comprar');
 
+  let toggleInfo = document.getElementById('toggle-info');
+  let menuInfo = document.getElementById('menu-info');
+
+  toggleComprar.addEventListener('mouseover', function () {
+      menuComprar.classList.add('show');
+  });
+
+  toggleComprar.addEventListener('mouseout', function () {
+      menuComprar.classList.remove('show');
+  });
+
+  toggleInfo.addEventListener('mouseover', function () {
+      menuInfo.classList.add('show');
+  });
+
+  toggleInfo.addEventListener('mouseout', function () {
+      menuInfo.classList.remove('show');
+  });
+  // Barra principal ----------------------- 
   let main = document.getElementById("main-menu");
   document.getElementById("hamburgerCheckbox").addEventListener("click", function () {
     main.classList.toggle("is-active");
