@@ -111,7 +111,7 @@
                     oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
                 <button onclick="increment(this)" id="increment">+</button>
             </div>
-            <input type="button" value="Verificar" class="btn-acciones btn-verificar" id="btnAgregar">
+            <input type="button" value="Añadir a lista" class="btn-acciones btn-verificar" id="btnAgregar">
         </div>
     </div>
     <div class="resultado-container">
@@ -120,7 +120,7 @@
     </div>
 </section>
 
-<section class="product-table-section">
+<section class="product-table-section" id="product-table-section">
     <label class="producto-label">Registro de Ventas </label></br>
     <span>Aquí se acumularán los productos seleccionados para la venta</span>
     <table class="table" id="tabla-ventas">
@@ -162,13 +162,15 @@
 </section>
 
 
-<div style="text-align: end; width: 100%; margin-top: 30px;">
+<div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
     <input type="submit" value="Guardar venta" class="btn-acciones btn-crear mx-2">
 </div>
 
 
 
+{% block footer %}
+{% endblock %}
 
 <script>
     document.getElementById('boton-resumen').addEventListener('click', function (event) {
@@ -285,8 +287,6 @@
     }
 </style>
 
-{% block footer %}
-{% endblock %}
 
 <script>
     $(document).ready(function () {
@@ -402,6 +402,7 @@
                 totalVenta()
                 productoSeleccionado = null;
                 $("#btnAgregar").removeClass("is-active")
+                $("#product-table-section").addClass("show");
                 $("#tabla-ventas").addClass("show");
                 $(".producto-cont-descuento").addClass("show")
             }
@@ -417,9 +418,11 @@
         $(document).on("click", ".eliminar-fila", function () {
             $(this).closest("tr.producto-row").remove();
             if ($("#tabla-ventas tr.producto-row").length < 1) {
+                $("#product-table-section").removeClass("show");
                 $("#tabla-ventas").removeClass("show");
                 $(".producto-cont-descuento").removeClass("show")
             }
+            totalVenta()
         });
 
         $("#descuento-venta").on("input", function () {

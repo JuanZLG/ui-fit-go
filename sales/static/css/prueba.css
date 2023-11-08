@@ -243,11 +243,17 @@ input[type="number"] {
 
 .product-table-section {
     height: auto;
-    max-height: 700px;
+    max-height: 300px; 
     overflow: hidden;
     box-shadow: 4px 2px 14px #cccccc70;
     padding: 20px !important;
+    transition: max-height 2s ease-in-out; 
 }
+.product-table-section.show {
+    max-height: 700px; 
+}
+
+
 
 .producto-cont-descuento {
     width: 100%;
@@ -262,7 +268,7 @@ input[type="number"] {
 
 #tabla-ventas {
     height: 500px;
-    overflow-y: auto;
+    overflow-y:auto;
     padding-right: 30px;
     display: none;
 }
