@@ -74,7 +74,7 @@ def send_email_codigo(correo, codigo):
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login(remitente, 'jnqv nqxb jmzg tkfr') 
+    server.login(remitente, '') 
 
     # Envía el correo
     server.sendmail(remitente, destinatario, msg.as_string())
@@ -108,11 +108,11 @@ def enviar_codigo(request):
                 codigo = str(random.randint(10000, 99999))
                 send_email_codigo(correo, codigo)
                 request.session['codigo_recuperacion'] = codigo
+                request.session['correo_recuperacion'] = correo 
                 return redirect('verificar_codigo')
             except ObjectDoesNotExist:
                 return render(request, 'enviar_codigo.html', {'error': 'El correo no existe'})
     return render(request, 'enviar_codigo.html')
-
 #---------------------------------------------------------------------------------------------------------------
 def verificar_codigo(request):
     if request.method == 'POST':
@@ -130,26 +130,29 @@ def restablecer_contrasena(request):
     if request.method == 'POST':
         nueva_contrasena = request.POST.get('nueva_contrasena')
         confirmar_contrasena = request.POST.get('confirmar_contrasena')
+
         correo = request.session.get('correo_recuperacion')
 
-        if validar_correo(correo):
-            User = get_user_model()
-            
-            try:
-                user = User.objects.get(email=correo)
-            except User.DoesNotExist:
-                return render(request, 'restablecer_contrasena.html', {'error': True})
-
-            if nueva_contrasena == confirmar_contrasena:
-                user.set_password(nueva_contrasena)
-                user.save()
-                return redirect('login_view')
+        if correo and nueva_contrasena == confirmar_contrasena:
+            if validar_correo(correo):
+                User = get_user_model()
+                try:
+                    user = User.objects.get(email=correo)
+                    user.set_password(nueva_contrasena)
+                    user.save()
+                    return redirect('login_view')
+                except User.DoesNotExist:
+                    return render(request, 'restablecer_contrasena.html', {'error': True})
             else:
                 return render(request, 'restablecer_contrasena.html', {'error': True})
         else:
             return render(request, 'restablecer_contrasena.html', {'error': True})
 
     return render(request, 'restablecer_contrasena.html')
+
+
+            
+
 
 
 
