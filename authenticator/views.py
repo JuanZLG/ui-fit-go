@@ -108,11 +108,11 @@ def enviar_codigo(request):
                 codigo = str(random.randint(10000, 99999))
                 send_email_codigo(correo, codigo)
                 request.session['codigo_recuperacion'] = codigo
+                request.session['correo_recuperacion'] = correo 
                 return redirect('verificar_codigo')
             except ObjectDoesNotExist:
                 return render(request, 'enviar_codigo.html', {'error': 'El correo no existe'})
     return render(request, 'enviar_codigo.html')
-
 #---------------------------------------------------------------------------------------------------------------
 def verificar_codigo(request):
     if request.method == 'POST':
@@ -132,9 +132,9 @@ def restablecer_contrasena(request):
         confirmar_contrasena = request.POST.get('confirmar_contrasena')
         correo = request.session.get('correo_recuperacion')
 
-        if validar_correo(correo):
+        if correo:
             User = get_user_model()
-            
+
             try:
                 user = User.objects.get(email=correo)
             except User.DoesNotExist:
@@ -150,6 +150,7 @@ def restablecer_contrasena(request):
             return render(request, 'restablecer_contrasena.html', {'error': True})
 
     return render(request, 'restablecer_contrasena.html')
+
 
 
 
