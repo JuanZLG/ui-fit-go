@@ -2,12 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 import jwt
 from django.conf import settings
 from django.http import JsonResponse
-
-
-
-
-
-from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from products.models import Productos

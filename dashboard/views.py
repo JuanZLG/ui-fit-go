@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from .models import Compras, Ventas, Clientes, Proveedores, Productos
 from django.db.models import Sum
 from django.db.models.functions import ExtractMonth
+import locale
+from datetime import datetime, timedelta
 
 @jwt_cookie_required
 def Entrance(request):
@@ -53,22 +55,7 @@ def calcular_total_compras_y_ventas(request):
     except Exception as e:
         return JsonResponse({'error': str(e)})
 
-
-
-from django.db.models import Sum
-from django.http import JsonResponse
-from datetime import datetime, timedelta
-from .models import Ventas, Compras
-
-<<<<<<< HEAD
-from django.db.models import Sum
-from django.http import JsonResponse
-from datetime import datetime, timedelta
-from .models import Ventas, Compras
-=======
-
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
->>>>>>> ff683485e985d2ebfeb9af609cdd137983438509
 
 def obtener_datos_ventas_y_compras(request):
     periodo = request.GET.get('periodo', 'semana')

@@ -287,7 +287,7 @@
                                 let itemLista = `
                                 <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
                                     <div class="product-details-container">
-                                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
@@ -431,7 +431,7 @@
             <div class="product-info">
                 <div class="product-details-container">
                     <div class="cont-img">
-                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                     </div>
                     <ul class="product-details">
                         <li><strong>${nombre_producto}</strong></li>
