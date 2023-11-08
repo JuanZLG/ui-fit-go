@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
-from sales.models import Clientes, Detalleventa, Ventas, Productos
+from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias
 from django.db.models import Q
+# from .models import Notification
 
 @module_access_required('ventas')
 @jwt_cookie_required
@@ -22,7 +23,7 @@ def crear_venta(request):
             documento = data.get('documento', '')
             totalVenta = data.get('totalVenta', '')
             productos = data.get('productos', [])
-
+            
             cliente = Clientes.objects.filter(documento=documento).first()
             venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
             for producto_datos in productos:
@@ -49,7 +50,7 @@ def crear_venta(request):
             return JsonResponse(response_data, status=400)
     
     clientes = Clientes.objects.all()
-    return render(request, 'createSales.html', {'clientes': clientes})
+    return render(request, 'prueba.html', {'clientes': clientes})
 
     
 def buscar_cliente(request):
@@ -386,3 +387,40 @@ def generar_informe_pdf_ventas(request):
 
     return HttpResponse("No se ha enviado una solicitud POST")
 
+
+
+
+def buscar_productos(request):
+    q = request.GET.get("q", "")
+
+    productos = Productos.objects.filter(
+        Q(nombre_producto__icontains=q )
+    )
+
+    resultados = []
+    for producto in productos:
+        precio_ganancia = producto.precio_pub - producto.precio 
+
+        resultados.append({
+            'id_producto': producto.id_producto,
+            'estado': producto.estado,
+            'nombre_producto': producto.nombre_producto,
+            'cantidad': producto.cantidad,
+            'descripcion': producto.descripcion,
+            'precio_compra': producto.precio,
+            'precio_venta': producto.precio_pub,
+            'precio_ganancia': precio_ganancia,
+            'marca': producto.id_marca.nombre_marca,
+            'categoria': producto.id_categoria.nombre_categoria,
+            'presentacion': get_image_name(producto.iProductImg),
+        })
+
+    return JsonResponse({"resultados": resultados})
+
+def get_image_name(image_field):
+    if image_field:
+        if isinstance(image_field, bytes):
+            return image_field.decode('utf-8')
+        else:
+            return image_field.name
+    return "No Image"

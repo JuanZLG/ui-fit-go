@@ -162,6 +162,7 @@
     background-color: #2222;
     text-align: center;
 } 
+
 .tabla-detalles tbody tr:hover {
     background-color: #22202022;
 }
@@ -181,4 +182,31 @@
     opacity: 0.5;
     pointer-events: none; 
     cursor: default; 
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+
+::-webkit-scrollbar-button:increment,
+.contenedor::-webkit-scrollbar-button {
+    display: none;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
 }

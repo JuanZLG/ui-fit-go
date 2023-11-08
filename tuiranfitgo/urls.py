@@ -20,11 +20,10 @@ urlpatterns = [
     path('admin/sales/', include('sales.urls')),  
     path('admin/purchases/', include('purchases.urls')),
     path('error/', views.error_view, name="initerror"),
+    path('unauthorized/', views.mixin_view, name="mixint"),
     path('logout/', views.logout_view, name='logout'),
-    path('authenticator/', include('authenticator.urls')),
+    path('verificar-notificaciones/', views.verificar_notificaciones, name='verificar_notificaciones'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

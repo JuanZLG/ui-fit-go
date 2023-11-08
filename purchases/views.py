@@ -17,15 +17,15 @@ logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
 
-@module_access_required('compras')
 @jwt_cookie_required
+@module_access_required('compras')
 def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
 @csrf_exempt
-@module_access_required('compras')
 @jwt_cookie_required
+@module_access_required('compras')
 def crear_compra(request):
     if request.method == 'POST':
         try:
@@ -80,6 +80,7 @@ def crear_compra(request):
 
     return render(request, 'createPurchases.html')
 
+@jwt_cookie_required
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
@@ -102,12 +103,14 @@ def buscar_proveedor(request):
 
     return JsonResponse({"resultados": resultados})
 
+@jwt_cookie_required
 def buscar_productos(request):
     q = request.GET.get("q", "")
     productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
     productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
     return JsonResponse({"productos": productos_json})
 
+@jwt_cookie_required
 def validar_producto(request):
     nombre_producto = request.GET.get("nombre_producto", "")
     producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
@@ -116,6 +119,7 @@ def validar_producto(request):
     else:
         return JsonResponse({"existe": producto is not None})
 
+@jwt_cookie_required
 def obtener_precio(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
@@ -130,6 +134,7 @@ def obtener_precio(request):
             status=400,
         )
 
+@jwt_cookie_required
 def obtener_nombre(request):
     nombre_producto = request.GET.get(
         "nombre_producto", None
@@ -147,6 +152,7 @@ def obtener_nombre(request):
             status=400,
         )
 
+@jwt_cookie_required
 def detalles_compra(request, compra_id):
     detalles = Detallecompra.objects.filter(id_compra=compra_id)
     detalles_data = []
@@ -164,6 +170,7 @@ def detalles_compra(request, compra_id):
 
     return JsonResponse({'detallecompra': detalles_data})
 
+@jwt_cookie_required
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         compra_id = request.GET.get('compra_id')
@@ -193,6 +200,7 @@ def cambiarEstado(request):
         else:
             return JsonResponse({'status': 'success'})
 
+@jwt_cookie_required
 def obtener_detalles_compra(request, compra_id):
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
 
@@ -302,6 +310,7 @@ def obtener_detalles_compra(request, compra_id):
 #     detalles = Detallecompra.objects.filter(id_compra=id_compra)
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
 
+
 def formatear_precios(valor):
     valor = round(valor, 2)
     precio_formateado = '${:,.2f}'.format(valor)
@@ -389,18 +398,6 @@ def generar_factura_pdf(request, compra_id):
 
     return response
 
-
-
-
-from io import BytesIO
-from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
-from reportlab.lib.units import inch
-from django.http import HttpResponse
-
 def generar_informe_pdf(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')
@@ -442,7 +439,6 @@ def generar_informe_pdf(request):
         elements.append(Paragraph('Informe de Compras', styles['Title']))
         elements.append(Spacer(1, 6))
         
-        # Estilo personalizado para el período de tiempo
         periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
         periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
         
@@ -467,7 +463,7 @@ def generar_informe_pdf(request):
 
             elements.append(t)
         else:
-            # Establecer el mensaje en rojo y centrado
+       
             mensaje_style = ParagraphStyle(
                 name='MensajeStyle',
                 alignment=TA_CENTER,

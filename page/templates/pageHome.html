@@ -7,31 +7,31 @@
 {% endblock %}
 
 
-{% block extraHeader %}
+{% block extraHeaderMobile %}
 <div class="info-section">
   <h1>BRUTALITY</h1>
   <p class="site-description">Explora nuestros productos y realiza tu compra a través de WhatsApp</p>
 </div>
+{% endblock %}
+{% block extraHeaderDesk %}
+<div style="width: 100%; background-color: #000;">
+  <img src="https://nutramerican.com/img/chocolatexl.webp" class="img-fluid">
 
+  <div style="background-color: rgba(0, 0, 0, 0.8); width: 100%;  color: #fff; text-align: center;">
+    <p>Explora nuestros productos y realiza tu compra a través de WhatsApp</p>
+  </div>
+</div>
 {% endblock %}
 
 
 {% block body %}
-<div class="product-featured">
-  <h2 class="title">Productos destacados</h2>
-  <div class="view-options">
-    <a href="#" aria-label="detalle de la lista de productos" id="list" class="mx-1"><i
-        class="fas fa-th-list fa-lg"></i></a>
-    <a href="#" aria-label="lista productos" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
-  </div>
-</div>
-
-<section class="product-card-container" id="product-container">
-  {% for producto in productos %}
-  <div class="product-card">
-    <a href="{% url 'pageDetails' %}?producto_id={{ producto.id_producto }}">
+<section class="mobile">
+  <div class="product-card-container" id="product-container">
+    {% for producto in productos %}
+    <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
       <div class="product-image">
         <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
+        <!-- <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"> -->
       </div>
       <div class="product-details">
         <h3 class="product-title">{{ producto.nombre_producto }}</h3>
@@ -39,63 +39,83 @@
           <p>{{ producto.descripcion }}</p>
         </div>
         <div class="product-price">
-          <span>${{ producto.precio }}</span>
+          <span>${{ producto.precio_pub }}</span>
           <span class="product-search">
             <i class="fas fa-search"></i>
           </span>
         </div>
       </div>
-    </a>
+    </div>
+    {% endfor %}
   </div>
 
-  {% endfor %}
 </section>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-  function filterProducts(selectedValue) {
-    $.ajax({
-      url: "{% url 'filter_products' %}",
-      method: 'GET',
-      data: { sortOption: selectedValue },
-      success: function (data) {
-        if (data.success) {
-          $("#product-container").empty();
+<section class="desktop mt-4">
+  <div class="col-md-11" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
+    <div class="text-muted card-panel mt-5 d-md-none d-lg-block">
+      <p><strong>MEJORES VENTAS</strong></p>
+      <ul class="list-group ">
+        <li style="display: flex;">
+          <img src="https://nutramerican.com/api_MegaplexStar/assets/productsgoldenwebp/bipro1lb/small.webp" height="64"
+            width="64">
+          <div class="media-item">
+            <p>BIPRO CLASSIC VAINILLA 0.9Lb </p>
+            <h6 class="mb-3">
+              <strong class="ms-2 text-danger">$323.982</strong>
+            </h6>
+          </div>
+        </li>
+        <li style="display: flex;">
+          <img
+            src="https://nutramerican.com/api_MegaplexStar/assets/productsgoldenwebp/bipro_classic_vainilla3lB/small.webp"
+            height="64" width="64">
+          <div class="media-item">
+            <p>BIPRO CLASSIC VAINILLA 3LB </p>
+            <h6 class="mb-3">
+              <strong class="ms-2 text-danger">$323.982</strong>
+            </h6>
+          </div>
+        </li>
+        <li style="display: flex;">
+          <img
+            src="https://nutramerican.com/api_MegaplexStar/assets/productos3dwebp/combo_definicion_muscular/combo_definicion_muscular-nutramerican-pharma-small.webp"
+            height="64" width="64">
+          <div class="media-item">
+            <p>COMBO DEFINICIÓN MUSCULAR </p>
+            <h6 class="mb-3">
+              <strong class="ms-2 text-danger">$323.982</strong>
+            </h6>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="product-card-container" id="product-container">
+      {% for producto in productos %}
+      <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
+        <div class="product-image">
+          <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
+          <!-- <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"> -->
+        </div>
+        <div class="product-details">
+          <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+          <div class="product-description">
+            <p>{{ producto.descripcion }}</p>
+          </div>
+          <div class="product-price">
+            <span>${{ producto.precio_pub }}</span>
+            <span class="product-search">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
-          $.each(data.data, function (index, p) {
-            var productCard =
-              '<div class="product-card">' +
-              '<a href="{% url "pageDetails" %}?producto_id=' + p.id_producto + '">' +
-              ' <div class="product-image">' +
-              '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-              '<div class="product-details">' +
-              '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-              '<div class="product-description">' +
-              '<p>' + p.descripcion + '</p></div>' +
-              '<div class="product-price">' +
-              '<span>' + p.precio + '</span>' +
-              '<span class="product-search">' +
-              '<i class="fas fa-search"></i></span></div>' +
-              '</div ></a ></div >';
-
-            $("#product-container").append(productCard);
-          });
-        }
-      }
-    });
-  }
-</script>
-
-<script>
-  $(document).ready(function () {
-    $("#sort").change(function () {
-      var selectedValue = $(this).val();
-      filterProducts(selectedValue);
-    });
+</section>
 
 
-
-  })
-</script>
 
 {% endblock %}

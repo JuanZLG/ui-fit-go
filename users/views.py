@@ -13,7 +13,6 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse_lazy
 from dotenv import load_dotenv
-from tuiranfitgo.views import jwt_cookie_required
 import smtplib 
 import os
 from email.mime.multipart import MIMEMultipart
@@ -21,17 +20,24 @@ from email.mime.text import MIMEText
 import string
 import secrets
 from django.template.loader import get_template
+from tuiranfitgo.views import jwt_cookie_required, module_access_required
+
 
 @jwt_cookie_required
+@module_access_required('usuarios')
 def Home(request):
     user = Usuarios.objects.all()
-    
     return render(request, 'usersHome.html', {"Users":user}) 
 
+
 @jwt_cookie_required
+@module_access_required('usuarios')
 def UserProfile(request):  
     return render(request, 'profile.html') 
 
+
+@jwt_cookie_required
+@module_access_required('usuarios')
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -46,6 +52,8 @@ def cambiarEstadoDeUsuario(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
+# @jwt_cookie_required
+# @module_access_required('usuarios')
 def verDetallesUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -69,7 +77,9 @@ def verDetallesUsuario(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+
 @jwt_cookie_required
+@module_access_required('usuarios')
 def createUser(request):
     roles = Roles.objects.all()
     
@@ -86,7 +96,8 @@ def createUser(request):
 
     return render(request, 'createUser.html', {"rols": roles})
 
-
+# @jwt_cookie_required
+# @module_access_required('usuarios')
 def send_email(user, password, email):
     load_dotenv()
     remitente = os.getenv("USER")
@@ -114,6 +125,8 @@ def send_email(user, password, email):
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
+# @jwt_cookie_required
+# @module_access_required('usuarios')
 def create_password(length=8):
     characters = string.ascii_letters + string.digits
     password = ""
@@ -123,6 +136,7 @@ def create_password(length=8):
 
 
 @jwt_cookie_required
+@module_access_required('usuarios')
 def editUser(request, id_usuario):
     roles = Roles.objects.all()
     
@@ -147,6 +161,7 @@ def editUser(request, id_usuario):
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
 
 @jwt_cookie_required
+@module_access_required('usuarios')
 def HomeRoles(request):
     rolPermisos = Rolespermisos.objects.all()
     permisos_count = {}
@@ -168,7 +183,8 @@ def HomeRoles(request):
         
     return render(request, 'rolesHome.html', {"permisos_count": permisos_count})
 
-
+@jwt_cookie_required
+# @module_access_required('usuarios')
 def accion_rol(request):
     data = json.loads(request.body)
     if request.method == 'POST':
@@ -222,7 +238,8 @@ def accion_rol(request):
     response_data = {"success": True}
     return JsonResponse(response_data)
 
-
+@jwt_cookie_required
+# @module_access_required('usuarios')
 def obtener_datos(request):
         id_rol = request.GET.get('param')
         rolespermisos = Rolespermisos.objects.get(id_rol=id_rol)
@@ -239,7 +256,8 @@ def obtener_datos(request):
         }
         return JsonResponse({'success': True, 'datos': datos})
 
-
+@jwt_cookie_required
+@module_access_required('usuarios')
 def rol_unico(request):
     nombre_rol = request.GET.get("nombre_rol", "")
     rol_existe = Roles.objects.filter(nombre_rol=nombre_rol).exists()
@@ -247,6 +265,8 @@ def rol_unico(request):
     return JsonResponse({"existe": rol_existe})
 
 
+@jwt_cookie_required
+@module_access_required('usuarios')
 def eliminar_rol(request):
     id_rol = request.GET.get('idrol')
     

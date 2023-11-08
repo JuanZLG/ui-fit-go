@@ -4,10 +4,15 @@
 
 {% block body %}
 
-<center>
-    <h1 class="modtitles">Gestión de Productos</h1>
-</center>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/productsHome.css' %}">
+</head>
 <br>
+<center>
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Productos</h1>
+</center>
+
 <div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
@@ -34,53 +39,22 @@
             </span>
         </div>
 
-        <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
-            </a>
-        </div>
+       
     </div>
 </div>
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
-            <table class="table table-bordered mx-auto text-center" id="dataTable" width="auto" cellspacing="0">
-                <style>
-                    ::-webkit-scrollbar {
-                        -webkit-appearance: none;
-                    }
-            
-                    ::-webkit-scrollbar:vertical {
-                        width: 10px;
-                    }
-            
-                    ::-webkit-scrollbar-button:increment,
-                    .contenedor::-webkit-scrollbar-button {
-                        display: none;
-                    }
-            
-                    ::-webkit-scrollbar:horizontal {
-                        height: 10px;
-                    }
-            
-                    ::-webkit-scrollbar-thumb {
-                        background-color: lightgray;
-                        border-radius: 20px;
-                        border: 2px solid #f1f2f3;
-                    }
-            
-                    ::-webkit-scrollbar-track {
-                        border-radius: 10px;
-                    }
-                </style>
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="0">
+                
                 <thead class="theads">
                     <tr>
                         <th>Categoría</th>
                         <th>Marca</th>
                         <th>Producto</th>
                         <th data-toggle="tooltip" data-placement="top" title="Stock del Producto">Existencias</th>
-                        <th data-toggle="tooltip" data-placement="top" title="Valor Unitario">Precio</th>
+                        <th data-toggle="tooltip" data-placement="top" title="Valor de Compra">Precio</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -92,7 +66,7 @@
                         <td>{{p.id_marca.nombre_marca}}</td>
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
-                        <td class="precio-format">{{ p.precio|floatformat:"0" }}</td>
+                        <td><span>$ </span><span class="precio-format">{{ p.precio|floatformat:"0" }}</span></td>
                         <td>
                             <button data-toggle="tooltip" data-placement="top" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton mx-3 {% if p.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
@@ -158,262 +132,12 @@
     });
 </script>
 
-<style>
-    .table {
-        width: 80%;
-    }
-
-    table thead.theads {
-        text-align: center;
-        color: white;
-        background-color: #222222;
-    }
-
-    table tbody.tbody {
-        text-align: center;
-    }
-
-    .modtitles {
-        font-size: 2em;
-        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-        background-size: 200% 200%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: animarGradiente 3s linear infinite;
-        font-weight: bold;
-    }
-
-    /* Toco repetir codigo para cambiar el blanco */
-    .btn-add{
-        color: #000;
-        font-weight: 600;
-    }
-
-    .btn-adder:hover{
-        color: #000;
-        background-color: #77B677;
-        border: solid 1px black;
-    }
-
-    .btn-adder {
-        background-color: #85da85;
-        border: solid 1px black;
-    }
-
-    .btn-add-brand,
-    .btn-add-category{
-        border: solid 1px black;
-    }
-
-    .btn-add-brand:hover{
-        border: solid 1px black;
-        background-color:#D6D6D6;
-    }
-
-    .btn-add-category:hover{
-        border: solid 1px black;
-        background-color:#D6D6D6;
-    }
-
-    .btn-add:hover {
-        background-color: #72d072;
-    }
-
-    .btn-dash {
-        background-color: #c55c5c;
-        color:black;
-    }
-
-    .btn-dash:hover {
-        background-color: #D16060;
-        color:black
-    }
-
-    tr.inactivo {
-        background-color: #ccc;
-        /* Cambia el fondo a un tono más claro */
-        color: #676666;
-    }
-
-    .statusbutton {
-        width: 5rem;
-        border-radius: 3px;
-        border: none;
-    }
-
-    .statusbutton:hover {
-        opacity: 0.9;
-    }
-
-    #editbutton {
-        background-color: #FFFF99;
-        color: #000;
-        /* background-color: #3498db; */
-        border: none;
-        transition: transform 0.5s;
-
-    }
-
-    #addc {
-        background-color: #FFFF99;
-    }
-
-    #addc:hover {
-        background-color: DEDE89;
-    }
-
-
-    #detailsbutton {
-        background-color: #419edd;
-        color: #000;
-        /* background-color: #1e3799; */
-        border: none;
-        transition: transform 0.5s;
-    }
-
-    #editbutton:hover,
-    #detailsbutton:hover {
-        transform: scale(1.1);
-    }
-
-    .cell-actions {
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .active-status {
-        background-color: #95eea5;
-        color: #09711c;
-    }
-
-    .inactive-status {
-        background-color: #ec8080;
-        color: #8a0404;
-    }
-</style>
-
-<style>
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.833);
-        z-index: 100;
-        display: none;
-        animation: fadeInBack 0.3s ease-in-out;
-    }
-
-
-    .productoDialog {
-        max-width: 70%;
-        width: 40%;
-        min-height: 10vh;
-        border: none;
-        background-color: rgb(255, 255, 255);
-        border-radius: 8px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-        animation: fadeIn 0.3s ease-in-out;
-        margin: auto;
-        padding: 20px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes fadeInBack {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .fadeOut {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-
-
-    .productoDialog .modal-container-header {
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .productoDialog h2 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        gap: 8px;
-    }
-
-    .cerrar-producto {
-        padding: 0;
-        border: 0;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: 0.15s ease;
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-
-    .estadoProductoCircle {
-        width: 1rem;
-        height: 1rem;
-        border-radius: 50%;
-    }
-
-    .estadoProductoCircle.activo {
-        background-color: #72d072;
-    }
-
-    .estadoProductoCircle.inactivo {
-        background-color: #ba4d4d;
-    }
-
-
-    .productoDialog section {
-        padding: 20px;
-    }
-
-    .productoDialog section p {
-        font-size: 1rem;
-        font-weight: bold;
-        color: #222222;
-    }
-
-    .productoDialog section p span {
-        color: rgb(99, 99, 99);
-    }
-</style>
-
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
 
 <div class="modal-backdrop"></div>
 
-<dialog id="verDetalleDialog" class="productoDialog dragHandle">
+<dialog id="verDetalleDialog" class="productoDialog dragHandle" style="width:25%">
     <form method="dialog">
         <div class="modal-container-header">
             <div class="estadoProductoCircle"></div>
@@ -436,8 +160,7 @@
             <p>Existencias: <span id="cantProd"></span></p>
             <p>Sabor: <span id="saborProd"></span></p>
             <p>Presentación: <span id="tamanoProd"></span><span> Libra(s)</span></p>
-            <p>Aspecto: <img src="data:image/jpeg;base64,{{ imagenproducto }}" alt="Imagen de Producto"></p>
-            <p>Info. Nutricional: <img src="data:image/png;base64,{{ imagennutri }}" alt="Imagen de Información Nutricional"></p>
+            <p>Precio al Público:<span> $</span> <span id="preventa" class="precio-format"></span></p>
         </section>
     </form>
 </dialog>
@@ -458,6 +181,14 @@
                     $("#catProd").text(producto.categoria);
                     $("#brandProd").text(producto.marca);
                     $("#descProd").text(producto.descripcion);
+                    console.log(producto.precio_pub)
+                    var formattedPrecio = formatoNumero(producto.precio_pub);
+                    $("#preventa").text(formattedPrecio);
+
+                    function formatoNumero(numero) {
+                        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    }
+                    
                     var fechaVen = new Date(producto.fechaven);
                     var fechaFormateada = fechaVen.getFullYear() + '-' + (fechaVen.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaVen.getDate().toString().padStart(2, '0');
                     $("#fechavenProd").text(fechaFormateada);
@@ -471,6 +202,8 @@
                     } else {
                         $(".estadoProductoCircle").addClass("inactivo").removeClass("activo");
                     }
+
+                    
                     
                     document.getElementById("verDetalleDialog").showModal();
                     $(".productoDialog").addClass("fadeIn");
@@ -492,6 +225,20 @@
         });
     });
 
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var precioElements = document.querySelectorAll('.precio-format');
+
+        precioElements.forEach(function(element) {
+            var precio = parseFloat(element.textContent);
+            if (!isNaN(precio)) {
+                var formattedPrecio = precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                element.textContent = formattedPrecio;
+            }
+        });
+    });
 </script>
 
 <div class="modal fade" id="crearCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -656,19 +403,6 @@ aria-hidden="true">
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var precioElements = document.querySelectorAll('.precio-format');
-
-        precioElements.forEach(function(element) {
-            var precio = parseFloat(element.textContent);
-            if (!isNaN(precio)) {
-                var formattedPrecio = precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                element.textContent = formattedPrecio;
-            }
-        });
-    });
-</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

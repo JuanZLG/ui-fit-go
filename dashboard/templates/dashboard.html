@@ -11,7 +11,6 @@
         border: none;
         background-color: #f7f8fa;
         padding: 0;
-        /* Cambiado a 0 para eliminar el espacio de relleno */
         border-radius: 10px;
     }
 
@@ -20,33 +19,57 @@
         transition: transform 0.2s ease;
     }
 
-    .chart-area,
-    .chart-pie-container {
+
+
+    .card-effect .fas {
+        margin-left: 50px;
+    }
+
+    .card-effect .fas.fa-user-slash {
+        margin-left: 40px;
+    }
+
+    .card-effect .fas .fa-shopping-bag {
+        margin-left: 50px;
+    }
+
+    .card-effect .fas .fa-dollar-sign {
+        margin-left: 50px;
+    }
+
+
+
+    .chart-area {
         display: flex;
         justify-content: center;
-        /* Centra horizontalmente */
         align-items: center;
-        height: 300px;
-        /* Establece la misma altura para ambos elementos */
-        
+        height: auto;
         border-radius: 10px;
         padding: 0;
         margin: 0;
+        position: relative;
+        max-width: 100%;
     }
 
-    .chart-area {
-        /* Puedes reducir la altura del área del gráfico según tus necesidades */
-        height: 240px;
-    }
-
-    /* Estilo del área del gráfico (canvas) */
-    #myPieChart {
+    #graficolindo {
         width: 100%;
+        max-width: 100%;
+        /* Establece un ancho máximo del 100% del contenedor */
         height: 100%;
-        padding: 0;
-        margin: 0;
+    }
+
+    #myPieChart {
+        width: 70%;
+        height: 70%;
     }
 </style>
+
+
+
+
+
+
+
 
 
 <div class="container">
@@ -67,14 +90,13 @@
                             <div id="clientes-activos" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
                             </div>
                         </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <i class="fas fa-user-check fa-2x text-purple ml-2 mt-2"></i>
+                        <div class="col-auto ml-auto">
+                            <i class="fas fa-user-check fa-2x text-purple mt-2"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
 
         <div class="col-xl-3 col-md-6 mb-4">
@@ -89,8 +111,8 @@
                             <div id="clientes-inactivos" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
                             </div>
                         </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <i class="fas fa-user-slash fa-2x text-danger ml-2 mt-2"></i>
+                        <div class="col-auto ml-auto">
+                            <i class="fas fa-user-slash fa-2x text-danger mt-2"></i>
                         </div>
                     </div>
                 </div>
@@ -123,8 +145,7 @@
 
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 card-effect">
-                <div class="card-body px-5 py-1 d-flex align-items-center" data-toggle="modal"
-                    data-target="#totalComprasPorMes">
+                <div class="card-body px-5 py-1 d-flex align-items-center">
                     <div class="row no-gutters">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
@@ -132,8 +153,27 @@
                             </div>
                             <div id="total-compras" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...</div>
                         </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <i class="fas fa-shopping-bag fa-2x text-primary ml-2 mt-2"></i>
+                        <div class="col-auto ml-auto">
+                            <i class="fas fa-shopping-bag fa-2x text-primary mt-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 card-effect">
+                <div class="card-body px-5 py-1 d-flex align-items-center">
+                    <div class="row no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total de Ventas
+                            </div>
+                            <div id="total-ventas" class="h5 mb-0 font-weight-bold text-gray-800">Cargando...
+                            </div>
+                        </div>
+                        <div class="col-auto ml-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-success mt-2"></i>
                         </div>
                     </div>
                 </div>
@@ -142,11 +182,9 @@
 
 
 
-
-
         <script>
-            // Función para actualizar el valor en la carta y en el modal
-            function actualizarValorEnCartaYModal(totalCompras) {
+            // Función para actualizar el valor en la carta de compras
+            function actualizarValorEnCartaCompras(totalCompras) {
                 const totalComprasFormatted = totalCompras.toLocaleString('es-CO', {
                     style: 'currency',
                     currency: 'COP',
@@ -155,133 +193,53 @@
                 });
                 $('#total-compras').text(totalComprasFormatted);
             }
-
-            // En el evento click de la tarjeta, cargar los totales de compras por mes en el modal
-            $('.card-body').on('click', function () {
-                var year = new Date().getFullYear(); // Obtiene el año actual
-
-                $.ajax({
-                    url: "{% url 'calcular_total_compras' 2023 %}",
-                    method: "GET",
-                    data: {
-                        'year': year
-                    },
-                    success: function (data) {
-                        console.log(data)
-                        var totalComprasPorMes = data.total_compras_por_mes;
-
-                        // Calcula el total de compras para mostrar en la carta y en el modal
-                        var totalCompras = 0;
-                        totalComprasPorMes.forEach(function (total) {
-                            totalCompras += total.total;
-                        });
-
-                        // Actualiza el valor en la carta y en el modal
-                        actualizarValorEnCartaYModal(totalCompras);
-
-                        // Construir la tabla y agregar los datos
-                        var table = $('#comprasPorMesTable tbody');
-                        table.empty();
-                        totalComprasPorMes.forEach(function (total) {
-                            const totalFormatted = total.total.toLocaleString('es-CO', {
-                                style: 'currency',
-                                currency: 'COP',
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0,
-                            });
-                            table.append('<tr><td>' + total.month + '</td><td>' +
-                                totalFormatted + '</td></tr>');
-                        });
-
-                        // Abre el modal
-                        $('#totalComprasPorMes').modal('show');
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener los totales de compras por mes:', error);
-                    }
+        
+            // Función para actualizar el valor en la carta de ventas
+            function actualizarValorEnCartaVentas(totalVentas) {
+                const totalVentasFormatted = totalVentas.toLocaleString('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
                 });
-            });
-
-            // Al cargar la página, actualizar el valor en la carta
-            $(document).ready(function () {
-                // Realiza una solicitud inicial para obtener el total de compras
-                $.ajax({
-                    url: "{% url 'calcular_total_compras' 2023 %}",
-                    method: "GET",
-                    data: {
-                        'year': new Date().getFullYear()
-                    },
-                    success: function (data) {
-                        var totalComprasPorMes = data.total_compras_por_mes;
-                        var totalCompras = 0;
-                        totalComprasPorMes.forEach(function (total) {
-                            totalCompras += total.total;
-                        });
-                        // Actualiza el valor en la carta al cargar la página
-                        actualizarValorEnCartaYModal(totalCompras);
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener los totales de compras por mes:', error);
-                    }
-                });
-            });
-        </script>
-
-
-
-
-
-
-
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 card-effect">
-                <div class="card-body px-5 py-1 d-flex align-items-center" data-toggle="modal"
-                    data-target="#totalComprasPorMes">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total de Ventas
-                            </div>
-                            <div id="total-ventas" class="h5 mb-0 font-weight-bold text-gray-800">Cargando...</div>
-                        </div>
-                        <div class="col-auto d-flex align-items-center">
-                            <i class="fas fa-dollar-sign fa-2x text-success ml-2 mt-2"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <script>
-            function actualizarTotalVentas() {
-                $.ajax({
-                    url: "{% url 'calcular_total_ventas' %}",
-                    method: "GET",
-                    success: function (data) {
-                        const totalVentas = data.total_ventas;
-                        const totalVentasFormatted = totalVentas.toLocaleString('es-CO', {
-                            style: 'currency',
-                            currency: 'COP',
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                        });
-
-                        $("#total-ventas").text(totalVentasFormatted);
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener el total de ventas:', error);
-                    }
-                });
+                $('#total-ventas').text(totalVentasFormatted);
             }
-
-            // Actualiza el total de ventas cada 5 segundos
-            setInterval(actualizarTotalVentas, 5000);
-
-            // Actualiza el total de ventas al cargar la página
-            actualizarTotalVentas();
+        
+            $(document).ready(function () {
+                $.ajax({
+                    url: "{% url 'calcular_total_compras_y_ventas' %}",
+                    method: "GET",
+                    success: function (data) {
+                        console.log(data);
+                        var totalComprasPorMes = data.total_compras_por_mes;
+                        var totalVentasPorMes = data.total_ventas_por_mes;
+        
+                        // Calcula el total de compras para mostrar en la carta de compras
+                        var totalCompras = 0;
+                        totalComprasPorMes.forEach(function (total) {
+                            totalCompras += total.total_compras;
+                        });
+        
+                        // Calcula el total de ventas para mostrar en la carta de ventas
+                        var totalVentas = 0;
+                        totalVentasPorMes.forEach(function (total) {
+                            totalVentas += total.total_ventas;
+                        });
+        
+                        // Actualiza el valor en la carta de compras al cargar la página
+                        actualizarValorEnCartaCompras(totalCompras);
+        
+                        // Actualiza el valor en la carta de ventas al cargar la página
+                        actualizarValorEnCartaVentas(totalVentas);
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener los totales de compras y ventas por mes:', error);
+                    }
+                });
+            });
         </script>
+        
+        
 
 
 
@@ -293,25 +251,24 @@
     </div>
 
     <!-- Content Row -->
-
     <div class="row">
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Compras y Ventas</h6>
-                    <a href="#" id="periodo-filtro" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-light-gray dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" data-value="semana">Última semana</a>
+                            <a class="dropdown-item" href="#" data-value="mes">Último mes</a>
+                            <a class="dropdown-item" href="#" data-value="ano">Último año</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <div id="filtro-periodo" class="form-group">
-                        <label for="periodo">Seleccionar período:</label>
-                        <select id="periodo">
-                            <option value="semana">Última semana</option>
-                            <option value="mes">Último mes</option>
-                            <option value="ano">Último año</option>
-                        </select>
-                    </div>
                     <div class="chart-area">
                         <canvas id="graficolindo"></canvas>
                     </div>
@@ -319,48 +276,91 @@
             </div>
         </div>
 
+
+
+
         <script>
-            var nuevoGrafico; // Declaración global para el gráfico
-
-            function actualizarGrafico(periodo) {
-                $.ajax({
-                    url: "{% url 'obtener_datos_ventas_y_compras' %}",
-                    method: "GET",
-                    data: {
-                        periodo: periodo // Envía el periodo seleccionado
-                    },
-                    success: function (data) {
-                        // Parsea los datos recibidos
-                        var periodo = data.periodo;
-                        var total_ventas = data.total_ventas;
-                        var total_compras = data.total_compras;
-
-                        // Puedes utilizar estos datos para actualizar el gráfico, pero esto dependerá de la biblioteca que utilices para el gráfico. 
-                        // Aquí asumimos que utilizas Chart.js:
-
-                        // Ejemplo de cómo actualizar los datos de ventas y compras en el gráfico de Chart.js:
-                        nuevoGrafico.data.datasets[0].data = [total_ventas];
-                        nuevoGrafico.data.datasets[1].data = [total_compras];
-                        nuevoGrafico.update();
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener los datos de ventas y compras:', error);
-                    }
-                });
-            }
-
-            // Agrega un evento de cambio en el select para actualizar el gráfico
-            $('#periodo').on('change', function () {
-                var periodo = $(this).val();
-                actualizarGrafico(periodo);
-            });
-
             $(document).ready(function () {
-                // Al cargar la página, actualiza el gráfico con el periodo predeterminado
-                var periodoPredeterminado = $('#periodo').val();
-                actualizarGrafico(periodoPredeterminado);
-                // Actualiza el gráfico cada 5 segundos
-                // (puedes conservar esta parte si deseas que el gráfico se actualice automáticamente)
+                // Inicialmente, selecciona 'ano' como valor predeterminado
+                var selectedValue = 'ano';
+
+                // Función para inicializar y actualizar el gráfico
+                function initializeAndRefreshChart(periodo) {
+                    // Obtén el contexto del canvas para el gráfico
+                    var ctx = document.getElementById("graficolindo").getContext("2d");
+
+                    // Limpia el gráfico anterior si existe
+                    if (window.nuevoGrafico) {
+                        window.nuevoGrafico.destroy();
+                    }
+
+                    // Configura el gráfico de barras (sin datos iniciales)
+                    nuevoGrafico = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [], // Etiquetas de días, semanas o meses
+                            datasets: [{
+                                    label: 'Ventas',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1,
+                                    data: [],
+                                },
+                                {
+                                    label: 'Compras',
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1,
+                                    data: [],
+                                },
+                            ],
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    // Actualiza el gráfico con el valor seleccionado
+                    actualizarGrafico(periodo);
+                }
+
+                // Función para actualizar el gráfico con los datos de ventas y compras
+                function actualizarGrafico(periodo) {
+                    $.ajax({
+                        url: "{% url 'obtener_datos_ventas_y_compras' %}",
+                        method: "GET",
+                        data: {
+                            periodo: periodo
+                        },
+                        success: function (data) {
+                            console.log(data); // Registra los datos recibidos
+                            // Actualiza las etiquetas y datos del gráfico
+                            nuevoGrafico.data.labels = data
+                                .labels; // Etiquetas de días, semanas o meses
+                            nuevoGrafico.data.datasets[0].data = data.ventas; // Datos de ventas
+                            nuevoGrafico.data.datasets[1].data = data.compras; // Datos de compras
+                            nuevoGrafico.update();
+                        },
+                        error: function (error) {
+                            console.error('Error al obtener los datos de ventas y compras:', error);
+                        }
+                    });
+                }
+
+                // Inicializa el gráfico con el valor predeterminado
+                initializeAndRefreshChart(selectedValue);
+
+                // Maneja el clic en los elementos del menú desplegable
+                $('.dropdown-item').on('click', function () {
+                    selectedValue = $(this).data('value');
+                    $('.btn--light-gray').text($(this).text());
+                    // Actualiza el gráfico con el nuevo período seleccionado
+                    actualizarGrafico(selectedValue);
+                });
             });
         </script>
 
@@ -401,16 +401,25 @@
                         var productos = data.productos; // Lista de nombres de productos
                         var cantidades = data.cantidades; // Lista de cantidades de productos
 
+                        // Genera una paleta de colores aleatorios
+                        function generarColoresAleatorios(cantidad) {
+                            var colores = [];
+                            for (var i = 0; i < cantidad; i++) {
+                                var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                                colores.push(color);
+                            }
+                            return colores;
+                        }
+
+                        var colores = generarColoresAleatorios(productos.length);
+
                         window.myPieChart = new Chart(ctx, {
                             type: 'pie',
                             data: {
-
                                 datasets: [{
                                     data: cantidades,
-                                    backgroundColor: ['#4e73df', '#1cc88a',
-                                        '#36b9cc'
-                                    ], // Colores personalizables
-                                }]
+                                    backgroundColor: colores, // Colores aleatorios
+                                }],
                             },
                             options: {
                                 tooltips: {
@@ -445,6 +454,7 @@
                 actualizarGraficoProductos();
             });
         </script>
+
 
 
 

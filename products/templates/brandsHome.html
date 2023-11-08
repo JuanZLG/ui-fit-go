@@ -5,120 +5,101 @@
 {% block body %}
 <style>
     .table {
-              width: 80%;
-          }
-      
-          table thead.theads {
-              text-align: center;
-              color: white;
-              background-color: #222222;
-          }
-      
-          table tbody.tbody {
-              text-align: center;
-          }
-      
-          .modtitles {
-              font-size: 2em;
-              background-image: linear-gradient(45deg, #000000, #3c3636, #000);
-              background-size: 200% 200%;
-              -webkit-background-clip: text;
-              background-clip: text;
-              color: transparent;
-              animation: animarGradiente 3s linear infinite;
-              font-weight: bold;
-              padding:2px;
-          }
-  
-          /* Toco repetir codigo para cambiar el blanco */
-          .btn-add,
-          .btn-dash {
-              color: #000;
-              font-weight: 600;
-          }
-      
-          .btn-add:hover,
-          .btn-dash:hover {
-              color: #000;
-          }
-      
-          .btn-add {
-              padding: 0;
-              width: auto;
-              block-size: 6vh;
-              background-color: #85da85;
-              display: flex;
-              align-items: center;
-          }
-      
-          .btn-add:hover {
-              background-color: #72d072;
-          }
-      
-          .btn-dash {
-              background-color: #c55c5c;
-          }
-      
-          .btn-dash:hover {
-              background-color: #ba4d4d;
-          }
-      
-          tr.inactivo {
-              background-color: #ccc;
-              /* Cambia el fondo a un tono más claro */
-              color: #676666;
-          }
-      
-          .statusbutton {
-              width: 5rem;
-              border-radius: 3px;
-              border: none;
-          }
-      
-          .statusbutton:hover {
-              opacity: 0.9;
-          }
-      
-          #deleteButton {
-              background-color: transparent;
-              color: #000;
-              /* background-color: #3498db; */
-              border: none;
-              transition: transform 0.5s;
-      
-          }
-      
-          #deleteButton:hover {
-              background-color:white;
-          }
-      
-          .cell-actions {
-              display: flex;
-              justify-content: space-around;
-          }
+        width: 80%;
+    }
 
-          .center-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 70vh; 
-          }
+    table thead.theads {
+        text-align: center;
+        color: white;
+        background-color: #222222;
+    }
 
-            .active-status {
-                background-color: #95eea5;
-                color: #09711c;
-            }
-        
-            .inactive-status {
-                background-color: #ec8080;
-                color: #8a0404;
-            }
-        
-          </style>
+    table tbody.tbody {
+        text-align: center;
+    }
 
-          <center>
-            <h1 class="modtitles">Marcas de Producto</h1>
+    .modtitles {
+        font-size: 2em;
+        background-image: linear-gradient(45deg, #000000, #3c3636, #000);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: animarGradiente 3s linear infinite;
+        font-weight: bold;
+        height: 5.7vh;
+    }
+
+    /* Toco repetir codigo para cambiar el blanco */
+    .btn-add,
+    .btn-dash {
+        color: #000;
+        font-weight: 600;
+    }
+
+    .btn-add:hover,
+    .btn-dash:hover {
+        color: #000;
+    }
+
+    .btn-add {
+        padding: 0;
+        width: auto;
+        block-size: 6vh;
+        background-color: #85da85;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-add:hover {
+        background-color: #72d072;
+    }
+
+    .btn-dash {
+        background-color: #c55c5c;
+    }
+
+    .btn-dash:hover {
+        background-color: #ba4d4d;
+    }
+
+
+    .statusbutton {
+        width: 5rem;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .statusbutton:hover {
+        opacity: 0.9;
+    }
+
+    #editbutton {
+        background-color: #FFFF99;
+        color: #000;
+        /* background-color: #3498db; */
+        border: none;
+        transition: transform 0.5s;
+
+    }
+
+    #editbutton:hover,
+    #detailsbutton:hover {
+        transform: scale(1.1);
+    }
+    .active-status {
+        background-color: #95eea5;
+        color: #09711c;
+    }
+
+    .inactive-status {
+        background-color: #ec8080;
+        color: #8a0404;
+    }
+</style>
+        <br>
+        <center>
+            <h1 class="text-black-800 mb-4" style="font-weight:bold;">Marcas de Producto</h1>
         </center>
         <br>
         <div class="card mb-4">
@@ -136,17 +117,10 @@
         <div class="card shadow mb-4">
             <div class="card-header py-4">
                 <div class="table-responsive">
-                    <style>
-                        .table-responsive{
-                        overflow-y: auto;
-                        max-height: 400px;
-                    }
-                    </style>
-                    <table class="table table-bordered mx-auto text-center" id="dataTable" width="auto">
+                    <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="0">
                         <thead class="theads">
                             <tr>
                                 <th>Nombre de la Marca</th>
-                                <th>Estado</th>
                                 <th>Accion(es)</th>
                             </tr>
                         </thead>
@@ -154,12 +128,8 @@
                             {% for mc in pbrands %}
                             <tr>
                                 <td>{{ mc.nombre_marca }}</td>
-                                <td><button
-                                    class="cambiar-estado statusbutton mx-3 active-status">Activo
-                                </button></td>
-                                <td>
-                                    <a class="btn btn-sm btn-danger delete-button" data-id-marca="{{ mc.id_marca }}"
-                                style="height:27px;" data-toggle="tooltip" data-placement="right" title="Eliminar Marca"><i class="fa-solid fa-trash-can fa-sm"
+                                <td class="cellactions">
+                                    <a class="btn btn-sm btn-danger delete-button" data-id-marca="{{ mc.id_marca }}" style="height:27px;" data-toggle="tooltip" data-placement="right" title="Eliminar Marca"><i class="fa-solid fa-trash-can fa-sm"
                                     style="color: #ffffff;"></i></a>
                                 </td>
                             </tr>
@@ -169,48 +139,6 @@
                 </div>
             </div>
         </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-    $(".delete-button").click(function () {
-        var idToDelete = parseInt($(this).data("id-marca"));
-        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
-
-        // Mostrar un modal de confirmación de SweetAlert2
-        Swal.fire({
-            title: 'Confirmación',
-            text: '¿Está seguro de eliminar esta marca?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    headers: {
-                        "X-CSRFToken": csrfToken
-                    },
-                    url: "{% url 'borrarMarca' %}",
-                    data: {
-                        idToDelete: idToDelete
-                    },
-                    method: "POST",
-                    success: function (response) {
-                        location.reload();
-                    },
-                    error: function (error) {
-                        // Manejo de errores si es necesario
-                    }
-                });
-            }
-        });
-    });
-});
-
-</script>
     
 <div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
 aria-hidden="true">
@@ -248,6 +176,44 @@ aria-hidden="true">
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+    $(".delete-button").click(function () {
+        var idToDelete = parseInt($(this).data("id-marca"));
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+
+        Swal.fire({
+            title: 'Confirmación',
+            text: '¿Está seguro de eliminar esta marca?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": csrfToken
+                    },
+                    url: "{% url 'borrarMarca' %}",
+                    data: {
+                        idToDelete: idToDelete
+                    },
+                    method: "POST",
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        
+                    }
+                });
+            }
+        });
+    });
+});
+
+</script>
 
 <script>
     $(document).ready(function () {

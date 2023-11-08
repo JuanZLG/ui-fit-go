@@ -7,14 +7,15 @@ from django.views.decorators.http import require_POST
 from .models import Proveedores
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
-@module_access_required('proveedores')
+
 @jwt_cookie_required
+@module_access_required('proveedores')
 def Home(request):
     proveedores = Proveedores.objects.all()
     return render(request, 'providersHome.html', {"proveedores":proveedores}) 
 
-@module_access_required('proveedores')
 @jwt_cookie_required
+@module_access_required('proveedores')
 def crearProveedor(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_proveedor')
@@ -37,15 +38,14 @@ def crearProveedor(request):
         return JsonResponse({'success': True})
     return render(request, 'createProvider.html')
 
-@module_access_required('proveedores')
+
 def proveedor_unico(request):
     proveedor = request.GET.get("proveedor", "")
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
 
-
-@module_access_required('proveedores')
 @jwt_cookie_required
+@module_access_required('proveedores')
 def editarProveedor(request, id_proveedor):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_proveedor')
