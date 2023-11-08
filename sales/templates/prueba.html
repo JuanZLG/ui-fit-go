@@ -111,7 +111,7 @@
                     oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
                 <button onclick="increment(this)" id="increment">+</button>
             </div>
-            <input type="button" value="Verificar" class="form-control product-button" id="btnAgregar">
+            <input type="button" value="Verificar" class="btn-acciones btn-verificar" id="btnAgregar">
         </div>
     </div>
     <div class="resultado-container">
@@ -130,7 +130,7 @@
                 <th class="price-column">Precio Compra (Unidad)</th>
                 <th class="price-column">Precio Venta (Unidad)</th>
                 <th class="price-column">Margen total de Ganancia</th>
-                <th class="total-column">TOTAL VENTA</th>
+                <th class="total-column">TOTAL PRODUCTO</th>
                 <th class="icon-column"></th>
             </tr>
         </thead>
@@ -138,75 +138,118 @@
         </tbody>
     </table>
     <div class="producto-cont-descuento">
-        <span class="mx-3">Aplicar descuento a la venta</span>
-        <div class="input-wrapper">
-            <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
-            <span class="percent-sign">%</span>
+        <div>
+            <span>Aplicar descuento a la venta</span>
+            <div class="input-wrapper">
+                <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1"
+                    title="Aplicar descuento" id="descuento-venta" style="width: 65px !important;">
+                <span class="percent-sign">%</span>
+            </div>
+        </div>
+        <div
+            style="border: 1px solid #ccc; display: flex; flex-direction: column; width: auto; gap: 10px; padding: 10px 15px;">
+            <div class="d-flex justify-content-between gap-3  align-items-center">
+                <span>Descuento venta:</span>
+                <span id="total-venta-descuento" style=" color: rgb(48, 48, 163);"></span>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="pt-1">TOTAL VENTA :</span>
+                <span id="total-venta" class="ml-3" style="font-weight: bold; color: rgb(184, 62, 62);"></span>
+            </div>
         </div>
     </div>
+
 </section>
 
 
 <div style="text-align: end; width: 100%; margin-top: 30px;">
-    <input type="button" value="Ver resumen" id="boton-resumen">
-    <input type="submit" value="Guardar venta" class="boton-guardar">
+    <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
+    <input type="submit" value="Guardar venta" class="btn-acciones btn-crear mx-2">
 </div>
 
-<div class="resumen-pedido">
-    <h4 class="titulo-resumen">RESUMEN DE TU PEDIDO</h4>
-    <div class="grid-resumen">
-        <div class="resumen-productos">
-            <h6 class="titulo-seccion"><i class="fas fa-box-open mr-1 mb-3"></i>TOTAL PRODUCTOS</h6>
-            <ul>
-                <li class="linea-resumen"><span>Total precio compra</span> <span class="valor-derecha">$3000.000</span>
-                </li>
-            </ul>
-        </div>
-        <div class="resumen-descuentos">
-            <h6 class="titulo-seccion"><i class="fas fa-gift mr-1 mb-3"></i>DESCUENTOS</h6>
-            <ul>
-                <li class="linea-descuento"><span>Producto xx</span> <span class="valor-derecha">50% - $20.000</span>
-                </li>
-                <li class="linea-descuento"><span>Muscle xx</span> <span class="valor-derecha">20% - $15.000</span></li>
-                <li class="linea-descuento"><span>Fat indusha ccxx max</span> <span class="valor-derecha">20% -
-                        $15.000</span></li>
-            </ul>
-        </div>
-        <div class="resumen-venta">
-            <h6 class="titulo-seccion"><i class="fas fa-dollar-sign mr-1 mb-3"></i>TOTAL VENTA</h6>
-            <ul>
-                <li class="linea-resumen"><span>Total precio venta</span> <span class="valor-derecha">$3000.000</span>
-                </li>
-            </ul>
-        </div>
-        <div class="resumen-ganancia">
-            <h6 class="titulo-seccion"><i class="fas fa-coins mr-1 mb-3"></i>TU GANANCIA</h63>
-                <ul>
-                    <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
-                </ul>
-        </div>
-    </div>
-</div>
+
+
 
 <script>
     document.getElementById('boton-resumen').addEventListener('click', function (event) {
-        document.querySelector(".resumen-pedido").classList.toggle("show");
+        resumen_pedido()
     });
+    function resumen_pedido() {
+
+        Swal.fire({
+            html: `
+    <div class="resumen-pedido">
+        <h4 class="titulo-resumen">RESUMEN DE TU PEDIDO</h4>
+        <div class="grid-resumen">
+            <div class="resumen-productos">
+                <h6 class="titulo-seccion"><i class="fas fa-box-open mr-1 mb-3"></i>TOTAL PRODUCTOS</h6>
+                <ul>
+                    <li class="linea-resumen"><span>Total precio compra</span> <span class="valor-derecha">$3000.000</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="resumen-descuentos">
+                <h6 class="titulo-seccion"><i class="fas fa-gift mr-1 mb-3"></i>DESCUENTOS</h6>
+                <ul>
+                    <li class="linea-descuento"><span>Producto xx</span> <span class="valor-derecha">50% - $20.000</span>
+                    </li>
+                    <li class="linea-descuento"><span>Muscle xx</span> <span class="valor-derecha">20% - $15.000</span></li>
+                    <li class="linea-descuento"><span>Fat indusha ccxx max</span> <span class="valor-derecha">20% -
+                            $15.000</span></li>
+                </ul>
+            </div>
+            <div class="resumen-venta">
+                <h6 class="titulo-seccion"><i class="fas fa-dollar-sign mr-1 mb-3"></i>TOTAL VENTA</h6>
+                <ul>
+                    <li class="linea-resumen"><span>Total precio venta</span> <span class="valor-derecha">$3000.000</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="resumen-ganancia">
+                <h6 class="titulo-seccion"><i class="fas fa-coins mr-1 mb-3"></i>TU GANANCIA</h63>
+                    <ul>
+                        <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+    `,
+            showCloseButton: true,
+            showConfirmButton: false,
+            customClass: {
+                closeButton: 'custom-close-button',
+                popup: 'custom-swal-popup'
+            }
+        })
+    }
+
+    let css = `
+    .custom-close-button { 
+        border: none !important; 
+        color: black !important; 
+    }
+    .custom-swal-popup {
+        width: 60% !important;
+    }
+`,
+        head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+
+    head.appendChild(style);
+
+    style.type = 'text/css';
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+
+
 </script>
 <style>
     .resumen-pedido {
-        display: none;
-        margin: 50px;
-        width: auto;
-        max-width: 80%;
-        background-color: aliceblue;
-        border-radius: 10px;
-        padding: 15px 20px;
-        float: right;
-    }
-
-    .resumen-pedido.show {
-        display: block;
+        width: 100%;
+        padding: 15px;
     }
 
     .titulo-resumen {
@@ -239,16 +282,6 @@
 
     .valor-total {
         color: rgb(22, 22, 88);
-    }
-
-    .boton-guardar {
-        width: 200px;
-        padding: 10px;
-        background-color: #222222;
-        color: #ffffff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
     }
 </style>
 
@@ -283,11 +316,12 @@
                                 let producto = data.resultados[i].nombre_producto;
                                 let img = data.resultados[i].presentacion;
                                 let cantidad = data.resultados[i].cantidad;
+                                // <img src="/media/${img}" alt="Imagen" class="img-fluid">
 
                                 let itemLista = `
                                 <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
                                     <div class="product-details-container">
-                                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
+                                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
@@ -332,6 +366,28 @@
             return existe;
         }
 
+        function totalVenta() {
+            let descuentoInput = $("#descuento-venta").val();
+            let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
+            let totalVenta = 0;
+
+            $("#tabla-ventas tr.producto-row").each(function () {
+                let fila = $(this);
+                let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
+                totalVenta += totalProducto;
+            });
+            let descuentoValor = totalVenta * descuento;
+            totalVenta = totalVenta - descuentoValor;
+            $("#total-venta").text(formatearPrecios(totalVenta));
+            if (descuentoInput) {
+                $("#total-venta-descuento").text(formatearPrecios(descuentoValor));
+            } else {
+                $("#total-venta-descuento").text(formatearPrecios(0));
+            }
+        }
+
+
+
         $("#btnAgregar").click(function () {
             if (productoSeleccionado) {
                 if (productoExiste(productoSeleccionado.id_producto)) {
@@ -343,9 +399,11 @@
                 productoSeleccionado.cantidadSeleccionada = parseInt($("#cantidad-ingresada").val(), 10);
                 $("#cantidad-ingresada").val("1")
                 agregarFila(productoSeleccionado)
+                totalVenta()
                 productoSeleccionado = null;
                 $("#btnAgregar").removeClass("is-active")
                 $("#tabla-ventas").addClass("show");
+                $(".producto-cont-descuento").addClass("show")
             }
         });
 
@@ -360,8 +418,14 @@
             $(this).closest("tr.producto-row").remove();
             if ($("#tabla-ventas tr.producto-row").length < 1) {
                 $("#tabla-ventas").removeClass("show");
+                $(".producto-cont-descuento").removeClass("show")
             }
         });
+
+        $("#descuento-venta").on("input", function () {
+            totalVenta()
+        });
+
 
 
         function formatearPrecios(valor) {
@@ -369,8 +433,23 @@
             let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             return '$' + precioFormateado;
         }
+
         $(document).on("click", ".product-update-button", function () {
-            $(this).removeClass("is-active");
+            let btn = $(this);
+            btn.val('ACTUALIZADO');
+            btn.addClass("update");
+            btn.fadeIn(100);
+
+            setTimeout(function () {
+                btn.fadeOut(100, function () {
+                    btn.removeClass("update");
+                    btn.val('ACTUALIZAR');
+                    btn.removeClass("is-active");
+                    btn.fadeIn(100);
+                });
+            }, 1000);
+
+
             let fila = $(this).closest("tr.producto-row");
             let descuento = parseFloat(fila.find(".descuento").val().replace(/[%]/g, '')) / 100;
             let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
@@ -385,7 +464,7 @@
             }
 
             let precio_ganancia = formatearPrecios(cantidad_seleccionada * (precio_venta_final - precio_compra));
-            let total_venta = formatearPrecios(precio_venta_final * cantidad_seleccionada);
+            let total_producto = formatearPrecios(precio_venta_final * cantidad_seleccionada);
             let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
             let descuento_html = ""
             if (descuento > 0) {
@@ -396,7 +475,8 @@
 
             fila.find(".precio_venta").html(precio_venta_con_descuento + descuento_html);
             fila.find(".total_ganancia").text(precio_ganancia);
-            fila.find(".total_venta").text(total_venta);
+            fila.find(".total_producto").text(total_producto);
+            totalVenta()
         });
 
 
@@ -424,6 +504,7 @@
             let precio_ganancia = producto.precio_ganancia
             let cantidad_seleccionada = producto.cantidadSeleccionada
             let precios = calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada);
+            // <img src="/media/${img}" alt="Imagen" class="img-fluid">
 
             let itemFila = `
     <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
@@ -431,7 +512,7 @@
             <div class="product-info">
                 <div class="product-details-container">
                     <div class="cont-img">
-                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
+                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
                     </div>
                     <ul class="product-details">
                         <li><strong>${nombre_producto}</strong></li>
@@ -458,7 +539,7 @@
         <td class="precio_compra"> ${precio_compra} </td>
         <td class="precio_venta"> ${precios.precio_venta} </td>
         <td class="total_ganancia"> ${precios.ganancia_total} </td>
-        <td class="total_venta"> ${precios.total_venta} </td>
+        <td class="total_producto"> ${precios.total_venta} </td>
         <td class="eliminar-fila"> 
             <i class="fas fa-trash"></i>
         </td>

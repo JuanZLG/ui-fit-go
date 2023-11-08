@@ -216,26 +216,46 @@ input[type="number"] {
     padding: 10px;
 }
 
-.product-button, .agregar-venta-button{
-    border: none;
-    background-color: #72d072 !important;
+.btn-acciones {
+    width: 200px;
+    padding: 8px;
+    color: #fff;
     font-weight: 500;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
 }
 
+.btn-crear, .btn-verificar {
+    background-color: #72d072;
+}
+
+.btn-resumen {
+    background-color: #419edd;
+}
+.btn-descuento {
+    margin-right: 10px;
+    background-color: rgb(48, 48, 163);
+}
 .product-button:active {
     transform: scale(0.97);
 }
 
 .product-table-section {
     height: auto;
-    max-height: 680px;
+    max-height: 700px;
     overflow: hidden;
     box-shadow: 4px 2px 14px #cccccc70;
     padding: 20px !important;
 }
+
 .producto-cont-descuento {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
+    padding: 0 50px;
     font-weight: bold;
     text-align: end;
 }
@@ -249,6 +269,12 @@ input[type="number"] {
 
 #tabla-ventas.show {
     display: block;
+}
+.producto-cont-descuento {
+    display: none;
+}
+.producto-cont-descuento.show {
+    display: flex;
 }
 
 .product-table-section .table thead th,
@@ -295,6 +321,8 @@ input[type="number"] {
 .input-wrapper {
     position: relative;
     display: inline-block;
+    margin-right: 25px;
+    margin-left: 10px;
 }
 
 .input-wrapper .descuento {
@@ -347,17 +375,22 @@ input[type="number"] {
     pointer-events: none;
     opacity: 0.5;
     font-weight: 500;
+    width: 150px;
     padding: 5px 15px;
     border: none;
     background-color: rgb(247, 247, 99) !important;
     height: 40px;
+    transition: all 100ms ease-in-out;
 }
 
 .product-update-button.is-active {
     opacity: 1;
     pointer-events: all;
 }
-
+.product-update-button.update {
+    background-color: #72d072 !important;
+    color: #fff !important;
+}
 .product-update-button:active {
     transform: scale(0.97);
 }

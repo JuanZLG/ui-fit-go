@@ -102,6 +102,3 @@ def module_access_required(module_name):
         return _wrapped_view
 
     return decorator
-
-
-
