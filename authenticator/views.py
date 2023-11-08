@@ -66,7 +66,7 @@ class loginmio(APIView):
         
 #-----------------------------------------------------------------------------------------------------
 def send_email_codigo(correo, codigo):
-    remitente = 'danielperezbedoya382@gmail.com'
+    remitente = ''
     destinatario = correo
     asunto = 'Código de Recuperación de Contraseña'
 
