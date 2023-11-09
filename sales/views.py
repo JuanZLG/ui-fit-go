@@ -16,21 +16,31 @@ def Home(request):
 @module_access_required('ventas')
 @csrf_exempt
 @jwt_cookie_required
+
 def crear_venta(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             documento = data.get('documento', '')
             totalVenta = data.get('totalVenta', '')
+            descuentoVenta = data.get('descuentoVenta', 'No aplica')
+            totalVentaDescuento = data.get('totalVentaDescuento', 'No aplica')
+            margenGananciaVenta = data.get('margenGananciaVenta')
             productos = data.get('productos', [])
             
             cliente = Clientes.objects.filter(documento=documento).first()
-            venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta)
+            venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta, descuentoVenta=descuentoVenta, totalVentaDescuento=totalVentaDescuento)
             for producto_datos in productos:
-                nombre_producto = producto_datos['nombre']
+                idProducto = producto_datos['idProducto']
                 cantidad_vendida = producto_datos['cantidad']
+                precioCompra = producto_datos['precioCompra']
+                precioVenta = producto_datos['precioVenta']
+                descuento = producto_datos['descuento']
+                totalProductoDescuento = producto_datos['totalProductoDescuento']
+                margenGananciaProducto = producto_datos['margenGananciaProducto']  
+                totalProducto = producto_datos['totalProducto']
 
-                producto = Productos.objects.get(nombre_producto=nombre_producto)
+                producto = Productos.objects.get(id=idProducto)
 
                 if producto:
                     producto.cantidad -= cantidad_vendida
@@ -40,8 +50,12 @@ def crear_venta(request):
                     id_producto=producto,
                     id_venta=venta,
                     cantidad=cantidad_vendida,
-                    precio_uni=producto_datos['precioUnidad'],
-                    precio_tot=producto_datos['precioTotal']
+                    precio_compra=precioCompra,
+                    precio_venta=precioVenta,
+                    descuento=descuento,
+                    totalProductoDescuento=totalProductoDescuento,
+                    margenGanancia=margenGananciaProducto,
+                    precio_tot=totalProducto,
                 )
             response_data = {'success': True}
             return JsonResponse(response_data)
@@ -52,7 +66,7 @@ def crear_venta(request):
     clientes = Clientes.objects.all()
     return render(request, 'prueba.html', {'clientes': clientes})
 
-    
+
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("q", "")
 
