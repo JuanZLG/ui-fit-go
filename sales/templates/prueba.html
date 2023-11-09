@@ -379,7 +379,7 @@
             $("#tabla-ventas tr.producto-row").each(function () {
                 let fila = $(this);
                 let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
-                let gananciaProducto = parseFloat(fila.find(".ganancia_producto").text().replace(/[$,.]/g, '')); // Asume que tienes una clase .ganancia_producto para la ganancia de cada producto
+                let gananciaProducto = parseFloat(fila.find(".ganancia_total").text().replace(/[$,.]/g, ''));
                 totalVenta += totalProducto;
                 totalGanancia += gananciaProducto; 
             });
@@ -391,7 +391,6 @@
                 $("#total-venta-descuento").text(formatearPrecios(descuentoValor));
             } else {
                 $("#total_ganancia_venta").text(formatearPrecios(0));
-                $("#total-venta-descuento").text(formatearPrecios(0));
             }
         }
 
@@ -643,6 +642,7 @@
 
         var venta = {
             descuentoVenta: descuentoVenta,
+            margenGananciaVenta:margenGananciaVenta,
             totalVenta: totalVenta,
             totalVentaDescuento: totalVentaDescuento,
             documentoCliente: documentoCliente,
