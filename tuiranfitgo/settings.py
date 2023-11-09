@@ -102,9 +102,9 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tuiranfit',
+        'NAME':'tuiranfitx',
         'USER': 'root',
-        'PASSWORD': '3127123250',
+        'PASSWORD': '1234',
         'PORT': '3306'
     }
 }
@@ -200,6 +200,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True 
-EMAIL_HOST_USER = 'danielperezbedoya382@gmail.com' 
-EMAIL_HOST_PASSWORD = 'jnqv nqxb jmzg tkfr' 
+EMAIL_HOST_USER = 'juanmartinezciro657@gmail.com' 
+EMAIL_HOST_PASSWORD = 'kckj mlib zwaf anhh' 
 

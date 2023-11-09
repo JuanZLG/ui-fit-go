@@ -19,6 +19,8 @@ from email.mime.text import MIMEText
 from django.contrib.auth import get_user_model
 import re
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.hashers import make_password
+from django.contrib import messages
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -66,7 +68,7 @@ class loginmio(APIView):
         
 #-----------------------------------------------------------------------------------------------------
 def send_email_codigo(correo, codigo):
-    remitente = ''
+    remitente = 'juanmartinezciro657@gmail.com'
     destinatario = correo
     asunto = 'Código de Recuperación de Contraseña'
 
@@ -81,7 +83,7 @@ def send_email_codigo(correo, codigo):
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login(remitente, '') 
+    server.login(remitente, 'kckj mlib zwaf anhh') 
 
     # Envía el correo
     server.sendmail(remitente, destinatario, msg.as_string())
@@ -133,6 +135,8 @@ def verificar_codigo(request):
 
 
 #------------------------------------------------------------------------------------------------------------------
+
+
 def restablecer_contrasena(request):
     if request.method == 'POST':
         nueva_contrasena = request.POST.get('nueva_contrasena')
@@ -142,13 +146,19 @@ def restablecer_contrasena(request):
 
         if correo and nueva_contrasena == confirmar_contrasena:
             if validar_correo(correo):
-                User = get_user_model()
                 try:
-                    user = User.objects.get(email=correo)
-                    user.set_password(nueva_contrasena)
+                    user = Usuarios.objects.get(correo=correo)
+                    hashed_password = make_password(nueva_contrasena)
+                    print(f"Contraseña original: {nueva_contrasena}")
+                    print(f"Contraseña hasheada: {hashed_password}")
+
+                    user.contrasena = hashed_password
                     user.save()
+
+                    print("contraseña actualizada")
+
                     return redirect('login_view')
-                except User.DoesNotExist:
+                except Usuarios.DoesNotExist:
                     return render(request, 'restablecer_contrasena.html', {'error': True})
             else:
                 return render(request, 'restablecer_contrasena.html', {'error': True})
@@ -156,6 +166,10 @@ def restablecer_contrasena(request):
             return render(request, 'restablecer_contrasena.html', {'error': True})
 
     return render(request, 'restablecer_contrasena.html')
+
+
+
+
 
 
             
