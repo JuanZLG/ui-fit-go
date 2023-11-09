@@ -6,6 +6,9 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/prueba.css' %}">
 </head>
+
+
+
 <section class="venta-section">
     <h1 class="venta-title">Agregar Venta</h1>
     <div class="venta-container">
@@ -155,6 +158,10 @@
                 <span>Descuento venta:</span>
                 <span id="total-venta-descuento" style=" color: rgb(48, 48, 163);"></span>
             </div>
+            <div class="d-flex justify-content-between gap-3  align-items-center">
+                <span>Total ganancia:</span>
+                <span id="total_ganancia_venta"></span>
+            </div>
             <div class="d-flex justify-content-center align-items-center">
                 <span class="pt-1">TOTAL VENTA :</span>
                 <span id="total-venta" class="ml-3" style="font-weight: bold; color: rgb(184, 62, 62);"></span>
@@ -168,7 +175,7 @@
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos requeridos (*)</p>
     <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
-    <input type="submit" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
+    <input type="button" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
 
 
@@ -217,7 +224,6 @@
                         <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
                     </ul>
             </div>
-            <!-- <span id="total_ganancia_venta"></span> -->
 
         </div>
     </div>
@@ -322,11 +328,12 @@
                                 let img = data.resultados[i].presentacion;
                                 let cantidad = data.resultados[i].cantidad;
                                 // <img src="/media/${img}" alt="Imagen" class="img-fluid">
+                                // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
 
                                 let itemLista = `
                                 <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
                                     <div class="product-details-container">
-                                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
@@ -379,7 +386,7 @@
             $("#tabla-ventas tr.producto-row").each(function () {
                 let fila = $(this);
                 let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
-                let gananciaProducto = parseFloat(fila.find(".total_ganancia").text().replace(/[$,.]/g, ''));
+                let gananciaProducto = parseFloat(fila.find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
                 totalVenta += totalProducto;
                 totalGanancia += gananciaProducto;
             });
@@ -486,7 +493,7 @@
             }
 
             fila.find(".precio_venta").html(precio_venta_con_descuento + descuento_html);
-            fila.find(".total_ganancia").text(precio_ganancia);
+            fila.find(".total_ganancia_producto").text(precio_ganancia);
             fila.find(".total_producto").text(total_producto);
             totalVenta()
         });
@@ -518,14 +525,14 @@
             let cantidad_seleccionada = producto.cantidadSeleccionada
             let precios = calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada);
             // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-
+            // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
             let itemFila = `
     <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
         <td class="p-2 celda-producto">
             <div class="product-info">
                 <div class="product-details-container">
                     <div class="cont-img">
-                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                     </div>
                     <ul class="product-details">
                         <li><strong>${nombre_producto}</strong></li>
@@ -551,7 +558,7 @@
         </td>
         <td class="precio_compra"> ${precio_compra} </td>
         <td> <span class="precio_venta">${precios.precio_venta}</span></td>
-        <td class="total_ganancia"> ${precios.ganancia_total} </td>
+        <td class="total_ganancia_producto"> ${precios.ganancia_total} </td>
         <td class="total_producto"> ${precios.total_venta} </td>
         <td class="eliminar-fila"> 
             <i class="fas fa-trash"></i>
@@ -615,7 +622,7 @@
     function enviarDatosVentas() {
         var productos = {};
         var descuentoVenta = $("#descuento-venta").val() || "No aplica";
-        var margenGananciaVenta = parseFloat($(this).find("#total_ganancia_venta").text() || "No aplica");
+        var margenGananciaVenta = parseFloat($("#total_ganancia_venta").text().replace(/[$,.]/g, ''));
         var totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
         var documentoCliente = $("#documento").text();
         $(".producto-row").each(function () {
@@ -624,10 +631,9 @@
             var precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
             var precioVenta = parseFloat($(this).find(".precio_venta").text().replace(/[$,.]/g, ''));
             var descuento = $(this).find(".descuento").val() || "No aplica";
-            var margenGananciaProducto = parseFloat($(this).find(".total_ganancia").text() || "No aplica");
+            var margenGananciaProducto = parseFloat($(this).find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
             var totalProducto = parseFloat($(this).find(".total_producto").text().replace(/[$,.]/g, ''));
             var totalProductoDescuento = parseFloat($(this).find("#total_producto_descuento").text().replace(/[$,.]/g, '')) || "No aplica";
-
             productos[idProducto] = {
                 cantidad: cantidad,
                 precioCompra: precioCompra,

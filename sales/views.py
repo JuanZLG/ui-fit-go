@@ -41,7 +41,6 @@ def crear_venta(request):
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
 
-
                 producto = Productos.objects.get(id_producto=idProducto)
 
                 if producto:

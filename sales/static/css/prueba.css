@@ -250,7 +250,7 @@ input[type="number"] {
     transition: max-height 300ms ease-in-out; 
 }
 .product-table-section.show {
-    max-height: 700px; 
+    max-height: 900px; 
 }
 
 
