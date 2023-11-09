@@ -238,6 +238,12 @@ def accion_rol(request):
     response_data = {"success": True}
     return JsonResponse(response_data)
 
+def email_unique(request):
+    email = request.GET.get("email", "")
+    email_existe = Usuarios.objects.filter(correo=email).exists()
+    return JsonResponse({"existe": email_existe})
+
+
 @jwt_cookie_required
 # @module_access_required('usuarios')
 def obtener_datos(request):

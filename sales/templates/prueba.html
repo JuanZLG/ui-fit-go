@@ -153,7 +153,6 @@
             style="border: 1px solid #ccc; display: flex; flex-direction: column; width: auto; gap: 10px; padding: 10px 15px;">
             <div class="d-flex justify-content-between gap-3  align-items-center">
                 <span>Descuento venta:</span>
-                <span id="total_ganancia_venta"></span>
                 <span id="total-venta-descuento" style=" color: rgb(48, 48, 163);"></span>
             </div>
             <div class="d-flex justify-content-center align-items-center">
@@ -218,6 +217,8 @@
                         <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
                     </ul>
             </div>
+            <!-- <span id="total_ganancia_venta"></span> -->
+
         </div>
     </div>
     `,
@@ -369,22 +370,22 @@
             });
             return existe;
         }
-
         function totalVenta() {
             let descuentoInput = $("#descuento-venta").val();
             let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
             let totalVenta = 0;
-            let totalGanancia = 0; 
+            let totalGanancia = 0;
 
             $("#tabla-ventas tr.producto-row").each(function () {
                 let fila = $(this);
                 let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
-                let gananciaProducto = parseFloat(fila.find(".ganancia_total").text().replace(/[$,.]/g, ''));
+                let gananciaProducto = parseFloat(fila.find(".total_ganancia").text().replace(/[$,.]/g, ''));
                 totalVenta += totalProducto;
-                totalGanancia += gananciaProducto; 
+                totalGanancia += gananciaProducto;
             });
             let descuentoValor = totalVenta * descuento;
             totalVenta = totalVenta - descuentoValor;
+            totalGanancia = totalGanancia - descuentoValor;
             $("#total-venta").text(formatearPrecios(totalVenta));
             $("#total_ganancia_venta").text(formatearPrecios(totalGanancia));
             if (descuentoInput) {
@@ -393,6 +394,7 @@
                 $("#total_ganancia_venta").text(formatearPrecios(0));
             }
         }
+
 
 
         $("#btnAgregar").click(function () {
@@ -478,7 +480,7 @@
             let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
             let descuento_html = ""
             if (descuento > 0) {
-                descuento_html = "<span id='total_producto_descuento'>- (" + formatearPrecios(precio_descuento) + ")</span>";
+                descuento_html = "<span id='total_producto_descuento' style='color: rgb(48, 48, 163);'>- (" + formatearPrecios(precio_descuento) + ")</span>";
             } else {
                 fila.find(".descuento").val("0")
             }
@@ -615,8 +617,7 @@
         var descuentoVenta = $("#descuento-venta").val() || "No aplica";
         var margenGananciaVenta = parseFloat($(this).find("#total_ganancia_venta").text() || "No aplica");
         var totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
-        var documentoCliente = $("#cont-docu").text();
-
+        var documentoCliente = $("#documento").text();
         $(".producto-row").each(function () {
             var idProducto = parseInt($(this).data("id-producto"));
             var cantidad = parseInt($(this).find(".cantidad-fila").val());
@@ -642,7 +643,7 @@
 
         var venta = {
             descuentoVenta: descuentoVenta,
-            margenGananciaVenta:margenGananciaVenta,
+            margenGananciaVenta: margenGananciaVenta,
             totalVenta: totalVenta,
             totalVentaDescuento: totalVentaDescuento,
             documentoCliente: documentoCliente,
@@ -650,30 +651,31 @@
         };
 
         console.log(venta);
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'crear_venta' %}",
+            data: JSON.stringify(venta),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Venta creada con éxito',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "{% url 'ventas' %}";
+                    }, 2000);
+                }
+            },
+        });
     }
 
 
 
-    // $.ajax({
-    //     type: "POST",
-    //     url: "{% url 'crear_venta' %}",
-    //     data: JSON.stringify(data),
-    //     contentType: "application/json",
-    //     success: function (response) {
-    //         if (response.success) {
-    //             Swal.fire({
-    //                 title: 'Éxito',
-    //                 text: 'Venta creada con éxito',
-    //                 icon: 'success',
-    //                 showConfirmButton: false,
-    //                 timer: 2000,
-    //             });
-    //             setTimeout(function () {
-    //                 window.location.href = "{% url 'ventas' %}";
-    //             }, 2000);
-    //         }
-    //     },
-    // });
 </script>
 
 

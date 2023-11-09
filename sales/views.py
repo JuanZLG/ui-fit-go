@@ -16,12 +16,11 @@ def Home(request):
 @module_access_required('ventas')
 @csrf_exempt
 @jwt_cookie_required
-
 def crear_venta(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            documento = data.get('documento', '')
+            documento = data.get('documentoCliente', '')
             totalVenta = data.get('totalVenta', '')
             descuentoVenta = data.get('descuentoVenta', 'No aplica')
             totalVentaDescuento = data.get('totalVentaDescuento', 'No aplica')
@@ -29,9 +28,11 @@ def crear_venta(request):
             productos = data.get('productos', [])
             
             cliente = Clientes.objects.filter(documento=documento).first()
-            venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta, descuentoVenta=descuentoVenta, totalVentaDescuento=totalVentaDescuento)
-            for producto_datos in productos:
-                idProducto = producto_datos['idProducto']
+            venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta, descuentoVenta=descuentoVenta, totalVentaDescuento=totalVentaDescuento, margenGanancia= margenGananciaVenta)
+            if cliente is None:
+                return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=400)
+
+            for idProducto, producto_datos in productos.items():
                 cantidad_vendida = producto_datos['cantidad']
                 precioCompra = producto_datos['precioCompra']
                 precioVenta = producto_datos['precioVenta']
@@ -40,7 +41,8 @@ def crear_venta(request):
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
 
-                producto = Productos.objects.get(id=idProducto)
+
+                producto = Productos.objects.get(id_producto=idProducto)
 
                 if producto:
                     producto.cantidad -= cantidad_vendida
@@ -67,6 +69,43 @@ def crear_venta(request):
     return render(request, 'prueba.html', {'clientes': clientes})
 
 
+
+def buscar_productos(request):
+    q = request.GET.get("q", "")
+
+    productos = Productos.objects.filter(
+        Q(nombre_producto__icontains=q )
+    )
+
+    resultados = []
+    for producto in productos:
+        precio_ganancia = producto.precio_pub - producto.precio 
+
+        resultados.append({
+            'id_producto': producto.id_producto,
+            'estado': producto.estado,
+            'nombre_producto': producto.nombre_producto,
+            'cantidad': producto.cantidad,
+            'descripcion': producto.descripcion,
+            'precio_compra': producto.precio,
+            'precio_venta': producto.precio_pub,
+            'precio_ganancia': precio_ganancia,
+            'marca': producto.id_marca.nombre_marca,
+            'categoria': producto.id_categoria.nombre_categoria,
+            'presentacion': get_image_name(producto.iProductImg),
+        })
+
+    return JsonResponse({"resultados": resultados})
+
+def get_image_name(image_field):
+    if image_field:
+        if isinstance(image_field, bytes):
+            return image_field.decode('utf-8')
+        else:
+            return image_field.name
+    return "No Image"
+
+
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("q", "")
 
@@ -90,83 +129,7 @@ def buscar_cliente(request):
     return JsonResponse({"resultados": resultados})
 
 
-def buscar_productos(request):
-    q = request.GET.get("q", "")
-    productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
-    productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
-    return JsonResponse({"productos": productos_json})
 
-
-def validar_cantidad(request):
-    cantidad = request.GET.get("cantidad", "")
-    nombre = request.GET.get("nombre", "")
-    producto = Productos.objects.get(nombre_producto__iexact=nombre)
-    if int(cantidad) > producto.cantidad:
-        return JsonResponse({"suficiente": False})
-    return JsonResponse({"suficiente": True})
-
-
-
-def buscar_documentos(request):
-    q = request.GET.get("q", "")
-    documentos = Clientes.objects.filter(documento__contains=q).values_list(
-        "documento", flat=True
-    )
-
-    nombre_cliente = ""
-    if documentos:
-        primer_documento = documentos[0]
-        cliente = Clientes.objects.filter(documento=primer_documento).first()
-        if cliente:
-            nombre_cliente = f"{cliente.nombres} {cliente.apellidos}"
-
-    return JsonResponse(
-        {"documentos": list(documentos), "nombre_cliente": nombre_cliente}
-    )
-
-def validar_producto(request):
-    nombre_producto = request.GET.get("nombre_producto", "")
-    producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
-    if producto is not None and producto.estado == 0:
-        return JsonResponse({"existe": False})
-    else:
-        return JsonResponse({"existe": producto is not None})
-
-def validar_cliente(request):
-    documentoDato = request.GET.get("documentoDato", "")
-    cliente_existe = Clientes.objects.filter(documento=documentoDato).exists()
-    return JsonResponse({"existe": cliente_existe})
-
-def obtener_precio(request):
-    nombre_producto = request.GET.get(
-        "nombre_producto", None
-    ) 
-    if nombre_producto is not None:
-        producto = Productos.objects.get(nombre_producto=nombre_producto)
-        precio = producto.precio
-        return JsonResponse({"precio": precio})
-    else:
-        return JsonResponse(
-            {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
-            status=400,
-        )
-
-def obtener_nombre(request):
-    nombre_producto = request.GET.get(
-        "nombre_producto", None
-    )  
-    if nombre_producto is not None:
-        try:
-            producto = Productos.objects.get(nombre_producto=nombre_producto)
-            precio = producto.precio
-            return JsonResponse({"precio": precio})
-        except Productos.DoesNotExist:
-            return JsonResponse({"error": "Producto no encontrado"}, status=404)
-    else:
-        return JsonResponse(
-            {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
-            status=400,
-        )
 
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -401,40 +364,3 @@ def generar_informe_pdf_ventas(request):
 
     return HttpResponse("No se ha enviado una solicitud POST")
 
-
-
-
-def buscar_productos(request):
-    q = request.GET.get("q", "")
-
-    productos = Productos.objects.filter(
-        Q(nombre_producto__icontains=q )
-    )
-
-    resultados = []
-    for producto in productos:
-        precio_ganancia = producto.precio_pub - producto.precio 
-
-        resultados.append({
-            'id_producto': producto.id_producto,
-            'estado': producto.estado,
-            'nombre_producto': producto.nombre_producto,
-            'cantidad': producto.cantidad,
-            'descripcion': producto.descripcion,
-            'precio_compra': producto.precio,
-            'precio_venta': producto.precio_pub,
-            'precio_ganancia': precio_ganancia,
-            'marca': producto.id_marca.nombre_marca,
-            'categoria': producto.id_categoria.nombre_categoria,
-            'presentacion': get_image_name(producto.iProductImg),
-        })
-
-    return JsonResponse({"resultados": resultados})
-
-def get_image_name(image_field):
-    if image_field:
-        if isinstance(image_field, bytes):
-            return image_field.decode('utf-8')
-        else:
-            return image_field.name
-    return "No Image"

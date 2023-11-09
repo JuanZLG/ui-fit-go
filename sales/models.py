@@ -61,7 +61,7 @@ class Detalleventa(models.Model):
     precio_compra = models.FloatField()
     precio_venta = models.FloatField()
     descuento = models.CharField(max_length=255, default="No aplica")
-    totalProductoDescuento = models.FloatField(null=True, blank=True)
+    totalProductoDescuento = models.CharField(max_length=255, default="No aplica")
     margenGanancia = models.FloatField()    
     estado = models.IntegerField(default=1)
 
@@ -74,7 +74,7 @@ class Ventas(models.Model):
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
     fechareg = models.DateField(default=timezone.now)
     descuentoVenta = models.CharField(max_length=255, default="No aplica")
-    totalVentaDescuento = models.FloatField(null=True, blank=True)
+    totalVentaDescuento = models.CharField(max_length=255, default="No aplica")
     totalVenta = models.FloatField()
     margenGanancia = models.FloatField()    
     estado = models.IntegerField(default=1)
