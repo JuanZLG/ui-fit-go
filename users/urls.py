@@ -11,6 +11,7 @@ urlpatterns=[
     path('obtener_datos/', views.obtener_datos, name='obtener_datos'),
     path('ver_detalles_usuario', views.verDetallesUsuario, name='ver_detalles_usuario'),
     path('rol_unico/', views.rol_unico, name='rol_unico'),
+    path('email_unique/', views.email_unique, name='email_unique'),
     path('remove/', views.eliminar_rol, name='eliminarRol'),
     path('profile/', views.UserProfile, name="myProfile"),
 

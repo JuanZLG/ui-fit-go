@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from authenticator.models import Usuarios
 from django.contrib.auth import logout
 from rest_framework.views import APIView
@@ -12,6 +12,16 @@ import json
 from .utils import custom_jwt_payload_handler
 from authenticator.models import Usuarios
 from django.core.mail import send_mail
+import random
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from django.contrib.auth import get_user_model
+import re
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -56,43 +66,120 @@ class loginmio(APIView):
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
         
+#-----------------------------------------------------------------------------------------------------
+def send_email_codigo(correo, codigo):
+    remitente = 'juanmartinezciro657@gmail.com'
+    destinatario = correo
+    asunto = 'Código de Recuperación de Contraseña'
 
-# authenticator/views.py
-from django.shortcuts import render
-from authenticator.models import Usuarios
-from django.core.mail import send_mail
+    msg = MIMEMultipart()
+    msg['Subject'] = asunto
+    msg['From'] = remitente 
+    msg['To'] = destinatario
 
+    mensaje = f'Tu código de recuperación es: {codigo}'
+
+    msg.attach(MIMEText(mensaje, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(remitente, 'kckj mlib zwaf anhh') 
+
+    # Envía el correo
+    server.sendmail(remitente, destinatario, msg.as_string())
+    server.quit()
+
+#------------------------------------------------------------------------------------------------------
 def olvide_contrasena(request):
-    error_message = None
-
     if request.method == 'POST':
         correo = request.POST.get('correo')
-        try:
-            # Verificar si el correo existe en la base de datos
-            usuario = Usuarios.objects.get(correo=correo)
+        if validar_correo(correo):
+            codigo = str(random.randint(10000, 99999))
 
-            # Lógica para generar un token o enlace para restablecer la contraseña
-            reset_link = "http://tu-sitio.com/restablecer-contrasena/" + usuario.correo + "/token/"
+            send_email_codigo(correo, codigo)
+            request.session['codigo_recuperacion'] = codigo
+            return redirect('verificar_codigo')
 
-            # Lógica para enviar el correo de recuperación
-            send_mail(
-                'Recuperar Contraseña',
-                f'Para restablecer tu contraseña, haz clic en este enlace: {reset_link}',
-                'noreply@tu-sitio.com',
-                [correo],
-                fail_silently=False,
-            )
-            return render(request, 'olvide_contrasena_exito.html')
+    return render(request, 'olvide_contrasena.html')
 
-        except Usuarios.DoesNotExist:
-            error_message = 'El correo no existe'
+#------------------------------------------------------------------------------------------------------
+def validar_correo(correo):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.match(pattern, correo) is not None
 
-    return render(request, 'olvide_contrasena.html', {'error_message': error_message})
+#------------------------------------------------------------------------------------------------------
+def enviar_codigo(request):
+    if request.method == 'POST':
+        correo = request.POST.get('correo')
+        if validar_correo(correo):
+            try:
+                user = Usuarios.objects.get(correo=correo)
+                codigo = str(random.randint(10000, 99999))
+                send_email_codigo(correo, codigo)
+                request.session['codigo_recuperacion'] = codigo
+                request.session['correo_recuperacion'] = correo 
+                return redirect('verificar_codigo')
+            except ObjectDoesNotExist:
+                return render(request, 'enviar_codigo.html', {'error': 'El correo no existe'})
+    return render(request, 'enviar_codigo.html')
+#---------------------------------------------------------------------------------------------------------------
+def verificar_codigo(request):
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        codigo_almacenado = request.session.get('codigo_recuperacion')
+        if codigo_ingresado == codigo_almacenado:
+            return redirect('restablecer_contrasena')
+        else:
+            return render(request, 'verificar_codigo.html', {'error': True})
+    return render(request, 'verificar_codigo.html')
+
+
+#------------------------------------------------------------------------------------------------------------------
+
+
+def restablecer_contrasena(request):
+    if request.method == 'POST':
+        nueva_contrasena = request.POST.get('nueva_contrasena')
+        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+
+        correo = request.session.get('correo_recuperacion')
+
+        if correo and nueva_contrasena == confirmar_contrasena:
+            if validar_correo(correo):
+                try:
+                    user = Usuarios.objects.get(correo=correo)
+                    print(f"Contraseña original: {nueva_contrasena}")
+
+                    user.contrasena = nueva_contrasena
+                    user.save()
+
+                    print("contraseña actualizada")
+
+                    return redirect('login_view')
+                except Usuarios.DoesNotExist:
+                    return render(request, 'restablecer_contrasena.html', {'error': True})
+            else:
+                return render(request, 'restablecer_contrasena.html', {'error': True})
+        else:
+            return render(request, 'restablecer_contrasena.html', {'error': True})
+
+    return render(request, 'restablecer_contrasena.html')
 
 
 
-def olvide_contrasena_exito(request):
-    return render(request, 'olvide_contrasena_exito.html')
+
+
+
+
+
+
+            
+
+
+
+
+
+
 
 #Login Malo
 # from django.views.decorators.csrf import csrf_exempt

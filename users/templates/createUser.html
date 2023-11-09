@@ -1,20 +1,22 @@
-{% extends "baseInterface.html" %} 
+{% extends "baseInterface.html" %}
 
-{% block title %} Agregar Usuario {% endblock %} 
+{% block title %} Agregar Usuario {% endblock %}
 
 {% block body %}
 <br>
-<center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Usuario</h1></center>
+<center>
+  <h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Usuario</h1>
+</center>
 <br>
 <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-6">
-        <div class="card shadow">
-          <div class="card-body p-5 pb-4">
-            <form class="form" id="usuario-form" method="post">
-              {% csrf_token %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <div class="card shadow">
+        <div class="card-body p-5 pb-4">
+          <form class="form" id="usuario-form" method="post">
+            {% csrf_token %}
 
-              <div class="col-md-5 mb-3">
+            <div class="col-md-5 mb-3">
               <div class="form-group">
                 <label for="iRole">Rol del Usuario</label>
                 <select class="form-select" aria-label="Default" name="iRole" id="iRole">
@@ -25,129 +27,163 @@
                 <div class="error-message" style="color:red;" id="iRole-error"></div>
               </div>
             </div>
-            
+
             <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Nombre de Usuario *</label>
-                <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese un nombre de usuario" autocomplete="off" autocorrect="off" autocapitalize="none"/>
+                <input type="text" class="form-control" id="iNombre" name="iNombre"
+                  placeholder="Ingrese un nombre de usuario" autocomplete="off" autocorrect="off"
+                  autocapitalize="none" />
                 <div class="error-message" style="color:red;" id="iNombre-error"></div>
               </div>
             </div>
-              
+
             <div class="col-md-12 mb-3">
               <div class="form-group">
                 <label>Correo *</label>
-                <input type="text" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" autocomplete="off" autocorrect="off" autocapitalize="none"/>
+                <input type="text" class="form-control" id="iCorreo" name="iCorreo"
+                  placeholder="Ingrese un email válido" autocomplete="off" autocorrect="off" autocapitalize="none" />
                 <div class="error-message" style="color:red;" id="iCorreo-error"></div>
               </div>
             </div>
             <br>
-              <div class="text-center">
-                <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
-              </div>
-            </form>
-          </div>
+            <div class="text-center">
+              <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+
 <script>
   $(document).ready(function () {
-      $('#iRole, #iNombre, #iCorreo').on('change', function () {
-          validarCampo($(this));
+    $('#iRole, #iNombre, #iCorreo').on('change', function () {
+      validarCampo($(this));
+    });
+
+    $('#iRole, #iNombre, #iCorreo').on('input', function () {
+      const campo = $(this);
+      const campoValue = campo.val();
+
+      if (campoValue) {
+        campo.removeClass('is-invalid');
+        $(`#${campo.attr('id')}-error`).text('');
+      }
+    });
+    $('#usuario-form').submit(async function (event) {
+      event.preventDefault();
+      let errors = false;
+
+      validarCampo($('#iRole'));
+      validarNombreUsuario($('#iNombre'));
+      await validarCorreo($('#iCorreo'));
+
+      $('.is-invalid').each(function () {
+        errors = true;
       });
 
-      $('#iRole, #iNombre, #iCorreo').on('input', function () {
-        const campo = $(this);
-        const campoValue = campo.val();
-
-        if (campoValue) {
-            campo.removeClass('is-invalid');
-            $(`#${campo.attr('id')}-error`).text('');
-        }
-      });
-
-      $('#usuario-form').submit(function (event) {
-          event.preventDefault();
-          let errors = false;
-
-          validarCampo($('#iRole'));
-          validarNombreUsuario($('#iNombre'));
-          validarCorreo($('#iCorreo'));
-
-          if ($('.error-message').text() === '') {
-              $.ajax({
-                  type: 'POST',
-                  url: "{% url 'createAUser' %}",
-                  data: $(this).serialize(),
-                  success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Éxito',
-                            text: 'Usuario creado con éxito',
-                            icon: 'success',
-                            showConfirmButton: false, 
-                            timer: 2000,
-                        });
-                        setTimeout(function () {
-                            window.location.href = "{% url 'usuarios' %}";
-                        }, 2000);
-                    }
-                  }
+      if (!errors) {
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'createAUser' %}",
+          data: $(this).serialize(),
+          success: function (response) {
+            if (response.success) {
+              Swal.fire({
+                title: 'Éxito',
+                text: 'Usuario creado con éxito',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 2000,
               });
+              setTimeout(function () {
+                window.location.href = "{% url 'usuarios' %}";
+              }, 2000);
+            }
           }
+        });
+      }
+    });
+
+
+
+    function mostrarError($campo, mensaje) {
+      $campo.addClass('is-invalid');
+      $campo.siblings('.error-message').text(mensaje);
+    }
+
+    function ocultarError($campo) {
+      $campo.removeClass('is-invalid');
+      $campo.siblings('.error-message').text('');
+    }
+
+    function validarCampo($campo) {
+      const valor = $campo.val();
+      if (!valor) {
+        mostrarError($campo, 'Este campo es obligatorio.');
+      } else {
+        ocultarError($campo);
+      }
+    }
+
+    function validarNombreUsuario($campo) {
+      let valor = $campo.val();
+      valor = valor.charAt(0).toUpperCase() + valor.slice(1);
+      const nombreUsuarioRegex = /^[A-Za-z]+$/;
+      if (!valor) {
+        mostrarError($campo, 'Este campo es obligatorio.');
+      } else if (!nombreUsuarioRegex.test(valor)) {
+        mostrarError($campo, 'El nombre de usuario no debe contener números ni caracteres especiales.');
+      } else {
+        ocultarError($campo);
+        $campo.val(valor);
+      }
+    }
+
+
+    async function email_unique(email) {
+      return new Promise(function (resolve, reject) {
+        $.ajax({
+          url: "{% url 'email_unique' %}",
+          type: "GET",
+          data: {
+            email: email,
+          },
+          success: function (data) {
+            if (data.existe) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          }
+        });
       });
-
-      function mostrarError($campo, mensaje) {
-          $campo.addClass('is-invalid');
-          $campo.siblings('.error-message').text(mensaje);
-      }
-
-      function ocultarError($campo) {
-          $campo.removeClass('is-invalid');
-          $campo.siblings('.error-message').text('');
-      }
-
-      function validarCampo($campo) {
-          const valor = $campo.val();
-          if (!valor) {
-              mostrarError($campo, 'Este campo es obligatorio.');
-          } else {
-              ocultarError($campo);
-          }
-      }
-
-      function validarNombreUsuario($campo) {
-        let valor = $campo.val();
-        valor = valor.charAt(0).toUpperCase() + valor.slice(1);
-        const nombreUsuarioRegex = /^[A-Za-z]+$/;
-        if (!valor) {
-            mostrarError($campo, 'Este campo es obligatorio.');
-        } else if (!nombreUsuarioRegex.test(valor)) {
-            mostrarError($campo, 'El nombre de usuario no debe contener números ni caracteres especiales.');
-        } else {
-            ocultarError($campo);
-            $campo.val(valor);
-        }
     }
-    
-    
-    function validarCorreo($campo) {
-        const valor = $campo.val();
-        const correoRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        if (!valor) {
-            mostrarError($campo, 'Este campo es obligatorio.');
-        } else if (!correoRegex.test(valor)) {
-            mostrarError($campo, 'Ingrese una dirección de correo electrónico válida.');
+
+    async function validarCorreo($campo) {
+      const valor = $campo.val();
+      const correoRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!valor) {
+        mostrarError($campo, 'Este campo es obligatorio.');
+      } else if (!correoRegex.test(valor)) {
+        mostrarError($campo, 'Ingrese una dirección de correo electrónico válida.');
+      } else {
+        const existe = await email_unique(valor);
+        if (existe) {
+          mostrarError($campo, 'Este correo ya existe');
         } else {
-            ocultarError($campo);
+          ocultarError($campo);
         }
+      }
     }
-  });
+  })
+
+
 </script>
 
 {% endblock %}

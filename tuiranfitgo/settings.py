@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from django.urls import reverse_lazy
 from datetime import timedelta
-
+from django.conf import settings    
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,10 +41,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -102,12 +102,19 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'tuiranfit',
+        'NAME':'tuiranfitx',
         'USER': 'root',
         'PASSWORD': 'monitoc10',
         'PORT': '3306'
     }
 }
+
+# Configura el motor de sesión en 'file'
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+
+# Especifica la ubicación donde se almacenarán los archivos de sesión
+SESSION_FILE_PATH = os.path.join(BASE_DIR, 'session_data')
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -182,9 +189,17 @@ CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# settings.py
+BASE_URL = 'http://www.tu-sitio.com/'  
+
+
+
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.tu-servidor-smtp.com'
-EMAIL_PORT = 587 
+EMAIL_HOST = 'smtp.gmail.com' 
+EMAIL_PORT = 587  
 EMAIL_USE_TLS = True 
-EMAIL_HOST_USER = 'danielperezbedoya382@gmail.com'
-EMAIL_HOST_PASSWORD = 'daniel123$' 
+EMAIL_HOST_USER = 'juanmartinezciro657@gmail.com' 
+EMAIL_HOST_PASSWORD = 'kckj mlib zwaf anhh' 
+

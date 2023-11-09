@@ -5,11 +5,13 @@
 </head>
 <body>
     <h1>Verificar Código</h1>
-    <p>Por favor, ingresa el código que has recibido en tu correo electrónico para restablecer tu contraseña.</p>
+    {% if error %}
+    <p>Código incorrecto. Por favor, intenta de nuevo.</p>
+    {% endif %}
     <form method="post">
         {% csrf_token %}
-        <label for="codigo">Código de Recuperación:</label>
-        <input type="text" id="codigo" name="codigo" required>
+        <label>Código de Verificación:</label>
+        <input type="text" name="codigo" required>
         <button type="submit">Verificar Código</button>
     </form>
 </body>

@@ -46,7 +46,6 @@
 
 .resultado-container {
     position: relative;
-    background-color: red;
     display: block;
 }
 
@@ -244,15 +243,15 @@ input[type="number"] {
 .product-table-section {
     height: auto;
     max-height: 300px; 
+    border-radius: 5px;
     overflow: hidden;
     box-shadow: 4px 2px 14px #cccccc70;
     padding: 20px !important;
-    transition: max-height 2s ease-in-out; 
+    transition: max-height 300ms ease-in-out; 
 }
 .product-table-section.show {
     max-height: 700px; 
 }
-
 
 
 .producto-cont-descuento {
@@ -327,11 +326,12 @@ input[type="number"] {
 .input-wrapper {
     position: relative;
     display: inline-block;
-    margin-right: 25px;
+    margin-right: 50px;
     margin-left: 10px;
 }
 
 .input-wrapper .descuento {
+    margin: auto;
     color: rgb(48, 48, 163);
     font-weight: bold;
     width: 50px;
@@ -360,13 +360,8 @@ input[type="number"] {
 .price-column {
     width: 10% !important;
     vertical-align: middle !important;
-
 }
-/* 
-#wrapper {
-    height: auto !important;
-    background-color: red !important;
-} */
+
 .total-column {
     width: 10% !important;
     vertical-align: middle !important;

@@ -7,7 +7,7 @@ class Usuarios(models.Model):
     id_rol = models.ForeignKey('Roles', models.DO_NOTHING, db_column='id_rol')
     correo = models.CharField(max_length=60)
     nombre_usuario = models.CharField(max_length=60)
-    contrasena = models.CharField(max_length=50)
+    contrasena = models.CharField(max_length=250)
     estado = models.IntegerField(default=1)
     
  

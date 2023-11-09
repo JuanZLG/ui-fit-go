@@ -33,6 +33,8 @@
 
         $("#nombreCliente").on("input", function () {
             let nombreCliente = $(this).val();
+            $("#nombreCliente").removeClass("is-invalid")
+            $("#campos-requeridos").css("color", "");
 
             listadoClientes.show();
             $("#cont-docu").empty()
@@ -96,12 +98,13 @@
 <section class="col-md-12 mb-4 product-section">
     <div class="product-content">
         <div class="product-header">
-            <label class="producto-label">Ingreso de productos *</label>
+            <label class="producto-label">Ingreso de productos</label>
             <p>Encuentra todos tus productos y finaliza las ventas de una forma fácil</p>
         </div>
         <div class="product-inputs">
             <div class="search-container">
-                <input type="search" class="form-control product-search" id="buscarProducto">
+                <input type="search" class="form-control product-search" id="buscarProducto"
+                    placeholder="Ingrese el nombre del producto">
                 <i class="fas fa-search search-icon"></i>
             </div>
             <div class="number-input">
@@ -121,7 +124,7 @@
 </section>
 
 <section class="product-table-section" id="product-table-section">
-    <label class="producto-label">Registro de Ventas </label></br>
+    <label class="producto-label">Lista de Productos *</label></br>
     <span>Aquí se acumularán los productos seleccionados para la venta</span>
     <table class="table" id="tabla-ventas">
         <thead class="text-center">
@@ -163,8 +166,9 @@
 
 
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
+    <p id="campos-requeridos">Campos requeridos (*)</p>
     <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
-    <input type="submit" value="Guardar venta" class="btn-acciones btn-crear mx-2">
+    <input type="submit" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
 
 
@@ -213,6 +217,8 @@
                         <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
                     </ul>
             </div>
+            <!-- <span id="total_ganancia_venta"></span> -->
+
         </div>
     </div>
     `,
@@ -297,7 +303,6 @@
             $("#buscarProducto").removeClass("is-valid");
             $("#btnAgregar").removeClass("is-active")
             $(".search-icon").show()
-
             listadoProductos.show();
 
             if (buscarProducto.length >= 3) {
@@ -365,24 +370,28 @@
             });
             return existe;
         }
-
         function totalVenta() {
             let descuentoInput = $("#descuento-venta").val();
             let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
             let totalVenta = 0;
+            let totalGanancia = 0;
 
             $("#tabla-ventas tr.producto-row").each(function () {
                 let fila = $(this);
                 let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
+                let gananciaProducto = parseFloat(fila.find(".total_ganancia").text().replace(/[$,.]/g, ''));
                 totalVenta += totalProducto;
+                totalGanancia += gananciaProducto;
             });
             let descuentoValor = totalVenta * descuento;
             totalVenta = totalVenta - descuentoValor;
+            totalGanancia = totalGanancia - descuentoValor;
             $("#total-venta").text(formatearPrecios(totalVenta));
+            $("#total_ganancia_venta").text(formatearPrecios(totalGanancia));
             if (descuentoInput) {
                 $("#total-venta-descuento").text(formatearPrecios(descuentoValor));
             } else {
-                $("#total-venta-descuento").text(formatearPrecios(0));
+                $("#total_ganancia_venta").text(formatearPrecios(0));
             }
         }
 
@@ -452,7 +461,7 @@
                 });
             }, 1000);
 
-
+            $('.product-update-button.is-active').tooltip('dispose');
             let fila = $(this).closest("tr.producto-row");
             let descuento = parseFloat(fila.find(".descuento").val().replace(/[%]/g, '')) / 100;
             let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
@@ -471,7 +480,7 @@
             let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
             let descuento_html = ""
             if (descuento > 0) {
-                descuento_html = "<span class='precio_diferencia_descuento'>- (" + formatearPrecios(precio_descuento) + ")</span>";
+                descuento_html = "<span id='total_producto_descuento' style='color: rgb(48, 48, 163);'>- (" + formatearPrecios(precio_descuento) + ")</span>";
             } else {
                 fila.find(".descuento").val("0")
             }
@@ -494,6 +503,7 @@
 
         function agregarFila(producto) {
             let tbody = $("#producto-tbody");
+            $("#campos-requeridos").css("color", "");
 
             let id_producto = producto.id_producto;
             let estadoProducto = producto.estado;
@@ -519,14 +529,14 @@
                     </div>
                     <ul class="product-details">
                         <li><strong>${nombre_producto}</strong></li>
-                        <li><strong class="mr-2">Marca:</strong>${marca}</li>
                         <li class="d-flex justify-content-between">
-                            <span> <strong class="mr-2">Categoria:</strong>${categoria}</span>
+                            <span><strong class="mr-2">Marca:</strong>${marca}</span>
                             <div class="input-wrapper">
                                 <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
                                 <span class="percent-sign">%</span>
                             </div>
                         </li>
+                        <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
                         <li class="d-flex gap-3">
                             <div class="number-input mt-3">
                                 <button onclick="decrement(this)" id="decrement">-</button>
@@ -540,7 +550,7 @@
             </div>
         </td>
         <td class="precio_compra"> ${precio_compra} </td>
-        <td class="precio_venta"> ${precios.precio_venta} </td>
+        <td> <span class="precio_venta">${precios.precio_venta}</span></td>
         <td class="total_ganancia"> ${precios.ganancia_total} </td>
         <td class="total_producto"> ${precios.total_venta} </td>
         <td class="eliminar-fila"> 
@@ -570,5 +580,103 @@
         }
         $(input).trigger('input');
     }
+
+
+    $("#crear-venta").click(function () {
+        var invalid = false;
+
+        if ($("#cont-docu").text() == "") {
+            $("#nombreCliente").addClass("is-invalid");
+            invalid = true;
+        }
+
+        if ($('.product-update-button').hasClass('is-active')) {
+            $('.product-update-button.is-active').tooltip({
+                title: "Actualizar primero",
+                trigger: "manual",
+                placement: "right"
+            }).tooltip('show');
+            invalid = true;
+        }
+        var tbody = document.getElementById('producto-tbody');
+        if (tbody.children.length === 0) {
+            invalid = true;
+        }
+
+        if (invalid) {
+            $("#campos-requeridos").css("color", "red");
+        } else {
+            $("#campos-requeridos").css("color", "");
+            enviarDatosVentas()
+        }
+    });
+
+
+    function enviarDatosVentas() {
+        var productos = {};
+        var descuentoVenta = $("#descuento-venta").val() || "No aplica";
+        var margenGananciaVenta = parseFloat($(this).find("#total_ganancia_venta").text() || "No aplica");
+        var totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
+        var documentoCliente = $("#documento").text();
+        $(".producto-row").each(function () {
+            var idProducto = parseInt($(this).data("id-producto"));
+            var cantidad = parseInt($(this).find(".cantidad-fila").val());
+            var precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
+            var precioVenta = parseFloat($(this).find(".precio_venta").text().replace(/[$,.]/g, ''));
+            var descuento = $(this).find(".descuento").val() || "No aplica";
+            var margenGananciaProducto = parseFloat($(this).find(".total_ganancia").text() || "No aplica");
+            var totalProducto = parseFloat($(this).find(".total_producto").text().replace(/[$,.]/g, ''));
+            var totalProductoDescuento = parseFloat($(this).find("#total_producto_descuento").text().replace(/[$,.]/g, '')) || "No aplica";
+
+            productos[idProducto] = {
+                cantidad: cantidad,
+                precioCompra: precioCompra,
+                precioVenta: precioVenta,
+                descuento: descuento,
+                margenGananciaProducto: margenGananciaProducto,
+                totalProducto: totalProducto,
+                totalProductoDescuento: totalProductoDescuento
+            };
+        });
+
+        var totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
+
+        var venta = {
+            descuentoVenta: descuentoVenta,
+            margenGananciaVenta: margenGananciaVenta,
+            totalVenta: totalVenta,
+            totalVentaDescuento: totalVentaDescuento,
+            documentoCliente: documentoCliente,
+            productos: productos
+        };
+
+        console.log(venta);
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'crear_venta' %}",
+            data: JSON.stringify(venta),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Venta creada con éxito',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "{% url 'ventas' %}";
+                    }, 2000);
+                }
+            },
+        });
+    }
+
+
+
 </script>
+
+
 {% endblock %}
