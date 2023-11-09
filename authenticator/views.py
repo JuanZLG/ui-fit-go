@@ -21,9 +21,6 @@ import re
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.hashers import check_password, make_password
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -34,15 +31,8 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Login Bueno 
 
-
-
-# ...
-
-def verificar_contrasena(contrasena_ingresada, contrasena_almacenada):
-    """
-    Verifica si la contraseña ingresada coincide con la almacenada en la base de datos.
-    """
-    return check_password(contrasena_ingresada, contrasena_almacenada)
+from rest_framework.response import Response
+from rest_framework import status
 
 class loginmio(APIView):
     def get(self, request):
@@ -58,7 +48,7 @@ class loginmio(APIView):
             if usuario.estado == 0:
                 return JsonResponse({'error': 'Usuario inactivo'}, status=401)
 
-            if verificar_contrasena(contrasena, usuario.contrasena):
+            if usuario.contrasena == contrasena:
                 payload = custom_jwt_payload_handler(usuario_data)
                 payload['id_rol'] = usuario_data['id_rol']
 
@@ -75,7 +65,6 @@ class loginmio(APIView):
                 return Response({'error': 'contrasena incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
-
         
 #-----------------------------------------------------------------------------------------------------
 def send_email_codigo(correo, codigo):
@@ -159,11 +148,9 @@ def restablecer_contrasena(request):
             if validar_correo(correo):
                 try:
                     user = Usuarios.objects.get(correo=correo)
-                    hashed_password = make_password(nueva_contrasena)
                     print(f"Contraseña original: {nueva_contrasena}")
-                    print(f"Contraseña hasheada: {hashed_password}")
 
-                    user.contrasena = hashed_password
+                    user.contrasena = nueva_contrasena
                     user.save()
 
                     print("contraseña actualizada")
