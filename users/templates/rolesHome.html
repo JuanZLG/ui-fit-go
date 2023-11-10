@@ -619,7 +619,11 @@
                 contentType: "application/json",
                 success: function (response) {
                     if (response.success) {
-                        alert("Exito");
+                        Swal.fire({
+                        title: "Buen trabajo!",
+                        text: "Rol creado con exito!",
+                        icon: "success"
+                        });
                         location.reload();
                     }
                 }
