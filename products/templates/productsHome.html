@@ -313,10 +313,12 @@
                 success: function (response) {
                     if (response.success) {
                         Swal.fire({
-                            title: "Éxito",
-                            text: "Se ha creado la categoria con éxito",
-                            icon: "success"
-                            });
+                            title: 'Éxito',
+                            text: 'Se ha creado la Categoria con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000, 
+                        });
                         location.reload();
                     }
                 }
