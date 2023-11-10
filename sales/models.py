@@ -46,8 +46,7 @@ class Productos(models.Model):
     precio = models.FloatField()
     precio_pub = models.FloatField()
     
-    iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
-    iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)
+    iProductImg = models.BinaryField(null=True, blank=True)
 
     class Meta:
         managed = False

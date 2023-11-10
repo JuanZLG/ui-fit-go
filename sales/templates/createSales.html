@@ -4,7 +4,7 @@
 
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/prueba.css' %}">
+    <link rel="stylesheet" href="{% static 'css/CreateVentas.css' %}">
 </head>
 
 
@@ -147,7 +147,7 @@
         <div>
             <span>Aplicar descuento a la venta</span>
             <div class="input-wrapper">
-                <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1"
+                <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" onkeydown="return validateInput(event)"
                     title="Aplicar descuento" id="descuento-venta" style="width: 65px !important;">
                 <span class="percent-sign">%</span>
             </div>
@@ -329,10 +329,10 @@
                                 let cantidad = data.resultados[i].cantidad;
                                 // <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                 // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
-
                                 let itemLista = `
-                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
+                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"} ${cantidad <= 0 ? "inactivo" : ""}">
                                     <div class="product-details-container">
+                                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
@@ -341,6 +341,7 @@
                                     </div>
                                 </li>
                             `;
+
 
                                 listadoProductos.append(itemLista);
                             }
@@ -376,6 +377,9 @@
             });
             return existe;
         }
+
+
+
         function totalVenta() {
             let descuentoInput = $("#descuento-venta").val();
             let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
@@ -392,6 +396,9 @@
             let descuentoValor = totalVenta * descuento;
             totalVenta = totalVenta - descuentoValor;
             totalGanancia = totalGanancia - descuentoValor;
+            if (totalGanancia < 0) {
+                totalGanancia = 0;
+            }
             $("#total-venta").text(formatearPrecios(totalVenta));
             $("#total_ganancia_venta").text(formatearPrecios(totalGanancia));
             if (descuentoInput) {
@@ -402,11 +409,13 @@
         }
 
 
-
         $("#btnAgregar").click(function () {
             if (productoSeleccionado) {
                 if (productoExiste(productoSeleccionado.id_producto)) {
                     alert('El producto ya existe en la lista de productos');
+                    $("#buscarProducto").val("")
+                    $("#cantidad-ingresada").val("1")
+                    $("#buscarProducto").val("").removeClass("is-valid");
                     return;
                 }
                 $("#buscarProducto").val("").removeClass("is-valid");
@@ -467,6 +476,7 @@
                 });
             }, 1000);
 
+            $("#campos-requeridos").css("color", "");
             $('.product-update-button.is-active').tooltip('dispose');
             let fila = $(this).closest("tr.producto-row");
             let descuento = parseFloat(fila.find(".descuento").val().replace(/[%]/g, '')) / 100;
@@ -486,7 +496,7 @@
             let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
             let descuento_html = ""
             if (descuento > 0) {
-                descuento_html = "<span id='total_producto_descuento' style='color: rgb(48, 48, 163);'>- (" + formatearPrecios(precio_descuento) + ")</span>";
+                descuento_html = "<span style='color: rgb(48, 48, 163);'>- (<span id='total_producto_descuento'>" + formatearPrecios(precio_descuento) + "</span>)</span>";
             } else {
                 fila.find(".descuento").val("0")
             }
@@ -531,13 +541,14 @@
                         <div class="product-info">
                             <div class="product-details-container">
                                 <div class="cont-img">
+                                    <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                 </div>
                                 <ul class="product-details">
                                     <li><strong>${nombre_producto}</strong></li>
                                     <li class="d-flex justify-content-between">
                                         <span><strong class="mr-2">Marca:</strong>${marca}</span>
                                         <div class="input-wrapper">
-                                            <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
+                                            <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento" onkeydown="return validateInput(event)">
                                             <span class="percent-sign">%</span>
                                         </div>
                                     </li>
@@ -563,13 +574,30 @@
                     </td>
                 </tr>
                 `;
-                        tbody.append(itemFila);
-                    }
-                });
+            tbody.append(itemFila);
+        }
+    });
 
 </script>
 
 
+<script>
+    function validateInput(event) {
+        let key = event.key;
+        let value = event.target.value + key;
+        let number = parseFloat(value);
+        if (key === 'Backspace') {
+            return true;
+        }
+        if (!/[\d.,]/.test(key)) {
+            return false;
+        }
+        if (isNaN(number) || number < 0 || number > 100) {
+            return false;
+        }
+        return true;
+    }
+</script>
 <script>
 
     function increment(button) {
@@ -588,7 +616,7 @@
 
 
     $("#crear-venta").click(function () {
-        var invalid = false;
+        let invalid = false;
 
         if ($("#cont-docu").text() == "") {
             $("#nombreCliente").addClass("is-invalid");
@@ -618,20 +646,20 @@
 
 
     function enviarDatosVentas() {
-        var productos = {};
-        var descuentoVenta = $("#descuento-venta").val() || "No aplica";
-        var margenGananciaVenta = parseFloat($("#total_ganancia_venta").text().replace(/[$,.]/g, ''));
-        var totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
-        var documentoCliente = $("#documento").text();
+        let productos = {};
+        let descuentoVenta = $("#descuento-venta").val() || "No aplica";
+        let margenGananciaVenta = parseFloat($("#total_ganancia_venta").text().replace(/[$,.]/g, ''));
+        let totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
+        let documentoCliente = $("#documento").text();
         $(".producto-row").each(function () {
-            var idProducto = parseInt($(this).data("id-producto"));
-            var cantidad = parseInt($(this).find(".cantidad-fila").val());
-            var precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
-            var precioVenta = parseFloat($(this).find(".precio_venta").text().replace(/[$,.]/g, ''));
-            var descuento = $(this).find(".descuento").val() || "No aplica";
-            var margenGananciaProducto = parseFloat($(this).find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
-            var totalProducto = parseFloat($(this).find(".total_producto").text().replace(/[$,.]/g, ''));
-            var totalProductoDescuento = parseFloat($(this).find("#total_producto_descuento").text().replace(/[$,.]/g, '')) || "No aplica";
+            let idProducto = parseInt($(this).data("id-producto"));
+            let cantidad = parseInt($(this).find(".cantidad-fila").val());
+            let precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
+            let precioVenta = parseFloat($(this).find(".precio_venta").text().replace(/[$,.]/g, ''));
+            let descuento = $(this).find(".descuento").val() || "No aplica";
+            let margenGananciaProducto = parseFloat($(this).find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
+            let totalProducto = parseFloat($(this).find(".total_producto").text().replace(/[$,.]/g, ''));
+            let totalProductoDescuento = parseFloat($(this).find("#total_producto_descuento").text().replace(/[$,.]/g, '')) || "No aplica";
             productos[idProducto] = {
                 cantidad: cantidad,
                 precioCompra: precioCompra,
@@ -643,9 +671,9 @@
             };
         });
 
-        var totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
+        let totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
 
-        var venta = {
+        let venta = {
             descuentoVenta: descuentoVenta,
             margenGananciaVenta: margenGananciaVenta,
             totalVenta: totalVenta,
