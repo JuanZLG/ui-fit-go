@@ -63,6 +63,7 @@ class Detalleventa(models.Model):
     descuentoProducto = models.CharField(max_length=255)
     totalProductoDescuento = models.CharField(max_length=255)
     margenGanancia = models.FloatField()    
+    precio_tot = models.FloatField()    
     estado = models.IntegerField(default=1)
 
     class Meta:

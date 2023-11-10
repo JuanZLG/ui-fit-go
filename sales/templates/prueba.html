@@ -333,7 +333,6 @@
                                 let itemLista = `
                                 <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
                                     <div class="product-details-container">
-                                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
@@ -527,47 +526,46 @@
             // <img src="/media/${img}" alt="Imagen" class="img-fluid">
             // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
             let itemFila = `
-    <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
-        <td class="p-2 celda-producto">
-            <div class="product-info">
-                <div class="product-details-container">
-                    <div class="cont-img">
-                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
-                    </div>
-                    <ul class="product-details">
-                        <li><strong>${nombre_producto}</strong></li>
-                        <li class="d-flex justify-content-between">
-                            <span><strong class="mr-2">Marca:</strong>${marca}</span>
-                            <div class="input-wrapper">
-                                <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
-                                <span class="percent-sign">%</span>
+                <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
+                    <td class="p-2 celda-producto">
+                        <div class="product-info">
+                            <div class="product-details-container">
+                                <div class="cont-img">
+                                </div>
+                                <ul class="product-details">
+                                    <li><strong>${nombre_producto}</strong></li>
+                                    <li class="d-flex justify-content-between">
+                                        <span><strong class="mr-2">Marca:</strong>${marca}</span>
+                                        <div class="input-wrapper">
+                                            <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
+                                            <span class="percent-sign">%</span>
+                                        </div>
+                                    </li>
+                                    <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
+                                    <li class="d-flex gap-3">
+                                        <div class="number-input mt-3">
+                                            <button onclick="decrement(this)" id="decrement">-</button>
+                                            <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                                            <button onclick="increment(this)" id="increment">+</button>
+                                        </div>   
+                                        <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
+                                    </li>
+                                </ul>
                             </div>
-                        </li>
-                        <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
-                        <li class="d-flex gap-3">
-                            <div class="number-input mt-3">
-                                <button onclick="decrement(this)" id="decrement">-</button>
-                                <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
-                                <button onclick="increment(this)" id="increment">+</button>
-                            </div>   
-                            <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </td>
-        <td class="precio_compra"> ${precio_compra} </td>
-        <td> <span class="precio_venta">${precios.precio_venta}</span></td>
-        <td class="total_ganancia_producto"> ${precios.ganancia_total} </td>
-        <td class="total_producto"> ${precios.total_venta} </td>
-        <td class="eliminar-fila"> 
-            <i class="fas fa-trash"></i>
-        </td>
-    </tr>
-    `;
-            tbody.append(itemFila);
-        }
-    });
+                        </div>
+                    </td>
+                    <td class="precio_compra"> ${precio_compra} </td>
+                    <td> <span class="precio_venta">${precios.precio_venta}</span></td>
+                    <td class="total_ganancia_producto"> ${precios.ganancia_total} </td>
+                    <td class="total_producto"> ${precios.total_venta} </td>
+                    <td class="eliminar-fila"> 
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+                `;
+                        tbody.append(itemFila);
+                    }
+                });
 
 </script>
 
@@ -638,7 +636,7 @@
                 cantidad: cantidad,
                 precioCompra: precioCompra,
                 precioVenta: precioVenta,
-                descuento: descuento,
+                descuentoProducto: descuento,
                 margenGananciaProducto: margenGananciaProducto,
                 totalProducto: totalProducto,
                 totalProductoDescuento: totalProductoDescuento

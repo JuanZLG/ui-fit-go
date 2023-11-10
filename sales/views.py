@@ -13,9 +13,7 @@ def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
-@module_access_required('ventas')
 @csrf_exempt
-@jwt_cookie_required
 def crear_venta(request):
     if request.method == 'POST':
         try:
@@ -36,7 +34,7 @@ def crear_venta(request):
                 cantidad_vendida = producto_datos['cantidad']
                 precioCompra = producto_datos['precioCompra']
                 precioVenta = producto_datos['precioVenta']
-                descuento = producto_datos['descuento']
+                descuento = producto_datos['descuentoProducto']
                 totalProductoDescuento = producto_datos['totalProductoDescuento']
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
@@ -53,7 +51,7 @@ def crear_venta(request):
                     cantidad=cantidad_vendida,
                     precio_compra=precioCompra,
                     precio_venta=precioVenta,
-                    descuento=descuento,
+                    descuentoProducto=descuento,
                     totalProductoDescuento=totalProductoDescuento,
                     margenGanancia=margenGananciaProducto,
                     precio_tot=totalProducto,
@@ -95,6 +93,7 @@ def buscar_productos(request):
         })
 
     return JsonResponse({"resultados": resultados})
+
 
 def get_image_name(image_field):
     if image_field:
