@@ -51,8 +51,6 @@ def pageDetails(request):
     return JsonResponse(response_data)
 
 
-
-
 def get_image_name(image_field):
     if image_field:
         if isinstance(image_field, bytes):

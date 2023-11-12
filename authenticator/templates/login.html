@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0">
@@ -8,17 +9,21 @@
     <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/EstilosLogin.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
+
 <body>
     <video autoplay muted loop id="video-fondo" style="width:100%">
         <source src="{% static 'img/grid.mp4' %}" type="video/mp4">
         EL navegador no admite la reproducción de videos.
-      </video>
-      {% comment %} <img src="{% static 'img/' %}" id="video-fondo"> {% endcomment %}
+    </video>
+    {% comment %} <img src="{% static 'img/' %}" id="video-fondo"> {% endcomment %}
     {% comment %} <div class="wrapperLogus">
         <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
     </div> {% endcomment %}
-    
+
     <div class="wrapper">
 
         <h1>Iniciar Sesión</h1>
@@ -29,39 +34,454 @@
             <div class="input-box">
                 <input type="email" name="correo" placeholder="Correo Electrónico" autocomplete="address-line1">
                 <box-icon type='solid' name='user'></box-icon>
-                <center><div style="margin-top:5px;" id="correo-error" class="text-with-shadow"></div></center>
-                <center><div style="margin-top:5px; " id="user-error" class="text-with-shadow"></div></center>
-                <center><div style="margin-top:5px;" id="status-error" class="text-with-shadow"></div></center>
+                <center>
+                    <div style="margin-top:5px;" id="correo-error" class="text-with-shadow"></div>
+                </center>
+                <center>
+                    <div style="margin-top:5px; " id="user-error" class="text-with-shadow"></div>
+                </center>
+                <center>
+                    <div style="margin-top:5px;" id="status-error" class="text-with-shadow"></div>
+                </center>
             </div>
             <div class="input-box">
                 <input type="password" name="contra" placeholder="Contraseña" autocomplete="current-password">
                 <box-icon name='lock-alt' type='solid'></box-icon>
-                <center><div style="margin-top:5px;" id="contra-error" class="text-with-shadow"></div></center>
-                <center><div style="margin-top:5px;" id="cvalid-error" class="text-with-shadow"></div></center>
+                <center>
+                    <div style="margin-top:5px;" id="contra-error" class="text-with-shadow"></div>
+                </center>
+                <center>
+                    <div style="margin-top:5px;" id="cvalid-error" class="text-with-shadow"></div>
+                </center>
             </div>
             <br>
             <div class="remember-forgot">
-                <a href="{% url 'enviar_codigo' %}">¿Olvidaste tu contraseña?</a>
-            </div>                                              
+                <a id="forget-pass">¿Olvidaste tu contraseña?</a>
+            </div>
             <center><button type="button" class="btn" id="login-button">Entrar</button></center>
         </form>
     </div>
-    
+
+    <style>
+        .swal2-popup {
+            width: 400px;
+            background-color: #222222;
+        }
+
+        .forget-container input {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 5px;
+            margin-top: 17px;
+            padding: 0 10px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            outline: none;
+            color: #000;
+            font-weight: 500;
+        }
+
+        .forget-butons {
+            margin-top: 10px;
+            padding-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .forget-butons button {
+            border: none;
+            border-radius: 10px;
+            width: 4.5rem;
+            height: 2.2rem;
+            padding: 5px 0;
+            color: #fff;
+            transition: all 200ms ease-in-out;
+        }
+
+        .forget-butons button:hover {
+            cursor: pointer;
+            transform: scale(0.94);
+            color: #ccc;
+        }
+
+        .forget-butons button:first-child {
+            background-color: rgba(0, 0, 0, .8);
+        }
+
+        .forget-butons button:last-child {
+            background-color: rgba(0, 0, 0, .4);
+        }
+
+
+        .codig-container-inputs {
+            width: 85%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .codig-container-inputs input {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .btn-codig {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-codig.is-active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        svg {
+            position: absolute;
+            top: 40%;
+            left: 40%;
+            margin: auto;
+            width: 3.25em;
+            transform-origin: center;
+            animation: rotate4 2s linear infinite;
+        }
+
+        circle {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 3;
+            stroke-dasharray: 1, 200;
+            stroke-dashoffset: 0;
+            stroke-linecap: round;
+            animation: dash4 1.5s ease-in-out infinite;
+        }
+
+        @keyframes rotate4 {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes dash4 {
+            0% {
+                stroke-dasharray: 1, 200;
+                stroke-dashoffset: 0;
+            }
+
+            50% {
+                stroke-dasharray: 90, 200;
+                stroke-dashoffset: -35px;
+            }
+
+            100% {
+                stroke-dashoffset: -125px;
+            }
+        }
+
+        .recover-container-inputs {
+            width: 100%;
+            padding: 5px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .recover-container-inputs label {
+            font-size: 14px;
+            color: #fff;
+        }
+    </style>
     <script>
-        document.getElementById('login-button').addEventListener('click', function() {
+        $(document).ready(function () {
+            function cambiarContraseña() {
+                Swal.close();
+                Swal.fire({
+                    title: '<span style="font-family:Arial; font-size:25px; color: #fff">Cambiar contraseña</span>',
+                    html: `
+                    <svg viewBox="25 25 50 50" id="loading">
+                        <circle r="20" cy="50" cx="50"></circle>
+                        </svg>
+                        <div class="forget-container" style="text-align:left;">
+                            <p style="font-size: 14px; color: #f2f2f2; text-align: start;"></p>
+                            <div class="recover-container-inputs" id="input-container">
+                                <label for="new-password">
+                                    Nueva contraseña *
+                                    <input type="password" id="new-password" placeholder="Nueva contraseña">
+                                </label>
+                                <label for="confirm-password">
+                                    Confirmar nueva contraseña *
+                                    <input type="password" id="confirm-password" placeholder="Confirmar nueva contraseña">
+                                </label>
+                            </div>
+                            <span id="recover-error" style="font-size: 14px; color:#C00000;"></span>
+                            <div class="forget-butons">
+                                <button id="submit-recover" class="submit-recover" style=" width: auto; padding: 0 10px">Verificar código</button>
+                                <button id="close-recover">Cancelar</button>
+                            </div>
+                        </div>
+                `,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    customClass: {
+                        popup: 'sweet-forget'
+                    }
+                });
+                $("#close-recover").click(function () {
+                    Swal.close();
+                });
+
+                $(".recover-container-inputs input").on("input", function () {
+                    $("#recover-error").text("");
+                });
+
+                $("#submit-recover").click(function () {
+                    let newPassword = $("#new-password").val();
+                    let confirmPassword = $("#confirm-password").val();
+
+                    if (newPassword !== confirmPassword) {
+                        $("#recover-error").text("Las contraseñas no coinciden.");
+                        return;
+                    } else if (newPassword == "" || confirmPassword == "") {
+                        $("#recover-error").text("Ambos campos son requeridos.");
+                        return;
+                    }
+
+                    let loadingTimeout = setTimeout(function () {
+                        $("#loading").show();
+                    }, 1000);
+                    $.ajax({
+                        url: "{% url 'restablecer_contrasena' %}",
+                        type: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        data: {
+                            newPassword: newPassword
+                        },
+                        success: function (response) {
+                            clearTimeout(loadingTimeout);
+                            alert("Melo")
+                        }
+                    })
+                });
+
+            }
+
+
+            function validarCodigo() {
+                Swal.close();
+                Swal.fire({
+                    title: '<span style="font-family:Arial; font-size:25px; color: #fff">Código de Verificación</span>',
+                    html: `
+                        <svg viewBox="25 25 50 50" id="loading">
+                        <circle r="20" cy="50" cx="50"></circle>
+                        </svg>
+                        <div class="forget-container" style="text-align:left;">
+                            <p style="font-size: 14px; color: #f2f2f2; text-align: start;">Ingresa el código enviado al correo para restablecer tu contraseña.</p>
+                            <div class="codig-container-inputs" id="input-container">
+                                <input type="number" maxlength="1">
+                                <input type="number" maxlength="1">
+                                <input type="number" maxlength="1">
+                                <input type="number" maxlength="1">
+                                <input type="number" maxlength="1">
+                            </div>
+                            <span id="codig-error" style="display: inline-block; font-size: 14px; color:#C00000;"></span>
+                            <div class="forget-butons">
+                                <button id="submit-codig" class="btn-codig" style=" width: auto; padding: 0 10px">Verificar código</button>
+                                <button id="close-codig">Cancelar</button>
+                            </div>
+                        </div>
+                        `,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    customClass: {
+                        popup: 'sweet-forget'
+                    }
+                });
+                $("#loading").hide();
+
+                $("#close-codig").click(function () {
+                    Swal.close();
+                });
+
+                document.querySelectorAll('#input-container input').forEach((input, index, inputArray) => {
+                    input.addEventListener('input', () => {
+                        $("#codig-error").text("");
+                        if (input.value.length > 1) {
+                            input.value = input.value[0];
+                        }
+                        if (input.value.length === 1 && index < inputArray.length - 1) {
+                            inputArray[index + 1].focus();
+                        }
+
+                        if (Array.from(inputArray).every(input => input.value.length === 1)) {
+                            document.querySelector('.btn-codig').classList.add('is-active');
+                        } else {
+                            document.querySelector('.btn-codig').classList.remove('is-active');
+                        }
+                    });
+
+                    input.addEventListener('keydown', (event) => {
+                        if (event.key === 'Backspace' && index > 0 && input.value.length === 0) {
+                            inputArray[index - 1].focus();
+                        }
+                    });
+
+                    input.addEventListener('keypress', (event) => {
+                        if (!/\d/.test(event.key)) {
+                            event.preventDefault();
+                        }
+                    });
+                });
+
+                $(document).ajaxStart(function () {
+                    $("#loading").show();
+                });
+
+                $(document).ajaxStop(function () {
+                    $("#loading").hide();
+                });
+                $("#submit-codig").click(function () {
+                    let codigo = "";
+                    $("#input-container input").each(function () {
+                        codigo += $(this).val();
+                    });
+
+                    let loadingTimeout = setTimeout(function () {
+                        $("#loading").show();
+                    }, 1000);
+                    $.ajax({
+                        url: "{% url 'verificar_codigo' %}",
+                        type: 'GET',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (response) {
+                            clearTimeout(loadingTimeout);
+                            if (response.success) {
+                                $("#loading").hide();
+                                cambiarContraseña();
+                            }
+                            else {
+                                $("#codig-error").text("Código incorrecto.");
+                            }
+                        }
+                    })
+                });
+            }
+
+            $("#forget-pass").click(function () {
+                Swal.fire({
+                    title: '<span style="font-family:Arial; font-size:25px; color: #fff">Recuperar contraseña</span>',
+                    html: `
+                    <svg viewBox="25 25 50 50" id="loading">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
+                    <div class="forget-container" style="position: relative; text-align: start;">
+                        <p style="display: inline-block; font-size: 14px; color: #f2f2f2;">Ingresa tu correo electrónico, te enviaremos un código para restablecer tu contraseña.</p>
+                        <input type="email" id="forget-correo" name="correo" placeholder="Correo Electrónico">
+                        <span id="forget-error" style="font-size: 14px; color:#C00000;"></span>
+                        <div class="forget-butons">
+                            <button id="submit-btn">Enviar</button>
+                            <button id="close-btn">Cerrar</button>
+                        </div>
+                    </div>
+                `,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    customClass: {
+                        popup: 'sweet-forget'
+                    }
+                });
+                $("#loading").hide();
+
+                $("#forget-correo").on("input", function () {
+                    $("#forget-error").text("");
+                });
+
+                $("#close-btn").click(function () {
+                    Swal.close();
+                });
+
+                $(document).ajaxStart(function () {
+                    $("#loading").show();
+                });
+
+                $(document).ajaxStop(function () {
+                    $("#loading").hide();
+                });
+                $("#submit-btn").click(function () {
+                    let correo = $("#forget-correo").val();
+                    let regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+                    if (correo == "") {
+                        $("#forget-error").text("Campo requerido");
+                    } else if (!regex.test(correo)) {
+                        $("#forget-error").text("Introduce un correo electrónico válido");
+                    } else {
+                        $("#forget-error").text("");
+                        let loadingTimeout = setTimeout(function () {
+                            $("#loading").show();
+                        }, 1000);
+                        $.ajax({
+                            url: "{% url 'verificar_correo' %}",
+                            type: 'GET',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            data: {
+                                correo: correo
+                            },
+                            success: function (response) {
+                                clearTimeout(loadingTimeout);
+                                if (response.existe) {
+                                    $("#loading").hide();
+                                    validarCodigo()
+                                }
+                                else {
+                                    $("#forget-error").text("No existen registros asociados con el correo electrónico ingresado");
+                                }
+                            }
+                        })
+                    }
+                });
+            });
+        });
+
+
+
+
+    </script>
+
+    <script>
+        document.getElementById('login-button').addEventListener('click', function () {
             document.getElementById('user-error').textContent = '';
             document.getElementById('correo-error').textContent = '';
             document.getElementById('contra-error').textContent = '';
             document.getElementById('status-error').textContent = '';
             document.getElementById('cvalid-error').textContent = '';
-    
+
             var correo = document.querySelector('[name="correo"]').value;
             var contra = document.querySelector('[name="contra"]').value;
             var formData = {
                 correo: correo,
                 contra: contra
             };
-    
+
             if (!correo && !contra) {
                 displayError('correo', 'El correo es obligatorio');
                 displayError('contra', 'La contraseña es obligatoria');
@@ -79,33 +499,33 @@
                     },
                     body: JSON.stringify(formData)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token) {
-                        console.log("Token Cargado");
-                        setCookie('jwt_token', data.token, 30);
-                        window.location.href = 'admin/home/';
-                    } else if (data.error === 'Usuario no Registrado') {
-                        displayError('user', 'No existe un usuario registrado con este correo');
-                    } else if (data.error === 'Usuario inactivo'){
-                        displayError('status', 'El usuario asociado a este correo esta inactivo')
-                    } else if ( data.error === 'contrasena incorrecta'){
-                        displayError('cvalid', 'La contraseña es incorrecta')
-                    } else {
-                        displayError('correo', 'Error: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    displayError('correo', 'Error: ' + error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.token) {
+                            console.log("Token Cargado");
+                            setCookie('jwt_token', data.token, 30);
+                            window.location.href = 'admin/home/';
+                        } else if (data.error === 'Usuario no Registrado') {
+                            displayError('user', 'No existe un usuario registrado con este correo');
+                        } else if (data.error === 'Usuario inactivo') {
+                            displayError('status', 'El usuario asociado a este correo esta inactivo')
+                        } else if (data.error === 'contrasena incorrecta') {
+                            displayError('cvalid', 'La contraseña es incorrecta')
+                        } else {
+                            displayError('correo', 'Error: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        displayError('correo', 'Error: ' + error);
+                    });
             }
         });
-    
+
         function displayError(field, message) {
             var errorElement = document.getElementById(field + '-error');
             errorElement.textContent = message;
         }
-    
+
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -120,7 +540,7 @@
             }
             return cookieValue;
         }
-    
+
         function setCookie(name, value, daysToExpire) {
             var date = new Date();
             date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000));
@@ -131,8 +551,8 @@
 
     <script>
         var imgn = document.getElementById('logus');
-        
-        imgn.oncontextmenu = function(e) {
+
+        imgn.oncontextmenu = function (e) {
             e.preventDefault();
         };
     </script>
@@ -142,4 +562,5 @@
         video.playbackRate = 0.75;
     </script>
 </body>
+
 </html>

@@ -147,8 +147,9 @@
         <div>
             <span>Aplicar descuento a la venta</span>
             <div class="input-wrapper">
-                <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" onkeydown="return validateInput(event)"
-                    title="Aplicar descuento" id="descuento-venta" style="width: 65px !important;">
+                <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1"
+                    onkeydown="return validateInput(event)" title="Aplicar descuento" id="descuento-venta"
+                    style="width: 65px !important;">
                 <span class="percent-sign">%</span>
             </div>
         </div>
@@ -191,42 +192,41 @@
 
         Swal.fire({
             html: `
-    <div class="resumen-pedido">
-        <h4 class="titulo-resumen">RESUMEN DE TU PEDIDO</h4>
-        <div class="grid-resumen">
-            <div class="resumen-productos">
-                <h6 class="titulo-seccion"><i class="fas fa-box-open mr-1 mb-3"></i>TOTAL PRODUCTOS</h6>
-                <ul>
-                    <li class="linea-resumen"><span>Total precio compra</span> <span class="valor-derecha">$3000.000</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="resumen-descuentos">
-                <h6 class="titulo-seccion"><i class="fas fa-gift mr-1 mb-3"></i>DESCUENTOS</h6>
-                <ul>
-                    <li class="linea-descuento"><span>Producto xx</span> <span class="valor-derecha">50% - $20.000</span>
-                    </li>
-                    <li class="linea-descuento"><span>Muscle xx</span> <span class="valor-derecha">20% - $15.000</span></li>
-                    <li class="linea-descuento"><span>Fat indusha ccxx max</span> <span class="valor-derecha">20% -
-                            $15.000</span></li>
-                </ul>
-            </div>
-            <div class="resumen-venta">
-                <h6 class="titulo-seccion"><i class="fas fa-dollar-sign mr-1 mb-3"></i>TOTAL VENTA</h6>
-                <ul>
-                    <li class="linea-resumen"><span>Total precio venta</span> <span class="valor-derecha">$3000.000</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="resumen-ganancia">
-                <h6 class="titulo-seccion"><i class="fas fa-coins mr-1 mb-3"></i>TU GANANCIA</h63>
-                    <ul>
-                        <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
-                    </ul>
-            </div>
+            <div class="details-container text-start">
+                <h2 class="details-title">Detalles de venta</h2>
+                <p>Fecha: 10/11/2023</p>
+                <p>Cliente: <span id="cliente" class="mr-2">Juan Pérez</span><span class="documento">1002580806<span></p>
+                <h3 class="details-subtitle">Productos</h3>
+                <table class="table details-table">
+                    <thead>
+                        <tr>
+                            <th style="width: auto;">Producto</th>
+                            <th style="width: auto;">Precio Unitario</th>
+                            <th style="width: auto;">Cantidad</th>
+                            <th style="width: auto;">Descuentos</th>
+                            <th style="width: auto;">Ganancia</th>
+                            <th style="width: auto;">Total Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalDetallesVenta">
+                        <tr>
+                            <td>Producto xxx</td>
+                            <td>$200.000 - $250.000</td>
+                            <td>2</td>
+                            <td>10%  - $20.000</td>
+                            <td>$30.000</td>
+                            <td>$500.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="details-sale">
+                    <p>Descuento de venta: 15%</p>
+                    <p>Total con descuento: $76.50</p>
+                    <p>Margen de ganancia: 44%</p>
+                    <p class="total">Precio total: $110.00</p>
+                </div>
 
-        </div>
-    </div>
+            </div>
     `,
             showCloseButton: true,
             showConfirmButton: false,
@@ -243,7 +243,8 @@
         color: black !important; 
     }
     .custom-swal-popup {
-        width: 60% !important;
+        max-width: 50% !important;
+        width: auto !important;
     }
 `,
         head = document.head || document.getElementsByTagName('head')[0],
@@ -261,41 +262,35 @@
 
 </script>
 <style>
-    .resumen-pedido {
-        width: 100%;
-        padding: 15px;
-    }
 
-    .titulo-resumen {
+    .details-title {
+        color: #333;
+        font-size: 32px;
+        margin-bottom: 20px;
         text-align: center;
-        margin-bottom: 5px;
     }
 
-    .grid-resumen {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 60px;
-        padding: 30px;
+    .details-subtitle {
+        color: #333;
+        font-size: 24px;
+        margin: 20px 0;
     }
 
-    .titulo-seccion {
-        color: rgb(22, 22, 88);
+    .details-container p {
+        color: #666;
+        margin-bottom: 10px;
     }
-
-    .linea-resumen,
-    .linea-descuento {
-        border-bottom: 2px dotted #222222;
-        padding: 5px 0;
+    .details-table {
+        background-color: #f2f2f2;
+        margin: 10px 0;
     }
-
-    .valor-derecha {
-        font-weight: bold;
-        float: right;
-        margin-left: 30px;
+    .details-table {
+        text-align: center;
+        vertical-align: middle;
     }
-
-    .valor-total {
-        color: rgb(22, 22, 88);
+    .details-sale {
+        text-align: end;
+        padding: 10px;
     }
 </style>
 

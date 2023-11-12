@@ -1,4 +1,6 @@
+import os
 from django.shortcuts import render, redirect
+from dotenv import load_dotenv
 from authenticator.models import Usuarios
 from django.contrib.auth import logout
 from rest_framework.views import APIView
@@ -67,103 +69,67 @@ class loginmio(APIView):
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
         
 #-----------------------------------------------------------------------------------------------------
-def send_email_codigo(correo, codigo):
-    remitente = 'juanmartinezciro657@gmail.com'
-    destinatario = correo
-    asunto = 'Código de Recuperación de Contraseña'
+from django.template.loader import get_template
+def send_email_codigo(user, email, codigo):
+    load_dotenv()
+    remitente = os.getenv("USER")
+    destinatario = email
+    asunto = "Recuperación de cuenta"
 
     msg = MIMEMultipart()
-    msg['Subject'] = asunto
-    msg['From'] = remitente 
-    msg['To'] = destinatario
+    msg["Subject"] = asunto
+    msg["From"] = remitente
+    msg["To"] = destinatario
 
-    mensaje = f'Tu código de recuperación es: {codigo}'
+    template = get_template("emailCodig.html")
+    context = {
+        'user': user,
+        'codigo': codigo,
+        'email': email
+    }
+    html = template.render(context)
 
-    msg.attach(MIMEText(mensaje, 'plain'))
-
-    server = smtplib.SMTP('smtp.gmail.com', 587)
+    msg.attach(MIMEText(html, "html"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
-    server.login(remitente, 'kckj mlib zwaf anhh') 
-
-    # Envía el correo
+    server.login(remitente, os.getenv("PASS"))
+    
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
 #------------------------------------------------------------------------------------------------------
-def olvide_contrasena(request):
-    if request.method == 'POST':
-        correo = request.POST.get('correo')
-        if validar_correo(correo):
-            codigo = str(random.randint(10000, 99999))
+def verificar_correo(request):
+    correo = request.GET.get('correo')
+    existe = Usuarios.objects.filter(correo=correo).exists()
+    if existe:
+        user = Usuarios.objects.filter(correo=correo).first()
+        user = user.nombre_usuario
+        codigo = str(random.randint(10000, 99999))
+        request.session['correo_almacenado'] = correo  
+        request.session['codigo_almacenado'] = codigo  
+        send_email_codigo(user, correo, codigo)
+    return JsonResponse({'existe': existe})
 
-            send_email_codigo(correo, codigo)
-            request.session['codigo_recuperacion'] = codigo
-            return redirect('verificar_codigo')
-
-    return render(request, 'olvide_contrasena.html')
-
-#------------------------------------------------------------------------------------------------------
-def validar_correo(correo):
-    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-    return re.match(pattern, correo) is not None
-
-#------------------------------------------------------------------------------------------------------
-def enviar_codigo(request):
-    if request.method == 'POST':
-        correo = request.POST.get('correo')
-        if validar_correo(correo):
-            try:
-                user = Usuarios.objects.get(correo=correo)
-                codigo = str(random.randint(10000, 99999))
-                send_email_codigo(correo, codigo)
-                request.session['codigo_recuperacion'] = codigo
-                request.session['correo_recuperacion'] = correo 
-                return redirect('verificar_codigo')
-            except ObjectDoesNotExist:
-                return render(request, 'enviar_codigo.html', {'error': 'El correo no existe'})
-    return render(request, 'enviar_codigo.html')
 #---------------------------------------------------------------------------------------------------------------
 def verificar_codigo(request):
-    if request.method == 'POST':
-        codigo_ingresado = request.POST.get('codigo')
-        codigo_almacenado = request.session.get('codigo_recuperacion')
-        if codigo_ingresado == codigo_almacenado:
-            return redirect('restablecer_contrasena')
-        else:
-            return render(request, 'verificar_codigo.html', {'error': True})
-    return render(request, 'verificar_codigo.html')
-
-
+    codigo_ingresado = request.GET.get('codigo')
+    codigo_almacenado = request.session.get('codigo_almacenado') 
+    if codigo_ingresado == codigo_almacenado:
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
 #------------------------------------------------------------------------------------------------------------------
 
 
 def restablecer_contrasena(request):
     if request.method == 'POST':
-        nueva_contrasena = request.POST.get('nueva_contrasena')
-        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+        nueva_contrasena = request.POST.get('newPassword')
+        correo = request.session.get('correo_almacenado') 
 
-        correo = request.session.get('correo_recuperacion')
-
-        if correo and nueva_contrasena == confirmar_contrasena:
-            if validar_correo(correo):
-                try:
-                    user = Usuarios.objects.get(correo=correo)
-                    print(f"Contraseña original: {nueva_contrasena}")
-
-                    user.contrasena = nueva_contrasena
-                    user.save()
-
-                    print("contraseña actualizada")
-
-                    return redirect('login_view')
-                except Usuarios.DoesNotExist:
-                    return render(request, 'restablecer_contrasena.html', {'error': True})
-            else:
-                return render(request, 'restablecer_contrasena.html', {'error': True})
-        else:
-            return render(request, 'restablecer_contrasena.html', {'error': True})
-
-    return render(request, 'restablecer_contrasena.html')
+        user = Usuarios.objects.get(correo=correo)
+        user.contrasena = nueva_contrasena
+        user.save()
+    return redirect('login_view')
 
 
 

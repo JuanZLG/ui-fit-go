@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function formatearPrecios(valor) {
         valor = Math.round(valor * 100) / 100;
         let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        return '$ ' + precioFormateado;
+        return '$' + precioFormateado;
     }
 
     changeStateElements.forEach(function (element) {
@@ -62,53 +62,91 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "GET",
                 success: function (response) {
                     var venta = response.success;
-                    console.log(venta)
-                    $("#fechareg").text(venta.fechareg);
-                    $("#cliente").text(venta.cliente);
-                    $("#documento").text(venta.documento);
-                    $("#totalVenta").text(formatearPrecios(venta.totalVenta));
 
-                    if (venta.estado == 1) {
-                        $(".estadoVentaCircle").addClass("activo").removeClass("inactivo");
+                    Swal.fire({
+                        html: `  
+                            <div class="modal-container">
+                                <h3 class="text-center">
+                                    <div class="modal-state ${venta.estado == 1 ? 'activo' : 'inactivo'}"></div>
+                                    <h2>Información de la Venta</h2>
+                                </h3>
+                                <div class="flex">
+                                    <span>Documento: ${venta.documento} </span>
+                                    <span>Fecha de venta: ${venta.fechareg}</span>
+                                    <span>Cliente: ${venta.cliente}</span>
+                                </div>
+                                <table class="table modal-table">
+                                    <h3 class="modal-subtitle text-start mt-3">Productos</h3>
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Compra</th>
+                                            <th>Precio Venta</th>
+                                            <th>Descuentos</th>
+                                            <th>Descuentos</th>
+                                            <th>Total Producto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modalDetallesVenta">
+                                        ${venta.detalles.map(detalle => `
+                                            <tr>
+                                                <td>${detalle.producto}</td>
+                                                <td>${detalle.cantidad}</td>
+                                                <td title="Precio de Compra">${formatearPrecios(detalle.precio_compra)}</td>
+                                                <td title="Precio de venta">${formatearPrecios(detalle.precio_venta)}</td>
+                                                <td>
+                                                    <span title="Descuento">${detalle.descuento !== "0" ? detalle.descuento + '%' : 'No aplica'}</span>
+                                                    <span title="Precio Descontado">${detalle.descuento !== "0" ? formatearPrecios(detalle.precio_descuento) : ''}</span>
+                                                </td>
+                                                <td>${detalle.ganancia}</td>
+                                                <td>${detalle.precio_tot}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            <div class="modal-footer">
+                                <span>Descuento de venta: 15%</span>
+                                <span>Total con descuento: $76.50</span>
+                                <span>Margen de ganancia: 44%</span>
+                                <span class="font-weight-bold total-venta">TOTAL:<span>${formatearPrecios(venta.totalVenta)}</span></span>
+                            <div>
+                        </div>
+                            `,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        customClass: {
+                            closeButton: 'custom-close-button',
+                            popup: 'custom-swal-popup'
+                        }
+                    })
+                    let css = `
+                            .custom-close-button { 
+                                border: none !important; 
+                                color: black !important; 
+                            }
+                            .custom-swal-popup {
+                                max-width: 50% !important;
+                                width: auto !important;
+                            }
+                            `,
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+
+                    head.appendChild(style);
+
+                    style.type = 'text/css';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
                     } else {
-                        $(".estadoVentaCircle").addClass("inactivo").removeClass("activo");
+                        style.appendChild(document.createTextNode(css));
                     }
-                    var detalles = venta.detalles;
-                    let detallesVentaHTML = "";
-                    for (let detalle of detalles) {
-                        const precioUnitario = formatearPrecios(detalle.precio_uni);
-                        const totalProducto = formatearPrecios(detalle.precio_tot);
-
-                        detallesVentaHTML += `
-                        <tr>
-                            <td>${detalle.producto}</td>
-                            <td>${precioUnitario}</td>
-                            <td>${detalle.cantidad}</td>
-                            <td>${totalProducto}</td> 
-                        </tr>
-                    `;
-                    }
-                    document.getElementById("modalDetallesVenta").innerHTML = detallesVentaHTML;
 
 
-                    document.getElementById("verDetallesDialog").showModal();
-                    $(".ventaDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
                 }
             });
         });
 
-        $("#cerrarDetallesVenta").click(function () {
-            $(".ventaDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
-            setTimeout(function () {
-                document.getElementById("verDetallesDialog").close();
-                $(".ventaDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").removeClass("fadeOut");
-            }, 300);
-        });
     });
 });
 

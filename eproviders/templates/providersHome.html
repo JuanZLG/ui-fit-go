@@ -82,42 +82,10 @@
     </div>
 </div>
 
-<div class="modal-backdrop"></div>
-
-<dialog id="verDetallesDialog" class="proveedorDialog dragHandle">
-    <form method="dialog">
-        <div class="modal-container-header">
-            <div class="estadoProveedorCircle"></div>
-            <h2>Información del Proveedor</h2>
-            <button class="cerrar-proveedor" type="button" id="cerrarDetallesProveedor">
-                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                        fill="currentColor"></path>
-                </svg>
-            </button>
-        </div>
-        <div id="identificacionRow" class="cont-identificacion">Identificación : <span id="tipo"
-                class="mr-2"></span><span id="identificacion"></span></div>
-        <section class="seccion-detalles">
-            <div>
-                <p>Nombre del Proveedor: <span class="proveedor-info" id="nombreProveedor"></p>
-                <p>Teléfono: <span class="proveedor-info" id="telefonoProveedor"></span></p>
-            </div>
-            <div>
-                <p>Correo: <span id="correoProveedor"></span></p>
-                <p id="direccionRow">Dirección : <span id="direccion"></span></p>
-            </div>
-        </section>
-        <div id="informacionRow" class="informacion-adicional">
-            <p>Información Adicional :</p>
-            <p id="informacion"></p>
-        </div>
-    </form>
-</dialog>
-
 <script src="{% static 'js/indexProv.js' %}"></script>
 
+
+
+</script>
 
 {% endblock %}

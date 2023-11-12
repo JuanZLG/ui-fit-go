@@ -68,14 +68,14 @@
         color: #fff;
         border: 2px solid #007BFF;
         border-radius: 5px;
-        padding: 6px 12px; 
+        padding: 6px 12px;
         font-weight: bold;
         font-size: 14px;
         transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
         cursor: pointer;
         position: absolute;
         bottom: 10px;
-        right: 10px; 
+        right: 10px;
     }
 
     #generar-informe-button:hover {
@@ -93,26 +93,26 @@
     }
 
     #miModal .modal-dialog {
-    max-width: 70%;
-    width: 45%;
-    min-height: 35vh;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    position: absolute;
-    top: 35%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-    animation: fadeIn 0.3s ease-in-out;
-    padding: 20px;
-}
+        max-width: 70%;
+        width: 45%;
+        min-height: 35vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: absolute;
+        top: 35%;
+        left: 55%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        animation: fadeIn 0.3s ease-in-out;
+        padding: 20px;
+    }
 
 
     #calendario-contenedor {
-        max-height: 100%; 
-        overflow-y: auto; 
+        max-height: 100%;
+        overflow-y: auto;
     }
 </style>
 
@@ -137,31 +137,35 @@
                             <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton mr-2 {% if venta.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-venta-id="{{ venta.id_venta}}"
-                                data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}" data-url-state="{% url 'cambiarEstadoVentas' %}">
+                                data-nuevo-estado="{% if venta.estado == 1 %}0{% else %}1{% endif %}"
+                                data-url-state="{% url 'cambiarEstadoVentas' %}">
                                 {% if venta.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
-                            
+
                         </td>
-                        
-                            <td class="cell-actions">
-                                {% if venta.estado == 1 %}
-                                    <a href="{% url 'generar_factura_pdf_venta' venta.id_venta %}" class="btn btn-sm"
-                                        id="editbutton"><i class="fa-solid fa-download" data-toggle="tooltip"
-                                            data-placement="top" title="Descargar Compra"></i></a>
-                                {% else %}
-                                    <button class="btn btn-sm inactive-button" disabled>
-                                        <i class="fa-solid fa-download" data-toggle="tooltip" data-placement="top" title="Descargar Compra"></i>
-                                    </button>
-                                {% endif %}
-                            
-                            
+
+                        <td class="cell-actions">
+                            {% if venta.estado == 1 %}
+                            <a href="{% url 'generar_factura_pdf_venta' venta.id_venta %}" class="btn btn-sm"
+                                id="editbutton"><i class="fa-solid fa-download" data-toggle="tooltip"
+                                    data-placement="top" title="Descargar Compra"></i></a>
+                            {% else %}
+                            <button class="btn btn-sm inactive-button" disabled>
+                                <i class="fa-solid fa-download" data-toggle="tooltip" data-placement="top"
+                                    title="Descargar Compra"></i>
+                            </button>
+                            {% endif %}
+
+
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
-                            class="btn btn-sm btn-primary verVenta ml-2" data-venta-id="{{ venta.id_venta }}" data-url-details="{% url 'verDetallesVenta' %}" >
-                            <i class="fa-solid fa-eye"></i>
-                        </button></td>
+                                class="btn btn-sm btn-primary  ml-2" data-venta-id="{{ venta.id_venta }}"
+                                data-url-details="{% url 'verDetallesVenta' %}">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
                     </tr>
                     {% endfor %}
-                    
+
                 </tbody>
             </table>
         </div>
@@ -172,47 +176,6 @@
 
 
 
-<div class="modal-backdrop"></div>
-
-<dialog id="verDetallesDialog" class="ventaDialog dragHandle">
-    <form method="dialog">
-        <div class="modal-container-header">
-            <div class="estadoVentaCircle {% if venta.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
-            <h2>Información de la Venta</h2>
-            <button class="cerrar-venta" type="button" id="cerrarDetallesVenta">
-                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                        fill="currentColor"></path>
-                </svg>
-            </button>
-        </div>
-        <div class="cont-detalle-header font-weight-bold">
-            <p class="float-right">Fecha de venta: <span id="fechareg"></span></p>
-            <p>Cliente: <span id="cliente"></span></p>
-            <p>Documento: <span id="documento"></span></p>
-        </div>
-        <div class="linea-detalle mb-2">
-            <h3>Detalles de la Venta:</h3>
-        </div>
-        <table class="table tabla-detalles">
-            <thead class="text-center">
-                <tr>
-                    <th style="width: 30%;">Producto</th>
-                    <th style="width: 30%;">Precio Unitario</th>
-                    <th style="width: 10%;">Cantidad</th>
-                    <th style="width: 30%;">Total Producto</th>
-                </tr>
-            </thead>
-            <tbody id="modalDetallesVenta">
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-end mt-2">
-            <span class="font-weight-bold total-venta">TOTAL:<span id="totalVenta"></span></span>
-        </div>
-    </form>
-</dialog>
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
