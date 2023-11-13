@@ -34,11 +34,10 @@ def crear_venta(request):
                 cantidad_vendida = producto_datos['cantidad']
                 precioCompra = producto_datos['precioCompra']
                 precioVenta = producto_datos['precioVenta']
-                descuento = producto_datos['descuento']
+                descuento = producto_datos['descuentoProducto']
                 totalProductoDescuento = producto_datos['totalProductoDescuento']
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
-
 
                 producto = Productos.objects.get(id_producto=idProducto)
 
@@ -52,7 +51,7 @@ def crear_venta(request):
                     cantidad=cantidad_vendida,
                     precio_compra=precioCompra,
                     precio_venta=precioVenta,
-                    descuento=descuento,
+                    descuentoProducto=descuento,
                     totalProductoDescuento=totalProductoDescuento,
                     margenGanancia=margenGananciaProducto,
                     precio_tot=totalProducto,
@@ -64,7 +63,7 @@ def crear_venta(request):
             return JsonResponse(response_data, status=400)
     
     clientes = Clientes.objects.all()
-    return render(request, 'prueba.html', {'clientes': clientes})
+    return render(request, 'createSales.html', {'clientes': clientes})
 
 
 
@@ -90,18 +89,11 @@ def buscar_productos(request):
             'precio_ganancia': precio_ganancia,
             'marca': producto.id_marca.nombre_marca,
             'categoria': producto.id_categoria.nombre_categoria,
-            'presentacion': get_image_name(producto.iProductImg),
+            'presentacion': producto.iProductImg.decode('utf8')
         })
 
     return JsonResponse({"resultados": resultados})
 
-def get_image_name(image_field):
-    if image_field:
-        if isinstance(image_field, bytes):
-            return image_field.decode('utf-8')
-        else:
-            return image_field.name
-    return "No Image"
 
 
 def buscar_cliente(request):

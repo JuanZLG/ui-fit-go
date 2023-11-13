@@ -46,8 +46,7 @@ class Productos(models.Model):
     precio = models.FloatField()
     precio_pub = models.FloatField()
     
-    iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
-    iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)
+    iProductImg = models.BinaryField(null=True, blank=True)
 
     class Meta:
         managed = False
@@ -60,9 +59,10 @@ class Detalleventa(models.Model):
     cantidad = models.IntegerField()
     precio_compra = models.FloatField()
     precio_venta = models.FloatField()
-    descuento = models.CharField(max_length=255, default="No aplica")
-    totalProductoDescuento = models.CharField(max_length=255, default="No aplica")
+    descuentoProducto = models.CharField(max_length=255)
+    totalProductoDescuento = models.CharField(max_length=255)
     margenGanancia = models.FloatField()    
+    precio_tot = models.FloatField()    
     estado = models.IntegerField(default=1)
 
     class Meta:
@@ -73,8 +73,8 @@ class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
     fechareg = models.DateField(default=timezone.now)
-    descuentoVenta = models.CharField(max_length=255, default="No aplica")
-    totalVentaDescuento = models.CharField(max_length=255, default="No aplica")
+    descuentoVenta = models.CharField(max_length=255)
+    totalVentaDescuento = models.CharField(max_length=255)
     totalVenta = models.FloatField()
     margenGanancia = models.FloatField()    
     estado = models.IntegerField(default=1)

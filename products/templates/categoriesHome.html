@@ -214,25 +214,23 @@
                 data: $('#category-form').serialize(),
                 success: function (response) {
                     if (response.success) {
+                        if (response.success) {
                         Swal.fire({
                             title: 'Éxito',
-                            text: 'Se ha creado la categoría con éxito',
+                            text: 'Se ha creado la Categoria con éxito',
                             icon: 'success',
-                            showConfirmButton: false, 
+                            showConfirmButton: false,
                             timer: 2000, 
                         });
-                        setTimeout(function () {
-                            location.reload();
-                        }, 2000);
+                        location.reload();
+                        }
                     }
                 }
-            });            
+            });
         }
 
     });
 </script>
-
-
 
 <div class="modal fade" id="editarCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
@@ -275,11 +273,18 @@
 
 <script>
     $(document).ready(function () {
-        $(".delete-button").click(function () {
-            var idToDelete = parseInt($(this).data("id-categoria"));
-            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+    $(".delete-button").click(function () {
+        var idToDelete = parseInt($(this).data("id-categoria"));
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-            if (confirm("¿Estás seguro de eliminar esta categoría?")) {
+        Swal.fire({
+            title: '¿Estás seguro de eliminar esta categoría?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     headers: {
                         "X-CSRFToken": csrfToken
@@ -288,17 +293,19 @@
                     data: {
                         idToDelete: idToDelete
                     },
-                    method: "POST", 
+                    method: "POST",
                     success: function (response) {
                         location.reload();
                     },
                     error: function (error) {
                        
-                    }
+                    },
                 });
             }
         });
     });
+});
+
 </script>
 
 

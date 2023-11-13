@@ -4,8 +4,11 @@
 
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/prueba.css' %}">
+    <link rel="stylesheet" href="{% static 'css/CreateVentas.css' %}">
 </head>
+
+
+
 <section class="venta-section">
     <h1 class="venta-title">Agregar Venta</h1>
     <div class="venta-container">
@@ -144,7 +147,7 @@
         <div>
             <span>Aplicar descuento a la venta</span>
             <div class="input-wrapper">
-                <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1"
+                <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" onkeydown="return validateInput(event)"
                     title="Aplicar descuento" id="descuento-venta" style="width: 65px !important;">
                 <span class="percent-sign">%</span>
             </div>
@@ -154,6 +157,10 @@
             <div class="d-flex justify-content-between gap-3  align-items-center">
                 <span>Descuento venta:</span>
                 <span id="total-venta-descuento" style=" color: rgb(48, 48, 163);"></span>
+            </div>
+            <div class="d-flex justify-content-between gap-3  align-items-center">
+                <span>Total ganancia:</span>
+                <span id="total_ganancia_venta"></span>
             </div>
             <div class="d-flex justify-content-center align-items-center">
                 <span class="pt-1">TOTAL VENTA :</span>
@@ -168,7 +175,7 @@
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos requeridos (*)</p>
     <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
-    <input type="submit" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
+    <input type="button" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
 
 
@@ -217,7 +224,6 @@
                         <li class="linea-resumen"><span>Tu ganancia</span> <span class="valor-derecha">$3000.000</span></li>
                     </ul>
             </div>
-            <!-- <span id="total_ganancia_venta"></span> -->
 
         </div>
     </div>
@@ -322,11 +328,11 @@
                                 let img = data.resultados[i].presentacion;
                                 let cantidad = data.resultados[i].cantidad;
                                 // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-
+                                // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
                                 let itemLista = `
-                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"}">
+                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"} ${cantidad <= 0 ? "inactivo" : ""}">
                                     <div class="product-details-container">
-                                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                                        <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
@@ -335,6 +341,7 @@
                                     </div>
                                 </li>
                             `;
+
 
                                 listadoProductos.append(itemLista);
                             }
@@ -370,6 +377,9 @@
             });
             return existe;
         }
+
+
+
         function totalVenta() {
             let descuentoInput = $("#descuento-venta").val();
             let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
@@ -379,13 +389,16 @@
             $("#tabla-ventas tr.producto-row").each(function () {
                 let fila = $(this);
                 let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
-                let gananciaProducto = parseFloat(fila.find(".total_ganancia").text().replace(/[$,.]/g, ''));
+                let gananciaProducto = parseFloat(fila.find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
                 totalVenta += totalProducto;
                 totalGanancia += gananciaProducto;
             });
             let descuentoValor = totalVenta * descuento;
             totalVenta = totalVenta - descuentoValor;
             totalGanancia = totalGanancia - descuentoValor;
+            if (totalGanancia < 0) {
+                totalGanancia = 0;
+            }
             $("#total-venta").text(formatearPrecios(totalVenta));
             $("#total_ganancia_venta").text(formatearPrecios(totalGanancia));
             if (descuentoInput) {
@@ -396,11 +409,13 @@
         }
 
 
-
         $("#btnAgregar").click(function () {
             if (productoSeleccionado) {
                 if (productoExiste(productoSeleccionado.id_producto)) {
                     alert('El producto ya existe en la lista de productos');
+                    $("#buscarProducto").val("")
+                    $("#cantidad-ingresada").val("1")
+                    $("#buscarProducto").val("").removeClass("is-valid");
                     return;
                 }
                 $("#buscarProducto").val("").removeClass("is-valid");
@@ -461,6 +476,7 @@
                 });
             }, 1000);
 
+            $("#campos-requeridos").css("color", "");
             $('.product-update-button.is-active').tooltip('dispose');
             let fila = $(this).closest("tr.producto-row");
             let descuento = parseFloat(fila.find(".descuento").val().replace(/[%]/g, '')) / 100;
@@ -480,13 +496,13 @@
             let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
             let descuento_html = ""
             if (descuento > 0) {
-                descuento_html = "<span id='total_producto_descuento' style='color: rgb(48, 48, 163);'>- (" + formatearPrecios(precio_descuento) + ")</span>";
+                descuento_html = "<span style='color: rgb(48, 48, 163);'>- (<span id='total_producto_descuento'>" + formatearPrecios(precio_descuento) + "</span>)</span>";
             } else {
                 fila.find(".descuento").val("0")
             }
 
             fila.find(".precio_venta").html(precio_venta_con_descuento + descuento_html);
-            fila.find(".total_ganancia").text(precio_ganancia);
+            fila.find(".total_ganancia_producto").text(precio_ganancia);
             fila.find(".total_producto").text(total_producto);
             totalVenta()
         });
@@ -518,46 +534,46 @@
             let cantidad_seleccionada = producto.cantidadSeleccionada
             let precios = calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada);
             // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-
+            // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
             let itemFila = `
-    <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
-        <td class="p-2 celda-producto">
-            <div class="product-info">
-                <div class="product-details-container">
-                    <div class="cont-img">
-                        <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
-                    </div>
-                    <ul class="product-details">
-                        <li><strong>${nombre_producto}</strong></li>
-                        <li class="d-flex justify-content-between">
-                            <span><strong class="mr-2">Marca:</strong>${marca}</span>
-                            <div class="input-wrapper">
-                                <input class="descuento" min="0" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento">
-                                <span class="percent-sign">%</span>
+                <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
+                    <td class="p-2 celda-producto">
+                        <div class="product-info">
+                            <div class="product-details-container">
+                                <div class="cont-img">
+                                    <img src="/media/${img}" alt="Imagen" class="img-fluid">
+                                </div>
+                                <ul class="product-details">
+                                    <li><strong>${nombre_producto}</strong></li>
+                                    <li class="d-flex justify-content-between">
+                                        <span><strong class="mr-2">Marca:</strong>${marca}</span>
+                                        <div class="input-wrapper">
+                                            <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento" onkeydown="return validateInput(event)">
+                                            <span class="percent-sign">%</span>
+                                        </div>
+                                    </li>
+                                    <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
+                                    <li class="d-flex gap-3">
+                                        <div class="number-input mt-3">
+                                            <button onclick="decrement(this)" id="decrement">-</button>
+                                            <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                                            <button onclick="increment(this)" id="increment">+</button>
+                                        </div>   
+                                        <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
+                                    </li>
+                                </ul>
                             </div>
-                        </li>
-                        <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
-                        <li class="d-flex gap-3">
-                            <div class="number-input mt-3">
-                                <button onclick="decrement(this)" id="decrement">-</button>
-                                <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
-                                <button onclick="increment(this)" id="increment">+</button>
-                            </div>   
-                            <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </td>
-        <td class="precio_compra"> ${precio_compra} </td>
-        <td> <span class="precio_venta">${precios.precio_venta}</span></td>
-        <td class="total_ganancia"> ${precios.ganancia_total} </td>
-        <td class="total_producto"> ${precios.total_venta} </td>
-        <td class="eliminar-fila"> 
-            <i class="fas fa-trash"></i>
-        </td>
-    </tr>
-    `;
+                        </div>
+                    </td>
+                    <td class="precio_compra"> ${precio_compra} </td>
+                    <td> <span class="precio_venta">${precios.precio_venta}</span></td>
+                    <td class="total_ganancia_producto"> ${precios.ganancia_total} </td>
+                    <td class="total_producto"> ${precios.total_venta} </td>
+                    <td class="eliminar-fila"> 
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+                `;
             tbody.append(itemFila);
         }
     });
@@ -565,6 +581,23 @@
 </script>
 
 
+<script>
+    function validateInput(event) {
+        let key = event.key;
+        let value = event.target.value + key;
+        let number = parseFloat(value);
+        if (key === 'Backspace') {
+            return true;
+        }
+        if (!/[\d.,]/.test(key)) {
+            return false;
+        }
+        if (isNaN(number) || number < 0 || number > 100) {
+            return false;
+        }
+        return true;
+    }
+</script>
 <script>
 
     function increment(button) {
@@ -583,7 +616,7 @@
 
 
     $("#crear-venta").click(function () {
-        var invalid = false;
+        let invalid = false;
 
         if ($("#cont-docu").text() == "") {
             $("#nombreCliente").addClass("is-invalid");
@@ -613,35 +646,34 @@
 
 
     function enviarDatosVentas() {
-        var productos = {};
-        var descuentoVenta = $("#descuento-venta").val() || "No aplica";
-        var margenGananciaVenta = parseFloat($(this).find("#total_ganancia_venta").text() || "No aplica");
-        var totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
-        var documentoCliente = $("#documento").text();
+        let productos = {};
+        let descuentoVenta = $("#descuento-venta").val() || "No aplica";
+        let margenGananciaVenta = parseFloat($("#total_ganancia_venta").text().replace(/[$,.]/g, ''));
+        let totalVenta = parseFloat($("#total-venta").text().replace(/[$,.]/g, ''));
+        let documentoCliente = $("#documento").text();
         $(".producto-row").each(function () {
-            var idProducto = parseInt($(this).data("id-producto"));
-            var cantidad = parseInt($(this).find(".cantidad-fila").val());
-            var precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
-            var precioVenta = parseFloat($(this).find(".precio_venta").text().replace(/[$,.]/g, ''));
-            var descuento = $(this).find(".descuento").val() || "No aplica";
-            var margenGananciaProducto = parseFloat($(this).find(".total_ganancia").text() || "No aplica");
-            var totalProducto = parseFloat($(this).find(".total_producto").text().replace(/[$,.]/g, ''));
-            var totalProductoDescuento = parseFloat($(this).find("#total_producto_descuento").text().replace(/[$,.]/g, '')) || "No aplica";
-
+            let idProducto = parseInt($(this).data("id-producto"));
+            let cantidad = parseInt($(this).find(".cantidad-fila").val());
+            let precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
+            let precioVenta = parseFloat($(this).find(".precio_venta").text().replace(/[$,.]/g, ''));
+            let descuento = $(this).find(".descuento").val() || "No aplica";
+            let margenGananciaProducto = parseFloat($(this).find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
+            let totalProducto = parseFloat($(this).find(".total_producto").text().replace(/[$,.]/g, ''));
+            let totalProductoDescuento = parseFloat($(this).find("#total_producto_descuento").text().replace(/[$,.]/g, '')) || "No aplica";
             productos[idProducto] = {
                 cantidad: cantidad,
                 precioCompra: precioCompra,
                 precioVenta: precioVenta,
-                descuento: descuento,
+                descuentoProducto: descuento,
                 margenGananciaProducto: margenGananciaProducto,
                 totalProducto: totalProducto,
                 totalProductoDescuento: totalProductoDescuento
             };
         });
 
-        var totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
+        let totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
 
-        var venta = {
+        let venta = {
             descuentoVenta: descuentoVenta,
             margenGananciaVenta: margenGananciaVenta,
             totalVenta: totalVenta,

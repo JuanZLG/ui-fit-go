@@ -41,7 +41,7 @@ class Productos(models.Model):
     
     iProductImg = models.ImageField(upload_to="landingproducts/products", null=True, blank=True)
     iInfoImg = models.ImageField(upload_to="landingproducts/nutritiondex", null=True, blank=True)
-
+    
     class Meta:
         managed = False
         db_table = 'productos'

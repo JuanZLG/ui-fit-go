@@ -312,7 +312,13 @@
                 data: $('#category-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        alert("Se ha creado la categoría con éxito.");
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Se ha creado la Categoria con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000, 
+                        });
                         location.reload();
                     }
                 }
@@ -393,8 +399,16 @@ aria-hidden="true">
                 data: $('#marca-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        alert("Se ha creado la marca con éxito.");
-                        location.reload();
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Se ha creado la marca con éxito!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000, 
+                            });
+                            location.reload();
+                        }
                     }
                 }
             });
@@ -402,7 +416,6 @@ aria-hidden="true">
 
     });
 </script>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

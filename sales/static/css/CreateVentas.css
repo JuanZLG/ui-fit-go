@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+
+::-webkit-scrollbar {
+    display: none;
+}
+
 .venta-section {
     width: 90%;
     margin: 0 auto;
@@ -106,6 +111,7 @@
 }
 
 .cliente-item:hover,
+.producto-item:hover,
 .producto-item.inactivo {
     cursor: pointer;
     color: #000;
@@ -250,13 +256,15 @@ input[type="number"] {
     transition: max-height 300ms ease-in-out; 
 }
 .product-table-section.show {
-    max-height: 700px; 
+    max-height: 900px; 
 }
 
 
 .producto-cont-descuento {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
