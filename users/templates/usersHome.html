@@ -292,7 +292,7 @@
 <script>
     $(document).ready(function () {
         $(".verUsuario").click(function () {
-            var usuarioId = $(this).data("usu-id"); // Corregido para que coincida con el atributo data-usu-id
+            var usuarioId = $(this).data("usu-id"); 
 
             $.ajax({
                 url: "{% url 'ver_detalles_usuario' %}",

@@ -150,13 +150,11 @@
                                 id="editbutton"><i class="fa-solid fa-download" data-toggle="tooltip"
                                     data-placement="top" title="Descargar Compra"></i></a>
                             {% else %}
-                            <button class="btn btn-sm inactive-button" disabled>
+                            <button class="btn btn-sm inactive-button" disabled id="editbutton">
                                 <i class="fa-solid fa-download" data-toggle="tooltip" data-placement="top"
                                     title="Descargar Compra"></i>
                             </button>
                             {% endif %}
-
-
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
                                 class="btn btn-sm btn-primary  ml-2" data-venta-id="{{ venta.id_venta }}"
                                 data-url-details="{% url 'verDetallesVenta' %}">
