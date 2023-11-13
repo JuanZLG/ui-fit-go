@@ -157,8 +157,13 @@ def detalles_venta(request):
                     detalle_data = {
                         'producto': producto.nombre_producto,
                         'cantidad': detalle.cantidad,
-                        'precio_uni': detalle.precio_uni,
+                        'precio_compra': detalle.precio_compra,
+                        'precio_venta': detalle.precio_venta,
+                        'descuento': detalle.descuentoProducto,
+                        'precio_descuento': detalle.totalProductoDescuento,
+                        'ganancia': detalle.margenGanancia,
                         'precio_tot': detalle.precio_tot,
+                        
                     }
                     detalles_data.append(detalle_data)
 
@@ -167,6 +172,9 @@ def detalles_venta(request):
                     'cliente': venta.id_cliente.nombres + ' ' + venta.id_cliente.apellidos,
                     'estado': venta.estado,
                     'documento': venta.id_cliente.documento,
+                    'descuentoVenta': venta.descuentoVenta,
+                    'totalVentaDescuento': venta.totalVentaDescuento,
+                    'margenGanancia': venta.margenGanancia,
                     'totalVenta': venta.totalVenta,
                     'detalles': detalles_data
                 }
