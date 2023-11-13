@@ -12,16 +12,20 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'agregarCliente' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip" data-placement="top" title="Crear un Cliente">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Cliente</span>
+                <a href="{% url 'agregarCliente' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear un Cliente">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Cliente</span>
                 </a>
-                    
+
             </span>
         </div>
 
         {% comment %} <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
             </a>
         </div> {% endcomment %}
     </div>
@@ -46,9 +50,11 @@
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
-                        <td>{{  cliente.id_municipio.id_departamento.nombre_departamento  }} / {{ cliente.id_municipio.nombre_municipio }}</td>
+                        <td>{{ cliente.id_municipio.id_departamento.nombre_departamento }} / 
+                            {{ cliente.id_municipio.nombre_municipio }}</td>
                         <td>
-                            <button  data-toggle="tooltip" data-placement="right" title="Cambiar de Estado" class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
+                            <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
+                                class="cambiar-estado statusbutton mx-3 {% if cliente.estado == 0 %}inactive-status{% else %}active-status{% endif %}"
                                 data-cliente-id="{{ cliente.id_cliente }}"
                                 data-nuevo-estado="{% if cliente.estado == 0 %}1{% else %}0{% endif %}">
                                 {% if cliente.estado == 0 %}
@@ -59,11 +65,14 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm"
-                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top" title="Editar Cliente"></i></a>
-                                <a  class="btn btn-sm btn-primary detailsbutton verCliente" data-cliente-id="{{ cliente.id_cliente }}"  data-toggle="tooltip" data-placement="right" title="Ver Detalles">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>     
+                            <a href="{% url 'editarCliente' cliente.id_cliente %}" class="btn btn-sm" id="editbutton"><i
+                                    class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                                    title="Editar Cliente"></i></a>
+                            <a class="btn btn-sm btn-primary detailsbutton verCliente"
+                                data-cliente-id="{{ cliente.id_cliente }}" data-toggle="tooltip" data-placement="right"
+                                title="Ver Detalles">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -82,8 +91,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $(".cambiar-estado").click(function() {
+    $(document).ready(function () {
+        $(".cambiar-estado").click(function () {
             var clienteId = $(this).data("cliente-id");
             var nuevoEstado = $(this).data("nuevo-estado");
 
@@ -105,17 +114,17 @@
                             nuevo_estado: nuevoEstado
                         },
                         method: "GET",
-                        success: function(response) {
+                        success: function (response) {
                             location.reload();
                         },
-                        error: function(error) {
+                        error: function (error) {
                         }
                     });
                 }
             });
         });
     });
-    
+
 </script>
 
 
@@ -156,7 +165,7 @@
         color: #000;
     }
 
-    .btn-adder:hover{
+    .btn-adder:hover {
         color: #000;
         background-color: #77B677;
         border: solid 1px black;
@@ -169,12 +178,12 @@
 
     .btn-dash {
         background-color: #c55c5c;
-        color:black;
+        color: black;
     }
 
     .btn-dash:hover {
         background-color: #D16060;
-        color:black
+        color: black
     }
 
     tr.inactivo {
@@ -200,7 +209,7 @@
     }
 
     .detailsbutton {
-       
+
         color: white;
         border: none;
         transition: transform 0.5s;
@@ -225,147 +234,50 @@
         background-color: #ec8080;
         color: #8a0404;
     }
-</style>
 
-<style>
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.833);
-        z-index: 100;
-        display: none;
-        animation: fadeInBack 0.3s ease-in-out;
-    }
 
-    .clienteDialog {
-        max-width: 70%;
-        width: 25%;
-        min-height: 10vh;
-        border: none;
-        background-color: rgb(255, 255, 255);
-        border-radius: 8px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-        animation: fadeIn 0.3s ease-in-out;
-        margin: auto;
-        padding: 20px;
-    }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes fadeInBack {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .fadeOut {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-
-    .clienteDialog .modal-container-header {
+    /* modal -------------------- */
+    .modal-container h2 {
+        font-size: 1.5rem;
         text-align: center;
-        border-bottom: 1px solid #ddd;
     }
 
-    .clienteDialog h2 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        gap: 8px;
-    }
-
-    .cerrar-cliente {
-        padding: 0;
-        border: 0;
-        width: 40px;
-        height: 40px;
+    .flex {
+        margin: 15px 0;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: 0.15s ease;
-        position: absolute;
-        top: 0;
-        right: 0;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
     }
 
-    .estadoClienteCircle {
+    .modal-body {
+        width: 100%;
+        margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-state {
         width: 1rem;
         height: 1rem;
         border-radius: 50%;
     }
 
-    .estadoClienteCircle.activo {
+    .modal-state.activo {
         background-color: #72d072;
-        /* Color para estado activo */
+        position: relative;
+        cursor: pointer;
     }
 
-    .estadoClienteCircle.inactivo {
-        background-color: #ba4d4d;
-        /* Color para estado inactivo */
-    }
+</style>
 
-    .clienteDialog section {
-        padding: 20px;
-    }
-
-    .clienteDialog section p {
-        font-size: 1rem;
-        font-weight: bold;
-        color: #222222;
-    }
-
-    .clienteDialog section p span {
-        color: rgb(99, 99, 99);
-    }
+<style>
 </style>
 
 <dialog id="verDetallesClienteDialog" class="clienteDialog dragHandle">
-    <form method="dialog">
-        <div class="modal-container-header">
-            <div class="estadoClienteCircle {% if cliente.estado == 1 %}activo{% else %}inactivo{% endif %}"></div>
-            <h2>Detalles del Cliente</h2>
-            <button class="cerrar-cliente" type="button" id="cerrarDetallesCliente">
-                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                        fill="currentColor"></path>
-                </svg>
-            </button>
-        </div>
-        <section>
-            <p>Nombre del Cliente: <span id="nombreCliente"></span></p>
-            <p>Documento: <span id="documentoCliente"></span></p>
-            <p>Celular: <span id="celularCliente"></span></p>
-            <p>Barrio: <span id="barrioCliente"></span></p>
-            <p>Dirección: <span id="direccionCliente"></span></p>
-            <p>Estado: <span id="estadoCliente"></span></p>
-            <p>Departamento: <span id="departamentoCliente"></span></p>
-            <p>Municipio: <span id="municipioCliente"></span></p>
-        </section>
-    </form>
+
 </dialog>
 
 
@@ -382,38 +294,65 @@
                 method: "GET",
                 success: function (response) {
                     var cliente = response.success;
-                    $("#nombreCliente").text(cliente.nombres + ' ' + cliente.apellidos);
-                    $("#documentoCliente").text(cliente.documento);
-                    $("#celularCliente").text(cliente.celular);
-                    $("#barrioCliente").text(cliente.barrio);
-                    $("#direccionCliente").text(cliente.direccion);
-                    $("#estadoCliente").text(cliente.estado == 1 ? 'Activo' : 'Inactivo');
-                    $("#departamentoCliente").text(cliente.departamento);
-                    $("#municipioCliente").text(cliente.municipio);
 
-                    if (cliente.estado == 1) {
-                        $(".estadoClienteCircle").addClass("activo").removeClass("inactivo");
+                    var estadoClienteCircleClass = cliente.estado == 1 ? 'activo' : 'inactivo';
+                    var estadoClienteText = cliente.estado == 1 ? 'Activo' : 'Inactivo';
+
+                    Swal.fire({
+                        html: `  
+                        <div class="modal-container">
+                            <div class="modal-state ${estadoClienteCircleClass}"></div>
+                            <h2 class="mx-3">Detalles del Cliente</h2>
+                            <div class="modal-body">
+                                <div class="flex">
+                                    <p>Cliente: ${cliente.nombres} ${cliente.apellidos}</p>
+                                    <p>Documento: ${cliente.documento}</p>
+                                </div>
+                                <p style="display:inline-block; text-align: start">Celular: ${cliente.celular}</p>
+                                <div class="flex">
+                                    <p>Departamento: ${cliente.departamento}</p>
+                                    <p>Municipio: ${cliente.municipio}</p>
+                                </div>
+                                <div class="flex">
+                                    <p>Barrio: ${cliente.barrio}</p>
+                                    <p>Dirección: ${cliente.direccion}</p>
+                                </div>
+                            </div>
+                        </div>
+                        `,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        customClass: {
+                            closeButton: 'custom-close-button',
+                            popup: 'custom-swal-popup'
+                        }
+                    })
+                    let css = `
+                            .custom-close-button { 
+                                border: none !important; 
+                                color: black !important; 
+                            }
+                            .custom-swal-popup {
+                                max-width: 50% !important;
+                                width: auto !important;
+                            }
+                            `,
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+
+                    head.appendChild(style);
+
+                    style.type = 'text/css';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
                     } else {
-                        $(".estadoClienteCircle").addClass("inactivo").removeClass("activo");
+                        style.appendChild(document.createTextNode(css));
                     }
-                    document.getElementById("verDetallesClienteDialog").showModal();
-                    $(".clienteDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
-                },
+                }
+
             });
         });
 
-        $("#cerrarDetallesCliente").click(function () {
-            $(".clienteDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
-            setTimeout(function () {
-                document.getElementById("verDetallesClienteDialog").close();
-                $(".clienteDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").removeClass("fadeOut");
-            }, 300);
-        });
     });
 
 </script>

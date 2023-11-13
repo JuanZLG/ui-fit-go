@@ -158,7 +158,6 @@ def verDetallesCliente(request):
         if id_cliente:
             try:
                 cliente = Clientes.objects.get(id_cliente=id_cliente)
-                # Si el cliente se encuentra, puedes devolver sus detalles en formato JSON
                 data = {
                     'nombres': cliente.nombres,
                     'apellidos': cliente.apellidos,

@@ -58,10 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     Swal.fire({
                         html: `
                         <div class="modal-container">
-                            <div class="modal-title text-center">
-                                <div class="modal-state ${estadoProveedorCircle}"></div>
-                                <h2 class=mx-3>Información del Proveedor</h2>
-                            </div>
+                            <div class="modal-state ${estadoProveedorCircle}"></div>
+                            <h2>Información del Proveedor</h2>
                             <div class="modal-header flex">
                                 <span id="identificacionRow" class="cont-identificacion">${identificacionRow}</span>
                                 <span><span class="proveedor-info" id="nombreProveedor">${proveedor.nombre_proveedor}</span></span>

@@ -140,7 +140,7 @@
 
 
     <header class="desktop">
-        <div class="main-header ">
+        <div class="main-header">
             <nav class="nav">
                 <div class="logo-container">
                     <a href="{% url 'pageHome' %}">
@@ -205,10 +205,10 @@
                     <i class="fa-solid fa-right-to-bracket"></i>
                 </a>
             </nav>
-            <div class="extra-header">
+            <!-- <div class="extra-header">
                 {% block extraHeaderDesk %}
                 {% endblock %}
-            </div>
+            </div> -->
         </div>
     </header>
 
@@ -230,25 +230,40 @@
     </div>
 
     <div class="desktop" style="border: 2px solid #ccc;">
-        <div class="catalog-section col-md-11 m-auto">
-            <div class="container-search">
-                <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input">
-                <i class="fas fa-times search-clear-icon" id="search-clear"></i>
-            </div>
-            <div style="display: flex; gap: 10px;justify-content: space-around;  width: 50%;">
-                <div>
-                    <span class="mx-2">Ordenar por:</span>
-                    <select name="sort" id="sort" class="catalog-select">
-                        <option value="defect" class="sort-option">Por defecto</option>
-                        <option value="all" class="sort-option">Ver todo</option>
-                        <option value="best-sellers" class="sort-option">Más vendidos</option>
-                        <option value="high-price" class="sort-option">Mayor precio</option>
-                        <option value="low-price" class="sort-option">Menor precio</option>
-                    </select>
+        <div class="catalog-section col-md-9 m-auto py-1">
+            <div style="display: flex; gap: 15px; justify-content: space-between; margin: auto;" class="col-md-11">
+                <div style="display: flex; align-items: center;">
+                    <span class="menu-comprar-title">SUMPLEMENTOS</span>
+                    <ul style="display: none;">
+                        {% for categoria in categorias %}
+                        <li style="color: #fff;">{{ categoria.nombre_categoria }}:
+                            <ul>
+                                {% for producto in categoria.productos_set.all %}
+                                <li class="menu-list-item"
+                                    onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 200)">
+                                    {{ producto.nombre_producto }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div class="view-options">
-                    <a href="#" id="list"><i class="fas fa-th-list fa-lg"></i></a>
-                    <a href="#" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
+                <div class="d-flex gap-4">
+                    <div>
+                        <span class="mx-2">Ordenar por:</span>
+                        <select name="sort" id="sort" class="catalog-select">
+                            <option value="defect" class="sort-option">Por defecto</option>
+                            <option value="all" class="sort-option">Ver todo</option>
+                            <option value="best-sellers" class="sort-option">Más vendidos</option>
+                            <option value="high-price" class="sort-option">Mayor precio</option>
+                            <option value="low-price" class="sort-option">Menor precio</option>
+                        </select>
+                    </div>
+                    <div class="view-options">
+                        <a href="#" id="list"><i class="fas fa-th-list fa-lg"></i></a>
+                        <a href="#" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -304,13 +319,13 @@
   <div>
     <swiper-container class="mySwiper" keyboard="true" space-between="30" pagination="true"
         pagination-clickable="true" navigation="true" loop="true">
-        <swiper-slide><a href="/media/landingproducts/products/${data.iProductImg_name}" data-lightbox="image-1"><img src="/media/landingproducts/products/${data.iProductImg_name}" class="img-fluid"
+        <swiper-slide><a href="/media/${data.iProductImg_name}" data-lightbox="image-1"><img src="/media/${data.iProductImg_name}" class="img-fluid"
             alt="Imagen"></a></swiper-slide>
-        <swiper-slide><a href="/media/landingproducts/nutritiondex/${data.iInfoImg_name}" data-lightbox="image-1"><img src="/media/landingproducts/nutritiondex/${data.iInfoImg_name}" class="img-fluid"
+        <swiper-slide><a href="/media/${data.iInfoImg_name}" data-lightbox="image-1"><img src="/media/${data.iInfoImg_name}" class="img-fluid"
             alt="Imagen"></a></swiper-slide>
     </swiper-container>
         <div class="col-lg-12 mb-4 mt-4" style="text-align:left;">
-            <h2 class="my-3"> ${data.nombre_producto} <strong>${data.precio_pub}</strong></h2>
+            <h2 class="my-3"> ${data.nombre_producto} <strong style="float:right;">${data.precio_pub}</strong></h2>
             <div class="mb-3" style="max-height: 100px; height: auto;overflow-y: scroll;"> ${data.descripcion}</div>
             <hr >
             <ul class="list-group list-group-flush mt-4">
@@ -350,7 +365,7 @@
                                     var productList =
                                         '<div class="search-card productDetailsButton" data-id="' + p.id_producto + '">' +
                                         '<div class="search-image">' +
-                                        '<img class="img-fluid" src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                                        '<img class="img-fluid" src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
                                         '<p class="search-title">' + p.nombre_producto + '</p></div >';
                                     $("#toggle-main-search").append(productList);
                                 });
@@ -397,7 +412,7 @@
                             var productCard =
                                 '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
                                 '<div class="product-image">' +
-                                '<img src="/media/landingproducts/products/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                                '<img src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
                                 '<div class="product-details">' +
                                 '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
                                 '<div class="product-description">' +

@@ -315,10 +315,11 @@ body {
 
 /*------------------ */
 .catalog-section {
-  padding: 5px;
+  padding-top: 15px;
+  gap: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 
@@ -719,7 +720,14 @@ footer {
     margin-left: 30px;
     width: 300px;
   }
-
+  .container-search.desk {
+    width: 100%;
+    margin-left: 0px;
+    margin-bottom: 30px;
+  }
+  .container-search.desk .search{
+    border: 2px solid #ccc;
+  }
   .search {
     display: block;
     width: 100%;
