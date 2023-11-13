@@ -21,6 +21,7 @@ import string
 import secrets
 from django.template.loader import get_template
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
+from base64 import urlsafe_b64decode as btoa
 
 
 @jwt_cookie_required
@@ -29,15 +30,35 @@ def Home(request):
     user = Usuarios.objects.all()
     return render(request, 'usersHome.html', {"Users":user}) 
 
-
 @jwt_cookie_required
-@module_access_required('usuarios')
-def UserProfile(request):  
-    return render(request, 'profile.html') 
+def UserProfile(request):
+    # Obtener el token desde la cookie
+    token = request.COOKIES.get('jwt_token')
 
+    # Decodificar manualmente el token para obtener el payload
+    if token:
+        try:
+            payload = json.loads(btoa(token.split('.')[1]))
+            id_rol = payload.get('id_rol')
 
-@jwt_cookie_required
-@module_access_required('usuarios')
+            # Obtener el nombre del rol desde la base de datos
+            try:
+                rol = Roles.objects.get(id_rol=id_rol)
+                nombre_rol = rol.nombre_rol
+            except Roles.DoesNotExist:
+                nombre_rol = "Rol no encontrado"  # Puedes manejar esto de la manera que prefieras
+
+            # Pasar el nombre del rol a la plantilla
+            return render(request, 'profile.html', {'nombre_rol': nombre_rol})
+        except Exception as e:
+            # Manejar cualquier error de decodificación del token
+            print(f"Error decodificando el token: {e}")
+
+    # Manejar el caso en que no haya token o se produzca un error
+    return render(request, 'profile.html', {'nombre_rol': "Rol no disponible"})
+
+# @jwt_cookie_required
+# @module_access_required('usuarios')
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -272,7 +293,7 @@ def rol_unico(request):
 
 
 @jwt_cookie_required
-@module_access_required('usuarios')
+# @module_access_required('usuarios')
 def eliminar_rol(request):
     id_rol = request.GET.get('idrol')
     

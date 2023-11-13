@@ -7,12 +7,13 @@ from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Cate
 from django.db.models import Q
 # from .models import Notification
 
-# @jwt_cookie_required
-# @module_access_required('ventas')
+@jwt_cookie_required
+@module_access_required('ventas')
 def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
+@csrf_exempt
 @jwt_cookie_required
 def crear_venta(request):
     if request.method == 'POST':
