@@ -21,14 +21,23 @@ import string
 import secrets
 from django.template.loader import get_template
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
-from base64 import urlsafe_b64decode as btoa
+from base64 import urlsafe_b64decode as atob
 
 
-@jwt_cookie_required
-@module_access_required('usuarios')
+# @jwt_cookie_required
+# @module_access_required('usuarios')
 def Home(request):
-    user = Usuarios.objects.all()
-    return render(request, 'usersHome.html', {"Users":user}) 
+    usuarios = Usuarios.objects.all()
+
+    for u in usuarios:
+        u.permiso_ver_detalles = u.id_rol_id is not None and u.estado == 1
+        u.habilitar_cambio_estado = u.id_rol_id is not None
+
+    context = {
+        'Usuarios': usuarios,
+    }
+
+    return render(request, 'usersHome.html', context)
 
 @jwt_cookie_required
 def UserProfile(request):
@@ -38,7 +47,7 @@ def UserProfile(request):
     # Decodificar manualmente el token para obtener el payload
     if token:
         try:
-            payload = json.loads(btoa(token.split('.')[1]))
+            payload = json.loads(atob(token.split('.')[1]))
             id_rol = payload.get('id_rol')
 
             # Obtener el nombre del rol desde la base de datos

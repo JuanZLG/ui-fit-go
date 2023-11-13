@@ -163,12 +163,13 @@ def cambiarEstadoDeProducto(request):
         try:
             producto = Productos.objects.get(id_producto=id_producto)
             producto.estado = int(nuevo_estado)
-            producto.save()
+
+            # Guardar solo el campo 'estado'
+            producto.save(update_fields=['estado'])
             return JsonResponse({'status': 'success'})
         except Productos.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Producto no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
 
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

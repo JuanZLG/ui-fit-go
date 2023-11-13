@@ -168,33 +168,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for u in Users %}
+                    {% for u in Usuarios %}
                     <tr class="{% if u.id_usuario == 1 %}admin{% endif %}">
                         <td>{{u.id_rol.nombre_rol}}</td>
                         <td>{{u.nombre_usuario}}</td>
                         <td>{{u.correo}}</td>
                         <td>
-                            <button
-                                class="cambiar-estado statusbutton mx-auto {% if u.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
-                                data-usuario-id="{{ u.id_usuario }}"
-                                data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}" data-toggle="tooltip"
-                                data-placement="right" title="Cambiar de Estado">
-                                {% if u.estado == 1 %}
-                                Activo
-                                {% else %}
-                                Inactivo
-                                {% endif %}
-                            </button>
+                            <button class="cambiar-estado statusbutton mx-auto {% if u.estado == 1 %}active-status{% elif u.estado == 0 %}inactive-status{% elif not u.id_rol %}disabled{% endif %}"
+            data-usuario-id="{{ u.id_usuario }}"
+            data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}" data-toggle="tooltip"
+            data-placement="right" title="Cambiar de Estado"
+            {% if not u.id_rol %}disabled{% endif %}>
+        {% if u.estado == 1 %}
+            Activo
+        {% else %}
+            Inactivo
+        {% endif %}
+    </button>
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm" id="editbutton"
                                 data-toggle="tooltip" data-placement="right" title="Modificar Usuario"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
-                            <button type="button"
-                                class="btn btn-sm btn-primary verUsuario {% if u.estado == 0 %}disabled{% endif %}"
-                                data-usu-id="{{ u.id_usuario }}" data-toggle="tooltip" data-placement="right"
-                                title="Ver Detalles" {% if not u.id_rol.nombre_rol and u.estado==1 %}disabled{% endif
-                                %}>
+                                    <button type="button"
+                                    class="btn btn-sm btn-primary verUsuario {% if not u.id_rol or u.estado != 1 %}disabled{% endif %}"
+                                    data-usu-id="{{ u.id_usuario }}" data-toggle="tooltip" data-placement="right" title="Ver Detalles"
+                                    {% if not u.id_rol or u.estado != 1 %}disabled{% endif %}>
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                             </a>

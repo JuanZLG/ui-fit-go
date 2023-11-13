@@ -79,7 +79,7 @@
         return cookieValue;
     }
 </script>
-<script>
+{% comment %} <script>
     function updateRoler() {
         var token = getCookie('jwt_token');
         if (token) {
@@ -90,5 +90,5 @@
     }
 
     updateRoler();
-</script>
+</script> {% endcomment %}
 {% endblock %}
