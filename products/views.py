@@ -189,6 +189,7 @@ def verDetallesProducto(request):
                     'status': producto.estado,
                     'servicios': producto.presentacion,
                     'precio_pub': producto.precio_pub,
+                    'img': producto.iProductImg.decode('utf8')
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:

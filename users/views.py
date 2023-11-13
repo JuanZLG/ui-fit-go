@@ -298,5 +298,3 @@ def eliminar_rol(request):
     
     except Roles.DoesNotExist:
         return JsonResponse({'error': 'El rol no existe'})
-
-

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css"><!--<![endif]-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+            font-family: 'Roboto Slab', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            width: 650px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            line-height: 120%;
+        }
+
+        .content {
+            background-color: #000;
+            text-align: center;
+            width: 650px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+
+        .info {
+            margin: 15px 30px;
+            text-align: start;
+            margin-bottom: 30px;
+        }
+
+        .info p {
+            display: inline-block;
+            color: #f3f6fe;
+            font-size: 20px;
+        }
+
+        .info h2 {
+            margin: 10px 0;
+            margin-bottom: 15px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .info ul.credentials {
+            color: #fcfcfc;
+            font-size: 16px;
+            list-style: disc;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .content p {
+            color: #fff;
+            font-size: 14px;
+            line-height: 120%;
+            text-align: center;
+        }
+
+        .content p:first-child {
+            font-size: 22px;
+        }
+    </style>
+
+<body>
+    <div class="content">
+        <div class="container">
+            <img src="https://8839072152.imgdist.com/public/users/Integrators/BeeProAgency/1078667_1063969/gorille.png"
+                alt="Your Logo" class="logo">
+            <div class="header">
+                <h1>¡Hola {{ user }}!</h1>
+            </div>
+        </div>
+        <div class="info">
+            <h2>Estás a unos pasos de acceder a tu cuenta.</h2>
+            <p>Este es el código con el que podrás recuperar tu contraseña:</p>
+            <ul class="credentials">
+                <li><strong>Código:</strong> {{ codigo }}</li>
+            </ul>
+        </div>
+        <p>Si no fuiste tú el que pidió la recuperación, comunícate con tu administrador.</p>
+    </div>
+</body>
+
+</html>

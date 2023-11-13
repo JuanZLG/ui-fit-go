@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         element.addEventListener("click", function () {
             let proveedorId = element.getAttribute("data-prov-id");
             let url = element.getAttribute("data-url-details");
-
+    
             $.ajax({
                 url: url,
                 data: {
@@ -50,58 +50,69 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "GET",
                 success: function (response) {
                     var proveedor = response.success;
-                    $("#nombreProveedor").text(proveedor.nombre_proveedor);
-                    $("#telefonoProveedor").text(proveedor.telefono);
-                    $("#correoProveedor").text(proveedor.correo);
+                    let identificacionRow = proveedor.identificacion !== "" ? `Identificación : <span id="tipo" class="mr-2">${proveedor.tipo}</span><span id="identificacion">${proveedor.identificacion}</span>` : "";
+                    let direccionRow = proveedor.direccion !== "" ? `Dirección : <span id="direccion">${proveedor.direccion}</span>` : "";
+                    let informacionRow = proveedor.informacion !== "" ? `<p>Información Adicional :</p><p id="informacion">${proveedor.informacion}</p>` : "";
+                    let estadoProveedorCircle = proveedor.estado == 1 ? "activo" : "inactivo";
+    
+                    Swal.fire({
+                        html: `
+                        <div class="modal-container">
+                            <div class="modal-title text-center">
+                                <div class="modal-state ${estadoProveedorCircle}"></div>
+                                <h2 class=mx-3>Información del Proveedor</h2>
+                            </div>
+                            <div class="modal-header flex">
+                                <span id="identificacionRow" class="cont-identificacion">${identificacionRow}</span>
+                                <span><span class="proveedor-info" id="nombreProveedor">${proveedor.nombre_proveedor}</span></span>
+                            </div>
+                            <div class="modal-body flex">
+                                <span>Correo: <span id="correoProveedor">${proveedor.correo}</span></span>
+                                <span>Teléfono: <span class="proveedor-info" id="telefonoProveedor">${proveedor.telefono}</span></span>
+                            </div>
+                            <div class="modal-footer">
+                                <span id="direccionRow">${direccionRow}</span>
+                                <p id="informacionRow" class="modal-info">
+                                    ${informacionRow}
+                                </p>
+                            </div>
+                        </div>
+                `,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        customClass: {
+                            closeButton: 'custom-close-button',
+                            popup: 'custom-swal-popup'
+                        }
+                    })
+                    let css = `
+                        .custom-close-button { 
+                            border: none !important; 
+                            color: black !important; 
+                        }
+                        .custom-swal-popup {
+                            max-width: 50% !important;
+                            width: auto !important;
+                        }
+                        `,
+                            head = document.head || document.getElementsByTagName('head')[0],
+                            style = document.createElement('style');
 
-                    if (proveedor.identificacion !== "") {
-                        $("#tipo").text(proveedor.tipo);
-                        $("#identificacion").text(proveedor.identificacion);
-                        $("#identificacionRow").show();
-                    } else {
-                        $("#identificacionRow").hide();
-                    }
+                        head.appendChild(style);
 
-                    if (proveedor.direccion !== "") {
-                        $("#direccion").text(proveedor.direccion);
-                        $("#direccionRow").show();
-                    } else {
-                        $("#direccionRow").hide();
-                    }
+                        style.type = 'text/css';
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(document.createTextNode(css));
+                        }
 
-                    if (proveedor.informacion !== "") {
-                        $("#informacion").text(proveedor.informacion);
-                        $("#informacionRow").show()
-                    } else {
-                        $("#informacionRow").hide();
-                    }
-
-                    if (proveedor.estado == 1) {
-                        $(".estadoProveedorCircle").addClass("activo").removeClass("inactivo");
-                    } else {
-                        $(".estadoProveedorCircle").addClass("inactivo").removeClass("activo");
-                    }
-
-                    document.getElementById("verDetallesDialog").showModal();
-                    $(".proveedorDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
                 },
             });
 
-
-            $("#cerrarDetallesProveedor").click(function () {
-                $(".proveedorDialog").addClass("fadeOut");
-                $(".modal-backdrop").addClass("fadeOut");
-                setTimeout(function () {
-                    document.getElementById("verDetallesDialog").close();
-                    $(".proveedorDialog").removeClass("fadeOut");
-                    $(".modal-backdrop").hide();
-                    $(".modal-backdrop").removeClass("fadeOut");
-                }, 300);
-            });
         });
     });
+});
 
 
     // $("#nombre_proveedor, #telefono, #correo, #tipoIdentificacion, #identificacion, #direccion, #informacion").val("");
@@ -166,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //     }
     // });
 
-    
+
     // function validarProveedor(proveedor, url) {
     //     return new Promise(function (resolve, reject) {
     //         $.ajax({
@@ -232,4 +243,3 @@ document.addEventListener("DOMContentLoaded", function () {
     // }
 
 
-});

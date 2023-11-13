@@ -17,10 +17,12 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'createAProduct' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip" data-placement="top" title="Crear un Producto">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Producto</span>
+                <a href="{% url 'createAProduct' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear un Producto">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Producto</span>
                 </a>
-                    
+
             </span>
             <span class="mx-2" data-toggle="tooltip" data-placement="top" title="Crear una Categoría">
                 <a class="btn btn-light btn-add-category btn-lg" data-toggle="modal" data-target="#crearCategoriaModal">
@@ -31,7 +33,8 @@
             </span>
 
             <span class="mx-2" data-toggle="tooltip" data-placement="top" title="Crear una Marca">
-                <a class="btn btn-light btn-add-brand btn-lg align-items-center" data-toggle="modal" data-target="#crearMarcaModal">
+                <a class="btn btn-light btn-add-brand btn-lg align-items-center" data-toggle="modal"
+                    data-target="#crearMarcaModal">
                     <span class="icon mx-auto">
                         <i class="fa-solid fa-inbox"></i>
                     </span>
@@ -39,7 +42,7 @@
             </span>
         </div>
 
-       
+
     </div>
 </div>
 
@@ -47,7 +50,7 @@
     <div class="card-header py-4">
         <div class="table-responsive">
             <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="0">
-                
+
                 <thead class="theads">
                     <tr>
                         <th>Categoría</th>
@@ -80,10 +83,12 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm" id="editbutton" data-toggle="tooltip" data-placement="top" title="Editar Producto"><i
+                            <a href="{% url 'editAProduct' p.id_producto %}" class="btn btn-sm" id="editbutton"
+                                data-toggle="tooltip" data-placement="top" title="Editar Producto"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
                             <button type="button" class="btn btn-sm btn-primary verProducto"
-                                data-prod-id="{{ p.id_producto }}" data-toggle="tooltip" data-placement="right" title="Ver Detalles">
+                                data-prod-id="{{ p.id_producto }}" data-toggle="tooltip" data-placement="right"
+                                title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
@@ -135,36 +140,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
 
-<div class="modal-backdrop"></div>
-
-<dialog id="verDetalleDialog" class="productoDialog dragHandle" style="width:25%">
-    <form method="dialog">
-        <div class="modal-container-header">
-            <div class="estadoProductoCircle"></div>
-            <h2>Información del Producto</h2>
-            <button class="cerrar-producto" type="button" id="cerrarDetalleProducto">
-                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                        fill="currentColor"></path>
-                </svg>
-            </button>
-        </div>
-        <section>
-            <p>Nombre del Producto: <span id="nameProd"></span></p>
-            <p>Categoría: <span id="catProd"></span></p>
-            <p>Marca: <span id="brandProd"></span></p>
-            <p>Descripción: <span id="descProd"></span></p>
-            <p>Fecha de Vencimiento: <span id="fechavenProd"></span></p>
-            <p>Existencias: <span id="cantProd"></span></p>
-            <p>Sabor: <span id="saborProd"></span></p>
-            <p>Presentación: <span id="tamanoProd"></span><span> Libra(s)</span></p>
-            <p>Precio al Público:<span> $</span> <span id="preventa" class="precio-format"></span></p>
-        </section>
-    </form>
-</dialog>
-
 <script>
     $(document).ready(function () {
         $(".verProducto").click(function () {
@@ -176,62 +151,93 @@
                 },
                 method: "GET",
                 success: function (response) {
-                    var producto = response.success;
-                    $("#nameProd").text(producto.nombre_producto);
-                    $("#catProd").text(producto.categoria);
-                    $("#brandProd").text(producto.marca);
-                    $("#descProd").text(producto.descripcion);
-                    console.log(producto.precio_pub)
-                    var formattedPrecio = formatoNumero(producto.precio_pub);
-                    $("#preventa").text(formattedPrecio);
+                    let producto = response.success;
+                    let formattedPrecio = formatoNumero(producto.precio_pub);
 
                     function formatoNumero(numero) {
                         return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                     }
-                    
-                    var fechaVen = new Date(producto.fechaven);
-                    var fechaFormateada = fechaVen.getFullYear() + '-' + (fechaVen.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaVen.getDate().toString().padStart(2, '0');
-                    $("#fechavenProd").text(fechaFormateada);
-                    $("#cantProd").text(producto.cantidad);
-                    $("#saborProd").text(producto.sabor);
-                    $("#tamanoProd").text(producto.servicios);
-                    
 
-                    if (producto.status == 1) {
-                        $(".estadoProductoCircle").addClass("activo").removeClass("inactivo");
+                    let fechaVen = new Date(producto.fechaven);
+                    let fechaFormateada = fechaVen.getFullYear() + '-' + (fechaVen.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaVen.getDate().toString().padStart(2, '0');
+                    let estadoProductoCircle = producto.status == 1 ? "activo" : "inactivo";
+                    let cantidadSpan = `<span style="color: ${producto.cantidad <= 5 ? 'red' : 'inherit'};">${producto.cantidad}</span>`;
+
+                    Swal.fire({
+                        html: `
+            <div class="modal-container">
+                <div class="modal-title text-center">
+                    <div class="modal-state ${estadoProductoCircle}"></div>
+                    <h2>Información del Producto</h2>
+                </div>
+                <div class="modal-header">
+                    <div class="modal-cont-img">
+                        <img src="/media/${producto.img}" alt="Imagen" class="img-fluid">
+                    </div>
+                    <div class="modal-info p-2 m-auto">
+                        <p>Nombre: ${producto.nombre_producto}</p>
+                        <p>Precio al Público: $${formattedPrecio}</p>
+                        <p>Fecha de Vencimiento: ${fechaFormateada}</p>
+                        <p>Existencias: ${cantidadSpan}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="flex">
+                        <p>Marca: ${producto.marca}</p>
+                        <p>Categoría: ${producto.categoria}</p>
+                    </div>
+                    <div class="flex">
+                        <p>Sabor: ${producto.sabor}</p>
+                        <p>Presentación:${producto.servicios}Libra(s)</p>
+                    </div>
+                    <div class="modal-cont-descrip">
+                        <p class="text-start">Descripción: ${producto.descripcion}</p>
+                    </div>
+                </div>
+            </div>
+            `,
+
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        customClass: {
+                            closeButton: 'custom-close-button',
+                            popup: 'custom-swal-popup'
+                        }
+                    })
+                    let css = `
+                        .custom-close-button { 
+                            border: none !important; 
+                            color: black !important; 
+                        }
+                        .custom-swal-popup {
+                            max-width: 50% !important;
+                            width: auto !important;
+                        }
+                        `,
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+
+                    head.appendChild(style);
+
+                    style.type = 'text/css';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
                     } else {
-                        $(".estadoProductoCircle").addClass("inactivo").removeClass("activo");
+                        style.appendChild(document.createTextNode(css));
                     }
 
-                    
-                    
-                    document.getElementById("verDetalleDialog").showModal();
-                    $(".productoDialog").addClass("fadeIn");
-                    $(".modal-backdrop").show();
-                    $(".modal-backdrop").addClass("fadeInBack");
                 },
             });
-        });
-
-        $("#cerrarDetalleProducto").click(function () {
-            $(".productoDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
-            setTimeout(function () {
-                document.getElementById("verDetalleDialog").close();
-                $(".productoDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").removeClass("fadeOut");
-            }, 300);
         });
     });
 
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var precioElements = document.querySelectorAll('.precio-format');
 
-        precioElements.forEach(function(element) {
+        precioElements.forEach(function (element) {
             var precio = parseFloat(element.textContent);
             if (!isNaN(precio)) {
                 var formattedPrecio = precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -280,7 +286,7 @@
 
 <script>
     $(document).ready(function () {
-        
+
         $("#nombre_categoria").on('input', function () {
             $("#nombre_categoria-error").text("");
             $("#nombre_categoria").removeClass("is-invalid")
@@ -317,7 +323,7 @@
                             text: 'Se ha creado la Categoria con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 2000, 
+                            timer: 2000,
                         });
                         location.reload();
                     }
@@ -329,45 +335,45 @@
 </script>
 
 <div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Marca</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="card shadow mb-4 w-70">
-                <div class="card-header py-4">
-                    <form class="form" id="marca-form" method="post">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="col-md-12 mb-1">
-                                <label for="nombre_marca">Nombre de la Marca *</label>
-                                <input type="text" class="form-control" id="nombre_marca"
-                                    name="nombre_marca" placeholder="Ingrese un nombre">
-                                <div style="margin-top:10px"></div>
-                                <span class="error-message" id="nombre_marca-error"></span>
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Marca</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow mb-4 w-70">
+                    <div class="card-header py-4">
+                        <form class="form" id="marca-form" method="post">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col-md-12 mb-1">
+                                    <label for="nombre_marca">Nombre de la Marca *</label>
+                                    <input type="text" class="form-control" id="nombre_marca" name="nombre_marca"
+                                        placeholder="Ingrese un nombre">
+                                    <div style="margin-top:10px"></div>
+                                    <span class="error-message" id="nombre_marca-error"></span>
+                                </div>
                             </div>
-                        </div>
+                    </div>
                 </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-success mx-auto" id="guardarMarca">Guardar</button>
+                </div>
+                </form>
             </div>
-            <div class="text-end">
-                <button type="button" class="btn btn-success mx-auto" id="guardarMarca">Guardar</button>
-            </div>
-            </form>
         </div>
     </div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        
+
         $("#nombre_marca").on('input', function () {
             $("#nombre_marca-error").text("");
             $("#nombre_marca").removeClass("is-invalid")
@@ -405,7 +411,7 @@ aria-hidden="true">
                                 text: 'Se ha creado la marca con éxito!',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 2000, 
+                                timer: 2000,
                             });
                             location.reload();
                         }
@@ -419,15 +425,15 @@ aria-hidden="true">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
-        });
-    </script>
+    });
+</script>
 
 
 {% endblock %}
