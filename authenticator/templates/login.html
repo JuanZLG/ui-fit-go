@@ -202,6 +202,14 @@
             font-size: 14px;
             color: #fff;
         }
+   
+        .white-text {
+            color: #fff !important;
+        }
+        #submit-btn.inhabilitado,
+        #close-btn.inhabilitado {
+            pointer-events: none;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -210,8 +218,8 @@
                 Swal.fire({
                     title: '<span style="font-family:Arial; font-size:25px; color: #fff">Cambiar contraseña</span>',
                     html: `
-                    <svg viewBox="25 25 50 50" id="loading">
-                        <circle r="20" cy="50" cx="50"></circle>
+                        <svg viewBox="25 25 50 50" id="loading">
+                            <circle r="20" cy="50" cx="50"></circle>
                         </svg>
                         <div class="forget-container" style="text-align:left;">
                             <p style="font-size: 14px; color: #f2f2f2; text-align: start;"></p>
@@ -256,26 +264,47 @@
                     } else if (newPassword == "" || confirmPassword == "") {
                         $("#recover-error").text("Ambos campos son requeridos.");
                         return;
-                    }
-
-                    let loadingTimeout = setTimeout(function () {
-                        $("#loading").show();
-                    }, 1000);
-                    $.ajax({
-                        url: "{% url 'restablecer_contrasena' %}",
-                        type: 'POST',
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        data: {
-                            newPassword: newPassword
-                        },
-                        success: function (response) {
-                            clearTimeout(loadingTimeout);
-                            alert("Melo")
+                    } else {
+                        var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                        if (!regex.test(newPassword)) {
+                            $("#recover-error").text("La contraseña debe tener al menos 8 caracteres, incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.");
+                            return;
                         }
-                    })
+                    }
+                    $("#loading").show();
+                    setTimeout(function () {
+                        $("#loading").hide();
+                        $.ajax({
+                            url: "{% url 'restablecer_contrasena' %}",
+                            type: 'POST',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            data: {
+                                newPassword: newPassword
+                            },
+                            success: function (response) {
+                                Swal.close();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Cuenta recuperada!',
+                                    text: 'Ahora puedes ingresar con tu nueva contraseña.',
+                                    confirmButtonColor: '#808080', 
+                                    confirmButtonText: 'Aceptar',
+                                    customClass: {
+                                        confirmButton: 'white-text' ,
+                                        title: "white-text",
+                                        text: "white-text",
+                                    }
+                                });
+                            }
+                        })
+                    }, 2000);
+                    $("#close-recover").click(function () {
+                        Swal.close();
+                    });
                 });
+
 
             }
 
@@ -286,7 +315,7 @@
                     title: '<span style="font-family:Arial; font-size:25px; color: #fff">Código de Verificación</span>',
                     html: `
                         <svg viewBox="25 25 50 50" id="loading">
-                        <circle r="20" cy="50" cx="50"></circle>
+                            <circle r="20" cy="50" cx="50"></circle>
                         </svg>
                         <div class="forget-container" style="text-align:left;">
                             <p style="font-size: 14px; color: #f2f2f2; text-align: start;">Ingresa el código enviado al correo para restablecer tu contraseña.</p>
@@ -346,22 +375,15 @@
                     });
                 });
 
-                $(document).ajaxStart(function () {
-                    $("#loading").show();
-                });
-
-                $(document).ajaxStop(function () {
-                    $("#loading").hide();
-                });
                 $("#submit-codig").click(function () {
                     let codigo = "";
                     $("#input-container input").each(function () {
                         codigo += $(this).val();
                     });
 
-                    let loadingTimeout = setTimeout(function () {
-                        $("#loading").show();
-                    }, 1000);
+                    $("#loading").show();
+                    setTimeout(function () {
+                        $("#loading").hide();
                     $.ajax({
                         url: "{% url 'verificar_codigo' %}",
                         type: 'GET',
@@ -372,7 +394,6 @@
                             codigo: codigo
                         },
                         success: function (response) {
-                            clearTimeout(loadingTimeout);
                             if (response.success) {
                                 $("#loading").hide();
                                 cambiarContraseña();
@@ -382,8 +403,11 @@
                             }
                         }
                     })
+                }, 2000);
+
                 });
             }
+
 
             $("#forget-pass").click(function () {
                 Swal.fire({
@@ -434,6 +458,8 @@
                         $("#forget-error").text("Introduce un correo electrónico válido");
                     } else {
                         $("#forget-error").text("");
+                        $("#submit-btn").addClass("inhabilitado")
+                        $("#close-btn").addClass("inhabilitado")
                         let loadingTimeout = setTimeout(function () {
                             $("#loading").show();
                         }, 1000);

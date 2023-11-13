@@ -93,24 +93,36 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <tr>
                                                 <td>${detalle.producto}</td>
                                                 <td>${detalle.cantidad}</td>
-                                                <td title="Precio de Compra">${formatearPrecios(detalle.precio_compra)}</td>
-                                                <td title="Precio de venta">${formatearPrecios(detalle.precio_venta)}</td>
+                                                <td>${formatearPrecios(detalle.precio_compra)}</td>
+                                                <td>${formatearPrecios(detalle.precio_venta)}</td>
                                                 <td>
                                                     <span title="Descuento">${detalle.descuento !== "0" ? detalle.descuento + '%' : 'No aplica'}</span>
                                                     <span title="Precio Descontado">${detalle.descuento !== "0" ? formatearPrecios(detalle.precio_descuento) : ''}</span>
                                                 </td>
-                                                <td>${detalle.ganancia}</td>
-                                                <td>${detalle.precio_tot}</td>
+                                                <td>${formatearPrecios(detalle.ganancia)}</td>
+                                                <td>${formatearPrecios(detalle.precio_tot)}</td>
                                             </tr>
                                         `).join('')}
                                     </tbody>
                                 </table>
                             <div class="modal-footer">
-                                <span>Descuento de venta: 15%</span>
-                                <span>Total con descuento: $76.50</span>
-                                <span>Margen de ganancia: 44%</span>
-                                <span class="font-weight-bold total-venta">TOTAL:<span>${formatearPrecios(venta.totalVenta)}</span></span>
-                            <div>
+                                <div>
+                                    <span>Descuento de venta:</span>
+                                    <span>${venta.descuentoVenta}%</span>
+                                </div>
+                                <div>
+                                    <span>Total descontado:</span>
+                                    <span>${formatearPrecios(venta.totalVentaDescuento)}</span>
+                                </div>
+                                <div>
+                                    <span>Margen de ganancia:</span>
+                                    <span>${formatearPrecios(venta.margenGanancia)}</span>
+                                </div>
+                                <div class="font-weight-bold total-venta mt-2 p-2" style="border-top: 2px dotted #ccc">
+                                    <span>TOTAL:</span>
+                                    <span class="mx-2">${formatearPrecios(venta.totalVenta)}</span>
+                                </div>
+                            </div>
                         </div>
                             `,
                         showCloseButton: true,

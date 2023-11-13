@@ -171,6 +171,9 @@ def detalles_venta(request):
                     'cliente': venta.id_cliente.nombres + ' ' + venta.id_cliente.apellidos,
                     'estado': venta.estado,
                     'documento': venta.id_cliente.documento,
+                    'descuentoVenta': venta.descuentoVenta,
+                    'totalVentaDescuento': venta.totalVentaDescuento,
+                    'margenGanancia': venta.margenGanancia,
                     'totalVenta': venta.totalVenta,
                     'detalles': detalles_data
                 }
