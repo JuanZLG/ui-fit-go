@@ -172,7 +172,8 @@
         justify-content: space-between;
         text-align: start;
     }
-    .modal-cont-img img {
+
+    .modal-cont-img  {
         width: auto;
         max-width: 110px;
     }

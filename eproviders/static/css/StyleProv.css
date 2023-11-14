@@ -1,4 +1,6 @@
-
+.modal-container strong {
+    margin-right: 10px;
+}
 .modal-container h2 {
     font-size: 1.5rem;
 }
