@@ -27,13 +27,11 @@
             <i class="fa-solid fa-download mr-2"></i><span class="text"
                 style="font-weight: 600; font-size: 16px;">Generar Informe</span>
         </a>
-
-        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true" style="width:60%">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="miModalLabel">Generar Informe Compras</h5>
+                        <h5 class="modal-title" id="miModalLabel">Generar Informe de Compras</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -43,20 +41,17 @@
                             {% csrf_token %}
                             <div id="calendario-contenedor">
                                 <p>Selecciona un rango de fechas:</p>
-                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de inicio"
-                                    class="date-input">
-                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de fin"
-                                    class="date-input">
-
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de inicio" class="date-input">
+                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de fin" class="date-input">
                                 <button type="submit" id="generar-informe-button">Generar Informe</button>
-                                <p id="error-message" style="color: red; display: none;">Por favor, complete ambos
-                                    campos de fecha.</p>
+                                <p id="error-message" style="color: red; display: none;">Por favor, complete ambos campos de fecha.</p>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 <style>
@@ -442,7 +437,7 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-end mt-2">
-            <span class="font-weight-bold total-compra">TOTAL:<span id="totalCompraCompra"></span></span>
+            <span class="font-weight-bold total-compra">Total:<span id="totalCompraCompra"></span></span>
         </div>
     </form>
 </dialog>
@@ -491,9 +486,9 @@
                     detallesCompraHTML += `
                         <tr>
                             <td>${detalle.producto}</td>
-                            <td>${precioUnitario}</td> <!-- Mostrar con 2 decimales -->
+                            <td>${precioUnitario}</td> 
                             <td>${detalle.cantidad}</td>
-                            <td>${totalProducto}</td> <!-- Mostrar con 2 decimales -->
+                            <td>${totalProducto}</td> 
                         </tr>
                     `;
 
@@ -523,7 +518,7 @@
     }
 
     function cerrarModal() {
-        // Cierra el modal
+        
         const modal = document.getElementById("verDetallesCompraDialog");
         modal.close();
     }
@@ -717,10 +712,5 @@
 }
 
 </style>
-
-
-
-
-
 
 {% endblock %}
