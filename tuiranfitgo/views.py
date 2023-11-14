@@ -5,9 +5,6 @@ from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from products.models import Productos
-
-
-from django.http import JsonResponse
 from .models import Productos
 
 def verificar_notificaciones(request):
@@ -30,12 +27,6 @@ def verificar_notificaciones(request):
     else:
         # Si no hay mensajes, devuelve un mensaje en blanco
         return JsonResponse({"mensaje": ""})
-
-
-
-
-
-
 
 
 

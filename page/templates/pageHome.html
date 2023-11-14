@@ -13,15 +13,9 @@
   <p class="site-description">Explora nuestros productos y realiza tu compra a través de WhatsApp</p>
 </div>
 {% endblock %}
-{% block extraHeaderDesk %}
-<div style="width: 100%; background-color: #000;">
-  <img src="https://nutramerican.com/img/chocolatexl.webp" class="img-fluid">
+<!-- {% block extraHeaderDesk %}
 
-  <div style="background-color: rgba(0, 0, 0, 0.8); width: 100%;  color: #fff; text-align: center;">
-    <p>Explora nuestros productos y realiza tu compra a través de WhatsApp</p>
-  </div>
-</div>
-{% endblock %}
+{% endblock %} -->
 
 
 {% block body %}
@@ -30,8 +24,8 @@
     {% for producto in productos %}
     <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
       <div class="product-image">
-        <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
-        <!-- <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"> -->
+        <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
+        <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
       </div>
       <div class="product-details">
         <h3 class="product-title">{{ producto.nombre_producto }}</h3>
@@ -52,8 +46,12 @@
 </section>
 
 <section class="desktop mt-4">
-  <div class="col-md-11" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
-    <div class="text-muted card-panel mt-5 d-md-none d-lg-block">
+  <div class="col-md-9" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
+    <div class="text-muted card-panel d-md-none d-lg-block">
+      <div class="container-search desk">
+        <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input">
+          <i class="fas fa-times search-clear-icon" id="search-clear"></i>
+      </div>
       <p><strong>MEJORES VENTAS</strong></p>
       <ul class="list-group ">
         <li style="display: flex;">
@@ -94,8 +92,8 @@
       {% for producto in productos %}
       <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
         <div class="product-image">
-          <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen">
-          <!-- <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"> -->
+          <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
+          <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
         </div>
         <div class="product-details">
           <h3 class="product-title">{{ producto.nombre_producto }}</h3>

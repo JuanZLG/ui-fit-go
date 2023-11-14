@@ -163,11 +163,14 @@ def cambiarEstadoDeProducto(request):
         try:
             producto = Productos.objects.get(id_producto=id_producto)
             producto.estado = int(nuevo_estado)
-            producto.save()
+
+            # Guardar solo el campo 'estado'
+            producto.save(update_fields=['estado'])
             return JsonResponse({'status': 'success'})
         except Productos.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Producto no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
+
 
 
 def verDetallesProducto(request):
@@ -177,7 +180,6 @@ def verDetallesProducto(request):
         if id_producto:
             try:
                 producto = Productos.objects.get(id_producto=id_producto)
-
                 data = {
                     'categoria': producto.id_categoria.nombre_categoria,
                     'marca': producto.id_marca.nombre_marca,

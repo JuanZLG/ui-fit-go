@@ -66,10 +66,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     Swal.fire({
                         html: `  
                             <div class="modal-container">
-                                <h3 class="text-center">
-                                    <div class="modal-state ${venta.estado == 1 ? 'activo' : 'inactivo'}"></div>
-                                    <h2>Información de la Venta</h2>
-                                </h3>
+                                <div class="modal-state ${venta.estado == 1 ? 'activo' : 'inactivo'}"></div>
+                                <h2>Información de la Venta</h2>
                                 <div class="flex">
                                     <span>Documento: ${venta.documento} </span>
                                     <span>Fecha de venta: ${venta.fechareg}</span>
@@ -84,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <th>Precio Compra</th>
                                             <th>Precio Venta</th>
                                             <th>Descuentos</th>
-                                            <th>Descuentos</th>
+                                            <th>Ganancia</th>
                                             <th>Total Producto</th>
                                         </tr>
                                     </thead>
@@ -108,11 +106,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="modal-footer">
                                 <div>
                                     <span>Descuento de venta:</span>
-                                    <span>${venta.descuentoVenta}%</span>
+                                    <span>${venta.descuentoVenta !== "0" ? detalle.descuentoVenta + '%' : 'No aplica'}</span>
                                 </div>
                                 <div>
                                     <span>Total descontado:</span>
-                                    <span>${formatearPrecios(venta.totalVentaDescuento)}</span>
+                                    <span>${venta.descuentoVenta !== "0" ? formatearPrecios(venta.totalVentaDescuento) : "$0"}</span>
                                 </div>
                                 <div>
                                     <span>Margen de ganancia:</span>
