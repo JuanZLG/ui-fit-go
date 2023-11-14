@@ -12,111 +12,127 @@
 <div class="container d-flex" style="flex-direction:flex-end; width:100%; margin-left:30px;">
     <div class="row">
         <div  style="max-height: 100vh; overflow-y: auto; display:flex; gap:40px; flex-direction:column; width:100%">
-            <div>
-                <h1 id="gproviders">Gestionando la Información de los Proveedores</h1>
-                <a target='_blank'>Esta guía detalla como administrar la información de tus proveedores en el sistema.</a>
-            </div>
             
-            <div><h2><a href="http://127.0.0.1:8000/admin/providers/">Acceder al Módulo</a></h2></div>
+            {% comment %} Aqui {% endcomment %}
+<h1 style="margin-bottom:0" id="musers"><a target='_blank'>Gestionando los Usuarios del Sistema</a></h1>
+<div style="margin-top:0"><p>Esta guía detalla cómo administrar a los usuarios de la aplicación, su autenticación y límite de acceso.</p></div>
 
-            <div><h3>1. En la barra lateral izquierda, selecciona el botón "Proveedores" y luego presiona en "Gestión de Proveedores".</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/a71cdec2-f63b-4fcb-8064-2c46127b6372/8c4d6228-b24f-4cb9-aeec-79d556f4da6b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=31&mark-y=672&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MDMmaD0xNTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, despliega &quot;Proveedores&quot; y has clic en &quot;Gestión de Proveedores&quot;." />
-            </div>
-
-            <div><h3>2. Una vez dentro del módulo de Proveedores, si deseas registrar un nuevo proveedor, presiona el botón "Agregar Proveedor", serás redirigido al formulario de Agregación.</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2228ba05-c2ef-4671-ab9f-23e8675a7e3b/32dc6991-0b1b-474c-9f82-49018f9bd17a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3670&fp-y=0.2935&fp-z=1.9915&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=358&mark-y=348&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00ODMmaD0xMzMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez dentro, si deseas registrar un nuevo proveedor, has clic en &quot;Agregar Proveedor&quot;." />
-            </div>
-
-            <div><h3>3. En el formulario "Agregar Proveedor", diligencia al menos los campos que están marcados con asterisco (campos obligatorios).</h3>
-            <p>Los campos sin asterisco, son opcionales.</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/282467f1-0736-4e67-a549-434da947a48a/1676eac3-5a6b-45e8-883e-b76a2b055298.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el formulario, diligencia al menos los campos marcados con (*)" />
-            </div>
-
-            <div><h3>4. Para los campos opcionales "Tipo de Documento" y "Número de Identificación" del formulario, ten en cuenta si el proveedor es una persona o si se trata de una empresa.</h3>
-            <p>En caso de que el proveedor sea una empresa, escoge la opción "NIT" y digita el número en el campo posterior.</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/58224612-2f2e-46b1-b8cc-bae8dfb2391c/fc169692-1717-4ce3-b283-fd6b491578bf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Para los campos opcionales &quot;Tipo de Documento&quot; y &quot;Número de Identificación&quot; ten en cuenta si el proveedor es una persona o si se trata de una empresa." />
-            </div>
-
-            <div><h3>5. En el campo "Información Adicional" del formulario, puedes añadir datos extra sobre tus proveedores.</h3>
-            <p>Por ejemplo, puedes escribir sobre el tipo de productos que ofrece.</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/4032b682-9e60-4c5a-a0f9-817726a66a3f/0f83f3ee-d484-4f9a-abc6-b7f28187b68a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Información Adicional&quot;, puedes añadir datos extra sobre tus proveedores." />
-            </div>
-
-            <div><h3>6. Una vez hayas diligenciado al menos los campos obligatorios (*) y todo esté en orden, presiona el botón "Guardar" para validar la información del formulario y registrar al nuevo proveedor.</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/059c6b62-b608-4d60-8913-cf340e5340c4/a149fbc9-f72c-48c6-9c94-5859e6d7e27d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=461&mark-y=226&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODEmaD0xNDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez hayas diligenciado al menos los campos obligatorios y todo esté en orden, has clic en &quot;Guardar&quot; para validar la información y registrar a un nuevo proveedor." />
-            </div>
-
-            <div><h3>7. Luego de registrar exitosamente al proveedor, serás redirigido a la página "Gestión de Proveedores", donde podrás visualizar el registro del proveedor que agregaste.</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2776f45b-b1cc-4a29-a20f-74645b66a73e/0c38b6b7-4dfe-4dcf-a6d3-683c7f647d77.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego de registrar exitosamente a un proveedor, irás al entorno &quot;Gestión de Proveedores&quot;, donde podrás visualizar el registro del nuevo proveedor." />
-            </div>
-
-            <div><h3 id="sproviders">8. Por defecto, el estado de un nuevo registro de proveedor es "Activo". Para el caso de que hayas prescindido de los servicios de algún proveedor, podrás desactivar su registro para que no interfiera en nuevas compras.</h3>
-            <p>Para cambiar de estado un registro, presiona en el "Botón de Estado".</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/c9d3d6aa-4986-4229-bdb4-891a9f8dea50/a08ad8ad-ab97-48de-a69e-1c02cc79c242.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=806&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNDcmaD01NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Por defecto, el estado de un nuevo registro es &quot;Activo&quot;. En caso de que hayas prescindido de los servicios de algún proveedor, podrás desactivarlo para que no interfiera en nuevas compras." />
-            </div>
-
-            <div><h3>9. Luego, aparecerá una ventana de confirmación como esta, debes presionar el botón "Confirmar" para continuar.</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dd1069d0-d734-43f5-9188-105002bf95e7/3299ae2e-00ac-40cd-9c53-c278041e93b3.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=337&mark-y=297&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzQmaD0xMjMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego, has clic en &quot;Confirmar&quot;." />
-            </div>
-
-            <div><h3>10. El proveedor estará Inactivo y pasará a un segundo plano en el sistema.</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/8b40e64e-e855-488c-8294-575991d2ebd8/70602e18-d2ab-453c-a156-c63a1e63927f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=813&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTEmaD01NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El proveedor estará Inactivo y pasará a un segundo plano en tu web." />
-            </div>
-
-            <div><h3>11. Puedes visualizar a detalle la información de cada registro de proveedor, presionando el botón azul con el icono de ojo.</h3>
-            <p>Se desplegará una ventana flotante con toda la información del registro seleccionado.</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/732af0d6-186f-477d-8927-d0e2f24887c6/fcabab15-8219-47fe-9d64-6833fd23de42.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1086&mark-y=15&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MCZoPTY4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Puedes visualizar a detalle la información de cada registro, haciendo clic en el botón azul." />
-            </div>
-
-            <div><h3 id="mproviders">12. En caso de que desees actualizar la información de un proveedor, para modificar el registro presiona en el Botón de Editar, correspondiente a ese registro.</h3>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2fb2055f-aa7c-4ef8-8a62-20ebae0f7334/0677651d-ab6b-4036-9b25-45d628d1cfb6.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1010&mark-y=13&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz02NyZoPTY2JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si deseas actualizar la información de un proveedor, para modificar el registro has clic en el Botón de Editar." />
-            </div>
-
-            <div><h3>13. Será redireccionado a un formulario como este, similar al de "Agregar Proveedor".</h3>
-            <p>Modifica los datos de los campos que desees actualizar y presiona el botón "Guardar".</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/68e095d6-8fc1-43b1-8f02-6186c14b1ef5/93698903-92b9-4a5d-9a61-b9d1f98ce0ea.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MzAmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Serás redireccionado a un formulario como este, similar al de &quot;Agregar Proveedor&quot;." />
-            </div>
-
-            <div><h3>14. En caso de que tenga muchos registros de proveedores y necesite encontrar a uno en particular, puede utilizar la barra de búsqueda.</h3>
-            <p>Puede hallar un proveedor utilizando cualquiera de sus datos, ya sea digitando su nombre, su teléfono o su correo.</p>
-            <img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/78623405-aa66-4191-b4f1-7559aef7a801/29b3c01a-5af0-4c28-a6d7-6470108b4eaf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=920&mark-y=31&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTEmaD01MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de que tengas muchos registros y necesites encontrar a uno en particular, utiliza la barra de búsqueda." />
-            </div>
-
-            <br/>
-            <hr/>
-
-<hr />
-{% comment %} <div style="height: 10px">&#8203;</div> {% endcomment %}
-
-<div>
-    <h1 id="scustomers">Gestionando la Información de los Clientes</h1>
-    <a target='_blank'>Esta guía detalla como administrar la información de los clientes en el sistema.</a>
+<div class="mb-0" style="margin-bottom: 0;"><h2 class="text-black"><a href="http://127.0.0.1:8000/admin/users/">Acceso al Módulo</a></h2></div>
+<div><h3>1. En la barra lateral izquierda, presione con el botón izquierdo del ratón en "Usuarios" y luego presione en "Gestión de Usuarios".</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/7fc40123-39c7-4b22-90c9-acb705fdb0b1/611b670f-65b0-441d-b6a8-0f7715b2b9c8.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.0992&fp-y=0.3133&fp-z=2.1581&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=45&mark-y=364&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MjMmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, presione con el botón izquierdo del ratón en &quot;Usuarios&quot; y luego presione en &quot;Gestión de Usuarios&quot;." />
 </div>
 
-<div><h2><a href="http://127.0.0.1:8000/admin/home/dashboard/">Acceder al Módulo</a></h2></div>
+<div><h3 id="auser">2. Una vez dentro del módulo de Usuarios, si desea registrar un nuevo usuario, presione con el botón izquierdo del ratón en "Agregar Usuario", será redirigido al formulario de Agregación.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/6805a98a-01fd-4553-82dd-4ba5d04f8471/144638b4-93cd-49ac-9598-e400506f3932.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3210&fp-y=0.3227&fp-z=2.0896&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=376&mark-y=338&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NDgmaD0xNTImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez dentro del módulo de Usuarios, si desea registrar un nuevo usuario, presione con el botón izquierdo del ratón en &quot;Agregar Usuario&quot;, será redirigido al formulario de Agregación." />
+</div>
+
+<div><h3>3. En el formulario, presione en el campo "Rol de Usuario", se desplegará una lista con los diferentes roles del sistema que tenga registrados.</h3>
+<p>En otro apartado del manual, podrá profundizar acerca del manejo de roles y permisos de usuario dentro de la aplicación.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/fc4092b6-62b3-49d0-b1fb-1821b6ff9e76/3310eb4e-0a36-44a4-92e7-a7ac63e13e30.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4922&fp-y=0.4124&fp-z=2.2829&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=411&mark-y=245&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zNzgmaD0xNjcmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el formulario, presione en el campo &quot;Rol de Usuario&quot;, se desplegará una lista con los diferentes roles del sistema que tenga registrados." />
+</div>
+
+<div><h3>4. En el campo "Nombre de Usuario", debe digitar un nombre de usuario válido (sin números ni caracteres especiales incluido el "Espacio" de la barra espaciadora).</h3>
+<p>Si ingresa un nombre no válido, obtendrá un mensaje de error al Guardar el formulario.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/d8459c3a-1d88-4489-b079-7618c948775d/b76d6d86-f3b8-46d2-8a3d-5856cdfabfca.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5788&fp-y=0.5215&fp-z=1.7630&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=291&mark-y=273&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MTgmaD0xMzYmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Nombre de Usuario&quot;, debe digitar un nombre de usuario válido (sin números ni caracteres especiales incluido el &quot;Espacio&quot; de la barra espaciadora)." />
+</div>
+
+<div><h3>5. Luego, en el campo "Correo Electrónico" debe digitar un correo válido, perteneciente al usuario que desea brindar acceso al  sistema.</h3>
+<p>Es importante que este campo sea correctamente diligenciado para consolidar el acceso del nuevo usuario.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/037c7a69-937f-458d-88ad-e4f8d13f1bb9/c8f23557-4f17-4552-b29f-3f5636b0edab.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5791&fp-y=0.6360&fp-z=1.7437&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=281&mark-y=275&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MzkmaD0xMzImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego, en el campo &quot;Correo Electrónico&quot; debe digitar un correo válido, perteneciente al usuario que desea brindar acceso al  sistema." />
+</div>
+
+<div><h3>6. Una vez haya diligenciado la totalidad de campos obligatorios, presione con el botón izquierdo del ratón en "Guardar".</h3>
+<p>Al guardar el formulario, se enviará un mensaje de correo electrónico a la dirección de correo diligenciada en el campo "Correo Electrónico", dicho mensaje le brindará las credenciales de acceso al nuevo usuario.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/0fa160aa-a1e0-40ae-a5c9-88d9cb427cbb/10d587da-1cc9-4649-ae5c-63dc0bbe8dae.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=498&mark-y=865&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xOTcmaD0xMTImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez haya diligenciado la totalidad de campos obligatorios, presione con el botón izquierdo del ratón en &quot;Guardar&quot;." />
+</div>
+
+<div><h3>7. Cuando se haya enviado el mensaje de correo electrónico, verá una alerta de Éxito en el registro del nuevo usuario. </h3>
+<p>Cada usuario creado, tendrá por defecto una contraseña aleatoria generada por el sistema, la cual podrá cambiar en el apartado "Mi Perfil", detallado más adelante en este manual.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/8a0032da-0e7d-4087-9130-d649d3fc2cd3/afa353b8-dd91-4d7e-b6da-fc55d0a64b82.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4997&fp-y=0.5000&fp-z=1.4701&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=265&mark-y=165&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02NzEmaD0zNTEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Cuando se haya enviado el mensaje de correo electrónico, verá una alerta de Éxito en el registro del nuevo usuario. " />
+</div>
+
+<div><h3>8. Luego de registrar al nuevo usuario, será redirigido a "Gestión de Usuarios", allí podrá ver el registro del nuevo usuario creado.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/0bd53100-1706-467b-b3eb-b49507fdbb65/50b2b9e3-dacf-455e-9082-275cb4ea56dd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=25&mark-y=99&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTYzJmg9MTY2JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego de registrar al nuevo usuario, será redirigido a &quot;Gestión de Usuarios&quot;, allí podrá ver el registro del nuevo usuario creado." />
+</div>
+
+<div><h3 id="moduser">9. Si desea modificar el registro de un usuario por su cuenta, presione con el botón izquierdo del ratón en el botón de lápiz "Editar", que corresponda al registro indicado.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/50d7ffd4-9f0c-4cdf-b55d-a55ea4675050/b5ef63fe-ef61-450b-9d8a-7288517313e7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8810&fp-y=0.7026&fp-z=3.0572&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=690&mark-y=295&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xNDYmaD0xMzEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea modificar el registro de un usuario por su cuenta, presione con el botón izquierdo del ratón en el botón de lápiz &quot;Editar&quot;, que corresponda al registro indicado." />
+</div>
+
+<div><h3>10. En el formulario de "Modificar Usuario", actualice los campos que desee alterar.</h3>
+<p>En este caso, queremos cambiar el correo electrónico de esta persona.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/12eda611-9f16-4343-af24-7c8f368b9ef9/d64c0f8a-8083-4cf5-9ce4-a0928162dd3c.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5837&fp-y=0.6008&fp-z=1.7182&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=258&mark-y=298&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02ODMmaD0xMjQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el formulario de &quot;Modificar Usuario&quot;, actualice los campos que desee alterar." />
+</div>
+
+<div><h3>11. Una vez haya finalizado la modificación de los datos, presione con el botón izquierdo del ratón en "Guardar" para actualizar el registro del usuario.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/8fe810a4-1c1c-4904-93fe-56ba7b602020/ca68d016-afb1-4b9d-bad0-9a99cc3239af.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5833&fp-y=0.8007&fp-z=2.6087&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=470&mark-y=290&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNjEmaD0xNDEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez haya finalizado la modificación de los datos, presione con el botón izquierdo del ratón en &quot;Guardar&quot; para actualizar el registro del usuario." />
+</div>
+
+<div><h3>12. Si todo salió bien, verá un mensaje de éxito luego de enviar el formulario.</h3>
+<p>Será redirigido a "Gestión de Usuarios".</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/c85a6d54-e278-4f3a-8785-55aaef7e2c7e/d73cb761-7f15-444b-9549-d1f28b9c02bd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&fp-z=1.4264&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=256&mark-y=180&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02ODgmaD0zNjAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si todo salió bien, verá un mensaje de éxito luego de enviar el formulario." />
+</div>
+
+<div><h3>13. Allí podrá visualizar el registro modificado, con los nuevos datos ingresados.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/24f61852-4c9d-4d9d-9944-c044837f55fa/591539ff-1ec1-4983-bdef-299895fe5c04.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=21&mark-y=106&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTUwJmg9MTc3JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Allí podrá visualizar el registro modificado, con los nuevos datos ingresados." />
+</div>
+
+<div><h3>14. Si desea visualizar a detalle la información de un usuario, presione en el botón azul del ojo, a continuación señalado:</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/938c4352-2bfb-4967-b5da-12194e24bc44/b875fcbf-ff68-4680-a588-161aafab0fba.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.9292&fp-y=0.5463&fp-z=2.7990&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=898&mark-y=303&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMjkmaD0xMTYmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea visualizar a detalle la información de un usuario, presione en el botón azul del ojo, a continuación señalado:" />
+</div>
+
+<div><h3>15. Verá una ventana flotante como esta, para cerrarla, presione en el botón "X" de arriba a la derecha del cuadro.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/d4ac43b8-d03b-4062-8c52-492ecf798d79/a02236b4-19b0-44df-a654-6da8164254f7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4964&fp-y=0.3431&fp-z=1.5199&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=368&mark-y=164&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NjQmaD0zOTImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Click on Información del Usuario…" />
+</div>
+
+<div><h3 id="statuser">16. Por defecto, el estado de un nuevo registro de usuario es "Activo". Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión.</h3>
+<p>Presione con el botón izquierdo del ratón en el botón de la columna "Estado" que corresponda al registro del usuario a bloquear.</p>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/54013467-e488-449a-b69e-769aac5d9be2/1c3fcdcf-8a4c-4e07-a4d2-864ff93ada38.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=871&mark-y=220&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTAmaD01MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Por defecto, el estado de un nuevo registro de usuario es &quot;Activo&quot;. Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión." />
+</div>
+
+<div><h3>17. Luego, presione en el botón "Confirmar", para cambiar el estado del usuario.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/77d8c6a1-e320-4b3d-9814-3c3ad6e75956/a7ba8cb7-48b2-4301-9cba-42255fd2f23e.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4587&fp-y=0.5694&fp-z=2.5091&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=452&mark-y=293&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yOTcmaD0xMzUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego, presione en el botón &quot;Confirmar&quot;, para cambiar el estado del usuario." />
+</div>
+
+<div><h3>18. El estado del usuario habrá cambiado.</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/5d68b4ef-aab9-44da-ab26-dd0226bdc299/14c518e7-67b4-4362-8ad9-4b1592adcab7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=14&mark-y=104&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTczJmg9MTgwJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El estado del usuario habrá cambiado." />
+</div>
+
+<div><h3>19. Esto sucederá si el usuario que ha inactivado, intenta iniciar sesión en la aplicación:</h3>
+<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/bde27d74-fe7e-4888-af05-22a813c2f8c5/19c528de-0987-40f2-9dd5-97653ceba47d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5014&fp-y=0.5054&fp-z=1.9651&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=51&mark-y=-219&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMDkzJmg9MTI0NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Esto sucederá si el usuario que ha bloqueado, intenta iniciar sesión en la aplicación:" />
+</div>
+
+<br/>
+<div class="custom-divider"></div>
+<hr/>
+
+<h1 id="mcustomer"><a target='_blank'>Gestionando la Información de los Clientes</a></h1>
+<div><p>Esta guía detalla como administrar la información de los clientes en el sistema, estos datos podrá utilizarlos externamente para gestionar los pedidos de los clientes y envíos.</p></div>
+
+<div><h2><a href="http://127.0.0.1:8000/admin/clients/">Acceso al Módulo</a></h2></div>
 
 <div><h3>1. En la barra lateral izquierda, con el botón izquierdo del ratón presione "Clientes", se desplegará un submenú, con el mismo botón del ratón, presione en "Gestión de Clientes".</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/6d7e66c8-0609-42ca-8a03-fcb58132c8e1/a71d390f-feab-4f42-bac8-9b34012ed99e.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.0992&fp-y=0.6035&fp-z=2.1581&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=45&mark-y=363&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MjMmaD0xMDImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, con el botón izquierdo del ratón presione &quot;Clientes&quot;, se desplegará un submenú, con el mismo botón del ratón, presione en &quot;Gestión de Clientes&quot;." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/6d7e66c8-0609-42ca-8a03-fcb58132c8e1/c79ae212-29eb-4b7b-8770-fd28733b88fa.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.0992&fp-y=0.6041&fp-z=2.1581&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=45&mark-y=362&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MjMmaD0xMDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, con el botón izquierdo del ratón presione &quot;Clientes&quot;, se desplegará un submenú, con el mismo botón del ratón, presione en &quot;Gestión de Clientes&quot;." />
 </div>
 
-<div><h3>2. Una vez dentro del módulo "Clientes", si desea registrar un nuevo cliente, presione el botón "Agregar Cliente", será redirigido al formulario de Agregación.</h3>
+<div><h3 id="acustomer">2. Una vez dentro del módulo "Clientes", si desea registrar un nuevo cliente, presione el botón "Agregar Cliente", será redirigido al formulario de Agregación.</h3>
 <img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/1b160248-9454-46de-87cc-91feef3a2a4b/89985c38-1d2d-4366-931a-9bd93c63b69c.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3195&fp-y=0.2952&fp-z=2.1723&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=391&mark-y=349&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MTgmaD0xMzEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez dentro del módulo &quot;Clientes&quot;, si desea registrar un nuevo cliente, presione el botón &quot;Agregar Cliente&quot;, será redirigido al formulario de Agregación." />
 </div>
 
 <div><h3>3. Una vez en el formulario, diligencia todos los campos marcados con asterisco (*).</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/4e17f495-4a8f-495d-8c9f-1b0edde0e317/866c7fc0-ee84-42f6-a924-e06fb1ef9b20.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6521&fp-y=0.3210&fp-z=2.1354&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=291&mark-y=319&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MTcmaD0xNzQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez en el formulario, diligencia todos los campos marcados con asterisco (*)." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/4e17f495-4a8f-495d-8c9f-1b0edde0e317/592205b9-ad3c-49cd-ba95-ece2af48041b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=445&mark-y=98&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MzgmaD01NzUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez en el formulario, diligencia todos los campos marcados con asterisco (*)." />
 </div>
 
-<div><h3>4. En el campo "Documento", digite el número de documento válido del cliente (máximo 10 caracteres)</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/9490f39f-35c9-4440-aa95-973a36d20aa5/afb0506f-cde9-4a9c-85da-5c937784e972.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.4312&fp-z=2.0717&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=373&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NTQmaD0xNjkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Documento&quot;, digite el número de documento válido del cliente (máximo 10 caracteres)" />
+<div><h3>4. En el campo "Documento", digite el número de documento de identidad válido del cliente (máximo 10 caracteres).</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/9490f39f-35c9-4440-aa95-973a36d20aa5/7b8c5875-37c8-4786-a5d2-7024febd1bc4.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5833&fp-y=0.3650&fp-z=2.0000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=188&mark-y=253&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zMTEmaD0xNzAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Documento&quot;, digite el número de documento de identidad válido del cliente (máximo 10 caracteres)." />
 </div>
 
 <div><h3>5. En el campo "Nombres", digite el primer y segundo nombre del cliente (si cuenta con segundo).</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/d76ea12a-87b4-4a66-9233-d915ca888042/43b224e0-7cd3-4b1b-97fd-47199f694fcd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.4312&fp-z=2.0717&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=373&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NTQmaD0xNjkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Nombres&quot;, digite el primer y segundo nombre del cliente (si cuenta con segundo)." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/d76ea12a-87b4-4a66-9233-d915ca888042/b3d0f1dc-b3e9-4bf6-9799-4e5b47720751.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5867&fp-y=0.3520&fp-z=2.0729&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=461&mark-y=275&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MTYmaD0xNjkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Nombres&quot;, digite el primer y segundo nombre del cliente (si cuenta con segundo)." />
 </div>
 
 <div><h3>6. En el campo "Apellidos", digite el primer y segundo apellido del cliente.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/cf7b9e27-322e-4e1b-85f5-672141f16c1e/fa8cd4e2-a094-40e0-a49f-488928842efc.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.4312&fp-z=2.0717&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=373&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NTQmaD0xNjkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Apellidos&quot;, digite el primer y segundo apellido del cliente." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/cf7b9e27-322e-4e1b-85f5-672141f16c1e/510a9b15-bb15-41a2-9589-80f75f71e1be.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=179&mark-y=451&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00MjUmaD0xNTgmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Apellidos&quot;, digite el primer y segundo apellido del cliente." />
 </div>
 
 <div><h3>7. En el campo "Celular", digite un número telefónico del cliente.</h3>
@@ -124,51 +140,51 @@
 </div>
 
 <div><h3>8. En el campo "Departamento" presione con el botón izquierdo del ratón, se desplegará una lista con los departamentos de Colombia, seleccione el departamento de la ubicación del cliente.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/1cb3ae09-2cca-41ce-9af9-7f9844f11eef/c44ae295-51b5-42d8-93c9-625b93fa71c8.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.5628&fp-z=2.1108&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=380&mark-y=355&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NDAmaD0xMDImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Departamento&quot; presione con el botón izquierdo del ratón, se desplegará una lista con los departamentos de Colombia, seleccione el departamento de la ubicación del cliente." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/1cb3ae09-2cca-41ce-9af9-7f9844f11eef/365a2d94-31aa-47ba-b296-41af7af71f39.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.5441&fp-z=2.1108&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=380&mark-y=319&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NDAmaD0xNzQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Departamento&quot; presione con el botón izquierdo del ratón, se desplegará una lista con los departamentos de Colombia, seleccione el departamento de la ubicación del cliente." />
 </div>
 
-<div><h3>9. En el campo "Municipio" presione con el botón izquierdo del ratón, se desplegará una lista con los municipios del departamento elegido previamente, seleccione el municipio de la ubicación del cliente.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/3fd94588-e026-4c6e-9274-bfd25799d44d/e7c76b71-226d-4a7a-96b9-0a89f429abcc.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6812&fp-y=0.5424&fp-z=2.4382&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=333&mark-y=307&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MzUmaD0xOTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Municipio&quot; presione con el botón izquierdo del ratón, se desplegará una lista con los municipios del departamento elegido previamente, seleccione el municipio de la ubicación del cliente." />
+<div><h3>9. En el campo "Municipio" presione con el botón izquierdo del ratón, se desplegará una lista con los municipios del departamento previamente escogido, seleccione el municipio que corresponda a la ubicación del cliente.</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/3fd94588-e026-4c6e-9274-bfd25799d44d/e7c76b71-226d-4a7a-96b9-0a89f429abcc.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6812&fp-y=0.5424&fp-z=2.4382&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=333&mark-y=307&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MzUmaD0xOTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Municipio&quot; presione con el botón izquierdo del ratón, se desplegará una lista con los municipios del departamento previamente escogido, seleccione el municipio que corresponda a la ubicación del cliente." />
 </div>
 
 <div><h3>10. En el campo "Barrio", digite el nombre del barrio que haya indicado el cliente.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/74a13020-0c7a-4d55-8a61-17340310b538/539c3e4b-3bcf-408c-ac79-9cb6212881cc.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.6536&fp-z=2.0717&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=373&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NTQmaD0xNjkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Barrio&quot;, digite el nombre del barrio que haya indicado el cliente." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/74a13020-0c7a-4d55-8a61-17340310b538/01a1a360-6be1-4b86-a521-d7857cc9ab20.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5060&fp-y=0.6564&fp-z=2.0717&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=373&mark-y=317&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NTQmaD0xNzgmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Barrio&quot;, digite el nombre del barrio que haya indicado el cliente." />
 </div>
 
 <div><h3>11. En el campo "Dirección", digite la dirección de residencia que haya indicado el cliente.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/f8206712-b4f1-4594-b90c-e0ecc4fd5550/5d4d11fc-df79-4583-aa06-70f7942dd343.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6799&fp-y=0.6547&fp-z=2.4174&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=329&mark-y=297&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01NDMmaD0xOTAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Dirección&quot;, digite la dirección de residencia que haya indicado el cliente." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/f8206712-b4f1-4594-b90c-e0ecc4fd5550/25e9883e-0049-47e7-b6fc-589558b36242.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6799&fp-y=0.6586&fp-z=2.4174&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=329&mark-y=290&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01NDMmaD0yMDUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Dirección&quot;, digite la dirección de residencia que haya indicado el cliente." />
 </div>
 
 <div><h3>12. Una vez este todo listo, presione con el botón izquierdo del ratón en "Guardar". Será redirigido a la pantalla "Gestión de Clientes".</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/d7b22ef0-8293-4493-9cba-52901d8a3e36/7d7b9827-1816-4dfb-8560-076798a45dfd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5906&fp-y=0.7577&fp-z=2.6577&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=478&mark-y=330&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNDMmaD0xMjQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez este todo listo, presione con el botón izquierdo del ratón en &quot;Guardar&quot;. Será redirigido a la pantalla &quot;Gestión de Clientes&quot;." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/d7b22ef0-8293-4493-9cba-52901d8a3e36/10a225e9-ae43-4ec8-93b9-e8a6bca6f55b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5903&fp-y=0.7572&fp-z=2.6226&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=472&mark-y=325&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNTYmaD0xMzQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez este todo listo, presione con el botón izquierdo del ratón en &quot;Guardar&quot;. Será redirigido a la pantalla &quot;Gestión de Clientes&quot;." />
 </div>
 
 <div><h3>13. En "Gestión de Clientes", podrá visualizar el nuevo registro del cliente que ha agregado al sistema.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/a95396f2-b258-41bc-a7ed-1a568cf7354b/625f0bb9-ceb3-4046-9f89-47d49809ebc7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5790&fp-y=0.6421&fp-z=1.2375&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=25&mark-y=278&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTUwJmg9MjA3JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En &quot;Gestión de Clientes&quot;, podrá visualizar el nuevo registro del cliente que ha agregado al sistema." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/a95396f2-b258-41bc-a7ed-1a568cf7354b/5bc95f36-375c-4f28-b43f-cef34140e6eb.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=36&mark-y=106&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTE1Jmg9MjAxJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En &quot;Gestión de Clientes&quot;, podrá visualizar el nuevo registro del cliente que ha agregado al sistema." />
 </div>
 
-<div><h3>14. Si desea cambiar el estado de un registro de cliente, en la columna "Estado" de dicho registro presione con el botón izquierdo del ratón el botón "Activo" o "Inactivo" según se encuentre.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/98d8eb83-671d-4e3b-95bd-c6d1f7123069/9684a388-8d9e-4a9f-9fa3-70f14627cebf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8130&fp-y=0.4763&fp-z=2.9347&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=473&mark-y=337&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNTUmaD05MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea cambiar el estado de un registro de cliente, en la columna &quot;Estado&quot; de dicho registro presione con el botón izquierdo del ratón el botón &quot;Activo&quot; o &quot;Inactivo&quot; según se encuentre." />
+<div><h3 id="statcustomer">14. Si desea cambiar el estado de un registro de cliente, en la columna "Estado" de dicho registro presione con el botón izquierdo del ratón el botón "Activo" o "Inactivo" según se encuentre.</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/98d8eb83-671d-4e3b-95bd-c6d1f7123069/efadc4e9-c35d-4111-ac88-0b24c07bd188.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=890&mark-y=191&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMjUmaD01MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea cambiar el estado de un registro de cliente, en la columna &quot;Estado&quot; de dicho registro presione con el botón izquierdo del ratón el botón &quot;Activo&quot; o &quot;Inactivo&quot; según se encuentre." />
 </div>
 
 <div><h3>15. Aparecerá una ventana de confirmación, debe presionar con el botón izquierdo del ratón en "Confirmar", o en su defecto, presione en "Cancelar" para detener el cambio de estado.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/11e79150-e0e4-429c-9972-85c818e3dc23/3b30d555-bda5-4b07-ad50-b889bd999aa7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4996&fp-y=0.5006&fp-z=1.3841&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=246&mark-y=146&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz03MDkmaD00NzImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Aparecerá una ventana de confirmación, debe presionar con el botón izquierdo del ratón en &quot;Confirmar&quot;, o en su defecto, presione en &quot;Cancelar&quot; para detener el cambio de estado." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/11e79150-e0e4-429c-9972-85c818e3dc23/9f4d1ff1-6d45-4d07-a7f4-f6f9c5e45f78.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5018&fp-y=0.5017&fp-z=1.3841&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=244&mark-y=145&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz03MTEmaD00NzQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Aparecerá una ventana de confirmación, debe presionar con el botón izquierdo del ratón en &quot;Confirmar&quot;, o en su defecto, presione en &quot;Cancelar&quot; para detener el cambio de estado." />
 </div>
 
-<div><h3>16. El cliente desactivado aparecerá con el botón rojo "Inactivo", pasará a un segundo plano en el sistema y ya no intervendrá en futuros registros de ventas.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/30486ef8-d962-4c23-9734-dcca195e5654/7a1e305a-10ae-4308-b9b2-f03e3f60d086.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5881&fp-y=0.5088&fp-z=1.2723&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=29&mark-y=263&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTQyJmg9MjM4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El cliente desactivado aparecerá con el botón rojo &quot;Inactivo&quot;, pasará a un segundo plano en el sistema y ya no intervendrá en futuros registros de ventas." />
+<div><h3>16. El cliente desactivado aparecerá con el botón rojo "Inactivo" y pasará a un segundo plano en el sistema, no intervendrá en futuros registros de ventas.</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/30486ef8-d962-4c23-9734-dcca195e5654/ba05f218-c242-46bf-a76f-799a62a8b463.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=34&mark-y=143&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTI5Jmg9MjM1JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El cliente desactivado aparecerá con el botón rojo &quot;Inactivo&quot; y pasará a un segundo plano en el sistema, no intervendrá en futuros registros de ventas." />
 </div>
 
 <div><h3>17. Para visualizar en detalle el registro de un cliente, presione con el botón izquierdo del ratón en el botón azul del ojo, a continuación señalado:</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/030461a9-73a5-41e2-a3ab-9de22cddf138/3926ab78-709a-41fb-906d-c9a858de9a82.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.9323&fp-y=0.6140&fp-z=2.8789&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=909&mark-y=330&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTQmaD0xMDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Para visualizar en detalle el registro de un cliente, presione con el botón izquierdo del ratón en el botón azul del ojo, a continuación señalado:" />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/030461a9-73a5-41e2-a3ab-9de22cddf138/3060e9d2-10ee-453e-acd0-7ca339693fc2.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=963&mark-y=447&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMzYmaD0xMjEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Para visualizar en detalle el registro de un cliente, presione con el botón izquierdo del ratón en el botón azul del ojo, a continuación señalado:" />
 </div>
 
-<div><h3>18. Aparecerá una ventana de "Detalles del Cliente", si ha terminado de visualizar el registro puede cerrar la ventana presionando el botón "X" ubicado en la parte superior derecha de la ventana.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/20c34da0-e6ad-4e7c-97eb-fd1e48fbc8cb/0126b0f0-00e0-4581-857d-771f2d203843.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4958&fp-y=0.4994&fp-z=1.2139&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=414&mark-y=82&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zNzEmaD02MDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Aparecerá una ventana de &quot;Detalles del Cliente&quot;, si ha terminado de visualizar el registro puede cerrar la ventana presionando el botón &quot;X&quot; ubicado en la parte superior derecha de la ventana." />
+<div><h3>18. Aparecerá una ventana de "Detalles del Cliente", si ha terminado de visualizar el registro puede cerrar la ventana presionando con el botón izquierdo del ratón en la "X" ubicada en la parte superior derecha de la ventana.</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/20c34da0-e6ad-4e7c-97eb-fd1e48fbc8cb/2d36d17a-94ba-4683-a02f-eb6136069296.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4954&fp-y=0.5039&fp-z=1.2074&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=406&mark-y=76&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zODgmaD02MTMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Aparecerá una ventana de &quot;Detalles del Cliente&quot;, si ha terminado de visualizar el registro puede cerrar la ventana presionando con el botón izquierdo del ratón en la &quot;X&quot; ubicada en la parte superior derecha de la ventana." />
 </div>
 
-<div><h3>19. Si desea actualizar el registro de un cliente, ya sea porque este cambió su número de teléfono o lugar de residencia, con el botón izquierdo del ratón presione en el ícono amarillo del lápiz a continuación señalado. Será redirigido al formulario de Modificación.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/c87529e7-40a0-4d98-b3bf-016fb4d6ae41/97e3ec9c-e110-4089-a58d-60884dc5d080.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8947&fp-y=0.6140&fp-z=2.8428&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=783&mark-y=326&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTUmaD0xMTMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea actualizar el registro de un cliente, ya sea porque este cambió su número de teléfono o lugar de residencia, con el botón izquierdo del ratón presione en el ícono amarillo del lápiz a continuación señalado. Será redirigido al formulario de Modificación." />
+<div><h3 id="modcustomer">19. Si desea actualizar el registro de un cliente, ya sea porque este cambió su número de teléfono o lugar de residencia, con el botón izquierdo del ratón presione en el ícono amarillo del lápiz a continuación señalado. Será redirigido al formulario de "Modificar Cliente".</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/c87529e7-40a0-4d98-b3bf-016fb4d6ae41/e1a16c26-fc2d-4bfc-9dd9-b912eca8a015.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1045&mark-y=189&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MiZoPTUwJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea actualizar el registro de un cliente, ya sea porque este cambió su número de teléfono o lugar de residencia, con el botón izquierdo del ratón presione en el ícono amarillo del lápiz a continuación señalado. Será redirigido al formulario de &quot;Modificar Cliente&quot;." />
 </div>
 
 <div><h3>20. Modifique el dato de alguno de los campos que desee.</h3>
@@ -176,24 +192,109 @@
 </div>
 
 <div><h3>21. Una vez haya modificado el registro del cliente, presiona con el botón izquierdo del ratón al botón "Guardar". Será redirigido a "Gestión de Clientes".</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/4b3a0e8f-4202-4cfc-8c90-589ccd2a1c43/7fb75a33-3783-4e0a-ab1c-8bab10591eba.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5881&fp-y=0.7577&fp-z=2.6710&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=481&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yMzgmaD0xMjEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez haya modificado el registro del cliente, presiona con el botón izquierdo del ratón al botón &quot;Guardar&quot;. Será redirigido a &quot;Gestión de Clientes&quot;." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/4b3a0e8f-4202-4cfc-8c90-589ccd2a1c43/549ec129-dc1c-4e54-ad89-d427277b873a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5877&fp-y=0.7588&fp-z=2.5886&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=466&mark-y=310&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNjgmaD0xNDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez haya modificado el registro del cliente, presiona con el botón izquierdo del ratón al botón &quot;Guardar&quot;. Será redirigido a &quot;Gestión de Clientes&quot;." />
 </div>
 
 <div><h3>22. Podrá visualizar el registro modificado con los nuevos datos ingresados.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/f13fe8d6-9855-4b7b-8819-5f6c0d8ba4c0/022081a0-f883-4f88-8b78-297f7c14b0a7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5881&fp-y=0.5617&fp-z=1.2723&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=29&mark-y=263&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTQyJmg9MjM4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Podrá visualizar el registro modificado con los nuevos datos ingresados." />
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/f13fe8d6-9855-4b7b-8819-5f6c0d8ba4c0/efff29ad-88a7-46df-9e1a-af1ca422c24b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=51&mark-y=312&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDk1Jmg9NjkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Podrá visualizar el registro modificado con los nuevos datos ingresados." />
 </div>
 
-<div><h3>23. En caso de tener una gran cantidad de registros de clientes, podrá utilizar la barra de búsqueda ubicada en la parte superior derecha de la tabla.</h3>
-<p>Puede buscar a un determinado cliente por su nombre, su apellido, su documento o su lugar de residencia.</p>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/b19d8171-74ee-4110-90b2-f35f7a9c823f/700756ec-8688-438e-9e85-4551d90d6134.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8839&fp-y=0.3535&fp-z=2.8518&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=532&mark-y=327&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01NDAmaD0xMTAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de tener una gran cantidad de registros de clientes, podrá utilizar la barra de búsqueda ubicada en la parte superior derecha de la tabla, puede buscar a un determinado cliente por su nombre, su apellido, su documento o su lugar de residencia." />
+<div><h3 id="bcustomer">23. En caso de tener una gran cantidad de registros de clientes, podrá utilizar la barra de búsqueda ubicada en la parte superior derecha de la tabla, puede buscar a un determinado cliente por su nombre, su apellido, su documento o su lugar de residencia.</h3>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/b19d8171-74ee-4110-90b2-f35f7a9c823f/1caead8c-a1e7-4620-94e4-8e43e874fbef.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=933&mark-y=40&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMzgmaD00OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de tener una gran cantidad de registros de clientes, podrá utilizar la barra de búsqueda ubicada en la parte superior derecha de la tabla, puede buscar a un determinado cliente por su nombre, su apellido, su documento o su lugar de residencia." />
 </div>
 
-<div><h3>25. Una sola página de la tabla no mostrará la totalidad de registros existentes, la página limitará el número de registros que puede visualizar y creará "Páginas", estas páginas aparecerán en la parte inferior derecha (abajo señalada) y ahí podrá desplazarse entre los registros.</h3>
-<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/88582037-210a-41f6-a4fa-a0e32841e5bc/74e11ea1-e252-4a7b-bdfe-eefbb88e0554.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8772&fp-y=0.8899&fp-z=4.0000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=530&mark-y=350&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xNjImaD0xNTUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de tener una gran cantidad de registros de clientes, la página limitará el número de registros que puede visualizar en la tabla y creará &quot;Páginas&quot;, estas páginas aparecerán en la parte inferior derecha (abajo señalada) y ahí podrá desplazarse entre los registros." />
+<div><h3>24. En caso de tener una gran cantidad de registros de clientes, la página limitará el número de registros que puede visualizar en la tabla y creará "Páginas".</h3>
+<p>Éstas páginas aparecerán en la parte inferior derecha (abajo señalada) y ahí podrá desplazarse entre los registros.</p>
+<img src="https://images.tango.us/workflows/995e6a44-4965-48c1-aad7-5b9ae546503c/steps/88582037-210a-41f6-a4fa-a0e32841e5bc/5e6797f7-968c-4af5-b861-32047df15459.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=182&mark-y=116&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04OTgmaD0yMjImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de tener una gran cantidad de registros de clientes, la página limitará el número de registros que puede visualizar en la tabla y creará &quot;Páginas&quot;." />
 </div>
 
 <br/>
+<div class="custom-divider"></div>
 <hr/>
+
+<h1 id="mprovider"><a target='_blank'>Gestionando la Información de los Proveedores</a></h1>
+<div><p>Aquí puede averiguar sobre como puedes administrar la información de proveedores de los productos.</p></div>
+
+<div><h2><a href="http://127.0.0.1:8000/admin/providers/">Acceso al Módulo</a></h2></div>
+
+<div><h3>1. En la barra lateral izquierda, presione con el botón izquierdo del ratón en "Proveedores" y a continuación, presione en "Gestión de Proveedores".</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/a71cdec2-f63b-4fcb-8064-2c46127b6372/26c11c99-e548-47bd-a9b8-07f393c335d7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=31&mark-y=672&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MDMmaD0xNTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, presione con el botón izquierdo del ratón en &quot;Proveedores&quot; y a continuación, presione en &quot;Gestión de Proveedores&quot;." />
+</div>
+
+<div><h3 id="aprovider">2. Una vez dentro, si desea registrar un nuevo proveedor, presione con el botón izquierdo del ratón, en "Agregar Proveedor".</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2228ba05-c2ef-4671-ab9f-23e8675a7e3b/32dc6991-0b1b-474c-9f82-49018f9bd17a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3670&fp-y=0.2935&fp-z=1.9915&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=358&mark-y=348&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00ODMmaD0xMzMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez dentro, si desea registrar un nuevo proveedor, presione con el botón izquierdo del ratón, en &quot;Agregar Proveedor&quot;." />
+</div>
+
+<div><h3>3. En el formulario, diligencie al menos los campos marcados con asterisco (*).</h3>
+<p>Los campos sin (*) son opcionales, rellénelos si así lo considera.</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/282467f1-0736-4e67-a549-434da947a48a/587fa185-f4fb-4c05-be79-4b66f09d9943.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el formulario, diligencie al menos los campos marcados con asterisco (*)." />
+</div>
+
+<div><h3>4. Para los campos opcionales "Tipo de Documento" y "Número de Identificación" tenga en cuenta si el proveedor es una persona o si se trata de una empresa.</h3>
+<p>En caso de que sea una empresa, presione en el campo donde dice "Documento", se desplegará una lista, escoja el tipo de documento "NIT" y digite el número correspondiente, en el campo contiguo.</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/58224612-2f2e-46b1-b8cc-bae8dfb2391c/8bb8fddd-745d-4b1b-9855-8dd9b34519fd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=39&mark-y=5&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTI3Jmg9MjExJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Para los campos opcionales &quot;Tipo de Documento&quot; y &quot;Número de Identificación&quot; tenga en cuenta si el proveedor es una persona o si se trata de una empresa." />
+</div>
+
+<div><h3>5. En el campo "Información Adicional", puede añadir datos extra sobre los proveedores.</h3>
+<p>Por ejemplo, puede escribir sobre el tipo de productos que ofrecen.</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/4032b682-9e60-4c5a-a0f9-817726a66a3f/eed03dd1-a528-4984-83ef-f70dea09af40.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Información Adicional&quot;, puede añadir datos extra sobre los proveedores." />
+</div>
+
+<div><h3>6. Una vez haya diligenciado al menos los campos obligatorios y todo esté en orden, presione con el botón izquierdo del ratón en "Guardar" para validar la información y registrar al nuevo proveedor.</h3>
+<p>Será redirigido a "Gestión de Proveedores".</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/059c6b62-b608-4d60-8913-cf340e5340c4/a149fbc9-f72c-48c6-9c94-5859e6d7e27d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=461&mark-y=226&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODEmaD0xNDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez haya diligenciado al menos los campos obligatorios y todo esté en orden, presione con el botón izquierdo del ratón en &quot;Guardar&quot; para validar la información y registrar al nuevo proveedor." />
+</div>
+
+<div><h3>7. Luego de registrar exitosamente a un proveedor, irá al entorno "Gestión de Proveedores", donde podrá visualizar el registro del nuevo proveedor.</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2776f45b-b1cc-4a29-a20f-74645b66a73e/2633fa11-edca-44f0-9d4c-c055eea7cb5f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDg0Jmg9NzUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego de registrar exitosamente a un proveedor, irá al entorno &quot;Gestión de Proveedores&quot;, donde podrá visualizar el registro del nuevo proveedor." />
+</div>
+
+<div><h3 id="statprovider">8. Por defecto, el estado de un nuevo registro es "Activo". En caso de que haya prescindido de los servicios de algún proveedor, podrá desactivarlo para que no interfiera en nuevos registros de compra.</h3>
+<p>Para cambiar de estado un registro, presione sobre el botón de la columna "Estado", que corresponda al registro que desea modificar el estado.</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/c9d3d6aa-4986-4229-bdb4-891a9f8dea50/e19a12cc-1d50-43fc-8965-b2f993b0e25b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=802&mark-y=175&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTYmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Por defecto, el estado de un nuevo registro es &quot;Activo&quot;. En caso de que haya prescindido de los servicios de algún proveedor, podrá desactivarlo para que no interfiera en nuevos registros de compra." />
+</div>
+
+<div><h3>9. Luego, presione con el botón izquierdo del ratón en "Confirmar".</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dd1069d0-d734-43f5-9188-105002bf95e7/f05e2860-0101-406b-9cb1-64f173dcd2de.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=342&mark-y=297&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzMmaD0xMjMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego, presione con el botón izquierdo del ratón en &quot;Confirmar&quot;." />
+</div>
+
+<div><h3>10. El proveedor estará Inactivo y pasará a un segundo plano en la web.</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/8b40e64e-e855-488c-8294-575991d2ebd8/8b8ca860-ada2-4c37-95a7-6dfb44973ff7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=812&mark-y=8&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTUmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El proveedor estará Inactivo y pasará a un segundo plano en la web." />
+</div>
+
+<div><h3>11. Puede visualizar a detalle la información de cada registro, presionando el botón azul del ojo, a continuación señalado.</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/732af0d6-186f-477d-8927-d0e2f24887c6/f43ff153-1a48-4034-86e8-f1f93cdd9a97.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1087&mark-y=13&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MCZoPTY4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Puede visualizar a detalle la información de cada registro, presionando el botón azul del ojo, a continuación señalado." />
+</div>
+
+<div><h2><a href="http://127.0.0.1:8000/admin/providers/"># Proveedores</a></h2></div>
+
+<div><h3>12. Se desplegará una ventana flotante con toda la información del registro.</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/b995e30a-e74c-45df-bf24-050dd13a233e/389fcda7-c3b9-4f6a-b06c-7b52bfbb6565.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4958&fp-y=0.4989&fp-z=1.4215&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=256&mark-y=194&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02ODgmaD00NDEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Se desplegará una ventana flotante con toda la información del registro." />
+</div>
+
+<div><h3 id="modprovider">13. Si desea actualizar la información de un proveedor, para modificar el registro presione en el botón del lápiz "Editar", a continuación señalado:</h3>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2fb2055f-aa7c-4ef8-8a62-20ebae0f7334/dce716b2-3aa4-443b-8e3e-f026ab91f59f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1007&mark-y=11&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03NiZoPTcyJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea actualizar la información de un proveedor, para modificar el registro presione en el botón del lápiz &quot;Editar&quot;, a continuación señalado:" />
+</div>
+
+<div><h3>14. Será redireccionado a un formulario como este, similar al de "Agregar Proveedor".</h3>
+<p>Modifique los datos de los campos que desee actualizar y presione en el botón "Guardar".</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/68e095d6-8fc1-43b1-8f02-6186c14b1ef5/6cbb75d9-7dcd-4706-9359-dd6d6d99b158.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MzAmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Será redireccionado a un formulario como este, similar al de &quot;Agregar Proveedor&quot;." />
+</div>
+
+<div><h3 id="bprovider">15. En caso de que tenga muchos registros y necesite encontrar a uno en particular, utilice la barra de búsqueda.</h3>
+<p>Puede hallar un proveedor utilizando cualquiera de sus datos, ya sea su nombre, su teléfono o su correo.</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/78623405-aa66-4191-b4f1-7559aef7a801/29b3c01a-5af0-4c28-a6d7-6470108b4eaf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=920&mark-y=31&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTEmaD01MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de que tenga muchos registros y necesite encontrar a uno en particular, utilice la barra de búsqueda." />
+</div>
+
+<div><h3>16. Una sola página de la tabla no mostrará la totalidad de registros existentes, la página limitará el número de registros que puede visualizar y creará más "Páginas".</h3>
+<p>Estas páginas aparecerán en la parte inferior derecha (abajo señalada) y ahí podrá desplazarse entre los proveedores.</p>
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dfb7bc93-f7a0-40d0-bfe4-4a6b671089b3/00ba5eba-fbbf-48e1-b858-574ab4165743.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8701&fp-y=0.9394&fp-z=4.0000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=159&mark-y=525&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz04ODMmaD0yMDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una sola página de la tabla no mostrará la totalidad de registros existentes, la página limitará el número de registros que puede visualizar y creará más &quot;Páginas&quot;." />
+</div>
+
+<br/>
+<div class="custom-divider"></div>
+<hr/>
+
             
         </div>
 
@@ -201,82 +302,139 @@
     <div class="container" style="width:70%">
         <div class="card shadow">
             <div class="card-header" style="background-color:red">
-                <h6 class="text-center" style="margin-top:5px; color:white; font-weight:bold; font-size:25px">Secciones del Manual</h6>
+                <h6 class="text-center" style="margin-top:5px; color:white; font-weight:bold; font-size:25px">Secciones</h6>
             </div>
             <ul class="list-group" style="border-radius:0;">
                 <li class="list-group-item collapsed">
-                    <center><a href="#" data-toggle="collapse" data-target="#collapseSec1" aria-expanded="false">Módulo de Proveedores</a></center>
+                    <center><a href="#" data-toggle="collapse" data-target="#collapseSec1" aria-expanded="false">Módulo de Usuarios y Autenticación</a></center>
                     
                     <div id="collapseSec1" class="collapse">
                         <div class="custom-divider"></div>
-                        <ol>
-                            <li>
+                        
+                        <div class="bg-white py-2 collapse-inner rounded text-center">
+                            <a href="#musers" class="collapse-item" style="font-weight:bold ;">Gestión de los Usuarios</a>
+                        </div>
+                    <ol>
+                        <li>
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <a href="#auser" class="collapse-item">Agregar Nuevo Usuario</a>
+                            </div>
+                        </li>
+
+                    <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#gproviders" class="collapse-item">Gestión de los Proveedores</a>
+                            <a href="#moduser" class="collapse-item">Modificar un Usuario</a>
                         </div>
                     </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#sproviders" class="collapse-item">Cambiar Estado del Proveedor</a>
+                            <a href="#statuser" class="collapse-item">Cambiar Estado de un Usuario</a>
+                        </div>
+                    </li>
+
+
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a href="#sproviders" class="collapse-item">Inicio de Sesión</a>
                         </div>
                     </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#mproviders" class="collapse-item">Modificación del Proveedor</a>
+                            <a href="#sproviders" class="collapse-item">Recuperación de Contraseña</a>
                         </div>
                     </li>
+
                 </ol>
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <center><a href="#section2" data-toggle="collapse" data-target="#collapseSec2" aria-expanded="false">Sección 2</a></center>
+                    <center><a href="#section2" data-toggle="collapse" data-target="#collapseSec2" aria-expanded="false">Control de Acceso al Sistema</a></center>
                     <div id="collapseSec2" class="collapse">
                         <div class="custom-divider"></div>
+                        
                         <ol>
                             <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 2</a>
+                            <a class="collapse-item" href="{% url 'proveedores' %}">Manejo de Roles</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{% url 'proveedores' %}">Manejo de Permisos de Acceso</a>
                         </div>
                     </li>
                 </ol>
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <center><a href="#section3" data-toggle="collapse" data-target="#collapseSec3" aria-expanded="false" aria-controls="collapseTwo">Sección 3</a></center>
+                    <center><a href="#section3" data-toggle="collapse" data-target="#collapseSec3" aria-expanded="false" aria-controls="collapseTwo">Módulo de Clientes</a></center>
                     <div id="collapseSec3" class="collapse" aria-labelledby="headingTwo">
                         <div class="custom-divider"></div>
+                        <div class="bg-white py-2 collapse-inner rounded text-center">
+                            <a href="#mcustomer" class="collapse-item" style="font-weight:bold ;">Gestión de los Clientes</a>
+                        </div>
                         <ol>
                         <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 3</a>
+                            <a class="collapse-item" href="#acustomer">Agregar Nuevo Cliente</a>
                         </div>
                         </li>
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 3.1</a>
+                                <a class="collapse-item" href="#modcustomer">Modificar un Cliente</a>
                             </div>
-                            </li>
+                        </li>
+
+                        <li>
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <a class="collapse-item" href="#statcustomer">Cambiar el Estado de un Cliente</a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <a class="collapse-item" href="bcustomer">Buscar Clientes</a>
+                            </div>
+                        </li>
                         </ol>
 
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <center><a href="#section4" data-toggle="collapse" data-target="#collapseSec4" aria-expanded="false" aria-controls="collapseTwo">Sección 4</a></center>
+                    <center><a href="#section4" data-toggle="collapse" data-target="#collapseSec4" aria-expanded="false" aria-controls="collapseTwo">Módulo de Proveedores</a></center>
                     <div id="collapseSec4" class="collapse" aria-labelledby="headingTwo">
                         <div class="custom-divider"></div>
+                        <div class="bg-white py-2 collapse-inner rounded text-center">
+                            <a href="#mcustomer" class="collapse-item" style="font-weight:bold ;">Gestión de los Proveedores</a>
+                        </div>
                         <ol>
                             <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{% url 'proveedores' %}">Como iniciar 4</a>
+                            <a class="collapse-item" href="#aprovider">Agregar Nuevo Proveedor</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#modprovider">Modificar un Proveedor</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#statprovider">Cambiar el Estado de un Proveedor</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#bprovider">Buscar Proveedores</a>
                         </div>
                     </li>
                 </ol>
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <center><a href="#scustomers" data-toggle="collapse" data-target="#collapseSec5" aria-expanded="false" aria-controls="collapseTwo">Módulo de Clientes</a></center>
+                    <center><a href="#scustomers" data-toggle="collapse" data-target="#collapseSec5" aria-expanded="false" aria-controls="collapseTwo">Módulo de Productos</a></center>
                     <div id="collapseSec5" class="collapse" aria-labelledby="headingTwo">
                         <div class="custom-divider"></div>
                         <ol>

@@ -24,8 +24,8 @@ from tuiranfitgo.views import jwt_cookie_required, module_access_required
 from base64 import urlsafe_b64decode as atob
 
 
-# @jwt_cookie_required
-# @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def Home(request):
     usuarios = Usuarios.objects.all()
 

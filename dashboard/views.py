@@ -103,16 +103,6 @@ def obtener_datos_ventas_y_compras(request):
     return JsonResponse(data)
 
 
-
-
-
-
-
-
-
-
-
-
 def obtener_todos_los_productos(request):
     try:
         # Consulta para obtener todos los productos y sus cantidades.
