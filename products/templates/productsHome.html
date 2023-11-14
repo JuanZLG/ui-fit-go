@@ -173,23 +173,23 @@
                         <img src="/media/${producto.img}" alt="Imagen" class="img-fluid">
                     </div>
                     <div class="modal-info p-2 m-auto">
-                        <p>Nombre: ${producto.nombre_producto}</p>
-                        <p>Precio al Público: $${formattedPrecio}</p>
-                        <p>Fecha de Vencimiento: ${fechaFormateada}</p>
-                        <p>Existencias: ${cantidadSpan}</p>
+                        <p><strong class="mr-1">Nombre:</strong> ${producto.nombre_producto}</p>
+                        <p><strong class="mr-1">Precio al Público:</strong> $${formattedPrecio}</p>
+                        <p><strong class="mr-1">Fecha de Vencimiento:</strong> ${fechaFormateada}</p>
+                        <p><strong class="mr-1">Existencias:</strong> ${cantidadSpan}</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="flex">
-                        <p>Marca: ${producto.marca}</p>
-                        <p>Categoría: ${producto.categoria}</p>
+                        <p><strong class="mr-1">Marca:</strong> ${producto.marca}</p>
+                        <p><strong>Categoría:</strong> ${producto.categoria}</p>
                     </div>
                     <div class="flex">
-                        <p>Sabor: ${producto.sabor}</p>
-                        <p>Presentación:${producto.servicios}Libra(s)</p>
+                        <p><strong class="mr-1">Sabor:</strong> ${producto.sabor}</p>
+                        <p><strong class="mr-1">Presentación:</strong>${producto.servicios}Libra(s)</p>
                     </div>
                     <div class="modal-cont-descrip">
-                        <p class="text-start">Descripción: ${producto.descripcion}</p>
+                        <p class="text-start"><strong class="mr-1">Descripción:</strong> ${producto.descripcion}</p>
                     </div>
                 </div>
             </div>

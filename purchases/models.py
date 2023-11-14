@@ -65,19 +65,20 @@ class Productos(models.Model):
     id_categoria = models.ForeignKey(Categorias, models.DO_NOTHING, db_column='id_categoria')
     id_marca = models.ForeignKey(Marcas, models.DO_NOTHING, db_column='id_marca')
     nombre_producto = models.CharField(max_length=75)
-    descripcion = models.CharField(max_length=1000)
+    descripcion = models.CharField(max_length=400)
     cantidad = models.IntegerField()
     fechaven = models.DateTimeField()
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
-    estado = models.IntegerField()
+    estado = models.IntegerField(default=1)
     precio = models.FloatField()
-
+    precio_pub = models.FloatField()
+    
+    iProductImg = models.BinaryField(null=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'productos'
-
 
 class Proveedores(models.Model):
     id_proveedor = models.AutoField(primary_key=True)

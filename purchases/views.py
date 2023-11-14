@@ -17,24 +17,24 @@ logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
 
-@jwt_cookie_required
-@module_access_required('compras')
+# @jwt_cookie_required
+# @module_access_required('compras')
 def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
 @csrf_exempt
-@jwt_cookie_required
-@module_access_required('compras')
+# @jwt_cookie_required
+# @module_access_required('compras')
+
+
 def crear_compra(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            logger.debug("Datos JSON recibidos: %s", data)
-
-            proveedor_nombre = data.get('proveedor', '')
+            print(data)
+            proveedor_nombre = data.get('nombreProveedor', '')
             totalCompra = data.get('totalCompra', '')
-
             productos = data.get('productos', [])
 
             if not proveedor_nombre:
@@ -50,51 +50,64 @@ def crear_compra(request):
 
             compra = Compras.objects.create(id_proveedor=proveedor, totalCompra=totalCompra)
 
-            for producto_datos in productos:
-                producto = Productos.objects.filter(nombre_producto=producto_datos['nombre']).first()
+            for producto_id, producto_datos in productos.items():
+                cantidad_comprada = producto_datos['cantidad']
+                precioCompra = producto_datos['precioCompra']
+                precioTotal = producto_datos['totalProducto']
 
-                if not producto:
-                    return JsonResponse({'error': f'Producto "{producto_datos["nombre"]}" no encontrado en la base de datos.'}, status=400)
+                producto = Productos.objects.get(id_producto=producto_id)
 
-                detalle = Detallecompra.objects.create(
+                if producto:
+                    producto.cantidad += cantidad_comprada
+                    producto.save()
+
+                Detallecompra.objects.create(
                     id_producto=producto,
                     id_compra=compra,
-                    cantidad=producto_datos['cantidad'],
-                    precio_uni=producto_datos['precioUnidad'],
-                    precio_tot=producto_datos['precioTotal']
+                    cantidad=cantidad_comprada,
+                    precio_uni=precioCompra,
+                    precio_tot=precioTotal
                 )
-
-                producto.cantidad += producto_datos['cantidad']
-                producto.save()
 
             response_data = {'success': True}
             return JsonResponse(response_data)
 
-        except json.JSONDecodeError:
-            logger.error("Error al decodificar datos JSON: %s", request.body)
-            return JsonResponse({'error': 'Datos JSON no válidos.'}, status=400)
+        except json.JSONDecodeError as e:
+            response_data = {'success': False, 'error': str(e)}
+            return JsonResponse(response_data, status=400)
 
         except Exception as e:
-            logger.error("Error al crear la compra: %s", str(e))
-            return JsonResponse({'error': 'Error al crear la compra. Intente nuevamente más tarde.'}, status=500)
+            response_data = {'success': False, 'error': str(e)}
+            return JsonResponse(response_data, status=500)
 
     return render(request, 'createPurchases.html')
 
-@jwt_cookie_required
+
+
+
+
+
+
+
+
+from .models import Proveedores
+
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
     palabras_clave = nombre_proveedor.split()
-    proveedores_encontrados = Proveedores.objects.all()
 
+    # Utiliza Q() para realizar la búsqueda de manera más eficiente
+    q_objects = Q()
     for palabra_clave in palabras_clave:
-        proveedores_encontrados = proveedores_encontrados.filter(
-            Q(nombre_proveedor__icontains=palabra_clave)
-        )
+        q_objects |= Q(nombre_proveedor__icontains=palabra_clave) 
+
+    # Utiliza filter() solo una vez para mejorar el rendimiento
+    proveedores_encontrados = Proveedores.objects.filter(q_objects)
 
     resultados = [
         {
-            "documento": proveedor.numero_documento_nit,
+            "id_proveedor": proveedor.id_proveedor,
             "nombre_proveedor": proveedor.nombre_proveedor,
             "estado": proveedor.estado,
         }
@@ -103,54 +116,35 @@ def buscar_proveedor(request):
 
     return JsonResponse({"resultados": resultados})
 
-@jwt_cookie_required
+
 def buscar_productos(request):
     q = request.GET.get("q", "")
-    productos = Productos.objects.filter(nombre_producto__icontains=q).values("nombre_producto", "estado")
-    productos_json = [{"nombre_producto": p["nombre_producto"], "estado": p["estado"]} for p in productos]
-    return JsonResponse({"productos": productos_json})
 
-@jwt_cookie_required
-def validar_producto(request):
-    nombre_producto = request.GET.get("nombre_producto", "")
-    producto = Productos.objects.filter(nombre_producto=nombre_producto).first()
-    if producto is not None and producto.estado == 0:
-        return JsonResponse({"existe": False})
-    else:
-        return JsonResponse({"existe": producto is not None})
-
-@jwt_cookie_required
-def obtener_precio(request):
-    nombre_producto = request.GET.get(
-        "nombre_producto", None
+    productos = Productos.objects.filter(
+        Q(nombre_producto__icontains=q )
     )
-    if nombre_producto is not None:
-        producto = Productos.objects.get(nombre_producto=nombre_producto)
-        precio = producto.precio
-        return JsonResponse({"precio": precio})
-    else:
-        return JsonResponse(
-            {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
-            status=400,
-        )
 
-@jwt_cookie_required
-def obtener_nombre(request):
-    nombre_producto = request.GET.get(
-        "nombre_producto", None
-    )
-    if nombre_producto is not None:
-        try:
-            producto = Productos.objects.get(nombre_producto=nombre_producto)
-            precio = producto.precio
-            return JsonResponse({"precio": precio})
-        except Productos.DoesNotExist:
-            return JsonResponse({"error": "Producto no encontrado"}, status=404)
-    else:
-        return JsonResponse(
-            {"error": 'Parámetro "nombre_producto" no proporcionado en la solicitud'},
-            status=400,
-        )
+    resultados = []
+    for producto in productos:
+        precio_ganancia = producto.precio_pub - producto.precio 
+
+        resultados.append({
+            'id_producto': producto.id_producto,
+            'estado': producto.estado,
+            'nombre_producto': producto.nombre_producto,
+            'cantidad': producto.cantidad,
+            'descripcion': producto.descripcion,
+            'precio_compra': producto.precio,
+            'precio_venta': producto.precio_pub,
+            'precio_ganancia': precio_ganancia,
+            'marca': producto.id_marca.nombre_marca,
+            'categoria': producto.id_categoria.nombre_categoria,
+            'presentacion': producto.iProductImg.decode('utf8')
+        })
+
+    return JsonResponse({"resultados": resultados})
+
+
 
 @jwt_cookie_required
 def detalles_compra(request, compra_id):

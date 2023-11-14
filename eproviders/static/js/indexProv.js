@@ -50,29 +50,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "GET",
                 success: function (response) {
                     var proveedor = response.success;
-                    let identificacionRow = proveedor.identificacion !== "" ? `Identificación : <span id="tipo" class="mr-2">${proveedor.tipo}</span><span id="identificacion">${proveedor.identificacion}</span>` : "";
-                    let direccionRow = proveedor.direccion !== "" ? `Dirección : <span id="direccion">${proveedor.direccion}</span>` : "";
-                    let informacionRow = proveedor.informacion !== "" ? `<p>Información Adicional :</p><p id="informacion">${proveedor.informacion}</p>` : "";
+                    let identificacionRow = proveedor.identificacion !== "" ? `<span><strong>Identificación:</strong>${proveedor.tipo} ${proveedor.identificacion}</span>` : "";
+                    let direccionRow = proveedor.direccion !== "" ? `<strong>Dirección:</strong><span id="direccion">${proveedor.direccion}</span>` : "";
+                    let informacionRow = proveedor.informacion !== "" ? `<strong>Información Adicional :</strong><p>${proveedor.informacion}</p>` : "";
                     let estadoProveedorCircle = proveedor.estado == 1 ? "activo" : "inactivo";
-    
+                    
                     Swal.fire({
                         html: `
                         <div class="modal-container">
                             <div class="modal-state ${estadoProveedorCircle}"></div>
                             <h2>Información del Proveedor</h2>
                             <div class="modal-header flex">
-                                <span id="identificacionRow" class="cont-identificacion">${identificacionRow}</span>
-                                <span><span class="proveedor-info" id="nombreProveedor">${proveedor.nombre_proveedor}</span></span>
+                                ${identificacionRow ? `${identificacionRow}` : ""}
+                                <span><strong>Proveedor:</strong>${proveedor.nombre_proveedor}</span></span>
                             </div>
                             <div class="modal-body flex">
-                                <span>Correo: <span id="correoProveedor">${proveedor.correo}</span></span>
-                                <span>Teléfono: <span class="proveedor-info" id="telefonoProveedor">${proveedor.telefono}</span></span>
+                                <span><strong>Correo:</strong>${proveedor.correo}</span>
+                                <span><strong>Teléfono:</strong>${proveedor.telefono} </span>
                             </div>
                             <div class="modal-footer">
-                                <span id="direccionRow">${direccionRow}</span>
-                                <p id="informacionRow" class="modal-info">
-                                    ${informacionRow}
-                                </p>
+                                ${direccionRow ? ` <span>${direccionRow}</span>` : ""}
+                                ${informacionRow ? `<p class="modal-info">${informacionRow}</p>` : ""}
                             </div>
                         </div>
                 `,

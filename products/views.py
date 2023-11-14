@@ -173,7 +173,6 @@ def cambiarEstadoDeProducto(request):
 
 
 
-from sales.models import Productos as ProductosImg
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_producto = request.GET.get('producto_id')
@@ -181,8 +180,6 @@ def verDetallesProducto(request):
         if id_producto:
             try:
                 producto = Productos.objects.get(id_producto=id_producto)
-                img = ProductosImg.objects.get(id_producto=id_producto)
-                # print(f"Imagen {img.iProductImg}")
                 data = {
                     'categoria': producto.id_categoria.nombre_categoria,
                     'marca': producto.id_marca.nombre_marca,
@@ -194,7 +191,7 @@ def verDetallesProducto(request):
                     'status': producto.estado,
                     'servicios': producto.presentacion,
                     'precio_pub': producto.precio_pub,
-                    'img': img.iProductImg.decode('utf8')
+                    'img': producto.iProductImg.decode('utf8')
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:

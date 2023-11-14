@@ -85,28 +85,43 @@
     }
 
     #miModal .modal-dialog {
-    max-width: 70%;
-    width: 45%;
-    min-height: 35vh;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    border-radius: 8px;
-    position: absolute;
-    top: 35%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-    animation: fadeIn 0.3s ease-in-out;
-    padding: 20px;
-}
+        max-width: 90%; /* Ancho máximo para pantallas pequeñas y medianas */
+        width: 40%; /* Ajuste del ancho para pantallas grandes */
+        min-height: 35vh;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        border-radius: 8px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
+        padding: 20px;
+    }
 
+    @media (max-width: 768px) {
+        /* Estilos específicos para pantallas pequeñas y medianas */
+        #miModal .modal-dialog {
+            width: 80%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        /* Estilos específicos para pantallas pequeñas */
+        #miModal .modal-dialog {
+            width: 90%;
+        }
+    }
 
     #calendario-contenedor {
         max-height: 100%; 
         overflow-y: auto; 
     }
 </style>
+
+
+
 
 
 <script>

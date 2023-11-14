@@ -91,13 +91,23 @@ def verDetallesUsuario(request):
         if id_usuario:
             try:
                 usuario = Usuarios.objects.get(id_usuario=id_usuario)
-                
+                rolespermisos = Rolespermisos.objects.get(id_rol=usuario.id_rol)
+
+                permisos = rolespermisos.id_permiso
+
                 data = {
                     'Rol': usuario.id_rol.nombre_rol,
                     'Nombre de Usuario': usuario.nombre_usuario,
                     'documento': usuario.correo,
                     'Estado': usuario.estado,
-                    
+                    'Permisos': {
+                        'Clientes': permisos.clientes,
+                        'Usuarios': permisos.usuarios,
+                        'Proveedores': permisos.proveedores,
+                        'Productos': permisos.productos,
+                        'Compras': permisos.compras,
+                        'Ventas': permisos.ventas,
+                    }
                 }
                 return JsonResponse({'success': data})
             except Usuarios.DoesNotExist:

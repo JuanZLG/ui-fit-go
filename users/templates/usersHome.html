@@ -175,16 +175,16 @@
                         <td>{{u.correo}}</td>
                         <td>
                             <button class="cambiar-estado statusbutton mx-auto {% if u.estado == 1 %}active-status{% elif u.estado == 0 %}inactive-status{% elif not u.id_rol %}disabled{% endif %}"
-            data-usuario-id="{{ u.id_usuario }}"
-            data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}" data-toggle="tooltip"
-            data-placement="right" title="Cambiar de Estado"
-            {% if not u.id_rol %}disabled{% endif %}>
-        {% if u.estado == 1 %}
-            Activo
-        {% else %}
-            Inactivo
-        {% endif %}
-    </button>
+                                    data-usuario-id="{{ u.id_usuario }}"
+                                    data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}" data-toggle="tooltip"
+                                    data-placement="right" title="Cambiar de Estado"
+                                    {% if not u.id_rol %}disabled{% endif %}>
+                                {% if u.estado == 1 %}
+                                    Activo
+                                {% else %}
+                                    Inactivo
+                                {% endif %}
+                            </button>
                         </td>
                         <td class="cell-actions">
                             <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm" id="editbutton"
@@ -245,7 +245,10 @@
 <style>
     /* modal ---------------- */
 
-    .modal-header h2 {
+    .modal-container strong {
+        margin-right: 10px;
+    }
+    .modal-container h2 {
         font-size: 1.5rem;
     }
 
@@ -265,6 +268,28 @@
         align-items: flex-start;
         overflow-x: hidden;
         gap: 10px;
+    }
+
+    .modal-permissions {
+        width: 400px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 5px;
+    }
+    .modal-permissions .permis {
+        font-size: 14px;
+        padding: 7px 20px;
+        color: #fff;
+        border-radius: 10px;
+        
+    }
+    .modal-permissions .permis.activo{
+        background-color: #77B677;
+    }
+    .modal-permissions .permis.inactivo{
+        background-color: #ba4d4d;
     }
 
     .modal-state {
@@ -291,7 +316,7 @@
 <script>
     $(document).ready(function () {
         $(".verUsuario").click(function () {
-            var usuarioId = $(this).data("usu-id"); 
+            var usuarioId = $(this).data("usu-id");
 
             $.ajax({
                 url: "{% url 'ver_detalles_usuario' %}",
@@ -301,36 +326,37 @@
                 method: "GET",
                 success: function (response) {
                     var usuario = response.success;
-
                     var rolUsuario = usuario.Rol;
                     var nombreUsuario = usuario['Nombre de Usuario'];
                     var correoUsuario = usuario.documento;
                     var estadoUsuario = usuario.Estado == 1 ? 'Activo' : 'Inactivo';
                     var estadoUsuarioCircle = usuario.Estado == 1 ? 'activo' : 'inactivo';
-                    var permisosUsuario = usuario.permisos;
+                    var permisosUsuario = usuario.Permisos;
 
                     var permisosHTML = '';
-                    for (var i = 0; i < permisosUsuario.length; i++) {
-                        permisosHTML += `<p>Permiso ${i + 1}: <span>${permisosUsuario[i]}</span></p>`;
-                    }
+                    $.each(permisosUsuario, function (permiso, valor) {
+                        let estadoPermiso = valor === 1 ? 'activo' : 'inactivo';
+                        permisosHTML += `<span class="permis ${estadoPermiso}">${permiso}</span>`;
+                    });
 
                     Swal.fire({
                         html: `
                         <div class="modal-container">
-                            <div class="modal-header text-center">
-                                <div class="modal-state ${estadoUsuarioCircle}"></div>
-                                <h2>Información del Usuario</h2>
-                            </div>
+                            <div class="modal-state ${estadoUsuarioCircle}"></div>
+                            <h2>Información del Usuario</h2>
                             <div class="modal-body">
-                                <p>Usuario: <span>${nombreUsuario}</span></p>
-                                <p>Rol: <span>${rolUsuario}</span></p>
-                                ${permisosHTML}
+                                <p><strong>Usuario:</strong><span>${nombreUsuario}</span></p>
+                                <p><strong>Rol:</strong><span>${rolUsuario}</span></p>
                             </div>
                             <div class="modal-footer">
-                                <p>Correo: <span>${correoUsuario}</span></p>
+                                <p><strong>Correo:</strong><span>${correoUsuario}</span></p>
+                            </div>
+                            <div class="modal-permissions">
+                                ${permisosHTML}
                             </div>
                         </div>
                         `,
+
 
 
                         showCloseButton: true,
