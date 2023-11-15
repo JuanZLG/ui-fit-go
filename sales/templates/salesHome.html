@@ -141,9 +141,7 @@
                                 data-url-state="{% url 'cambiarEstadoVentas' %}">
                                 {% if venta.estado == 1 %}Activo{% else %}Inactivo{% endif %}
                             </button>
-
                         </td>
-
                         <td class="cell-actions">
                             {% if venta.estado == 1 %}
                             <a href="{% url 'generar_factura_pdf_venta' venta.id_venta %}" class="btn btn-sm"

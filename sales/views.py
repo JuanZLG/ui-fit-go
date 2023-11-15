@@ -96,6 +96,21 @@ def buscar_productos(request):
     return JsonResponse({"resultados": resultados})
 
 
+def verificar_stock(request):
+    producto = request.GET.get('id_producto')
+    cantidad_str = request.GET.get('cantidad')
+    if cantidad_str.isdigit():
+        cantidad = int(cantidad_str)
+    else:
+        cantidad = 0  
+    try:
+        producto_obj = Productos.objects.get(id_producto=producto)
+        supera_stock = cantidad > producto_obj.cantidad
+    except Productos.DoesNotExist:
+        supera_stock = False
+
+    return JsonResponse({'supera_stock': supera_stock})
+
 
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("q", "")

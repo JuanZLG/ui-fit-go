@@ -132,3 +132,19 @@ def search_products(request):
         })
 
     return JsonResponse({'success': True, 'data': data})
+
+def mas_vendidos(request):
+    productos = Productos.objects.all().annotate(
+        total_vendido=Sum('detalleventa__cantidad')
+    ).filter(estado=1).order_by('-total_vendido')[:5]
+
+    data = []
+    for producto in productos:
+        precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
+        data.append({
+            'nombre_producto': producto.nombre_producto,
+            'precio_pub': precio_formateado,
+            'presentacion': producto.iProductImg.decode('utf8')
+        })
+
+    return JsonResponse({'success': True, 'data': data})

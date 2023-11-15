@@ -127,8 +127,10 @@
         height: 600px;
         overflow-y: scroll;
         grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: min-content;
         row-gap: 40px;
     }
+    
 
     .product-card-container.grid-view {
         grid-template-columns: repeat(4, 1fr);

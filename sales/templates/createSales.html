@@ -107,7 +107,7 @@
         <div class="product-inputs">
             <div class="search-container">
                 <input type="search" class="form-control product-search" id="buscarProducto"
-                    placeholder="Ingrese el nombre del producto">
+                    placeholder="Ingrese el nombre del producto" data-id-producto="">
                 <i class="fas fa-search search-icon"></i>
             </div>
             <div class="number-input">
@@ -175,7 +175,6 @@
 
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos requeridos (*)</p>
-    <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
     <input type="button" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
 
@@ -183,86 +182,8 @@
 
 {% block footer %}
 {% endblock %}
-
-<script>
-    document.getElementById('boton-resumen').addEventListener('click', function (event) {
-        resumen_pedido()
-    });
-    function resumen_pedido() {
-
-        Swal.fire({
-            html: `
-            <div class="details-container text-start">
-                <h2 class="details-title">Detalles de venta</h2>
-                <p>Fecha: 10/11/2023</p>
-                <p>Cliente: <span id="cliente" class="mr-2">Juan Pérez</span><span class="documento">1002580806<span></p>
-                <h3 class="details-subtitle">Productos</h3>
-                <table class="table details-table">
-                    <thead>
-                        <tr>
-                            <th style="width: auto;">Producto</th>
-                            <th style="width: auto;">Precio Unitario</th>
-                            <th style="width: auto;">Cantidad</th>
-                            <th style="width: auto;">Descuentos</th>
-                            <th style="width: auto;">Ganancia</th>
-                            <th style="width: auto;">Total Producto</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modalDetallesVenta">
-                        <tr>
-                            <td>Producto xxx</td>
-                            <td>$200.000 - $250.000</td>
-                            <td>2</td>
-                            <td>10%  - $20.000</td>
-                            <td>$30.000</td>
-                            <td>$500.000</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="details-sale">
-                    <p>Descuento de venta: 15%</p>
-                    <p>Total con descuento: $76.50</p>
-                    <p>Margen de ganancia: 44%</p>
-                    <p class="total">Precio total: $110.00</p>
-                </div>
-
-            </div>
-    `,
-            showCloseButton: true,
-            showConfirmButton: false,
-            customClass: {
-                closeButton: 'custom-close-button',
-                popup: 'custom-swal-popup'
-            }
-        })
-    }
-
-    let css = `
-    .custom-close-button { 
-        border: none !important; 
-        color: black !important; 
-    }
-    .custom-swal-popup {
-        max-width: 50% !important;
-        width: auto !important;
-    }
-`,
-        head = document.head || document.getElementsByTagName('head')[0],
-        style = document.createElement('style');
-
-    head.appendChild(style);
-
-    style.type = 'text/css';
-    if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-    } else {
-        style.appendChild(document.createTextNode(css));
-    }
-
-
-</script>
+   
 <style>
-
     .details-title {
         color: #333;
         font-size: 32px;
@@ -280,14 +201,17 @@
         color: #666;
         margin-bottom: 10px;
     }
+
     .details-table {
         background-color: #f2f2f2;
         margin: 10px 0;
     }
+
     .details-table {
         text-align: center;
         vertical-align: middle;
     }
+
     .details-sale {
         text-align: end;
         padding: 10px;
@@ -304,6 +228,8 @@
             $("#buscarProducto").removeClass("is-valid");
             $("#btnAgregar").removeClass("is-active")
             $(".search-icon").show()
+            $("#cantidad-ingresada").val("1")
+            $("#buscarProducto").data('id-producto', "");
             listadoProductos.show();
 
             if (buscarProducto.length >= 3) {
@@ -336,8 +262,6 @@
                                     </div>
                                 </li>
                             `;
-
-
                                 listadoProductos.append(itemLista);
                             }
                         }
@@ -348,19 +272,21 @@
                 listadoProductos.empty();
             }
         });
-
         listadoProductos.on("click", ".producto-item", function () {
             if (!$(this).hasClass("inactivo")) {
                 listadoProductos.hide();
                 let index = $(this).index();
                 productoSeleccionado = resultadosBusqueda[index];
                 $("#buscarProducto").val(productoSeleccionado.nombre_producto).addClass("is-valid");
+                $("#buscarProducto").data('id-producto', productoSeleccionado.id_producto);
                 $(".search-icon").hide()
+                $("#cantidad-ingresada").val("1")
                 $("#btnAgregar").addClass("is-active")
             } else {
                 alert("Este producto esta inhabilitado")
             }
         });
+
 
         function productoExiste(id_producto) {
             let existe = false;
@@ -415,6 +341,7 @@
                 }
                 $("#buscarProducto").val("").removeClass("is-valid");
                 $(".search-icon").show()
+                $("#buscarProducto").data('id-producto', "");
                 productoSeleccionado.cantidadSeleccionada = parseInt($("#cantidad-ingresada").val(), 10);
                 $("#cantidad-ingresada").val("1")
                 agregarFila(productoSeleccionado)
@@ -446,6 +373,34 @@
 
         $("#descuento-venta").on("input", function () {
             totalVenta()
+        });
+
+        $("#cantidad-ingresada").on("input", function () {
+            if ($("#cantidad-ingresada").val() === '') {
+                $("#btnAgregar").removeClass("is-active")
+            } else {
+                $("#btnAgregar").addClass("is-active")
+            }
+            let id_producto = $("#buscarProducto").data('id-producto'); 
+            let cantidad = parseInt($(this).val());
+
+            if (id_producto) {
+                $.ajax({
+                    url: "{% url 'verificar_stock' %}",
+                    type: 'GET',
+                    data: {
+                        'id_producto': id_producto,
+                        'cantidad': cantidad
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.supera_stock) {
+                            $("#btnAgregar").removeClass("is-active")
+                            alert("La cantidad ingresada supera el stock disponible.");
+                        }
+                    }
+                });
+            }
         });
 
 
