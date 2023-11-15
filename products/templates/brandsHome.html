@@ -30,6 +30,34 @@
         height: 5.7vh;
     }
 
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+     
+    ::-webkit-scrollbar:vertical {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-button:increment,
+    .contenedor::-webkit-scrollbar-button {
+        display: none;
+    }
+    
+    ::-webkit-scrollbar:horizontal {
+        height: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: lightgray;
+        border-radius: 20px;
+        border: 2px solid #f1f2f3;
+    }
+    
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
+    }
+    
+
     /* Toco repetir codigo para cambiar el blanco */
     .btn-add,
     .btn-dash {
@@ -184,12 +212,13 @@ aria-hidden="true">
         var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
         Swal.fire({
-            title: 'Confirmación',
-            text: '¿Está seguro de eliminar esta marca?',
-            icon: 'warning',
+            title: 'Eliminar',
+            text: '¿Desea eliminar esta categoría? Se inhabilitaran los productos asociados a ella.',
             showCancelButton: true,
             confirmButtonText: 'Confirmar',
             cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#419edd',
+            cancelButtonColor: '#ba4d4d',
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({

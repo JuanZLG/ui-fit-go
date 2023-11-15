@@ -31,6 +31,34 @@
         height: 5.7vh;
     }
 
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+     
+    ::-webkit-scrollbar:vertical {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-button:increment,
+    .contenedor::-webkit-scrollbar-button {
+        display: none;
+    }
+    
+    ::-webkit-scrollbar:horizontal {
+        height: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: lightgray;
+        border-radius: 20px;
+        border: 2px solid #f1f2f3;
+    }
+    
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
+    }
+    
+
     /* Toco repetir codigo para cambiar el blanco */
     .btn-add,
     .btn-dash {
@@ -97,6 +125,8 @@
         background-color: #ec8080;
         color: #8a0404;
     }
+
+    
 </style>
 <br>
 <center>
@@ -217,7 +247,7 @@
                         if (response.success) {
                         Swal.fire({
                             title: 'Éxito',
-                            text: 'Se ha creado la Categoria con éxito',
+                            text: 'Se ha creado la categoria con éxito',
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 2000, 
@@ -278,11 +308,14 @@
         var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
         Swal.fire({
-            title: '¿Estás seguro de eliminar esta categoría?',
-            icon: 'warning',
+            title: 'Eliminar',
+            text: '¿Desea eliminar esta categoría? Se inhabilitaran los productos asociados a ella.',
             showCancelButton: true,
-            confirmButtonText: 'Sí',
-            cancelButtonText: 'No',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#419edd',
+            cancelButtonColor: '#ba4d4d',
+            
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
@@ -307,6 +340,31 @@
 });
 
 </script>
+
+<style>
+    .my-custom-popup {
+        /* Estilos para el fondo del diálogo o cualquier otro elemento del popup */
+        background-color: #f3f3f3;
+    }
+    
+    .my-confirm-button {
+        /* Estilos para el botón de confirmar */
+        background-color: #28a745; /* Verde */
+        color: #fff; /* Texto blanco */
+    }
+    
+    .my-cancel-button {
+        /* Estilos para el botón de cancelar */
+        background-color: #dc3545; /* Rojo */
+        color: #fff; /* Texto blanco */
+    }
+    
+    .my-icon {
+        /* Estilos para el icono de advertencia (warning) */
+        color: #ffc107; /* Amarillo */
+    }
+    
+</style>
 
 
 {% comment %}

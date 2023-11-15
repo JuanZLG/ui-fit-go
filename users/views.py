@@ -39,6 +39,9 @@ def Home(request):
 
     return render(request, 'usersHome.html', context)
 
+import base64
+import json
+
 @jwt_cookie_required
 def UserProfile(request):
     # Obtener el token desde la cookie
@@ -47,7 +50,7 @@ def UserProfile(request):
     # Decodificar manualmente el token para obtener el payload
     if token:
         try:
-            payload = json.loads(atob(token.split('.')[1]))
+            payload = json.loads(base64.b64decode(token.split('.')[1] + '==').decode('utf-8'))
             id_rol = payload.get('id_rol')
 
             # Obtener el nombre del rol desde la base de datos
@@ -65,6 +68,7 @@ def UserProfile(request):
 
     # Manejar el caso en que no haya token o se produzca un error
     return render(request, 'profile.html', {'nombre_rol': "Rol no disponible"})
+
 
 # @jwt_cookie_required
 # @module_access_required('usuarios')

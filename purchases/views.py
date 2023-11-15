@@ -17,17 +17,15 @@ logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
 
-# @jwt_cookie_required
-# @module_access_required('compras')
+@jwt_cookie_required
+@module_access_required('compras')
 def Home(request):
     compras = Compras.objects.all()
     return render(request, "purchasesHome.html", {"compras": compras})
 
 @csrf_exempt
-# @jwt_cookie_required
-# @module_access_required('compras')
-
-
+@jwt_cookie_required
+@module_access_required('compras')
 def crear_compra(request):
     if request.method == 'POST':
         try:

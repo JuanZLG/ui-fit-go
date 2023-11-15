@@ -51,10 +51,12 @@
                                 <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de Fin"
                                     class="date-input">
 
-                                <button type="submit" id="generar-informe-button">Generar Informe</button>
-                                <p id="error-message" style="color: red; display: none;">Por favor, complete ambos
-                                    campos de fecha.</p>
-                            </div>
+                                    <p id="error-message" style="color: red; display: none;">Por favor, complete ambos campos de fecha.</p>
+                                    <br>
+                                </div>
+                                <div class="modal-footer" style="margin-top:5%">
+                                    <div style="margin-top:2%"><button class="btn btn-success" type="submit" id="generar-informe-button">Generar</button></div>
+                                </div>
                         </form>
                     </div>
                 </div>
@@ -64,24 +66,23 @@
 </div>
 <style>
     #generar-informe-button {
-        background-color: #007BFF;
+        background-color: #07950C;
         color: #fff;
-        border: 2px solid #007BFF;
+        border: 2px solid #22AD0F;
         border-radius: 5px;
-        padding: 6px 12px;
+        padding: 6px 12px; 
         font-weight: bold;
         font-size: 14px;
         transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
         cursor: pointer;
         position: absolute;
         bottom: 10px;
-        right: 10px;
+        right: 10px; 
     }
 
     #generar-informe-button:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-        transform: scale(1.05);
+        background-color: #1DA422 ;
+        border-color: #22AD0F;
     }
 
     .date-input {
@@ -108,7 +109,6 @@
         animation: fadeIn 0.3s ease-in-out;
         padding: 20px;
     }
-
 
     #calendario-contenedor {
         max-height: 100%;
@@ -170,11 +170,6 @@
     </div>
 </div>
 </div>
-
-
-
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'js/indexSales.js' %}"></script>
