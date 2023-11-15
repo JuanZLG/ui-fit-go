@@ -214,16 +214,15 @@
                 data: $('#category-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        if (response.success) {
                         Swal.fire({
                             title: 'Éxito',
                             text: 'Se ha creado la Categoria con éxito',
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 2000, 
+                        }).then(() => {
+                            location.reload();
                         });
-                        location.reload();
-                        }
                     }
                 }
             });
