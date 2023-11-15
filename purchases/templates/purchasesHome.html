@@ -138,13 +138,26 @@
             var fechaFin = $("#fecha_fin").val();
 
             if (!fechaInicio || !fechaFin) {
-                alert("Por favor, complete ambos campos de fecha.");
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Por favor, complete ambos campos de fecha.',
+                    icon: 'error',
+                });
                 e.preventDefault();
             } else {
                 
                 setTimeout(function () {
                     $("#miModal").modal("hide");
                 }, 2000);
+                Swal.fire({
+                    title: 'Informe Creado con Éxito',
+                    text: 'Tu informe ha sido generado con éxito.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                }).then(() => {
+                    location.reload();
+                });
             }
         });
 
@@ -195,7 +208,7 @@
 
                             <a href="#" class="btn btn-sm btn-primary" id="editbutton{{ compra.id_compra }}"
                                 data-compra-id="{{ compra.id_compra }}"
-                                onclick="mostrarDetallesCompra({{ compra.id_compra }})" data-toggle="tooltip"
+                                onclick="mostrarDetallesCompra('{{ compra.id_compra }}')" data-toggle="tooltip"
                                 data-placement="right" title="Ver Detalles">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
