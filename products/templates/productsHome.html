@@ -321,14 +321,14 @@
                             text: 'Se ha creado la Categoria con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 2000,
+                            timer: 3000,
+                        }).then(() => {
+                            location.reload();
                         });
-                        location.reload();
                     }
                 }
             });
         }
-
     });
 </script>
 
@@ -403,21 +403,19 @@
                 data: $('#marca-form').serialize(),
                 success: function (response) {
                     if (response.success) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Éxito',
-                                text: 'Se ha creado la marca con éxito!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 2000,
-                            });
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Se ha creado la marca con éxito!',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        }).then(() => {
                             location.reload();
-                        }
+                        });
                     }
                 }
             });
         }
-
     });
 </script>
 
