@@ -316,10 +316,10 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Éxito',
-                                text: 'Cliente editado con éxito',
+                                text: 'Cliente guardado con éxito',
                                 icon: 'success',
                                 showConfirmButton: false, 
-                                timer: 2000,
+                                timer: 1000,
                             });
                             setTimeout(function () {
                                 window.location.href = "{% url 'Clientes' %}";

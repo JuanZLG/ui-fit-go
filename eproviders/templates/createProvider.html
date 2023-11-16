@@ -191,10 +191,10 @@
                 if (response.success) {
                     Swal.fire({
                         title: 'Éxito',
-                        text: 'Proveedor creado con éxito',
+                        text: 'Proveedor agregado con éxito',
                         icon: 'success',
                         showConfirmButton: false, 
-                        timer: 2000,
+                        timer: 1000,
                     });
                     setTimeout(function () {
                         window.location.href = "{% url 'proveedores' %}";

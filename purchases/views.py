@@ -83,15 +83,6 @@ def crear_compra(request):
     return render(request, 'createPurchases.html')
 
 
-
-
-
-
-
-
-
-from .models import Proveedores
-
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
@@ -163,9 +154,6 @@ def detalles_compra(request, compra_id):
         detalles_data.append(detalle_data)
 
     return JsonResponse({'detallecompra': detalles_data})
-
-@jwt_cookie_required
-
 
 
 def cambiarEstado(request):

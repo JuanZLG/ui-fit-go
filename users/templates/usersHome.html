@@ -212,9 +212,12 @@
             title: 'Alerta',
             text: 'Para habilitar nuevamente este usuario deberá asociarle un rol.',
             icon: 'warning',
+            iconColor:'red',
             showCancelButton: true,
             confirmButtonText: 'Confirmar',
             cancelButtonText: 'Cancelar',
+            confirmButtonColor:'#419edd',
+            cancelButtonColor:'#ba4d4d'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.replace("edituser/" + usuarioId + "/");
@@ -239,6 +242,7 @@
                     },
                     method: "GET",
                     success: function (response) {
+                        $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                         location.reload();
                     }
                 });

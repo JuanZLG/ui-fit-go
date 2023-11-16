@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             Swal.fire({
                 title: 'Estado',
-                text: '¿Desea cambiar el estado de este registro?',
+                text: '¿Desea cambiar el estado de este proveedor?',
                 showCancelButton: true,
                 confirmButtonColor: '#419edd',
                 cancelButtonColor: '#ba4d4d',

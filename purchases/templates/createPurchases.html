@@ -83,7 +83,6 @@
                 $("#nombreProveedor").val(nombreApellido).addClass("is-valid");
                 listadoProveedores.hide();
 
-                // Agregamos el console.log después de seleccionar el proveedor
                 console.log('Proveedor seleccionado:', nombreApellido);
             }
         });
@@ -560,10 +559,10 @@
                 if (response.success) {
                     Swal.fire({
                         title: 'Éxito',
-                        text: 'Compra creada con éxito',
+                        text: 'Compra agregada con éxito',
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 2000,
+                        timer: 1000,
                     });
                     setTimeout(function () {
                         window.location.href = "{% url 'purchases' %}";

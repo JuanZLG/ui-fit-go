@@ -23,8 +23,6 @@ from django.template.loader import get_template
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 from base64 import urlsafe_b64decode as atob
 
-
-
 @jwt_cookie_required
 @module_access_required('usuarios')
 def Home(request):
@@ -41,14 +39,12 @@ def Home(request):
     return render(request, 'usersHome.html', context)
 
 import base64
-import json
 
 @jwt_cookie_required
 def UserProfile(request):
-    # Obtener el token desde la cookie
+
     token = request.COOKIES.get('jwt_token')
 
-    # Decodificar manualmente el token para obtener el payload
     if token:
         try:
             payload = json.loads(base64.b64decode(token.split('.')[1] + '==').decode('utf-8'))

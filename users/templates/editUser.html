@@ -148,10 +148,10 @@
                   if (response.success) {
                       Swal.fire({
                           title: 'Éxito',
-                          text: 'Usuario Editado con éxito',
+                          text: 'Usuario modificado con éxito',
                           icon: 'success',
                           showConfirmButton: false,
-                          timer: 2000,
+                          timer: 1000,
                       });
                       setTimeout(function () {
                           window.location.href = "{% url 'usuarios' %}";
