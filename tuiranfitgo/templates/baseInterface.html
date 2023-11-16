@@ -295,48 +295,40 @@
                                     id="verNotificacionesAnteriores">
                                     Ver notificaciones anteriores
                                 </a>
-                                <!-- Aquí se agregarán dinámicamente las notificaciones -->
-                                <div id="notificacionesHistorial"></div>
+                                <div id="notificacionesHistorial" style="padding: 7px 10px; text-align: center;"></div>
                             </div>
                         </li>
 
 
 
                         <script>
-                            let contadorNotificaciones = 0;
-                            let notificaciones = [];
-
                             $(document).ready(function () {
                                 $.ajax({
                                     url: '/verificar-notificaciones/',
                                     type: 'GET',
                                     success: function (data) {
                                         // Usando each
-                                        $.each(data, function (index, value) {
-                                            $('#notificacionesHistorial').append(value.mensaje + '<br>');
+                                        $.each(data.mensajes, function (index, mensaje) {
+                                            $('#notificacionesHistorial').append(mensaje + '<br>');
                                         });
+
+                                        // Actualizar el contador y mostrarlo
+                                        contadorNotificaciones = data.mensajes.length;
+                                        $('#notificacionesCounter').text(contadorNotificaciones);
                                     },
                                     error: function (error) {
                                         console.log(error);
                                     }
                                 });
-                            }); 
+                            });
 
-                            // const verNotificacionesAnterioresBtn = document.getElementById(
-                            //     'verNotificacionesAnteriores');
-                            // verNotificacionesAnterioresBtn.addEventListener('click', function () {
-                            //     notificaciones.forEach((notificacion, index) => {
-                            //         console.log(`Notificación ${index + 1}: ${notificacion.mensaje}`);
-                            //     });
-                            // });
+                            const verNotificacionesAnterioresBtn = document.getElementById('verNotificacionesAnteriores');
+                            verNotificacionesAnterioresBtn.addEventListener('click', function () {
+                                notificaciones.forEach((notificacion, index) => {
+                                    console.log(`Notificación ${index + 1}: ${notificacion.mensaje}`);
+                                });
+                            });
                         </script>
-
-
-
-
-
-
-
 
                         <!-- Nav Item - Messages -->
                         <!-- <li class="nav-item dropdown no-arrow mx-1">
