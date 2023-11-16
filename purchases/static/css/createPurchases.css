@@ -54,7 +54,7 @@
     display: block;
 }
 
-#resultado-proveedor {
+#resultado-Proveedor {
     width: 100%;
 }
 
@@ -62,7 +62,7 @@
     width: 63%;
 }
 
-#resultado-proveedor,
+#resultado-Proveedor,
 #resultado-producto {
     font-size: 0.875rem;
     background-color: #fff;
@@ -81,7 +81,7 @@
     padding-left: 15px;
 }
 
-#resultado-proveedor.show,
+#resultado-Proveedor.show,
 #resultado-producto.show {
     max-height: 150px;
     border-bottom: 2px solid #ccc;
