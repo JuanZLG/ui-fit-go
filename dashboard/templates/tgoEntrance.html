@@ -8,10 +8,13 @@
     <title>Dashboard</title>
 </head>
 <body>
+    <video autoplay muted loop id="video-fondo" style="width:100%">
+        <source src="{% static 'img/grid.mp4' %}" type="video/mp4">
+        EL navegador no admite la reproducción de videos.
+    </video>
     
     <style>
         body {
-
             background-color:black;
             display: flex;
             justify-content: center;
@@ -24,16 +27,31 @@
             };
         }
         
+        #video-fondo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top:2.5;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            object-fit: cover;
+            
+          }
+        
+
         h1 {
-            font-size:150px;
+            font-size:160px;
             font-weight: bold;
             font-family:Verdana, Geneva, Tahoma, sans-serif;
             color: rgb(255, 255, 255);
             text-shadow: 0 0 10px rgb(255, 255, 255);
-            animation: titilar 2s infinite alternate;
+            animation: titilar 3s infinite alternate;
             user-select: none;
             cursor: default;
-            margin-top:0;
+            align-self: center;
         }
         
         @keyframes fadeOut {
@@ -65,7 +83,7 @@
     </style>
 
      <div class="vista1">
-        <h1>TuiranFit &copy;</h1>
+        <h1>TuiranFit</h1>
     </div>
 
     <script>

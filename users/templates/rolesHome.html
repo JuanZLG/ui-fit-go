@@ -230,6 +230,7 @@
                     },
                     method: "GET",
                     success: function (response) {
+                        $('body').addClass('animate__animated animate__fadeOut').css('animation-duration', '50');
                         location.reload();
                     },
                     error: function (error) {
@@ -620,8 +621,8 @@
                 success: function (response) {
                     if (response.success) {
                         Swal.fire({
-                        title: "Buen trabajo!",
-                        text: "Rol creado con exito!",
+                        title: "Éxito",
+                        text: "El Rol ha sido agregado.",
                         icon: "success"
                         });
                         location.reload();

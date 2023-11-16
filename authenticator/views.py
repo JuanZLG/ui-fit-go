@@ -60,7 +60,8 @@ class loginmio(APIView):
                 response_data = {
                     'token': token,
                     'nombre_usuario': usuario_data['nombre_usuario'],
-                    'id_rol': usuario_data['id_rol']
+                    'id_rol': usuario_data['id_rol'],
+              
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:

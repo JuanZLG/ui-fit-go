@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 import json
 from urllib.parse import parse_qs
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
@@ -22,6 +22,7 @@ import secrets
 from django.template.loader import get_template
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 from base64 import urlsafe_b64decode as atob
+
 
 
 @jwt_cookie_required
@@ -68,6 +69,36 @@ def UserProfile(request):
 
     # Manejar el caso en que no haya token o se produzca un error
     return render(request, 'profile.html', {'nombre_rol': "Rol no disponible"})
+
+@csrf_exempt 
+@jwt_cookie_required 
+def change_password(request):
+    try:
+        # Obtén el ID del usuario desde el payload del token
+        user_name = request.user.get('correo')
+        print(f'user_name: {user_name}')
+
+        # Busca el usuario en la base de datos
+        user = get_object_or_404(Usuarios, correo=user_name)
+
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        print(f'new_password: {new_password}')
+        print(f'confirm_password: {confirm_password}')
+
+        if new_password != confirm_password:
+            return HttpResponseBadRequest('Las contraseñas no coinciden.')
+
+        # Cambia la contraseña y guarda el usuario
+        user.contrasena = new_password
+        user.save()
+
+        return JsonResponse({'detail': 'Contraseña actualizada correctamente.'})
+
+    except Exception as e:
+        print(f'Error: {e}')
+        return HttpResponseBadRequest('Error al cambiar la contraseña.')
 
 
 # @jwt_cookie_required

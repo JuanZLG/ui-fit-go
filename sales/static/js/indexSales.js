@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         },
                         method: "GET",
                         success: function (response) {
+                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                             location.reload();
                         },
                         error: function (error) {

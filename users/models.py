@@ -5,24 +5,6 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserM
 # from django.urls import reverse_lazy
 # from django.views import View
 
-
-# ------------------------------- Intento del 13 de Octubre, errores de relative_name -----------------------------------------
-
-# class CustomUserManager(BaseUserManager):
-#     def create_user(self, correo, contrasena, **extra_fields):
-#         if not correo:
-#             raise ValueError('El correo electrónico es un campo obligatorio.')
-#         user = self.model(correo=correo, **extra_fields)
-#         user.set_password(contrasena)
-#         user.save(using=self._db)
-#         return user
-
-#     def create_superuser(self, correo, contrasena, **extra_fields):
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_superuser', True)
-
-#         return self.create_user(correo, contrasena, **extra_fields)
-
 class Rolespermisos(models.Model):
     id_rolespermisos = models.AutoField(primary_key=True)
     id_rol = models.ForeignKey('Roles', models.DO_NOTHING, db_column='id_rol')
@@ -40,7 +22,6 @@ class Roles(models.Model):
         managed = False
         db_table = 'roles'
 
-# ---------------------------------Modelo Provisional----------------------------------
 
 class Usuarios(models.Model):
     id_usuario = models.AutoField(primary_key=True)

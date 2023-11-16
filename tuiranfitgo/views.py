@@ -38,7 +38,7 @@ def mixin_view(request):
 
 def jwt_cookie_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
-        token = request.COOKIES.get('jwt_token') # Esto me lee el token 
+        token = request.COOKIES.get('jwt_token') 
         if not token:
             return redirect('initerror')
         try:

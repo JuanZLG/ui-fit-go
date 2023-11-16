@@ -14,6 +14,7 @@ urlpatterns=[
     path('email_unique/', views.email_unique, name='email_unique'),
     path('remove/', views.eliminar_rol, name='eliminarRol'),
     path('profile/', views.UserProfile, name="myProfile"),
+    path('changepsw/', views.change_password, name='changepsw'),
 
 ]
 

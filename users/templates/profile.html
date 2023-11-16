@@ -29,20 +29,28 @@
                     
                     <form id="changePasswordForm" method="post" style="display: none;">
                         <br>
-                        {% csrf_token %}
                         
+                        {% csrf_token %}
                         <div class="form-row">
                         <div class="col-md-6">
                         <label for="new_password">Nueva Contraseña:</label>
-                        <input class="form-control" type="text" name="new_password" placeholder="Ingrese una Contraseña" required autocomplete="new-password"><br>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="input-group">
+                        <input class="form-control" type="text" name="new_password" id="confir" placeholder="Ingrese una Contraseña" autocomplete="new-password"><br>
+                    </div>
+                        <div class="error-message" style="color:red;" id="confir-error"></div>   
+                        
+                    </div>
+                        <div class="col-md-6 ">
                         <label for="confirm_password">Confirmar Contraseña:</label>
-                        <input class="form-control" type="text" name="confirm_password" placeholder="Repita la contraseña"required autocomplete="new-password"><br>
-                        </div>
+                        <div class="input-group">
+                        <input class="form-control" type="text" name="confirm_password" id="rep" placeholder="Repita la contraseña" autocomplete="new-password"><br>
+                    </div>
+                        <div class="error-message" style="color:red;" id="rep-error"></div>
+                        
+                    </div>
                     </div>
                         <div class="text-end mt-3">
-                        <button type="submit" name="change_password" class="btn btn-success">Guardar</button>
+                        <button type="submit" name="change_password" id="changePasswordForm" class="btn btn-success">Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -55,13 +63,12 @@
 
 
 <script>
-    // Función para mostrar/ocultar formulario de cambio de contraseña
+    
     function toggleChangePassword() {
         var form = document.getElementById('changePasswordForm');
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Otras funciones y código JavaScript que puedas necesitar...
 </script>
 
 
@@ -86,8 +93,6 @@
     function updateRoler() {
         var token = getCookie('jwt_token');
         if (token) {
-            // Asegurarse de que la longitud del token sea múltiplo de 4
-            
 
             try {
                 var payload = JSON.parse(atob(token.split('.')[1]));
@@ -101,5 +106,111 @@
 
     updateRoler();
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    $(document).ready(function() {
+
+        $('#confir, #rep').on('input', function () {
+            validarCamposLlenos();
+        });
+
+        function validarCamposLlenos() {
+            let camposLlenos = true;
+            const pwValue = $('#confir').val().trim();
+            const cpsw = $('#rep').val().trim();
+        
+            if (!pwValue) {
+                mostrarError('#confir', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarContraseña(pwValue)) {
+                mostrarError('#confir', 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.');
+                camposLlenos = false;
+            } else {
+                // Si el campo pwValue es válido, ocultar el error de confir
+                ocultarError('#confir');
+                
+            }
+        
+            if (!cpsw){
+                mostrarError('#rep', 'Este campo es obligatorio.');
+                camposLlenos = false
+            } else if (pwValue != cpsw) {
+                mostrarError('#rep', 'Las contraseñas no coinciden.');
+                camposLlenos = false;
+            } else {
+                ocultarError('#rep');
+            }
+        
+            return camposLlenos;
+        }
+        
+        function validarContraseña(contraseña) {
+            const contraseñaRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+            return contraseñaRegex.test(contraseña);
+        }
+    
+        function mostrarError(selector, mensaje) {
+            $(selector).addClass('is-invalid');
+            $(`${selector}-error`).text(mensaje);
+        }
+    
+        function ocultarError(selector) {
+            $(selector).removeClass('is-invalid');
+            $(`${selector}-error`).text('');
+        }
+
+        $('#changePasswordForm').submit(function(e) {
+            e.preventDefault();
+            
+            var new_password = $('[name="new_password"]').val();
+            var confirm_password = $('[name="confirm_password"]').val();
+            
+            if (!validarCamposLlenos()) {
+                return;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'changepsw' %}",
+                data: {
+                    new_password: new_password,
+                    confirm_password: confirm_password,
+                },
+                headers: {
+                    "Authorization": "Bearer " + getCookie('jwt_token')
+                },
+                dataType: 'json',  
+                success: function(response) {
+                    alert(response.detail);
+                    $('body').addClass('animate__animated animate__fadeOut').css('animation-duration', '500ms');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500); // Ajusta el tiempo según tus preferencias
+                },
+                error: function(error) {
+                    alert(error.responseJSON.detail);
+                }
+            });
+        });
+    });
+</script>
+
+    
 
 {% endblock %}

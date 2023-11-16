@@ -143,14 +143,6 @@
 
             </span>
         </div>
-
-        {% comment %} <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
-                title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text"
-                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
-            </a>
-        </div> {% endcomment %}
     </div>
 </div>
 
@@ -234,6 +226,7 @@
                         },
                         method: "GET",
                         success: function (response) {
+                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                             location.reload();
                         }
                     });

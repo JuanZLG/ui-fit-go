@@ -231,6 +231,7 @@ aria-hidden="true">
                     },
                     method: "POST",
                     success: function (response) {
+                        $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                         location.reload();
                     },
                     error: function (error) {
@@ -286,6 +287,7 @@ aria-hidden="true">
                             timer: 4000, 
                         });
                         setTimeout(function () {
+                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                             location.reload();
                         }, 2000); 
                     }

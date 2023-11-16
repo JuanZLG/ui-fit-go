@@ -190,7 +190,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # settings.py
-BASE_URL = 'http://www.tu-sitio.com/'  
+# BASE_URL = 'http://www.tu-sitio.com/'  
 
 
 
