@@ -13,20 +13,22 @@
           <div class="card-body p-4">
             <form class="form" id="usuario-form" method="post">
             {% csrf_token %}
-      
-      <div class="form-group">
-        <label for="categoria">Rol del Usuario</label>
-        <select class="form-select" aria-label="Default" name="iRole" id="iRole">
-          {% for r in rols %}
-          <option value="{{ r.id_rol }}"
-                {% if r.id_rol == people.id_rol.id_rol %} selected {% endif %}>
-                {{ r.nombre_rol }}
-              </option>
-          {% endfor %}
-        </select>
-        <div class="error-message" style="color:red;" id="iRole-error"></div>
-      </div>
-
+            <div class="form-group">
+              <label for="categoria">Rol del Usuario</label>
+              <select class="form-select" aria-label="Default" name="iRole" id="iRole">
+                  {% if not people.id_rol %}
+                  <option value="" selected>No tiene rol asociado</option>
+                  {% endif %}
+                  {% for r in rols %}
+                  <option value="{{ r.id_rol }}"
+                      {% if r.id_rol == people.id_rol.id_rol %} selected {% endif %}>
+                      {{ r.nombre_rol }}
+                  </option>
+                  {% endfor %}
+              </select>
+              <div class="error-message" style="color:red;" id="iRole-error"></div>
+          </div>
+          
       <div class="form-group">
         <label>Nombre de Usuario *</label>
         <input type="text" class="form-control" id="iNombre" name="iNombre" placeholder="Ingrese un nombre de usuario" value="{{ people.nombre_usuario }}"/>
@@ -39,21 +41,16 @@
         <div class="error-message" style="color:red;" id="iCorreo-error"></div>
       </div>
 
-      <div class="form-group">
-        <label>Contraseña *</label>
-        <input type="password" class="form-control" id="iPassword" name="iPassword" placeholder="Ingrese una contraseña"  value="{{ people.contrasena }}" autocomplete="new-password" autocorrect="off" autocapitalize="none"/>
-        <div class="error-message" style="color:red;" id="iPassword-error"></div>
-      </div>
-
       <div class="text-center">
         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+        {% if not people.id_rol %}
+          <a href="{% url 'usuarios' %}" class="btn btn-secondary mx-2">Cancelar</a>
+        {% endif %}
       </div>
+      
 
     </form>
   </div>
-</div>
-</div>
-</div>
 </div>
 
 {% comment %} <script>
@@ -75,44 +72,39 @@
 <script>
     $(document).ready(function () {
 
-        $('#iRole, #iNombre, #iCorreo, #iPassword').on('change', function () {
+        $('#iRole, #iNombre, #iCorreo').on('change', function () {
             ocultarError($(this));
         });
-
         function validarCamposLlenos() {
-            let camposLlenos = true;
-            const nombreValue = $('#iNombre').val();
-            const emailValue = $('#iCorreo').val();
-            const pwValue = $('#iPassword').val();
-            const roleValue = $('#iRole').val();
-    
-            if (!nombreValue) {
-                mostrarError('#iNombre', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarNombreUsuario(nombreValue)) {
-                mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
-                camposLlenos = false;
-            }
-    
-            if (!emailValue) {
-                mostrarError('#iCorreo', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarCorreo(emailValue)) {
-                mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
-                camposLlenos = false;
-            }
-    
-            if (!pwValue) {
-                mostrarError('#iPassword', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarContraseña(pwValue)) {
-                mostrarError('#iPassword', 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.');
-                camposLlenos = false;
-            }
-    
-            return camposLlenos;
-        }
-    
+    let camposLlenos = true;
+    const nombreValue = $('#iNombre').val();
+    const emailValue = $('#iCorreo').val();
+    const roleValue = $('#iRole').val();
+
+    if (!nombreValue) {
+        mostrarError('#iNombre', 'Este campo es obligatorio.');
+        camposLlenos = false;
+    } else if (!validarNombreUsuario(nombreValue)) {
+        mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
+        camposLlenos = false;
+    }
+
+    if (!emailValue) {
+        mostrarError('#iCorreo', 'Este campo es obligatorio.');
+        camposLlenos = false;
+    } else if (!validarCorreo(emailValue)) {
+        mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
+        camposLlenos = false;
+    }
+
+    if (!roleValue) {
+        mostrarError('#iRole', 'Debe seleccionar un rol.');
+        camposLlenos = false;
+    }
+
+    return camposLlenos;
+}
+
         function validarCorreo(correo) {
             // Debe contener al menos un "@" y un "."
             const correoRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;

@@ -303,87 +303,33 @@
 
 
 
-                        <!-- JavaScript para manejar notificaciones y contador -->
                         <script>
-                            // JavaScript
                             let contadorNotificaciones = 0;
                             let notificaciones = [];
 
-                            // Función para cargar notificaciones en tiempo real
-                            function cargarNotificaciones() {
-                                fetch('/verificar-notificaciones/')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        // Imprimir los datos en la consola para depuración
-                                        console.log('Datos recibidos:', data);
-
-                                        if (data.mensaje) {
-                                            contadorNotificaciones++;
-                                            notificaciones.push({
-                                                mensaje: data.mensaje,
-                                                timestamp: Date.now()
-                                            });
-                                        }
-
-                                        // Actualiza el contador
-                                        const notificacionesCounter = document.getElementById(
-                                            'notificacionesCounter');
-                                        notificacionesCounter.innerText = contadorNotificaciones;
-
-                                        // Muestra las notificaciones en el historial
-                                        const notificacionesHistorial = document.getElementById(
-                                            'notificacionesHistorial');
-                                        notificacionesHistorial.innerHTML = '';
-
-                                        notificaciones.forEach((notificacion, index) => {
-                                            const notificacionItem = document.createElement('a');
-                                            notificacionItem.className =
-                                                'dropdown-item d-flex align-items-center';
-                                            notificacionItem.href = 'javascript:void(0)';
-
-                                            const notificacionTexto = document.createElement('div');
-                                            notificacionTexto.className = 'small text-gray-500';
-                                            notificacionTexto.innerText = 'Hace un momento';
-
-                                            const notificacionDescripcion = document.createElement('div');
-                                            notificacionDescripcion.innerText = notificacion.mensaje;
-
-                                            notificacionItem.appendChild(notificacionTexto);
-                                            notificacionItem.appendChild(notificacionDescripcion);
-
-                                            // Manejar clic en la notificación
-                                            notificacionItem.addEventListener('click', function () {
-                                                // Actualizar el contador y hacer la notificación más opaca
-                                                contadorNotificaciones--;
-                                                notificacionesCounter.innerText =
-                                                    contadorNotificaciones;
-                                                notificacionItem.style.opacity = '0.7';
-
-                                                // Aquí puedes agregar lógica adicional, como manejar el clic y mostrar más detalles, si es necesario.
-                                            });
-
-                                            notificacionesHistorial.appendChild(notificacionItem);
+                            $(document).ready(function () {
+                                $.ajax({
+                                    url: '/verificar-notificaciones/',
+                                    type: 'GET',
+                                    success: function (data) {
+                                        // Usando each
+                                        $.each(data, function (index, value) {
+                                            $('#notificacionesHistorial').append(value.mensaje + '<br>');
                                         });
-                                    })
-                                    .catch(error => {
-                                        console.error('Error al obtener notificaciones:', error);
-                                    });
-                            }
-
-                            // Cargar notificaciones cuando la página se carga por primera vez
-                            cargarNotificaciones();
-
-                            // Cargar notificaciones cada cierto tiempo (por ejemplo, cada 30 segundos)
-                            setInterval(cargarNotificaciones, 30000);
-
-                            // Manejar el botón "Ver notificaciones anteriores"
-                            const verNotificacionesAnterioresBtn = document.getElementById(
-                                'verNotificacionesAnteriores');
-                            verNotificacionesAnterioresBtn.addEventListener('click', function () {
-                                notificaciones.forEach((notificacion, index) => {
-                                    console.log(`Notificación ${index + 1}: ${notificacion.mensaje}`);
+                                    },
+                                    error: function (error) {
+                                        console.log(error);
+                                    }
                                 });
-                            });
+                            }); 
+
+                            // const verNotificacionesAnterioresBtn = document.getElementById(
+                            //     'verNotificacionesAnteriores');
+                            // verNotificacionesAnterioresBtn.addEventListener('click', function () {
+                            //     notificaciones.forEach((notificacion, index) => {
+                            //         console.log(`Notificación ${index + 1}: ${notificacion.mensaje}`);
+                            //     });
+                            // });
                         </script>
 
 
@@ -477,7 +423,7 @@
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
-                                
+
                                 {% comment %} <a class="dropdown-item" href="#">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Configuración de Perfil
@@ -550,8 +496,8 @@
                 <div class="modal-footer">
                     <div class="mx-auto" style="justify-content: space-between; flex-direction: row; ">
                         <a class="btn btn-danger mr-2" href="{% url 'logout' %}">Cerrar Sesión</a>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+
                     </div>
                 </div>
             </div>
@@ -632,7 +578,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
         integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5" crossorigin="anonymous">
-    </script>
+        </script>
 
     <!-- Scripts de Nivel de Página -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
@@ -642,10 +588,10 @@
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-    </script>
+        </script>
 
     <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>

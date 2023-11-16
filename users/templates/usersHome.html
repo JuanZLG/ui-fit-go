@@ -166,20 +166,22 @@
                         <td>{{u.nombre_usuario}}</td>
                         <td>{{u.correo}}</td>
                         <td>
-                            <button class="cambiar-estado statusbutton mx-auto {% if u.estado == 1 %}active-status{% elif u.estado == 0 %}inactive-status{% elif not u.id_rol %}disabled{% endif %}"
-                                    data-usuario-id="{{ u.id_usuario }}"
-                                    data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}" data-toggle="tooltip"
-                                    data-placement="right" title="Cambiar de Estado"
-                                    {% if not u.id_rol %}disabled{% endif %}>
-                                {% if u.estado == 1 %}
-                                    Activo
-                                {% else %}
-                                    Inactivo
-                                {% endif %}
-                            </button>
+                            <button class="cambiar-estado statusbutton mx-auto {% if u.estado == 1 %}active-status{% elif u.estado == 0 %}inactive-status{% endif %}"
+                            data-usuario-id="{{ u.id_usuario }}"
+                            data-nuevo-estado="{% if u.estado == 1 %}0{% else %}1{% endif %}"
+                            data-tiene-rol="{% if u.id_rol %}true{% else %}false{% endif %}"
+                            data-toggle="tooltip"
+                            data-placement="right" title="Cambiar de Estado">
+                        {% if u.estado == 1 %}
+                            Activo
+                        {% else %}
+                            Inactivo
+                        {% endif %}
+                    </button>
+                    
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm" id="editbutton"
+                            <a href="{% url 'editAUser' u.id_usuario %}" class="btn btn-sm {% if not u.id_rol or u.estado != 1 %}disabled{% endif %}" id="editbutton" 
                                 data-toggle="tooltip" data-placement="right" title="Modificar Usuario"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
                                     <button type="button"
@@ -197,44 +199,65 @@
         </div>
     </div>
 </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $(".cambiar-estado").click(function () {
-            var usuarioId = $(this).data("usuario-id");
-            var nuevoEstado = $(this).data("nuevo-estado");
 
-            Swal.fire({
-                title: 'Estado',
-                text: '¿Desea cambiar el estado de este usuario?',
-                showCancelButton: true,
-                confirmButtonColor: '#419edd',
-                cancelButtonColor: '#ba4d4d',
-                confirmButtonText: 'Confirmar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{% url 'cambiarEstadoDeUsuario'  %}",
-                        data: {
-                            usuario_id: usuarioId,
-                            nuevo_estado: nuevoEstado
-                        },
-                        method: "GET",
-                        success: function (response) {
-                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
-                            location.reload();
-                        }
-                    });
-                }
-            });
+        function cambiarEstadoClickHandler(usuarioId, nuevoEstado, tieneRol) {
+    if (!tieneRol) {
+        Swal.fire({
+            title: 'Alerta',
+            text: 'Para habilitar nuevamente este usuario deberá asociarle un rol.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.replace("edituser/" + usuarioId + "/");
+            }
         });
+    } else {
+        Swal.fire({
+            title: 'Estado',
+            text: '¿Desea cambiar el estado de este usuario?',
+            showCancelButton: true,
+            confirmButtonColor: '#419edd',
+            cancelButtonColor: '#ba4d4d',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{% url 'cambiarEstadoDeUsuario'  %}",
+                    data: {
+                        usuario_id: usuarioId,
+                        nuevo_estado: nuevoEstado
+                    },
+                    method: "GET",
+                    success: function (response) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    }
+}
+
+$(".cambiar-estado").click(function () {
+    var usuarioId = $(this).data("usuario-id");
+    var nuevoEstado = $(this).data("nuevo-estado");
+    var tieneRol = $(this).data("tiene-rol"); 
+
+    cambiarEstadoClickHandler(usuarioId, nuevoEstado, tieneRol);
+});
+
     });
 </script>
+
 <style>
     /* modal ---------------- */
 

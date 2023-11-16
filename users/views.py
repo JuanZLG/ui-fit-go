@@ -211,7 +211,6 @@ def create_password(length=8):
 
 
 @jwt_cookie_required
-@module_access_required('usuarios')
 def editUser(request, id_usuario):
     roles = Roles.objects.all()
     
@@ -219,7 +218,6 @@ def editUser(request, id_usuario):
         role = request.POST['iRole']
         nombre_usuario = request.POST['iNombre']
         correo = request.POST['iCorreo']
-        contrasena = request.POST['iPassword']
         
         rl = Roles.objects.get(id_rol=role)
         
@@ -227,7 +225,6 @@ def editUser(request, id_usuario):
             id_rol=rl,
             nombre_usuario=nombre_usuario,
             correo=correo,
-            contrasena=contrasena,
         )
         
         response_data = {'success': True}
@@ -258,60 +255,61 @@ def HomeRoles(request):
         
     return render(request, 'rolesHome.html', {"permisos_count": permisos_count})
 
+
 @jwt_cookie_required
-# @module_access_required('usuarios')
-def accion_rol(request):
+def edit_rol(request):
     data = json.loads(request.body)
     if request.method == 'POST':
-        if data.get("accion") == "create":
-            nombre_rol = data.get("nombreRol")
-            permisos = data.get("permisos")
+        id_rol = data.get("id_rol")
+        nombreRol = data.get("nombreRol")
+        permisos = data.get("permisos")
 
-            rol = Roles(nombre_rol=nombre_rol)
-            rol.save()
+        rol = Roles.objects.get(id_rol=id_rol)
+        rol.nombre_rol = nombreRol
+        rol.save()
+        print(rol.id_rol)
 
-            permiso = Permisos(
-                clientes=permisos.get("Clientes", 0),
-                usuarios=permisos.get("Usuarios", 0),
-                proveedores=permisos.get("Proveedores", 0),
-                productos=permisos.get("Productos", 0),
-                compras=permisos.get("Compras", 0),
-                ventas=permisos.get("Ventas", 0)
-            )
-            permiso.save()
+        permiso = Rolespermisos.objects.get(id_rol=rol.id_rol)
+        permiso.id_permiso.clientes = permisos.get("Clientes", 0)
+        permiso.id_permiso.usuarios = permisos.get("Usuarios", 0)
+        permiso.id_permiso.proveedores = permisos.get("Proveedores", 0)
+        permiso.id_permiso.productos = permisos.get("Productos", 0)
+        permiso.id_permiso.compras = permisos.get("Compras", 0)
+        permiso.id_permiso.ventas = permisos.get("Ventas", 0)
+        permiso.id_permiso.save()
 
-            roles_permisos = Rolespermisos(
-                id_rol=rol,
-                id_permiso=permiso
-            )
-            roles_permisos.save()
-
-
-        elif data.get("accion") == "edit":
-            id_rol = data.get("id_rol")
-            nombreRol = data.get("nombreRol")
-            permisos = data.get("permisos")
-
-            try:
-                rol = Roles.objects.get(id_rol=id_rol)
-                rol.nombre_rol = nombreRol
-                rol.save()
-                print(rol.id_rol)
-
-                permiso = Rolespermisos.objects.get(id_rol=rol.id_rol)
-                permiso.id_permiso.clientes = permisos.get("Clientes", 0)
-                permiso.id_permiso.usuarios = permisos.get("Usuarios", 0)
-                permiso.id_permiso.proveedores = permisos.get("Proveedores", 0)
-                permiso.id_permiso.productos = permisos.get("Productos", 0)
-                permiso.id_permiso.compras = permisos.get("Compras", 0)
-                permiso.id_permiso.ventas = permisos.get("Ventas", 0)
-                permiso.id_permiso.save()
-            except Roles.DoesNotExist:
-                print("Excepción: El rol no existe.")
-                return JsonResponse({"success": False, "message": "El rol no existe."})
-    
     response_data = {"success": True}
     return JsonResponse(response_data)
+
+@jwt_cookie_required
+def create_rol(request):
+    data = json.loads(request.body)
+    if request.method == 'POST':
+        nombre_rol = data.get("nombreRol")
+        permisos = data.get("permisos")
+
+        rol = Roles(nombre_rol=nombre_rol)
+        rol.save()
+
+        permiso = Permisos(
+            clientes=permisos.get("Clientes", 0),
+            usuarios=permisos.get("Usuarios", 0),
+            proveedores=permisos.get("Proveedores", 0),
+            productos=permisos.get("Productos", 0),
+            compras=permisos.get("Compras", 0),
+            ventas=permisos.get("Ventas", 0)
+        )
+        permiso.save()
+
+        roles_permisos = Rolespermisos(
+            id_rol=rol,
+            id_permiso=permiso
+        )
+        roles_permisos.save()
+
+    response_data = {"success": True}
+    return JsonResponse(response_data)
+
 
 def email_unique(request):
     email = request.GET.get("email", "")
@@ -336,6 +334,11 @@ def obtener_datos(request):
             }
         }
         return JsonResponse({'success': True, 'datos': datos})
+
+
+
+
+
 
 @jwt_cookie_required
 @module_access_required('usuarios')

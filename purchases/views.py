@@ -16,6 +16,8 @@ import logging
 logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
+from django.db import transaction
+
 
 @jwt_cookie_required
 @module_access_required('compras')
@@ -163,34 +165,52 @@ def detalles_compra(request, compra_id):
     return JsonResponse({'detallecompra': detalles_data})
 
 @jwt_cookie_required
+
+
+
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         compra_id = request.GET.get('compra_id')
         nuevo_estado = request.GET.get('nuevo_estado')
-        
-        compra = Compras.objects.get(id_compra=compra_id)
-        estado_anterior = compra.estado 
-        compra.estado = int(nuevo_estado)
-        compra.save()
 
-        detalles = Detallecompra.objects.filter(id_compra=compra_id)
-        for detalle in detalles:
-            producto = detalle.id_producto
+        try:
+            with transaction.atomic():
+                compra = Compras.objects.select_for_update().get(id_compra=compra_id)
+                
+                if nuevo_estado == "1" and compra.estado == 0:
+                    # Sumar productos solo si la compra está pasando de Inactivo a Activo
+                    detalles = Detallecompra.objects.filter(id_compra=compra_id)
+                    for detalle in detalles:
+                        producto = detalle.id_producto
+                        producto.cantidad += detalle.cantidad
+                        producto.save()
+                elif nuevo_estado == "0" and compra.estado == 1:
+                    # Restar productos solo si la compra está pasando de Activo a Inactivo
+                    detalles = Detallecompra.objects.filter(id_compra=compra_id)
+                    for detalle in detalles:
+                        producto = detalle.id_producto
+                        producto.cantidad -= detalle.cantidad
+                        if producto.cantidad < 0:
+                            # Revertir cambios y retornar mensaje de error
+                            transaction.set_rollback(True)
+                            return JsonResponse({'status': 'error', 'message': 'No es posible desactivar la compra, pues su stock quedaría negativo.'})
 
-            if detalle.estado == 1: 
-                if compra.estado == 1: 
-                    producto.cantidad += detalle.cantidad  
-                else:  
-                    producto.cantidad -= detalle.cantidad 
+                        producto.save()
 
-                producto.save()  
+                compra.estado = int(nuevo_estado)
+                compra.save()
 
-            detalle.save() 
-        
-        if estado_anterior == 0 and nuevo_estado == "1":
-            return JsonResponse({'status': 'error', 'message': 'No se puede cambiar de Inactivo a Activo.'})
-        else:
             return JsonResponse({'status': 'success'})
+
+        except Compras.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Compra no encontrada.'}, status=404)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Solicitud no válida.'}, status=400)
+
+
 
 @jwt_cookie_required
 def obtener_detalles_compra(request, compra_id):

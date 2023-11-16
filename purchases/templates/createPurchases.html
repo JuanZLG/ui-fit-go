@@ -148,7 +148,6 @@
 
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos requeridos (*)</p>
-    <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
     <input type="button" value="Guardar compra" id="crear-compra" class="btn-acciones btn-crear mx-2">
 </div>
 
@@ -157,80 +156,7 @@
 {% block footer %}
 {% endblock %}
 
-<script>
-    document.getElementById('boton-resumen').addEventListener('click', function (event) {
-        resumen_pedido()
-    });
-
-    function resumen_pedido() {
-
-        Swal.fire({
-            html: `
-            <div class="details-container text-start">
-                <h2 class="details-title">Detalles de venta</h2>
-                <p>Fecha: 10/11/2023</p>
-                <p>Cliente: <span id="cliente" class="mr-2">Juan Pérez</span><span class="documento">1002580806<span></p>
-                <h3 class="details-subtitle">Productos</h3>
-                <table class="table details-table">
-                    <thead>
-                        <tr>
-                            <th style="width: auto;">Producto</th>
-                            <th style="width: auto;">Precio Unitario</th>
-                            <th style="width: auto;">Cantidad</th>
-                            <th style="width: auto;">Total Producto</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modalDetallesVenta">
-                        <tr>
-                            <td>Producto xxx</td>
-                            <td>$200.000 - $250.000</td>
-                            <td>2</td>
-                            <td>10%  - $20.000</td>
-                            <td>$30.000</td>
-                            <td>$500.000</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="details-sale">
-                    <p>Descuento de venta: 15%</p>
-                    <p>Total con descuento: $76.50</p>
-                    <p>Margen de ganancia: 44%</p>
-                    <p class="total">Precio total: $110.00</p>
-                </div>
-
-            </div>
-    `,
-            showCloseButton: true,
-            showConfirmButton: false,
-            customClass: {
-                closeButton: 'custom-close-button',
-                popup: 'custom-swal-popup'
-            }
-        })
-    }
-
-    let css = `
-    .custom-close-button { 
-        border: none !important; 
-        color: black !important; 
-    }
-    .custom-swal-popup {
-        max-width: 50% !important;
-        width: auto !important;
-    }
-`,
-        head = document.head || document.getElementsByTagName('head')[0],
-        style = document.createElement('style');
-
-    head.appendChild(style);
-
-    style.type = 'text/css';
-    if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-    } else {
-        style.appendChild(document.createTextNode(css));
-    }
-</script>
+    
 <style>
     .details-title {
         color: #333;
@@ -269,35 +195,35 @@
 
 <script>
     $(document).ready(function () {
-        let listadoProductos = $("#resultado-producto");
-        var productoSeleccionado
-        $("#buscarProducto").on("input", function () {
-            let buscarProducto = $(this).val();
-            $("#buscarProducto").removeClass("is-valid");
-            $("#btnAgregar").removeClass("is-active")
-            $(".search-icon").show()
-            listadoProductos.show();
+                let listadoProductos = $("#resultado-producto");
+                var productoSeleccionado
+                $("#buscarProducto").on("input", function () {
+                    let buscarProducto = $(this).val();
+                    $("#buscarProducto").removeClass("is-valid");
+                    $("#btnAgregar").removeClass("is-active")
+                    $(".search-icon").show()
+                    listadoProductos.show();
 
-            if (buscarProducto.length >= 3) {
-                $.ajax({
-                    url: "{% url 'buscar_productos' %}?q=" + buscarProducto,
-                    type: "GET",
-                    success: function (data) {
-                        listadoProductos.empty();
-                        listadoProductos.removeClass("show");
+                    if (buscarProducto.length >= 3) {
+                        $.ajax({
+                            url: "{% url 'buscar_productos' %}?q=" + buscarProducto,
+                            type: "GET",
+                            success: function (data) {
+                                listadoProductos.empty();
+                                listadoProductos.removeClass("show");
 
-                        if (data.resultados.length > 0) {
-                            resultadosBusqueda = data.resultados;
-                            for (let i = 0; i < data.resultados.length; i++) {
-                                listadoProductos.addClass("show");
-                                let estadoProducto = data.resultados[i].estado;
-                                let producto = data.resultados[i].nombre_producto;
-                                let img = data.resultados[i].presentacion;
-                                let cantidad = data.resultados[i].cantidad;
-                                // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-                                // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
-                                let itemLista = `
-                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"} ${cantidad <= 0 ? "inactivo" : ""}">
+                                if (data.resultados.length > 0) {
+                                    resultadosBusqueda = data.resultados;
+                                    for (let i = 0; i < data.resultados.length; i++) {
+                                        listadoProductos.addClass("show");
+                                        let estadoProducto = data.resultados[i].estado;
+                                        let producto = data.resultados[i].nombre_producto;
+                                        let img = data.resultados[i].presentacion;
+                                        let cantidad = data.resultados[i].cantidad;
+                                        // <img src="/media/${img}" alt="Imagen" class="img-fluid">
+                                        // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                                        let itemLista = `
+                                <li class="producto-item">
                                     <div class="product-details-container">
                                         <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
@@ -310,182 +236,194 @@
                             `;
 
 
-                                listadoProductos.append(itemLista);
+                                        listadoProductos.append(itemLista);
+                                    }
+                                }
+                            },
+                        });
+                    } else {
+                        listadoProductos.removeClass("show");
+                        listadoProductos.empty();
+                    }
+                });
+
+                listadoProductos.on("click", ".producto-item", function () {
+                    $(document).ready(function () {
+                        // ... (código anterior)
+
+                        listadoProductos.on("click", ".producto-item", function () {
+                            // ... (código anterior)
+
+                            if (!$(this).hasClass("inactivo")) {
+                                listadoProductos.hide();
+                                let index = $(this).index();
+                                productoSeleccionado = resultadosBusqueda[index];
+                                $("#buscarProducto").val(productoSeleccionado.nombre_producto)
+                                    .addClass("is-valid");
+                                $(".search-icon").hide()
+                                $("#btnAgregar").addClass("is-active")
                             }
+                        });  });
+
+                        // ... (resto del código)
+                    });
+
+
+                    function productoExiste(id_producto) {
+                        let existe = false;
+                        $("#tabla-compras tr.producto-row").each(function () {
+                            if ($(this).data('id-producto') == id_producto) {
+                                existe = true;
+                                return false;
+                            }
+                        });
+                        return existe;
+                    }
+
+
+
+                    function totalCompra() {
+                        let totalCompra = 0;
+
+                        $("#tabla-compras tr.producto-row").each(function () {
+                            let fila = $(this);
+                            let totalProducto = parseFloat(fila.find(".total_producto").text().replace(
+                                /[$,.]/g,
+                                ''));
+
+                            console.log('Total del producto:', totalProducto);
+
+                            if (!isNaN(totalProducto)) {
+                                totalCompra += totalProducto;
+                            } else {
+                                console.error('Error: totalProducto no es un número válido');
+                            }
+                        });
+
+                        console.log('Total de la compra:', totalCompra);
+
+                        $("#total-compra").text(formatearPrecios(totalCompra));
+                    }
+
+
+
+                    $("#btnAgregar").click(function () {
+                        if (productoSeleccionado) {
+                            if (productoExiste(productoSeleccionado.id_producto)) {
+                                alert('El producto ya existe en la lista de productos');
+                                $("#buscarProducto").val("")
+                                $("#cantidad-ingresada").val("1")
+                                $("#buscarProducto").val("").removeClass("is-valid");
+                                return;
+                            }
+                            $("#buscarProducto").val("").removeClass("is-valid");
+                            $(".search-icon").show()
+                            productoSeleccionado.cantidadSeleccionada = parseInt($(
+                                    "#cantidad-ingresada").val(),
+                                10);
+                            $("#cantidad-ingresada").val("1")
+                            agregarFila(productoSeleccionado)
+                            totalCompra()
+                            productoSeleccionado = null;
+                            $("#btnAgregar").removeClass("is-active")
+                            $("#product-table-section").addClass("show");
+                            $("#tabla-compras").addClass("show");
+                            $(".producto-cont-descuento").addClass("show")
                         }
-                    },
-                });
-            } else {
-                listadoProductos.removeClass("show");
-                listadoProductos.empty();
-            }
-        });
-
-        listadoProductos.on("click", ".producto-item", function () {
-            if (!$(this).hasClass("inactivo")) {
-                listadoProductos.hide();
-                let index = $(this).index();
-                productoSeleccionado = resultadosBusqueda[index];
-                $("#buscarProducto").val(productoSeleccionado.nombre_producto).addClass("is-valid");
-                $(".search-icon").hide()
-                $("#btnAgregar").addClass("is-active")
-            } else {
-                alert("Este producto esta inhabilitado")
-            }
-        });
-
-        function productoExiste(id_producto) {
-            let existe = false;
-            $("#tabla-compras tr.producto-row").each(function () {
-                if ($(this).data('id-producto') == id_producto) {
-                    existe = true;
-                    return false;
-                }
-            });
-            return existe;
-        }
+                    });
 
 
-
-        function totalCompra() {
-            let totalCompra = 0;
-
-            $("#tabla-compras tr.producto-row").each(function () {
-                let fila = $(this);
-                let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g,
-                    ''));
-
-                console.log('Total del producto:', totalProducto);
-
-                if (!isNaN(totalProducto)) {
-                    totalCompra += totalProducto;
-                } else {
-                    console.error('Error: totalProducto no es un número válido');
-                }
-            });
-
-            console.log('Total de la compra:', totalCompra);
-
-            $("#total-compra").text(formatearPrecios(totalCompra));
-        }
+                    $(document).on("input", ".cantidad-fila, .descuento", function () {
+                        let fila = $(this).closest("tr.producto-row");
+                        fila.find(".product-update-button").addClass("is-active");
+                    });
 
 
-
-        $("#btnAgregar").click(function () {
-            if (productoSeleccionado) {
-                if (productoExiste(productoSeleccionado.id_producto)) {
-                    alert('El producto ya existe en la lista de productos');
-                    $("#buscarProducto").val("")
-                    $("#cantidad-ingresada").val("1")
-                    $("#buscarProducto").val("").removeClass("is-valid");
-                    return;
-                }
-                $("#buscarProducto").val("").removeClass("is-valid");
-                $(".search-icon").show()
-                productoSeleccionado.cantidadSeleccionada = parseInt($("#cantidad-ingresada").val(),
-                    10);
-                $("#cantidad-ingresada").val("1")
-                agregarFila(productoSeleccionado)
-                totalCompra()
-                productoSeleccionado = null;
-                $("#btnAgregar").removeClass("is-active")
-                $("#product-table-section").addClass("show");
-                $("#tabla-compras").addClass("show");
-                $(".producto-cont-descuento").addClass("show")
-            }
-        });
-
-
-        $(document).on("input", ".cantidad-fila, .descuento", function () {
-            let fila = $(this).closest("tr.producto-row");
-            fila.find(".product-update-button").addClass("is-active");
-        });
-
-
-        $(document).on("click", ".eliminar-fila", function () {
-            $(this).closest("tr.producto-row").remove();
-            if ($("#tabla-compras tr.producto-row").length < 1) {
-                $("#product-table-section").removeClass("show");
-                $("#tabla-compras").removeClass("show");
-                $(".producto-cont-descuento").removeClass("show")
-            }
-            totalCompra()
-        });
+                    $(document).on("click", ".eliminar-fila", function () {
+                        $(this).closest("tr.producto-row").remove();
+                        if ($("#tabla-compras tr.producto-row").length < 1) {
+                            $("#product-table-section").removeClass("show");
+                            $("#tabla-compras").removeClass("show");
+                            $(".producto-cont-descuento").removeClass("show")
+                        }
+                        totalCompra()
+                    });
 
 
 
 
 
-        function formatearPrecios(valor) {
-            valor = Math.round(valor * 100) / 100;
-            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            return '$' + precioFormateado;
-        }
+                    function formatearPrecios(valor) {
+                        valor = Math.round(valor * 100) / 100;
+                        let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        return '$' + precioFormateado;
+                    }
 
-        $(document).on("click", ".product-update-button", function () {
-            let btn = $(this);
-            btn.val('ACTUALIZADO');
-            btn.addClass("update");
-            btn.fadeIn(100);
+                    $(document).on("click", ".product-update-button", function () {
+                        let btn = $(this);
+                        btn.val('ACTUALIZADO');
+                        btn.addClass("update");
+                        btn.fadeIn(100);
 
-            setTimeout(function () {
-                btn.fadeOut(100, function () {
-                    btn.removeClass("update");
-                    btn.val('ACTUALIZAR');
-                    btn.removeClass("is-active");
-                    btn.fadeIn(100);
-                });
-            }, 1000);
+                        setTimeout(function () {
+                            btn.fadeOut(100, function () {
+                                btn.removeClass("update");
+                                btn.val('ACTUALIZAR');
+                                btn.removeClass("is-active");
+                                btn.fadeIn(100);
+                            });
+                        }, 1000);
 
-            $("#campos-requeridos").css("color", "");
-            $('.product-update-button.is-active').tooltip('dispose');
-            let fila = $(this).closest("tr.producto-row");
-            let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
-            let precio_compra = parseFloat(fila.find(".precio_compra").text().replace(/[$,.]/g, ''));
-
-
-            let total_producto = formatearPrecios(precio_compra * cantidad_seleccionada);
-            let total_compraa = formatearPrecios(precio_compra)
+                        $("#campos-requeridos").css("color", "");
+                        $('.product-update-button.is-active').tooltip('dispose');
+                        let fila = $(this).closest("tr.producto-row");
+                        let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
+                        let precio_compra = parseFloat(fila.find(".precio_compra").text().replace(
+                            /[$,.]/g, ''));
 
 
-
-            fila.find(".precio_compra").html(total_compraa);
-
-            fila.find(".total_producto").text(total_producto);
-            totalCompra()
-        });
+                        let total_producto = formatearPrecios(precio_compra * cantidad_seleccionada);
+                        let total_compraa = formatearPrecios(precio_compra)
 
 
 
+                        fila.find(".precio_compra").html(total_compraa);
 
-        function calcularPrecios(precio_compra, cantidad_seleccionada) {
-            let total_compra = precio_compra * cantidad_seleccionada;
-            precio_compra = parseFloat(precio_compra); // Convertir a número
-            return {
-                total_compra,
-                precio_compra
-            };
-        }
+                        fila.find(".total_producto").text(total_producto);
+                        totalCompra()
+                    });
 
 
 
-        function agregarFila(producto) {
-            let tbody = $("#producto-tbody");
-            $("#campos-requeridos").css("color", "");
 
-            let id_producto = producto.id_producto;
-            let estadoProducto = producto.estado;
-            let marca = producto.marca;
-            let categoria = producto.categoria;
-            let nombre_producto = producto.nombre_producto;
-            let img = producto.presentacion;
-            let cantidad = producto.cantidad;
-            let precio_compra = parseFloat(producto.precio_compra)
-            let cantidad_seleccionada = producto.cantidadSeleccionada
-            let precios = calcularPrecios(precio_compra, cantidad_seleccionada);
-            // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-            // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
-            let itemFila = `
+                    function calcularPrecios(precio_compra, cantidad_seleccionada) {
+                        let total_compra = precio_compra * cantidad_seleccionada;
+                        precio_compra = parseFloat(precio_compra); // Convertir a número
+                        return {
+                            total_compra,
+                            precio_compra
+                        };
+                    }
+
+
+
+                    function agregarFila(producto) {
+                        let tbody = $("#producto-tbody");
+                        $("#campos-requeridos").css("color", "");
+
+                        let id_producto = producto.id_producto;
+                        let estadoProducto = producto.estado;
+                        let marca = producto.marca;
+                        let categoria = producto.categoria;
+                        let nombre_producto = producto.nombre_producto;
+                        let img = producto.presentacion;
+                        let cantidad = producto.cantidad;
+                        let precio_compra = parseFloat(producto.precio_compra)
+                        let cantidad_seleccionada = producto.cantidadSeleccionada
+                        let precios = calcularPrecios(precio_compra, cantidad_seleccionada);
+                        // <img src="/media/${img}" alt="Imagen" class="img-fluid">
+                        // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
+                        let itemFila = `
                 <tr class="producto-row" data-id-producto="${id_producto}" data-precio-compra="${precios.precio_compra}">
                     <td class="p-2 celda-producto">
                         <div class="product-info">
@@ -497,32 +435,30 @@
                                     <li><strong>${nombre_producto}</strong></li>
                                     <li class="d-flex justify-content-between">
                                         <span><strong class="mr-2">Marca:</strong>${marca}</span>
-                                        
                                     </li>
                                     <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
-                                    <li class="d-flex gap-3">
-                                        <div class="number-input mt-3">
+                                </ul>
+                                <ul>
+                                    <div class="number-input mt-3">
                                             <button onclick="decrement(this)" id="decrement">-</button>
                                             <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
                                             <button onclick="increment(this)" id="increment">+</button>
                                         </div>   
                                         <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
-                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </td>
                     <td class="precio_compra"> ${formatearPrecios(precio_compra)} </td>
-                    
                     <td class="total_producto"> ${formatearPrecios(precios.total_compra)} </td>
                     <td class="eliminar-fila"> 
                         <i class="fas fa-trash"></i>
                     </td>
                 </tr>
                 `;
-            tbody.append(itemFila);
-        }
-    });
+                        tbody.append(itemFila);
+                    }
+                });
 </script>
 
 

@@ -235,9 +235,6 @@ input[type="number"] {
     background-color: #72d072;
 }
 
-.btn-resumen {
-    background-color: #419edd;
-}
 .btn-descuento {
     margin-right: 10px;
     background-color: rgb(48, 48, 163);
@@ -274,6 +271,8 @@ input[type="number"] {
 }
 
 #tabla-compras {
+    width: 90%;
+    margin: auto;
     height: 500px;
     overflow-y:auto;
     padding-right: 30px;

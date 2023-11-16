@@ -46,47 +46,14 @@
 </section>
 
 <section class="desktop mt-4">
-  <div class="col-md-9" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
+  <div class="col-md-10" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
     <div class="text-muted card-panel d-md-none d-lg-block">
       <div class="container-search desk">
-        <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input">
-          <i class="fas fa-times search-clear-icon" id="search-clear"></i>
+        <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input-desk">
+        <i class="fas fa-times search-clear-icon" id="search-clear-desk"></i>
       </div>
-      <p><strong>MEJORES VENTAS</strong></p>
-      <ul class="list-group ">
-        <li style="display: flex;">
-          <img src="https://nutramerican.com/api_MegaplexStar/assets/productsgoldenwebp/bipro1lb/small.webp" height="64"
-            width="64">
-          <div class="media-item">
-            <p>BIPRO CLASSIC VAINILLA 0.9Lb </p>
-            <h6 class="mb-3">
-              <strong class="ms-2 text-danger">$323.982</strong>
-            </h6>
-          </div>
-        </li>
-        <li style="display: flex;">
-          <img
-            src="https://nutramerican.com/api_MegaplexStar/assets/productsgoldenwebp/bipro_classic_vainilla3lB/small.webp"
-            height="64" width="64">
-          <div class="media-item">
-            <p>BIPRO CLASSIC VAINILLA 3LB </p>
-            <h6 class="mb-3">
-              <strong class="ms-2 text-danger">$323.982</strong>
-            </h6>
-          </div>
-        </li>
-        <li style="display: flex;">
-          <img
-            src="https://nutramerican.com/api_MegaplexStar/assets/productos3dwebp/combo_definicion_muscular/combo_definicion_muscular-nutramerican-pharma-small.webp"
-            height="64" width="64">
-          <div class="media-item">
-            <p>COMBO DEFINICIÓN MUSCULAR </p>
-            <h6 class="mb-3">
-              <strong class="ms-2 text-danger">$323.982</strong>
-            </h6>
-          </div>
-        </li>
-      </ul>
+      <p id="title-search"><strong>MEJORES VENTAS</strong></p>
+      <ul class="list-group d-flex gap-4" id="toggle-main-search-desk"></ul>
     </div>
     <div class="product-card-container" id="product-container">
       {% for producto in productos %}
@@ -114,6 +81,94 @@
 
 </section>
 
+<script>
+  $(document).ready(function () {
+
+    cargarProductos()
+
+    function cargarProductos() {
+      $("#title-search").text("MEJORES VENTAS")
+      $.ajax({
+        url: "{% url 'mas_vendidos' %}",
+        type: "GET",
+        success: function (data) {
+          if (data.success) {
+            $("#toggle-main-search-desk").empty();
+            $.each(data.data, function (index, p) {
+              var productList =
+                '<li class="d-flex">' +
+                '<img src="/media/' + p.presentacion + '" alt="Imagen" height="64" width="64">' +
+                '<div class="media-item px-2 d-flex gap-2 flex-column">' +
+                '<span>' + p.nombre_producto + '</span>' +
+                '<h6><strong class="text-danger">' + p.precio_pub + '</strong></h6></div></li>';
+
+              $("#toggle-main-search-desk").append(productList);
+            });
+          }
+        },
+      });
+
+    }
+
+    $(document).on("input", "#search-input-desk", function () {
+      let search = $(this).val();
+      $("#title-search").text("RESULTADOS...")
+
+      if (search.length >= 2) {
+        $.ajax({
+          url: "{% url 'search_products' %}",
+          method: 'GET',
+          data: { search: search },
+          success: function (data) {
+            if (data.success) {
+              if (data.data.length > 0) {
+                $("#toggle-main-search-desk").empty();
+                $.each(data.data, function (index, p) {
+                  $("#toggle-main-search-desk").addClass("is-active");
+                  var productList =
+                    '<li class="d-flex">' +
+                    '<img  src="/media/' + p.iProductImg_name + '" alt="Imagen" height="64" width="64">' +
+                    '<div class="media-item px-2 d-flex gap-2 flex-column">' +
+                    '<span>' + p.nombre_producto + '</span>' +
+                    '<h6><strong class=" text-danger">' + p.precio_pub + '</strong></h6></div></li>';
+
+                  $("#toggle-main-search-desk").append(productList);
+                });
+                $('.productDetailsButton').click(function () {
+                  id_producto = $(this).data("id")
+                  closeMains()
+                  $("#search-input").val("");
+                  $("#toggle-main-search-desk").empty();
+                  $("#toggle-main-search-desk").removeClass("is-active");
+                  setTimeout(function () {
+                    cargarDetalle(id_producto);
+                  }, 200);
+                });
+              } else {
+                $("#toggle-main-search-desk").empty();
+                $("#toggle-main-search-desk").removeClass("is-active");
+                $("#title-search").text("NO SE HAN ENCONTRADO RESULTADOS")
+              }
+            }
+          }
+        });
+      } else {
+        $("#toggle-main-search-desk").empty();
+        $("#toggle-main-search-desk").removeClass("is-active");
+        cargarProductos()
+      }
+    });
+
+    $("#search-clear-desk").on("click", function () {
+      $("#search-input-desk").val("");
+      $("#toggle-main-search-desk").empty();
+      $("#toggle-main-search-desk").removeClass("is-active");
+      cargarProductos()
+    });
+
+  });
+
+</script>
 
 
 {% endblock %}

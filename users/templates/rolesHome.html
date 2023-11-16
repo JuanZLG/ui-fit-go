@@ -48,7 +48,7 @@
         align-items: center;
     }
 
-    .btn-adder:hover{
+    .btn-adder:hover {
         color: #000;
         background-color: #77B677;
         border: solid 1px black;
@@ -61,12 +61,12 @@
 
     .btn-dash {
         background-color: #c55c5c;
-        color:black;
+        color: black;
     }
 
     .btn-dash:hover {
         background-color: #D16060;
-        color:black
+        color: black
     }
 
     tr.inactivo {
@@ -137,16 +137,20 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a class="btn btn-succes btn-adder btn-lg verCrear" data-toggle="tooltip" data-placement="top" title="Crear un Rol y Asignar Permisos">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Agregar Rol</span>
+                <a class="btn btn-succes btn-adder btn-lg verCrear" data-toggle="tooltip" data-placement="top"
+                    title="Crear un Rol y Asignar Permisos">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Rol</span>
                 </a>
-                    
+
             </span>
         </div>
 
         {% comment %} <div class="d-flex align-items-center mx-2">
-            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top" title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text" style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
             </a>
         </div> {% endcomment %}
     </div>
@@ -160,7 +164,8 @@
                 <thead class="theads">
                     <tr>
                         <th>Nombre del Rol</th>
-                        <th data-toggle="tooltip" data-placement="top" title="Controla el acceso a cada módulo.">Permisos</th>
+                        <th data-toggle="tooltip" data-placement="top" title="Controla el acceso a cada módulo.">
+                            Permisos</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -168,16 +173,20 @@
                     {% for rol, recuento in permisos_count.items %}
                     <tr class="{% if rol.id_rol == 1 %}admin{% endif %}">
                         <td>{{ rol.nombre_rol }}</td>
-                        <td data-toggle="tooltip" data-placement="right" title="Cantidad de Permisos">{{ recuento }} / 6 </td>
+                        <td data-toggle="tooltip" data-placement="right" title="Cantidad de Permisos">{{ recuento }} / 6
+                        </td>
                         <td class="cell-actions">
-                            <button type="button" class="btn btn-sm verEditar" data-id-rol="{{rol.id_rol}}"data-toggle="tooltip" data-placement="right" title="Modificar Rol y Permisos"><i
+                            <button type="button" class="btn btn-sm verEditar" data-id-rol="{{rol.id_rol}}"
+                                data-toggle="tooltip" data-placement="right" title="Modificar Rol y Permisos"><i
                                     class="fa-solid fa-pen-to-square"></i></button>
                             <button type="button" class="btn btn-sm btn-primary verDetalles"
-                                data-id-rol="{{rol.id_rol}}" data-toggle="tooltip" data-placement="right" title="Ver Permisos">
+                                data-id-rol="{{rol.id_rol}}" data-toggle="tooltip" data-placement="right"
+                                title="Ver Permisos">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                             <a class="btn btn-sm btn-danger delete-button" data-id-rol="{{ rol.id_rol }}"><i
-                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip" data-placement="top" title="Eliminar Rol"></i></a>
+                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip"
+                                    data-placement="top" title="Eliminar Rol"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -241,179 +250,12 @@
     });
 </script>
 
-<div class="modal-backdrop"></div>
 
-<dialog id="verCrear" class="rolDialog dragHandle">
-    <form method="dialog">
-        {% csrf_token %}
-        <div class="modal-container-header">
-            <h2>Crear Rol y Permisos</h2>
-            <button class="cerrar-rol" type="button">
-                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                        fill="currentColor"></path>
-                </svg>
-            </button>
-        </div>
-        <div class="mt-3 linea-detalle">
-            <label>Nombre del Rol</label>
-            <input type="text" class="form-control nombreRol" placeholder="Ingrese Nombre del Rol">
-            <label class="error-rol"></label>
-        </div>
-        <p class="mt-2">Permisos:</p>
-        <div class="cont-check">
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" class="permisoClientes">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoClientes">Clientes</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" class="permisoProveedores">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoProveedores">Proveedores</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" class="permisoProductos">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoProductos">Productos</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" class="permisoVentas">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoVentas">Ventas</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" class="permisoCompras">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoCompras">Compras</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" class="permisoUsuarios">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoUsuarios">Usuarios</label>
-            </div>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-rol" id="guardarRol">Guardar Rol</button>
-        </div>
-    </form>
-</dialog>
-
-
-<dialog id="verEditar" class="rolDialog dragHandle">
-    <form method="dialog">
-        {% csrf_token %}
-        <div class="modal-container-header">
-            <h2>Modificar Rol y Permisos</h2>
-            <button class="cerrar-rol" type="button">
-                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                        fill="currentColor"></path>
-                </svg>
-            </button>
-        </div>
-        <div class="mt-3 linea-detalle">
-            <label>Nombre del Rol</label>
-            <input type="text" class="form-control nombreRol" placeholder="Ingrese Nombre del Rol">
-            <label class="error-rol"></label>
-        </div>
-        <p class="mt-2">Permisos:</p>
-        <div class="cont-check">
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" name="permisoClientes" class="permisoClientes">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoClientes">Clientes</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" name="permisoProveedores" class="permisoProveedores">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoProveedores">Proveedores</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" name="permisoProductos" class="permisoProductos">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoProductos">Productos</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" name="permisoVentas" class="permisoVentas">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoVentas">Ventas</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" name="permisoCompras" class="permisoCompras">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoCompras">Compras</label>
-            </div>
-            <div>
-                <label class="div-check">
-                    <input type="checkbox" name="permisoUsuarios" class="permisoUsuarios">
-                    <div class="checkmark"></div>
-                </label>
-                <label for="permisoUsuarios">Usuarios</label>
-            </div>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-rol" id="modificarRol">Modificar Rol</button>
-        </div>
-    </form>
-</dialog>
-
-
-<dialog id="verDetalles" class="rolDialog dragHandle">
-    <div class="modal-container-header linea-detalle">
-        <h2>Detalles <span id="nombreRol"></span> </h2>
-        <button class="cerrar-rol" type="button">
-            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 0h24v24H0z" fill="none"></path>
-                <path
-                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
-                    fill="currentColor"></path>
-            </svg>
-        </button>
-    </div>
-    <div class="mt-3">
-        <p class="font-weight-bold">Permisos:</p>
-        <div class="cont-permisos-detalles">
-            <span id="permisoClientes" class="permiso"></span>
-            <span id="permisoProveedores" class="permiso"></span>
-            <span id="permisoProductos" class="permiso"></span>
-            <span id="permisoVentas" class="permiso"></span>
-            <span id="permisoCompras" class="permiso"></span>
-            <span id="permisoUsuarios" class="permiso"></span>
-        </div>
-    </div>
-</dialog>
 
 <style>
     .cont-permisos-detalles {
         margin: auto;
-        width: 80%;
+        width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -436,34 +278,93 @@
 </style>
 
 <script>
+    function cargarDatos(param) {
+        $.ajax({
+            url: "{% url 'obtener_datos'  %}",
+            data: {
+                param: param
+            },
+            method: "GET",
+            success: function (data) {
+                let datos = data.datos;
+                let nombreRol = datos.nombre_rol;
+                let permisosHTML = '';
+
+                $.each(datos.permisos, function (permiso, valor) {
+                    let estadoPermiso = valor === 1 ? 'activo' : 'inactivo';
+                    permisosHTML += `<span class="permiso ${estadoPermiso}">${permiso}</span>`;
+                });
+
+                Swal.fire({
+                    html: `
+                        <div class="modal-container">
+                            <div class="modal-container-header">
+                                <h2>Detalles: <span>${nombreRol}</span> </h2>
+                                <div class="mt-2" style="text-align: left;">
+                                    <p class="font-weight-bold">Permisos:</p>
+                                    <div class="cont-permisos-detalles">
+                                        ${permisosHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `,
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    customClass: {
+                        closeButton: 'custom-close-button',
+                        popup: 'custom-swal-popup'
+                    }
+                })
+                let css = `
+                        .custom-close-button {
+                            border: none !important;
+                            color: black !important;
+                        }
+                        .custom-swal-popup {
+                            max-width: 35% !important;
+                            width: auto !important;
+                        }
+                        `,
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+
+                head.appendChild(style);
+
+                style.type = 'text/css';
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
+
+            },
+            error: function (error) {
+                console.error("Error al cargar los datos de edición: " + error);
+            }
+        });
+    }
+</script>
+<script>
+
     $(document).ready(function () {
 
-        let modal = ""
-        let = id_rol = 0
+        $(".verDetalles").click(function () {
+            let id_rol = $(this).data("id-rol");
+            cargarDatos(id_rol);
+        });
+
         $(".verCrear").click(function () {
-            document.getElementById("verCrear").showModal();
-            modal = "verCrear";
-            $(".rolDialog, .modal-backdrop").addClass("fadeIn");
-            $(".modal-backdrop").show().addClass("fadeInBack");
+            let id_rol = $(this).data("id-rol");
+            cargarDatosCrear(id_rol);
         });
 
         $(".verEditar").click(function () {
-            id_rol = $(this).data("id-rol");
-            modal = "verEditar";
-            cargarDatos(id_rol, modal);
-            $(".rolDialog, .modal-backdrop").addClass("fadeIn");
-            $(".modal-backdrop").show().addClass("fadeInBack");
+            let id_rol = $(this).data("id-rol");
+            cargarDatosEditar(id_rol);
         });
 
-        $(".verDetalles").click(function () {
-            id_rol = $(this).data("id-rol");
-            modal = "verDetalles";
-            cargarDatos(id_rol, modal);
-            $(".rolDialog, .modal-backdrop").addClass("fadeIn");
-            $(".modal-backdrop").show().addClass("fadeInBack");
-        });
-
-        function cargarDatos(param, modal) {
+        function cargarDatosEditar(param) {
             $.ajax({
                 url: "{% url 'obtener_datos'  %}",
                 data: {
@@ -472,35 +373,75 @@
                 method: "GET",
                 success: function (data) {
                     let datos = data.datos;
-                    if (modal == "verEditar") {
-                        let nombreRolInput = $("#verEditar .nombreRol");
-                        nombreRolInput.val(datos.nombre_rol);
+                    let nombreRol = datos.nombre_rol;
+                    let permisosHTML = '';
 
-                        $.each(datos.permisos, function (permiso, valor) {
-                            let checkbox = $("#verEditar input[name='permiso" + permiso + "']");
-                            checkbox.prop("checked", valor === 1);
-                        });
+                    $.each(datos.permisos, function (permiso, valor) {
+                        let estadoPermiso = valor === 1 ? 'checked' : '';
+                        permisosHTML += `
+                <div>
+                    <label class="div-check">
+                        <input type="checkbox" name="permiso${permiso}" class="permiso${permiso}" ${estadoPermiso}>
+                        <div class="checkmark"></div>
+                    </label>
+                    <label for="permiso${permiso}">${permiso}</label>
+                </div>`;
+                    });
 
-                        let dialogEditar = document.getElementById("verEditar");
-                        if (dialogEditar && !dialogEditar.open) {
-                            dialogEditar.showModal();
+                    Swal.fire({
+                        html: `
+                <form method="dialog" style="text-align:start;">
+                    {% csrf_token %}
+                    <div class="modal-container-header">
+                        <div class="modal-state ${estadoUsuarioCircle}"></div>
+                        <h2>Modificar Rol y Permisos</h2>
+                    </div>
+                    <div class="mt-3">
+                        <label>Nombre del Rol</label>
+                        <input type="text" class="form-control nombreRol" id="nombreRolEdit" placeholder="Ingrese Nombre del Rol" value="${nombreRol}">
+                        <label class="error-rol"></label>
+                    </div>
+                    <p class="mt-2">Permisos:</p>
+                    <div class="cont-check">
+                        ${permisosHTML}
+                        <p class="error-rol-permisos"></p>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-rol" id="modificarRol" data-id-rol="${param}">Modificar Rol</button>
+                    </div>
+                </form>
+                `,
+                        showCloseButton: true,
+                        showConfirmButton: false,
+                        customClass: {
+                            closeButton: 'custom-close-button',
+                            popup: 'custom-swal-popup'
                         }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // enviarDatosVentas("edit");
+                        }
+                    });
+
+                    let css = `
+                .custom-close-button { 
+                    border: none !important; 
+                    color: black !important; 
+                }
+                .custom-swal-popup {
+                    width: 35% !important;
+                }
+            `,
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+
+                    head.appendChild(style);
+
+                    style.type = 'text/css';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
                     } else {
-                        let nombreRol = $("#verDetalles #nombreRol").text(datos.nombre_rol);
-
-                        $.each(datos.permisos, function (permiso, valor) {
-                            let permisoElement = $("#verDetalles #permiso" + permiso).text(permiso);
-                            if (valor === 1) {
-                                permisoElement.addClass('activo').removeClass('inactivo');
-                            } else {
-                                permisoElement.addClass('inactivo').removeClass('activo');
-                            }
-                        });
-
-                        let dialogEditar = document.getElementById("verDetalles");
-                        if (dialogEditar && !dialogEditar.open) {
-                            dialogEditar.showModal();
-                        }
+                        style.appendChild(document.createTextNode(css));
                     }
                 },
                 error: function (error) {
@@ -509,24 +450,243 @@
             });
         }
 
+        $(document).on('click', '#modificarRol', function (event) {
+            event.preventDefault();
+            let id_rol = $(this).data("id-rol");
+            camposValidos = true;
+            let nombre_rol = $("#nombreRolEdit").val();
+            if (nombre_rol.trim() === "") {
+                $("#nombreRolEdit").addClass("is-invalid");
+                $(".error-rol").text("El campo es requerido.").css("color", "red");
+                camposValidos = false;
+            } else {
+                $("#nombreRolEdit").removeClass("is-invalid");
+                $(".error-rol").text("");
+            }
+            let permisos = {};
+            let permisosMarcados = 0;
 
-        $(".cerrar-rol").click(function () {
-            $(".rolDialog").addClass("fadeOut");
-            $(".modal-backdrop").addClass("fadeOut");
-            setTimeout(function () {
-                document.getElementById(modal).close();
-                $(".rolDialog").removeClass("fadeOut");
-                $(".modal-backdrop").hide().removeClass("fadeOut");
+            $(".cont-check input[type='checkbox']").each(function () {
+                var permiso = $(this).attr("class").replace("permiso", "");
+                permisos[permiso] = $(this).is(":checked") ? 1 : 0;
 
-            }, 300);
-            $(".nombreRol").removeClass("is-invalid");
-            $(".error-rol").text("");
+                if ($(this).is(":checked")) {
+                    permisosMarcados++;
+                }
+            });
+
+            if (permisosMarcados === 0) {
+                $(".error-rol-permisos").text("Debe seleccionar al menos un permiso").css("color", "red");
+                camposValidos = false;
+            }
+
+
+            if (!camposValidos) {
+                return;
+            } else {
+                var data = {
+                    id_rol: id_rol,
+                    nombreRol: nombre_rol,
+                    permisos: permisos
+                };
+                var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": csrfToken
+                    },
+                    type: "POST",
+                    url: "{% url 'edit_rol' %}",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Rol actualizado con éxito',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000,
+                            });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
+                        }
+                    }
+                });
+            }
         });
 
-        $(".nombreRol").on("input", function () {
+        function cargarDatosCrear(param) {
+
+            Swal.fire({
+                html: `
+            <form method="dialog" style="text-align:start;">
+                {% csrf_token %}
+                <div class="modal-container-header">
+                    <h2>Crear Rol y Permisos</h2>
+                </div>
+                <div class="mt-3">
+                    <label>Nombre del Rol</label>
+                    <input type="text" class="form-control nombreRol" id="nombreRolCreate" placeholder="Ingrese Nombre del Rol">
+                    <label class="error-rol"></label>
+                </div>
+                <p class="mt-2">Permisos:</p>
+                <div class="cont-check">
+                    <div>
+                        <label class="div-check">
+                            <input type="checkbox" class="permisoClientes">
+                            <div class="checkmark"></div>
+                        </label>
+                        <label for="permisoClientes">Clientes</label>
+                    </div>
+                    <div>
+                        <label class="div-check">
+                            <input type="checkbox" class="permisoProveedores">
+                            <div class="checkmark"></div>
+                        </label>
+                        <label for="permisoProveedores">Proveedores</label>
+                    </div>
+                    <div>
+                        <label class="div-check">
+                            <input type="checkbox" class="permisoProductos">
+                            <div class="checkmark"></div>
+                        </label>
+                        <label for="permisoProductos">Productos</label>
+                    </div>
+                    <div>
+                        <label class="div-check">
+                            <input type="checkbox" class="permisoVentas">
+                            <div class="checkmark"></div>
+                        </label>
+                        <label for="permisoVentas">Ventas</label>
+                    </div>
+                    <div>
+                        <label class="div-check">
+                            <input type="checkbox" class="permisoCompras">
+                            <div class="checkmark"></div>
+                        </label>
+                        <label for="permisoCompras">Compras</label>
+                    </div>
+                    <div>
+                        <label class="div-check">
+                            <input type="checkbox" class="permisoUsuarios">
+                            <div class="checkmark"></div>
+                        </label>
+                        <label for="permisoUsuarios">Usuarios</label>
+                    </div>
+                    <p class="error-rol-permisos"></p>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-rol" id="createRol" data-id-rol="${param}">Guardar Rol</button>
+                </div>
+            </form>
+        `,
+                showCloseButton: true,
+                showConfirmButton: false,
+                customClass: {
+                    closeButton: 'custom-close-button',
+                    popup: 'custom-swal-popup'
+                }
+
+            });
+
+            let css = `
+        .custom-close-button { 
+            border: none !important; 
+            color: black !important; 
+        }
+        .custom-swal-popup {
+            width: 35% !important;
+        }
+    `,
+                head = document.head || document.getElementsByTagName('head')[0],
+                style = document.createElement('style');
+
+            head.appendChild(style);
+
+            style.type = 'text/css';
+            if (style.styleSheet) {
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+        }
+
+        $(document).on('click', '#createRol', function (event) {
+            event.preventDefault();
+            camposValidos = true;
+            let nombre_rol = $("#nombreRolCreate").val();
+            if (nombre_rol.trim() === "") {
+                $("#nombreRolCreate").addClass("is-invalid");
+                $(".error-rol").text("El campo es requerido.").css("color", "red");
+                camposValidos = false;
+            } else {
+                $("#nombreRolCreate").removeClass("is-invalid");
+                $(".error-rol").text("");
+            }
+
+            let permisos = {};
+            let permisosMarcados = 0;
+
+            $(".cont-check input[type='checkbox']").each(function () {
+                var permiso = $(this).attr("class").replace("permiso", "");
+                permisos[permiso] = $(this).is(":checked") ? 1 : 0;
+
+                if ($(this).is(":checked")) {
+                    permisosMarcados++;
+                }
+            });
+
+            if (permisosMarcados === 0) {
+                $(".error-rol-permisos").text("Debe seleccionar al menos un permiso").css("color", "red");
+                camposValidos = false;
+            }
+
+
+            if (!camposValidos) {
+                return;
+            } else {
+                var data = {
+                    nombreRol: nombre_rol,
+                    permisos: permisos
+                };
+                var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    headers: {
+                        "X-CSRFToken": csrfToken
+                    },
+                    type: "POST",
+                    url: "{% url 'create_rol' %}",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Rol creado con éxito',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000,
+                            });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).on('input', '.nombreRol', function (event) {
             $(this).removeClass("is-invalid");
             $(".error-rol").text("");
         });
+
+        $(document).on('change', '.permisoClientes, .permisoProveedores, .permisoProductos, .permisoVentas, .permisoCompras, .permisoUsuarios', function (event) {
+            $(this).removeClass("is-invalid");
+            $(".error-rol-permisos").text("");
+        });
+
 
 
         function validarRol(nombre_rol) {
@@ -548,183 +708,9 @@
             });
         }
 
-        $("#guardarRol, #modificarRol").click(function (event) {
-            event.preventDefault();
-            camposValidos = true;
-            let accion = "";
-            if ($("#" + modal + " .nombreRol").val().trim() === "") {
-                $("#" + modal + " .nombreRol").addClass("is-invalid");
-                $("#" + modal + " .error-rol").text("El campo es requerido.").css("color", "red");
-                camposValidos = false;
-            } else {
-                $("#" + modal + " .nombreRol").removeClass("is-invalid");
-                $("#" + modal + " .error-rol").text("");
-            }
-            nombre_rol = $("#" + modal + " .nombreRol").val()
-            if (!camposValidos) {
-                return;
-            } else {
-                if ($(this).attr("id") == "guardarRol") {
-                    accion = "create";
-                    validarRol(nombre_rol).then(function (existe) {
-                        if (existe) {
-                            $("#" + modal + " .nombreRol").addClass("is-invalid");
-                            $("#" + modal + " .error-rol").text("El nombre del rol '" + nombre_rol + "' ya existe").css("color", "red");
-                            camposValidos = false;
-                        } else {
-                            enviarDatosVentas(accion);
-                        }
-                    });
-                }
-                else if ($(this).attr("id") == "modificarRol") {
-                    accion = "edit";
-                    enviarDatosVentas(accion);
-                }
-            }
-        });
-
-
-
-        function enviarDatosVentas(accion) {
-            var nombreRol = $("#" + modal + " .nombreRol").val();
-            var permisos = {};
-
-            var checkboxClientes = $("#" + modal + " .permisoClientes");
-            var checkboxProveedores = $("#" + modal + " .permisoProveedores");
-            var checkboxProductos = $("#" + modal + " .permisoProductos");
-            var checkboxVentas = $("#" + modal + " .permisoVentas");
-            var checkboxCompras = $("#" + modal + " .permisoCompras");
-            var checkboxUsuarios = $("#" + modal + " .permisoUsuarios");
-
-            permisos["Clientes"] = checkboxClientes.is(":checked") ? 1 : 0;
-            permisos["Proveedores"] = checkboxProveedores.is(":checked") ? 1 : 0;
-            permisos["Productos"] = checkboxProductos.is(":checked") ? 1 : 0;
-            permisos["Ventas"] = checkboxVentas.is(":checked") ? 1 : 0;
-            permisos["Compras"] = checkboxCompras.is(":checked") ? 1 : 0;
-            permisos["Usuarios"] = checkboxUsuarios.is(":checked") ? 1 : 0;
-
-            var data = {
-                id_rol: id_rol,
-                accion: accion,
-                nombreRol: nombreRol,
-                permisos: permisos
-            };
-            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
-            $.ajax({
-                headers: {
-                    "X-CSRFToken": csrfToken
-                },
-                type: "POST",
-                url: "{% url 'accion_rol' %}",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                        title: "Éxito",
-                        text: "El Rol ha sido agregado.",
-                        icon: "success"
-                        });
-                        location.reload();
-                    }
-                }
-            });
-
-        }
     });
 
 </script>
-<style>
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.833);
-        z-index: 100;
-        display: none;
-        animation: fadeInBack 0.3s ease-in-out;
-    }
-
-    .rolDialog {
-        max-width: 100%;
-        width: 35%;
-        min-height: 10vh;
-        border: none;
-        background-color: rgb(255, 255, 255);
-        border-radius: 8px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
-        animation: fadeIn 0.3s ease-in-out;
-
-        margin: auto;
-        padding: 20px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes fadeInBack {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .fadeOut {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-
-
-    .linea-detalle {
-        border-bottom: 1px solid #ddd;
-    }
-
-    .modal-container-header h2 {
-        font-size: 1.125rem;
-        font-weight: 700;
-        gap: 8px;
-        text-align: center;
-    }
-
-
-    .cerrar-rol {
-        padding: 0;
-        border: 0;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: 0.15s ease;
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-
-    .btn-rol {
-        background-color: #222222;
-        color: #fff;
-    }
-</style>
 
 
 {% endblock %}
