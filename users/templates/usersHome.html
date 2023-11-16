@@ -162,7 +162,7 @@
                 <tbody>
                     {% for u in Usuarios %}
                     <tr class="{% if u.id_usuario == 1 %}admin{% endif %}">
-                        <td>{{u.id_rol.nombre_rol}}</td>
+                        <td>{% if u.id_rol %}{{u.id_rol.nombre_rol}}{% else %}Sin rol{% endif %}</td>
                         <td>{{u.nombre_usuario}}</td>
                         <td>{{u.correo}}</td>
                         <td>

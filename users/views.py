@@ -221,12 +221,15 @@ def editUser(request, id_usuario):
             id_rol=rl,
             nombre_usuario=nombre_usuario,
             correo=correo,
+            estado=1
         )
         
         response_data = {'success': True}
         return JsonResponse(response_data)    
     users = Usuarios.objects.get(id_usuario=id_usuario)
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
+
+
 
 @jwt_cookie_required
 @module_access_required('usuarios')
@@ -353,8 +356,8 @@ def eliminar_rol(request):
     try:
         rol = Roles.objects.get(id_rol=id_rol)
         
-        usuario = Usuarios.objects.filter(id_rol=rol).first()
-        if usuario:
+        usuarios = Usuarios.objects.filter(id_rol=rol)
+        for usuario in usuarios:
             usuario.id_rol = None 
             usuario.estado = 0
             usuario.save()
@@ -372,3 +375,4 @@ def eliminar_rol(request):
     
     except Roles.DoesNotExist:
         return JsonResponse({'error': 'El rol no existe'})
+
