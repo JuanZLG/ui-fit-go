@@ -177,7 +177,7 @@ def verDetallesCliente(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-@module_access_required('clientes')
+# @module_access_required('clientes')
 def validar_documento(request):
     documento = request.GET.get('documento', '')
 
