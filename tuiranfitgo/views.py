@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from products.models import Productos
 from .models import Productos
 
+
 def verificar_notificaciones(request):
     mensaje = []
 
@@ -17,17 +18,10 @@ def verificar_notificaciones(request):
         for producto in productos_pocos:
             mensaje.append(f"Pocos {producto.nombre_producto} en inventario ({producto.cantidad} disponibles).")
 
-    if productos_muchos.exists():
-        for producto in productos_muchos:
-            mensaje.append(f"Inventario con alta cantidad de {producto.nombre_producto} ({producto.cantidad} disponibles).")
-
     if mensaje:
-        # Si hay mensajes, devuelve solo el primer mensaje (puedes ajustar esto según tus necesidades)
         return JsonResponse({"mensaje": mensaje[0]})
     else:
-        # Si no hay mensajes, devuelve un mensaje en blanco
         return JsonResponse({"mensaje": ""})
-
 
 
 def error_view(request):  
@@ -38,13 +32,12 @@ def mixin_view(request):
 
 def jwt_cookie_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
-        token = request.COOKIES.get('jwt_token') # Esto me lee el token 
+        token = request.COOKIES.get('jwt_token')
         if not token:
             return redirect('initerror')
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
     
-            #Espacio para mas comprobaciones si algo
             request.user = payload
         except jwt.ExpiredSignatureError:
             return JsonResponse({'error': 'Token JWT caducado'}, status=401)

@@ -148,7 +148,6 @@
 
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos requeridos (*)</p>
-    <input type="button" value="Ver resumen" id="boton-resumen" class="btn-acciones btn-resumen mx-2">
     <input type="button" value="Guardar compra" id="crear-compra" class="btn-acciones btn-crear mx-2">
 </div>
 
@@ -157,80 +156,7 @@
 {% block footer %}
 {% endblock %}
 
-<script>
-    document.getElementById('boton-resumen').addEventListener('click', function (event) {
-        resumen_pedido()
-    });
-
-    function resumen_pedido() {
-
-        Swal.fire({
-            html: `
-            <div class="details-container text-start">
-                <h2 class="details-title">Detalles de venta</h2>
-                <p>Fecha: 10/11/2023</p>
-                <p>Cliente: <span id="cliente" class="mr-2">Juan Pérez</span><span class="documento">1002580806<span></p>
-                <h3 class="details-subtitle">Productos</h3>
-                <table class="table details-table">
-                    <thead>
-                        <tr>
-                            <th style="width: auto;">Producto</th>
-                            <th style="width: auto;">Precio Unitario</th>
-                            <th style="width: auto;">Cantidad</th>
-                            <th style="width: auto;">Total Producto</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modalDetallesVenta">
-                        <tr>
-                            <td>Producto xxx</td>
-                            <td>$200.000 - $250.000</td>
-                            <td>2</td>
-                            <td>10%  - $20.000</td>
-                            <td>$30.000</td>
-                            <td>$500.000</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="details-sale">
-                    <p>Descuento de venta: 15%</p>
-                    <p>Total con descuento: $76.50</p>
-                    <p>Margen de ganancia: 44%</p>
-                    <p class="total">Precio total: $110.00</p>
-                </div>
-
-            </div>
-    `,
-            showCloseButton: true,
-            showConfirmButton: false,
-            customClass: {
-                closeButton: 'custom-close-button',
-                popup: 'custom-swal-popup'
-            }
-        })
-    }
-
-    let css = `
-    .custom-close-button { 
-        border: none !important; 
-        color: black !important; 
-    }
-    .custom-swal-popup {
-        max-width: 50% !important;
-        width: auto !important;
-    }
-`,
-        head = document.head || document.getElementsByTagName('head')[0],
-        style = document.createElement('style');
-
-    head.appendChild(style);
-
-    style.type = 'text/css';
-    if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-    } else {
-        style.appendChild(document.createTextNode(css));
-    }
-</script>
+    
 <style>
     .details-title {
         color: #333;
@@ -497,23 +423,21 @@
                                     <li><strong>${nombre_producto}</strong></li>
                                     <li class="d-flex justify-content-between">
                                         <span><strong class="mr-2">Marca:</strong>${marca}</span>
-                                        
                                     </li>
                                     <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
-                                    <li class="d-flex gap-3">
-                                        <div class="number-input mt-3">
+                                </ul>
+                                <ul>
+                                    <div class="number-input mt-3">
                                             <button onclick="decrement(this)" id="decrement">-</button>
                                             <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
                                             <button onclick="increment(this)" id="increment">+</button>
                                         </div>   
                                         <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
-                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </td>
                     <td class="precio_compra"> ${formatearPrecios(precio_compra)} </td>
-                    
                     <td class="total_producto"> ${formatearPrecios(precios.total_compra)} </td>
                     <td class="eliminar-fila"> 
                         <i class="fas fa-trash"></i>
