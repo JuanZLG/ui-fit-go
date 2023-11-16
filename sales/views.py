@@ -202,6 +202,8 @@ def detalles_venta(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
+
+
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib import colors
@@ -227,7 +229,7 @@ def generar_factura_pdf_venta(request, venta_id):
 
     for detalle in detalles_venta:
         producto = detalle.id_producto.nombre_producto
-        precioUnitario = formatear_precios(detalle.precio_uni)
+        precioUnitario = formatear_precios(detalle.precio_compra)  # Usar precio_compra o precio_venta según corresponda
         cantidad = detalle.cantidad
         totalProducto = formatear_precios(detalle.precio_tot)
         totalVenta += detalle.precio_tot
@@ -238,7 +240,6 @@ def generar_factura_pdf_venta(request, venta_id):
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename=Informe_venta_{venta.id_cliente.nombres}_{venta.id_cliente.apellidos}.pdf'
-
 
     buffer = response
     doc = SimpleDocTemplate(buffer, pagesize=letter)
@@ -285,6 +286,7 @@ def generar_factura_pdf_venta(request, venta_id):
     doc.build(elements)
 
     return response
+
 from io import BytesIO
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer
 from reportlab.lib.pagesizes import letter

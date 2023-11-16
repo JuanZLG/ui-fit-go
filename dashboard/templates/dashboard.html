@@ -102,22 +102,51 @@
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-danger shadow h-100 card-effect">
                 <div class="card-body px-5 py-1 d-flex align-items-center" data-toggle="modal"
-                    data-target="#totalClientesInactivos">
+                    data-target="#totalMargenGanancia">
                     <div class="row no-gutters">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Clientes Inactivos
+                                Margen de Ganancia
                             </div>
-                            <div id="clientes-inactivos" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
+                            <div id="margen-ganancia" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
                             </div>
                         </div>
                         <div class="col-auto ml-auto">
-                            <i class="fas fa-user-slash fa-2x text-danger mt-2"></i>
+                            <i class="fas fa-chart-line fa-2x text-danger mt-2"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: "{% url 'obtener_margen_ganancia' %}",
+                    type: 'GET',
+                    success: function (data) {
+                        const margenGanancia = parseFloat(data.margen_ganancia_total.replace(',', ''));
+        
+                        if (!isNaN(margenGanancia)) {
+                            const formatter = new Intl.NumberFormat('es-CO', {
+                                style: 'currency',
+                                currency: 'COP',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                            });
+                            const margenGananciaFormatted = formatter.format(margenGanancia);
+                            $('#margen-ganancia').text(margenGananciaFormatted);
+                        } else {
+                            console.error('Error: El valor recibido no es un número válido.');
+                        }
+                    },
+                    error: function () {
+                        console.error('Error al obtener el margen de ganancia');
+                    }
+                });
+            });
+        </script>
+        
+        
 
 
 

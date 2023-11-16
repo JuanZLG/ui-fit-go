@@ -115,8 +115,12 @@ class Detalleventa(models.Model):
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
     id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
     cantidad = models.IntegerField()
-    precio_uni = models.FloatField()
-    precio_tot = models.FloatField()
+    precio_compra = models.FloatField()
+    precio_venta = models.FloatField()
+    descuentoProducto = models.CharField(max_length=255)
+    totalProductoDescuento = models.CharField(max_length=255)
+    margenGanancia = models.FloatField()    
+    precio_tot = models.FloatField()    
     estado = models.IntegerField(default=1)
 
     class Meta:
@@ -127,11 +131,16 @@ class Ventas(models.Model):
     id_venta = models.AutoField(primary_key=True)
     id_cliente = models.ForeignKey(Clientes, models.DO_NOTHING, db_column='id_cliente')
     fechareg = models.DateField(default=timezone.now)
-    estado = models.IntegerField(default=1)
+    descuentoVenta = models.CharField(max_length=255)
+    totalVentaDescuento = models.CharField(max_length=255)
     totalVenta = models.FloatField()
+    margenGanancia = models.FloatField()    
+    estado = models.IntegerField(default=1)
+
     class Meta:
         managed = False
-        db_table = 'ventas'        
+        db_table = 'ventas'
+       
 
 
 
