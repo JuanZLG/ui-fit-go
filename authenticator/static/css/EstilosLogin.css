@@ -184,3 +184,152 @@ body {
         transform: translate(-5px, 5px);
     }
 }
+
+/*---------------------- OLVIDAR CONTRA ------------------------------*/
+.swal2-popup {
+    width: 400px;
+    background-color: #222222;
+}
+
+.forget-container input {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 5px;
+    margin-top: 17px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    outline: none;
+    color: #000;
+    font-weight: 500;
+}
+
+.forget-butons {
+    margin-top: 10px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.forget-butons button {
+    border: none;
+    border-radius: 10px;
+    width: 4.5rem;
+    height: 2.2rem;
+    padding: 5px 0;
+    color: #fff;
+    transition: all 200ms ease-in-out;
+}
+
+.forget-butons button:hover {
+    cursor: pointer;
+    transform: scale(0.94);
+    color: #ccc;
+}
+
+.forget-butons button:first-child {
+    background-color: rgba(0, 0, 0, .8);
+}
+
+.forget-butons button:last-child {
+    background-color: rgba(0, 0, 0, .4);
+}
+
+
+.codig-container-inputs {
+    width: 85%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.codig-container-inputs input {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.btn-codig {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.btn-codig.is-active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+svg {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    margin: auto;
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+}
+
+circle {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 3;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash4 {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+        stroke-dashoffset: -125px;
+    }
+}
+
+.recover-container-inputs {
+    width: 100%;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.recover-container-inputs label {
+    font-size: 14px;
+    color: #fff;
+}
+
+.white-text {
+    color: #fff !important;
+}
+#submit-btn.inhabilitado,
+#forget-correo.inhabilitado {
+    pointer-events: none;
+}
