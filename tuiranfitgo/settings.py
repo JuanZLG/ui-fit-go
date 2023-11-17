@@ -102,9 +102,9 @@ WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.mysql',
-        'NAME':'ranfit',
+        'NAME':'tuiranfitxx',
         'USER': 'root',
-        'PASSWORD': 'monitoc10',
+        'PASSWORD': 'juannn',
         'PORT': '3306'
     }
 }
