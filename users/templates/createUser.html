@@ -15,7 +15,9 @@
         <div class="card-body p-5 pb-4">
           <form class="form" id="usuario-form" method="post">
             {% csrf_token %}
-
+            <svg viewBox="25 25 50 50" id="loading">
+              <circle r="20" cy="50" cx="50"></circle>
+            </svg>
             <div class="col-md-5 mb-3">
               <div class="form-group">
                 <label for="iRole">Rol del Usuario</label>
@@ -58,33 +60,155 @@
 </div>
 
 
+<style>
+  svg {
+    z-index: 999;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    margin: auto;
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+  }
+
+  circle {
+    fill: none;
+    stroke: rgb(128, 128, 255);
+    stroke-width: 3;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
+  }
+
+  @keyframes rotate4 {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes dash4 {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+    }
+
+    50% {
+      stroke-dasharray: 90, 200;
+      stroke-dashoffset: -35px;
+    }
+
+    100% {
+      stroke-dashoffset: -125px;
+    }
+  }
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
   $(document).ready(function () {
-    $('#iRole, #iNombre, #iCorreo').on('change', function () {
-      validarCampo($(this));
-    });
+    $("#loading").hide();
+
 
     $('#iRole, #iNombre, #iCorreo').on('input', function () {
       const campo = $(this);
       const campoValue = campo.val();
 
       if (campoValue) {
-        campo.removeClass('is-invalid');
-        $(`#${campo.attr('id')}-error`).text('');
+        ocultarError(campo);
       }
     });
+
+    function mostrarError($campo, mensaje) {
+      $campo.addClass('is-invalid');
+      $campo.siblings('.error-message').text(mensaje);
+    }
+
+    function ocultarError($campo) {
+      $campo.removeClass('is-invalid');
+      $campo.siblings('.error-message').text('');
+    }
+
+    function validarCampo($campo) {
+      const valor = $campo.val();
+      if (!valor) {
+        mostrarError($campo, 'Este campo es obligatorio.');
+      } else {
+        ocultarError($campo);
+      }
+    }
+
+    function validarNombreUsuario($campo) {
+      let valor = $campo.val().trim();
+      valor = valor.charAt(0).toUpperCase() + valor.slice(1);
+      const nombreUsuarioRegex = /^[A-Za-z\s]+$/;
+      if (!valor) {
+        mostrarError($campo, 'Este campo es obligatorio.');
+      } else if (!nombreUsuarioRegex.test(valor)) {
+        mostrarError($campo, 'El nombre de usuario no debe contener números ni caracteres especiales.');
+      } else {
+        ocultarError($campo);
+        $campo.val(valor);
+      }
+    }
+
+    function validarCorreoUnico(correo) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          url: "{% url 'email_unique' %}",
+          type: "GET",
+          data: {
+            email: correo,
+          },
+          success: function (data) {
+            if (data.existe) {
+              mostrarError($('#iCorreo'), 'Este correo ya existe');
+              resolve(false);
+            } else {
+              ocultarError($('#iCorreo'));
+              resolve(true);
+            }
+          },
+          error: function () {
+            reject();
+          }
+        });
+      });
+    }
+    $('#iCorreo').on('input', async function () {
+      const correo = $(this).val();
+      await validarCorreoUnico(correo);
+    });
+
+    function validarCorreo($campo) {
+      const valor = $campo.val();
+      const correoRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!valor) {
+        mostrarError($campo, 'Este campo es obligatorio.');
+      } else if (!correoRegex.test(valor)) {
+        mostrarError($campo, 'Ingrese una dirección de correo electrónico válida.');
+      }
+    }
+
     $('#usuario-form').submit(async function (event) {
       event.preventDefault();
       let errors = false;
 
       validarCampo($('#iRole'));
       validarNombreUsuario($('#iNombre'));
-      await validarCorreo($('#iCorreo'));
+      validarCorreo($('#iCorreo'));
 
       $('.is-invalid').each(function () {
         errors = true;
+      });
+
+      $(document).ajaxStart(function () {
+        $("#loading").show();
+      });
+
+      $(document).ajaxStop(function () {
+        $("#loading").hide();
       });
 
       if (!errors) {
@@ -109,79 +233,8 @@
         });
       }
     });
-
-
-
-    function mostrarError($campo, mensaje) {
-      $campo.addClass('is-invalid');
-      $campo.siblings('.error-message').text(mensaje);
-    }
-
-    function ocultarError($campo) {
-      $campo.removeClass('is-invalid');
-      $campo.siblings('.error-message').text('');
-    }
-
-    function validarCampo($campo) {
-      const valor = $campo.val();
-      if (!valor) {
-        mostrarError($campo, 'Este campo es obligatorio.');
-      } else {
-        ocultarError($campo);
-      }
-    }
-
-    function validarNombreUsuario($campo) {
-      let valor = $campo.val();
-      valor = valor.charAt(0).toUpperCase() + valor.slice(1);
-      const nombreUsuarioRegex = /^[A-Za-z]+$/;
-      if (!valor) {
-        mostrarError($campo, 'Este campo es obligatorio.');
-      } else if (!nombreUsuarioRegex.test(valor)) {
-        mostrarError($campo, 'El nombre de usuario no debe contener números ni caracteres especiales.');
-      } else {
-        ocultarError($campo);
-        $campo.val(valor);
-      }
-    }
-
-
-    async function email_unique(email) {
-      return new Promise(function (resolve, reject) {
-        $.ajax({
-          url: "{% url 'email_unique' %}",
-          type: "GET",
-          data: {
-            email: email,
-          },
-          success: function (data) {
-            if (data.existe) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
-          }
-        });
-      });
-    }
-
-    async function validarCorreo($campo) {
-      const valor = $campo.val();
-      const correoRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (!valor) {
-        mostrarError($campo, 'Este campo es obligatorio.');
-      } else if (!correoRegex.test(valor)) {
-        mostrarError($campo, 'Ingrese una dirección de correo electrónico válida.');
-      } else {
-        const existe = await email_unique(valor);
-        if (existe) {
-          mostrarError($campo, 'Este correo ya existe');
-        } else {
-          ocultarError($campo);
-        }
-      }
-    }
-  })
+  });
 </script>
+
 
 {% endblock %}

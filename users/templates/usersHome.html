@@ -143,6 +143,14 @@
 
             </span>
         </div>
+
+        {% comment %} <div class="d-flex align-items-center mx-2">
+            <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
+                title="Descargar PDF con Registros">
+                <i class="fa-solid fa-download mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+            </a>
+        </div> {% endcomment %}
     </div>
 </div>
 
@@ -212,12 +220,9 @@
             title: 'Alerta',
             text: 'Para habilitar nuevamente este usuario deberá asociarle un rol.',
             icon: 'warning',
-            iconColor:'red',
             showCancelButton: true,
             confirmButtonText: 'Confirmar',
             cancelButtonText: 'Cancelar',
-            confirmButtonColor:'#419edd',
-            cancelButtonColor:'#ba4d4d'
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.replace("edituser/" + usuarioId + "/");
@@ -242,7 +247,6 @@
                     },
                     method: "GET",
                     success: function (response) {
-                        $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                         location.reload();
                     }
                 });

@@ -13,7 +13,7 @@
     <br>
     <div class="mb-4 col-md-11 p-0 card shadow">
         <div class="card-header py-4">
-            <form id="proveedor-form" method="post" >
+            <form id="proveedor-form" method="post">
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="col-md-7 mb-3">
@@ -60,10 +60,13 @@
                 </div>
                 <div class="form-row">
                     <label>Información Adicional</label>
-                    <textarea id="informacion" class="form-control" rows="3" cols="50" name="informacion" style="resize: none; max-height: 200px;"></textarea>
+                    <textarea id="informacion" class="form-control" rows="3" cols="50" name="informacion"
+                        style="resize: none; max-height: 200px;"></textarea>
                 </div>
                 <div class="text-end mt-3">
-                    <button id="btnCrearProv" class="btn btn-success mx-auto" type="submit" data-url-crear="{% url 'crearProveedor' %}"  data-url-validar="{% url 'proveedor_unico' %}">Guardar</button>
+                    <button id="btnCrearProv" class="btn btn-success mx-auto" type="submit"
+                        data-url-crear="{% url 'crearProveedor' %}"
+                        data-url-validar="{% url 'proveedor_unico' %}">Guardar</button>
                 </div>
             </form>
 
@@ -78,131 +81,132 @@
     $(document).ready(function () {
 
         $("#nombre_proveedor, #telefono, #correo, #tipoIdentificacion, #identificacion, #direccion, #informacion").val("");
-    function mostrarError(selector, mensaje) {
-        $(selector).addClass('is-invalid');
-        $(`${selector}-error`).text(mensaje).css('color', 'red');
-    }
-
-    function validarFormatoCorreo(correo) {
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        return emailRegex.test(correo);
-    }
-    function validarCamposObligatorios() {
-        let camposLlenos = true;
-        const nombreValue = $('#nombre_proveedor').val();
-        const telefonoValue = $('#telefono').val();
-        const correoValue = $('#correo').val();
-        const tipoIdentificacionValue = $('#tipoIdentificacion').val(); // Obtener valor del select
-        const identificacionValue = $('#identificacion').val(); // Obtener valor del input identificacion
-
-        if (!nombreValue) {
-            mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
-            camposLlenos = false;
-        }
-        if (!telefonoValue) {
-            mostrarError('#telefono', 'Este campo es obligatorio.');
-            camposLlenos = false;
-        } else if (!/^\d{10}$/.test(telefonoValue)) {
-            mostrarError('#telefono', 'Número inválido.');
-            camposLlenos = false;
-        }
-        if (!correoValue) {
-            mostrarError('#correo', 'Este campo es obligatorio.');
-            camposLlenos = false;
-        } else if (!validarFormatoCorreo(correoValue)) {
-            mostrarError('#correo', 'El formato del correo electrónico no es válido.');
-            camposLlenos = false;
+        function mostrarError(selector, mensaje) {
+            $(selector).addClass('is-invalid');
+            $(`${selector}-error`).text(mensaje).css('color', 'red');
         }
 
-        if (tipoIdentificacionValue !== '' && identificacionValue === '') {
-            mostrarError('#identificacion', 'Debe ingresar una identificación.');
-            camposLlenos = false;
-        } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
-            mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
-            camposLlenos = false;
-        } else {
-            $("#identificacion").removeClass("is-invalid")
-            $("#identificacion-error").text("")
+        function validarFormatoCorreo(correo) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailRegex.test(correo);
         }
+        function validarCamposObligatorios() {
+            let camposLlenos = true;
+            const nombreValue = $('#nombre_proveedor').val();
+            const telefonoValue = $('#telefono').val();
+            const correoValue = $('#correo').val();
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val();
+            const identificacionValue = $('#identificacion').val();
 
-        return camposLlenos;
-    }
+            if (!nombreValue) {
+                mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            }
+            if (!telefonoValue) {
+                mostrarError('#telefono', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!/^\d{10}$/.test(telefonoValue)) {
+                mostrarError('#telefono', 'Número inválido.');
+                camposLlenos = false;
+            }
+            if (!correoValue) {
+                mostrarError('#correo', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarFormatoCorreo(correoValue)) {
+                mostrarError('#correo', 'El formato del correo electrónico no es válido.');
+                camposLlenos = false;
+            }
+            else {
+                r = validarProveedorUnico(nombreValue);
+                camposLlenos = r;
+            }
 
 
-    $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
-        const campo = $(this);
-        const campoValue = campo.val();
-
-        if (campoValue) {
-            campo.removeClass('is-invalid');
-            $(`#${campo.attr('id')}-error`).text('');
-        }
-    });
-
-    
-    function validarProveedor(proveedor, url) {
-        return new Promise(function (resolve, reject) {
-            $.ajax({
-                url: url,
-                type: "GET",
-                data: {
-                    proveedor: proveedor,
-                },
-                success: function (data) {
-                    if (data.existe) {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
-                }
-            });
-        });
-    }
-
-    $('#proveedor-form').submit(function (event) {
-        event.preventDefault();
-        let urlCrear = document.getElementById("btnCrearProv").getAttribute("data-url-crear");
-        let urlValidar = document.getElementById("btnCrearProv").getAttribute("data-url-validar");
-        //     <div class="text-end mt-3">
-        //     <button id="btnCrearProv" class="btn btn-success mx-auto" type="submit" data-url-crear="{% url 'crearProveedor' %}"  data-url-validar="{% url 'proveedor_unico' %}">Guardar</button>
-        // </div>
-        if (!validarCamposObligatorios()) {
-            return;
-        }
-        prov = $("#nombre_proveedor").val()
-        validarProveedor(prov, urlValidar).then(function (existe) {
-            if (existe) {
-                $("#nombre_proveedor").addClass("is-invalid");
-                $("#nombre_proveedor-error").text("El proveedor " + prov + " ya existe").css("color", "red");
+            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
+                mostrarError('#identificacion', 'Debe ingresar una identificación.');
+                camposLlenos = false;
+            } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
+                mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
+                camposLlenos = false;
             } else {
-                $("#nombre_proveedor").removeClass("is-invalid");
-                $("#nombre_proveedor-error").text("");
+                $("#identificacion").removeClass("is-invalid")
+                $("#identificacion-error").text("")
+            }
+
+            return camposLlenos;
+        }
+
+
+        $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
+            const campo = $(this);
+            const campoValue = campo.val();
+
+            if (campoValue) {
+                campo.removeClass('is-invalid');
+                $(`#${campo.attr('id')}-error`).text('');
+            }
+
+        });
+        function validarProveedorUnico(proveedor) {
+            return new Promise((resolve, reject) => {
+                let urlValidar = $("#btnCrearProv").attr("data-url-validar");
+                $.ajax({
+                    url: urlValidar,
+                    type: "GET",
+                    data: {
+                        proveedor: proveedor,
+                    },
+                    success: function (data) {
+                        if (data.existe) {
+                            mostrarError('#nombre_proveedor', 'Este proveedor ya existe');
+                            resolve(false);
+                        } else {
+                            $("#nombre_proveedor").removeClass("is-invalid");
+                            $("#nombre_proveedor-error").text("");
+                            resolve(true);
+                        }
+                    }
+                });
+            });
+        }
+
+        $('#nombre_proveedor').on('input', async function () {
+            const proveedor = $(this).val();
+            const resultadoValidacion = await validarProveedorUnico(proveedor);
+            return resultadoValidacion;
+        });
+
+        $('#proveedor-form').submit(async function (event) {
+            event.preventDefault();
+
+            if (!(await validarCamposObligatorios())) {
+                return;
+            } else {
+                let urlCrear = $("#btnCrearProv").attr("data-url-crear");
                 enviarDatosProveedor(urlCrear);
             }
         });
-    });
-
-    function enviarDatosProveedor(url) {
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: $('#proveedor-form').serialize(),
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: 'Proveedor agregado con éxito',
-                        icon: 'success',
-                        showConfirmButton: false, 
-                        timer: 1000,
-                    });
-                    setTimeout(function () {
-                        window.location.href = "{% url 'proveedores' %}";
-                    }, 3000);
+        function enviarDatosProveedor(url) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: $('#proveedor-form').serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Proveedor agregado con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1000,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'proveedores' %}";
+                        }, 3000);
+                    }
                 }
-            }
-        });            
-    }
+            });
+        }
 
 
     });
