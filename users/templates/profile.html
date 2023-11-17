@@ -21,8 +21,6 @@
                     <p><strong>Correo Electrónico:</strong> {{ user.correo }}</p>
                     <p><strong>Rol del Sistema: </strong><span id="roled">{{ nombre_rol }}</span></p>
 
-
-                    
                     <div class="text-end">
                     <button id="changePasswordBtn" onclick="toggleChangePassword()" class="btn btn-success">Cambiar Contraseña</button>
                     </div>
@@ -35,7 +33,7 @@
                         <div class="col-md-6">
                         <label for="new_password">Nueva Contraseña:</label>
                         <div class="input-group">
-                        <input class="form-control" type="text" name="new_password" id="confir" placeholder="Ingrese una Contraseña" autocomplete="new-password"><br>
+                        <input class="form-control" type="password" name="new_password" id="confir" placeholder="Ingrese una Contraseña" autocomplete="new-password"><br>
                     </div>
                         <div class="error-message" style="color:red;" id="confir-error"></div>   
                         
@@ -43,7 +41,7 @@
                         <div class="col-md-6 ">
                         <label for="confirm_password">Confirmar Contraseña:</label>
                         <div class="input-group">
-                        <input class="form-control" type="text" name="confirm_password" id="rep" placeholder="Repita la contraseña" autocomplete="new-password"><br>
+                        <input class="form-control" type="password" name="confirm_password" id="rep" placeholder="Repita la contraseña" autocomplete="new-password"><br>
                     </div>
                         <div class="error-message" style="color:red;" id="rep-error"></div>
                         
