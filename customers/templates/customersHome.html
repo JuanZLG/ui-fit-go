@@ -50,7 +50,7 @@
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
-                        <td>{{ cliente.id_municipio.id_departamento.nombre_departamento }} / 
+                        <td>{{ cliente.id_municipio.id_departamento.nombre_departamento }} /
                             {{ cliente.id_municipio.nombre_municipio }}</td>
                         <td>
                             <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
@@ -109,17 +109,17 @@
                         },
                         method: "GET",
                         success: function (response) {
-                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
+                            $('.table-responsive').addClass(
+                                'animate__animated animate__fadeOut').css(
+                                'animation-duration', '100');
                             location.reload();
                         },
-                        error: function (error) {
-                        }
+                        error: function (error) {}
                     });
                 }
             });
         });
     });
-
 </script>
 
 
@@ -262,10 +262,11 @@
 
     .modal-state.activo {
         background-color: #72d072;
-        position: relative;
-        cursor: pointer;
     }
 
+    .modal-state.inactivo {
+        background-color: #ba4d4d;
+    }
 </style>
 
 <style>
@@ -290,7 +291,8 @@
                 success: function (response) {
                     var cliente = response.success;
 
-                    var estadoClienteCircleClass = cliente.estado == 1 ? 'activo' : 'inactivo';
+                    var estadoClienteCircleClass = cliente.estado == 1 ? 'activo' :
+                        'inactivo';
                     var estadoClienteText = cliente.estado == 1 ? 'Activo' : 'Inactivo';
 
                     Swal.fire({
@@ -349,7 +351,6 @@
         });
 
     });
-
 </script>
 
 
