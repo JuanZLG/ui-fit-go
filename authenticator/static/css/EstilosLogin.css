@@ -283,7 +283,7 @@ svg {
 
 circle {
     fill: none;
-    stroke: #ccc;
+    stroke: rgb(128, 128, 255);
     stroke-width: 3;
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;

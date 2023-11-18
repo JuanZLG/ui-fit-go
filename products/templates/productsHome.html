@@ -65,8 +65,9 @@
                 <tbody>
                     {% for p in Products %}
                     <tr class="{% if p.estado == 0 %}inactivo{% endif %}">
-                        <td>{{p.id_categoria.nombre_categoria}}</td>
-                        <td>{{p.id_marca.nombre_marca}}</td>
+                        <td>{% if p.id_categoria %}{{p.id_categoria.nombre_categoria}}{% else %}Sin categoria{% endif %}
+                        </td>
+                        <td>{% if p.id_marca %}{{p.id_marca.nombre_marca}} {% else %}Sin marca{% endif %}</td>
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
                         <td><span>$ </span><span class="precio-format">{{ p.precio|floatformat:"0" }}</span></td>
@@ -74,6 +75,8 @@
                             <button data-toggle="tooltip" data-placement="top" title="Cambiar de Estado"
                                 class="cambiar-estado statusbutton mx-3 {% if p.estado == 1 %}active-status{% else %}inactive-status{% endif %}"
                                 data-producto-id="{{ p.id_producto }}"
+                                data-tiene-categoria="{% if p.id_categoria%}true{% else %}false{% endif %}"
+                                data-tiene-marca="{% if p.id_marca %}true{% else %}false{% endif %}"
                                 data-nuevo-estado="{% if p.estado == 1 %}0{% else %}1{% endif %}">
                                 {% if p.estado == 1 %}
                                 Activo
@@ -106,37 +109,72 @@
 
 <script>
     $(document).ready(function () {
+
         $(".cambiar-estado").click(function () {
             var productoId = $(this).data("producto-id");
             var nuevoEstado = $(this).data("nuevo-estado");
+            var tieneCategoria = $(this).data("tiene-categoria");
+            var tieneMarca = $(this).data("tiene-marca");
 
-            Swal.fire({
-                title: 'Estado',
-                text: '¿Desea cambiar el estado de este registro?',
-                showCancelButton: true,
-                confirmButtonColor: '#419edd',
-                cancelButtonColor: '#ba4d4d',
-                confirmButtonText: 'Confirmar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{% url 'cambiarEstadoDeProducto'  %}",
-                        data: {
-                            producto_id: productoId,
-                            nuevo_estado: nuevoEstado
-                        },
-                        method: "GET",
-                        success: function(response) {
-                           
-                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
-                                location.reload();
-                        },
-                    });
-                }
-            });
+            cambiarEstadoClickHandler(productoId, nuevoEstado, tieneMarca, tieneCategoria);
         });
+
+        function cambiarEstadoClickHandler(productoId, nuevoEstado, tieneMarca, tieneCategoria) {
+            let text = ""
+            let falt = false
+            if (!tieneCategoria && !tieneMarca) {
+                text = 'Para habilitar nuevamente este producto deberá seleccionar su marca y categoria.';
+                falt = true
+            } else if (!tieneCategoria) {
+                text = 'Para habilitar nuevamente este producto deberá seleccionar su categoria.';
+                falt = true
+            } else if (!tieneMarca) {
+                text = 'Para habilitar nuevamente este producto deberá seleccionar su marca.';
+                falt = true
+            }
+
+            if (falt) {
+                Swal.fire({
+                    title: 'Alerta',
+                    text: text,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.replace("editproduct/" + productoId + "/");
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Estado',
+                    text: '¿Desea cambiar el estado de este registro?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#419edd',
+                    cancelButtonColor: '#ba4d4d',
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{% url 'cambiarEstadoDeProducto'  %}",
+                            data: {
+                                producto_id: productoId,
+                                nuevo_estado: nuevoEstado
+                            },
+                            method: "GET",
+                            success: function (response) {
+                                $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
+                                location.reload();
+                            },
+                        });
+                    }
+                });
+            }
+        }
     });
+
 </script>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="

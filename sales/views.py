@@ -79,6 +79,16 @@ def buscar_productos(request):
     for producto in productos:
         precio_ganancia = producto.precio_pub - producto.precio 
 
+        try:
+            marca = producto.id_marca.nombre_marca
+        except Productos.id_marca.RelatedObjectDoesNotExist:
+            marca = "No tiene marca"
+
+        try:
+            categoria = producto.id_categoria.nombre_categoria
+        except Productos.id_categoria.RelatedObjectDoesNotExist:
+            categoria = "No tiene categorías"
+
         resultados.append({
             'id_producto': producto.id_producto,
             'estado': producto.estado,
@@ -88,12 +98,13 @@ def buscar_productos(request):
             'precio_compra': producto.precio,
             'precio_venta': producto.precio_pub,
             'precio_ganancia': precio_ganancia,
-            'marca': producto.id_marca.nombre_marca,
-            'categoria': producto.id_categoria.nombre_categoria,
+            'marca': marca,
+            'categoria': categoria,
             'presentacion': producto.iProductImg.decode('utf8')
         })
 
     return JsonResponse({"resultados": resultados})
+
 
 
 def verificar_stock(request):

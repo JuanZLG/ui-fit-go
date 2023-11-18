@@ -15,13 +15,17 @@
           <div class="form-group">
             <label for="categoria">Categoría</label>
             <select class="form-select" aria-label="Default" name="iCategoria" id="iCategoria">
+              {% if not Product.id_categoria %}
+              <option value="" selected>No tiene categoría</option>
+              {% endif %}
               {% for c in categorias %}
               <option value="{{ c.id_categoria }}"
-                {% if c.id_categoria == Product.id_categoria.id_categoria %} selected {% endif %}>
-                {{ c.nombre_categoria }}
+                  {% if c.id_categoria == Product.id_categoria.id_categoria %} selected {% endif %}>
+                  {{ c.nombre_categoria }}
               </option>
               {% endfor %}
-            </select>
+          </select>
+          
             <div class="error-message" id="iCategoria-error" style="color:red;"></div>
           </div>
         </div>
@@ -30,13 +34,16 @@
           <div class="form-group">
             <label>Marca</label>
             <select class="form-select" aria-label="Default select example" name="iMarca" id="iMarca">
+              {% if not Product.id_marca %}
+              <option value="" selected>No tiene marca</option>
+              {% endif %}
               {% for m in marcas %}
               <option value="{{ m.id_marca }}"
-                {% if m.id_marca == Product.id_marca.id_marca %} selected {% endif %}>
-                {{ m.nombre_marca }}
+                  {% if m.id_marca == Product.id_marca.id_marca %} selected {% endif %}>
+                  {{ m.nombre_marca }}
               </option>
               {% endfor %}
-            </select>
+          </select>
             <div class="error-message" id="iMarca-error" style="color:red;"></div>
           </div>
         </div>
@@ -152,6 +159,9 @@
       <div class="form-row">
         <div class="col-md-12 text-center">
           <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+          {% if not Product.id_marca or not Product.id_categoria %}
+          <a href="{% url 'productos' %}" class="btn btn-secondary mx-2">Cancelar</a>
+          {% endif %}
         </div>
       </div>
     </form>
@@ -178,7 +188,8 @@
       const presentacionValue = $('#iServices').val();
       const priceValue = $('#iPrice').val();
       const pubpriceValue = $('#iPubPrice').val();
-   
+      const marcaValue = $('#iMarca').val();
+      const categoriaValue = $('#iCategoria').val();
 
       if (!nombreValue) {
           mostrarError('#iNombre', 'Este campo es obligatorio.');
@@ -219,11 +230,27 @@
         mostrarError('#iPubPrice', 'Este campo es obligatorio.');
         camposLlenos = false;
       }
+
+      if (!marcaValue) {
+        mostrarError('#iMarca', 'Debe seleccionar una marca.');
+        camposLlenos = false;
+    }
+    if (!categoriaValue) {
+        mostrarError('#iCategoria', 'Debe seleccionar una categoria.');
+        camposLlenos = false;
+    }
      
       return camposLlenos;
   }
   
+    function ocultarError($campo) {
+      $campo.removeClass('is-invalid');
+      $campo.siblings('.error-message').text('');
+    }
 
+    $('#iNombre, #iDescripcion, #iFechaven, #iCantidad, #iSabor, #iServices, #iPrice, #iPubPrice, #iMarca, #iCategoria').on('input', function () {
+      ocultarError($(this));
+    });
   function mostrarError(selector, mensaje) {
       $(selector).addClass('is-invalid');
       $(`${selector}-error`).text(mensaje);
