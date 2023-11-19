@@ -84,7 +84,7 @@
                 <ul>
                     {% for producto in categoria.productos_set.all %}
                     <li class="menu-list-item"
-                        onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 200)">
+                        onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
                         {{ producto.nombre_producto }}
                     </li>
                     {% endfor %}
@@ -142,50 +142,13 @@
     <header class="desktop">
         <div class="main-header">
             <nav class="nav">
-                <div class="logo-container">
-                    <a href="{% url 'pageHome' %}">
-                        <img src="{% static 'img/gorille.png' %}" class="logo img-fluid" alt="Logo de Brutálity">
-                    </a>
-                    <h1>BRUTALITY</h1>
-                </div>
                 <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">Inicio</a>
-                    </li>
-                    <li id="toggle-comprar" class="nav-item">
-                        <a href="#" class="nav-link">Comprar</a>
-                        <div id="menu-comprar">
-                            <ul>
-                                <span class="menu-comprar-title">SUMPLEMENTOS</span>
-                                {% for categoria in categorias %}
-                                <li style="color: #fff;">{{ categoria.nombre_categoria }}:
-                                    <ul>
-                                        {% for producto in categoria.productos_set.all %}
-                                        <li class="menu-list-item"
-                                            onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 200)">
-                                            {{ producto.nombre_producto }}
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            <ul>
-                                <span class="menu-comprar-title">MARCAS</span>
-                                {% for marca in marcas %}
-                                <li class="menu-list-item">{{ marca.nombre_marca }}
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            <ul>
-                                <span class="menu-comprar-title">CATEGORIAS</span>
-                                {% for categoria in categorias %}
-                                <li class="menu-list-item">{{ categoria.nombre_categoria }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </li>
-                    </li>
+                    <div class="logo-container">
+                        <a href="{% url 'pageHome' %}">
+                            <img src="{% static 'img/gorille.png' %}" class="logo img-fluid" alt="Logo de Brutálity">
+                        </a>
+                        <h1>BRUTALITY</h1>
+                    </div>
                     <li id="toggle-info" class="nav-item">
                         <a href="#" class="nav-link">Información
                             <svg style="height: 24px;" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -201,8 +164,8 @@
                         </ul>
                     </li>
                 </ul>
-                <a href="#" class="nav-link login">Ingresar
-                    <i class="fa-solid fa-right-to-bracket"></i>
+                <a href="#" class="nav-link nav-item">Ingresar
+                    <i class="fas fa-sign-in-alt mx-2"></i>
                 </a>
             </nav>
             <!-- <div class="extra-header">
@@ -214,7 +177,7 @@
 
     <div class="mobile">
         <div class="catalog-section">
-            <select name="sort" id="sort" class="catalog-select">
+            <select name="sortMobile" id="sortMobile" class="catalog-select">
                 <option value="defect" class="sort-option">Por defecto</option>
                 <option value="all" class="sort-option">Ver todo</option>
                 <option value="best-sellers" class="sort-option">Más vendidos</option>
@@ -222,9 +185,8 @@
                 <option value="low-price" class="sort-option">Menor precio</option>
             </select>
             <div class="view-options">
-                <a href="#" aria-label="detalle de la lista de productos" id="list"><i
-                        class="fas fa-th-list fa-lg"></i></a>
-                <a href="#" aria-label="lista productos" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
+                <a href="#" class="list"><i class="fas fa-th-list fa-lg"></i></a>
+                <a href="#" class="grid"><i class="fas fa-th-large fa-lg"></i></a>
             </div>
         </div>
     </div>
@@ -252,17 +214,13 @@
                 <div class="d-flex gap-4">
                     <div>
                         <span class="mx-2">Ordenar por:</span>
-                        <select name="sort" id="sort" class="catalog-select">
+                        <select name="sortDesk" id="sortDesk" class="catalog-select">
                             <option value="defect" class="sort-option">Por defecto</option>
                             <option value="all" class="sort-option">Ver todo</option>
                             <option value="best-sellers" class="sort-option">Más vendidos</option>
                             <option value="high-price" class="sort-option">Mayor precio</option>
                             <option value="low-price" class="sort-option">Menor precio</option>
                         </select>
-                    </div>
-                    <div class="view-options">
-                        <a href="#" id="list"><i class="fas fa-th-list fa-lg"></i></a>
-                        <a href="#" id="grid"><i class="fas fa-th-large fa-lg"></i></a>
                     </div>
                 </div>
             </div>
@@ -271,7 +229,7 @@
 
     <div class="mobile">
         <div class="product-featured">
-            <h3 class="title" id="dynamic-title" data-id-filter="producto-0">Suplementos</h3>
+            <h3 class="title" id="dynamic-title-mobile" data-id-filter="producto-0">Suplementos</h3>
         </div>
     </div>
     {% block body %}{% endblock %}
@@ -281,22 +239,21 @@
         <p>&copy; 2023 Brutality</p>
     </footer>
 
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <style>
         swiper-container {
             width: 100%;
             height: 100%;
+            display: flex;
+            align-items: center;
+            /* Centra verticalmente las imágenes */
         }
-
 
         swiper-slide img {
             display: block;
             width: 80%;
+            max-height: 500px;
+            /* Establece un tamaño máximo para la altura de la imagen */
             margin: 0 auto;
-            height: 100%;
             object-fit: cover;
         }
     </style>
@@ -325,7 +282,7 @@
             alt="Imagen"></a></swiper-slide>
     </swiper-container>
         <div class="col-lg-12 mb-4 mt-4" style="text-align:left;">
-            <h2 class="my-3"> ${data.nombre_producto} <strong style="float:right;">${data.precio_pub}</strong></h2>
+            <h3 class="my-3"> ${data.nombre_producto} <strong style="float:right;">$${data.precio_pub}</strong></h3>
             <div class="mb-3" style="max-height: 100px; height: auto;overflow-y: scroll;"> ${data.descripcion}</div>
             <hr >
             <ul class="list-group list-group-flush mt-4">
@@ -399,7 +356,7 @@
         });
 
 
-        function filterProducts(valor, tipo = "productos") {
+        function filterProductsMobile(valor, tipo = "productos") {
             $.ajax({
                 url: filterProductsUrl,
                 method: 'GET',
@@ -423,9 +380,9 @@
                                 '<i class="fas fa-search"></i></span></div>' +
                                 '</div ></div >';
 
-                            $("#dynamic-title").text(p.dynamicTitle);
-                            $("#dynamic-title").data("id-filter", p.identificador);
-                            $("#product-container").append(productCard);
+                            $("#dynamic-title-mobile").text(p.dynamicTitle);
+                            $("#dynamic-title-mobile").data("id-filter", p.identificador);
+                            $("#product-container-mobile").append(productCard);
                         });
                         $('.productDetailsButton').click(function () {
                             id_producto = $(this).data("id")
@@ -466,7 +423,7 @@
             iconCategorias.classList.add("fa-chevron-down");
         }
         function resetSortSelect() {
-            const sortSelect = document.getElementById('sort');
+            const sortSelect = document.getElementById('sortMobile');
             sortSelect.value = 'all';
         }
         closeSubMainOptions.addEventListener('click', () => toggleCloseSubMain());
@@ -513,31 +470,24 @@
             toggleCloseSubMain()
         }
         $(document).ready(function () {
-            $("#sort").change(function () {
+            $("#sortMobile").change(function () {
                 let selectedValue = $(this).val();
                 if (selectedValue == "defect") location.reload();
-                const tipo = $("#dynamic-title").data('id-filter');
-                filterProducts(selectedValue, tipo);
-            });
+                const tipo = $("#dynamic-title-mobile").data('id-filter');
+                filterProductsMobile(selectedValue, tipo);
+            }); 
             const menuListItems = document.querySelectorAll('.menu-list-item');
 
             menuListItems.forEach((menuItem) => {
                 menuItem.addEventListener('click', function () {
                     const itemName = menuItem.textContent;
                     const tipo = menuItem.getAttribute('data-id-filter');
-                    filterProducts(itemName, tipo);
+                    filterProductsMobile(itemName, tipo);
                     closeMains()
                 });
             });
         })
 
-
-
-
-        $('.productDetailsButton').off('click').click(function () {
-            id_producto = $(this).data("id")
-            cargarDetalle(id_producto);
-        });
 
         let css = '.custom-close-button { border: none !important; color: black !important; }',
             head = document.head || document.getElementsByTagName('head')[0],

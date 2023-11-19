@@ -117,7 +117,7 @@ def search_products(request):
     productos = Productos.objects.filter(
         Q(estado=1),
         Q(nombre_producto__icontains=buscar)
-    )
+    )[:5]  
 
     data = []
     for producto in productos:
@@ -142,6 +142,7 @@ def mas_vendidos(request):
     for producto in productos:
         precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         data.append({
+            'id_producto': producto.id_producto,
             'nombre_producto': producto.nombre_producto,
             'precio_pub': precio_formateado,
             'presentacion': producto.iProductImg.decode('utf8')

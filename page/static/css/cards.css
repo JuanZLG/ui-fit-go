@@ -21,7 +21,7 @@
 }
 
 .product-card-container {
-    background: #f2f2f2;
+    background: #fff;
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -62,6 +62,7 @@
     align-items: center;
     min-height: 250px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .product-card a {
@@ -130,20 +131,13 @@
         grid-auto-rows: min-content;
         row-gap: 40px;
     }
-    
 
-    .product-card-container.grid-view {
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    .product-card-container.list-view {
-        font-size: 1.2rem;
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
     .product-card {
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        width: 180px;
+        min-height: 300px;
     }
 
+    .product-image {
+        height: 200px;
+    }
 }

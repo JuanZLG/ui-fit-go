@@ -1,0 +1,30 @@
+  <div id="menu-comprar">
+                            <ul>
+                                <span class="menu-comprar-title">SUMPLEMENTOS</span>
+                                {% for categoria in categorias %}
+                                <li style="color: #fff;">{{ categoria.nombre_categoria }}:
+                                    <ul>
+                                        {% for producto in categoria.productos_set.all %}
+                                        <li class="menu-list-item"
+                                            onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 200)">
+                                            {{ producto.nombre_producto }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <ul>
+                                <span class="menu-comprar-title">MARCAS</span>
+                                {% for marca in marcas %}
+                                <li class="menu-list-item">{{ marca.nombre_marca }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <ul>
+                                <span class="menu-comprar-title">CATEGORIAS</span>
+                                {% for categoria in categorias %}
+                                <li class="menu-list-item">{{ categoria.nombre_categoria }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
