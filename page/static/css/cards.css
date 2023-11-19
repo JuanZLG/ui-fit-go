@@ -127,11 +127,11 @@
     .product-card-container {
         height: 600px;
         overflow-y: scroll;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         grid-auto-rows: min-content;
         row-gap: 40px;
     }
-
+    
     .product-card {
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         min-height: 300px;

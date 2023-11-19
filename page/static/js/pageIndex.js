@@ -99,4 +99,44 @@ document.querySelectorAll('.mobile .view-options .grid').forEach(function (eleme
 
   // Opciones SubMenu ----------------------- 
 
+
+  var activeElement = null;
+
+  document.querySelectorAll('.element-container').forEach(function (element) {
+      element.addEventListener('click', function (event) {
+          event.stopPropagation();
+          var optionElement = this.querySelector('.element-option');
+          if (activeElement && activeElement === optionElement) {
+              activeElement.style.display = 'none';
+              activeElement = null;
+          } else {
+              if (activeElement) {
+                  activeElement.style.display = 'none';
+              }
+              optionElement.style.display = 'block';
+              activeElement = optionElement;
+          }
+      });
+  });
+
+  document.addEventListener('click', function () {
+      if (activeElement) {
+          activeElement.style.display = 'none';
+          activeElement = null;
+      }
+  });
+
+  window.addEventListener('scroll', function () {
+      if (activeElement) {
+          activeElement.style.display = 'none';
+          activeElement = null;
+      }
+  });
+  document.getElementById("product-container-desk").addEventListener('scroll', function () {
+      if (activeElement) {
+          activeElement.style.display = 'none';
+          activeElement = null;
+      }
+  });
+  
 });  

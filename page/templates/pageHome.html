@@ -46,8 +46,8 @@
 </section>
 
 <section class="desktop mt-4">
-  <div class="col-md-12" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
-    <div class="px-4">
+  <div class="row px-3">
+    <div class="col-lg-2 col-md-3">
       <div class="container-search desk">
         <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input-desk">
         <i class="fas fa-times search-clear-icon" id="search-clear-desk"></i>
@@ -55,8 +55,22 @@
       <p id="title-search"><strong>MEJORES VENTAS</strong></p>
       <ul class="list-group d-flex gap-4" id="toggle-main-search-desk"></ul>
     </div>
-    <div>
-      <h3 class="title" id="dynamic-title-desk" data-id-filter="producto-0">Suplementos</h3>
+    <div class="col-md-9 col-lg-10 px-4">
+      <div class="col-md-11 mx-auto pb-1 d-flex justify-content-between">
+        <h3 class="title" id="dynamic-title-desk" data-id-filter="producto-0">Suplementos</h3>
+        <div class="d-flex gap-4">
+          <div>
+            <span class="mx-2">Ordenar por:</span>
+            <select name="sortDesk" id="sortDesk" class="catalog-select">
+              <option value="defect" class="sort-option">Por defecto</option>
+              <option value="all" class="sort-option">Ver todo</option>
+              <option value="best-sellers" class="sort-option">Más vendidos</option>
+              <option value="high-price" class="sort-option">Mayor precio</option>
+              <option value="low-price" class="sort-option">Menor precio</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <div class="product-card-container" id="product-container-desk">
         {% for producto in productos %}
         <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
@@ -81,57 +95,19 @@
       </div>
     </div>
   </div>
-
+  <div class="row">
+    <div class="col-md-2 px-4">
+      <p><strong>OPCIONES</strong></p>
+    </div>
+  </div>
 </section>
+
 
 
 <script>
   $(document).ready(function () {
 
-    
-    function filterProductsDesk(valor, tipo = "productos") {
-            $.ajax({
-                url: filterProductsUrl,
-                method: 'GET',
-                data: { valor: valor, tipo: tipo },
-                success: function (data) {
-                    if (data.success) {
-                        $("#product-container-desk").empty();
 
-                        $.each(data.data, function (index, p) {
-                            var productCard =
-                                '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
-                                '<div class="product-image">' +
-                                '<img src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                                '<div class="product-details">' +
-                                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-                                '<div class="product-description">' +
-                                '<p>' + p.descripcion + '</p></div>' +
-                                '<div class="product-price">' +
-                                '<span>' + p.precio_pub + '</span>' +
-                                '<span class="product-search">' +
-                                '<i class="fas fa-search"></i></span></div>' +
-                                '</div ></div >';
-
-                            $("#dynamic-title-desk").text(p.dynamicTitle);
-                            $("#dynamic-title-desk").data("id-filter", p.identificador);
-                            $("#product-container-desk").append(productCard);
-                        });
-                        $('.productDetailsButton').click(function () {
-                            id_producto = $(this).data("id")
-                            cargarDetalle(id_producto);
-                        });
-                    }
-                }
-            });
-        }
-
-    $("#sortDesk").change(function () {
-      let selectedValue = $(this).val();
-      if (selectedValue == "defect") location.reload();
-      const tipo = $("#dynamic-title-desk").data('id-filter');
-      filterProductsDesk(selectedValue, tipo);
-    });
 
     cargarProductos()
 
