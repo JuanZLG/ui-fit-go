@@ -30,7 +30,7 @@
 
 }
 
-.proveedor-header {
+.compra-header {
     display: flex;
     justify-content: space-between;
 }
@@ -104,7 +104,7 @@
     padding-right: 30px;
 }
 
-.proveedor-item.inactivo,
+.´roveedor-item.inactivo,
 .producto-item.inactivo {
     opacity: 0.8 !important;
     color: #222222 !important;
@@ -235,6 +235,9 @@ input[type="number"] {
     background-color: #72d072;
 }
 
+.btn-resumen {
+    background-color: #419edd;
+}
 .btn-descuento {
     margin-right: 10px;
     background-color: rgb(48, 48, 163);
@@ -271,9 +274,8 @@ input[type="number"] {
 }
 
 #tabla-compras {
-    width: 90%;
-    margin: auto;
-    height: 500px;
+    height: auto;
+    max-height: 600px; 
     overflow-y:auto;
     padding-right: 30px;
     display: none;
