@@ -9,11 +9,13 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/manual.css' %}">
 </head>
-<div class="container d-flex" style="flex-direction:flex-end; width:100%; margin-left:30px;">
+<div class="container d-flex mx-auto" style="flex-direction:flex-end; width:100%; margin-left:30px;">
     <div class="row">
-        <div  style="max-height: 100vh; overflow-y: auto; display:flex; gap:40px; flex-direction:column; width:100%">
+        <div class="card-header" style="text-align: center; font-weight: bold; font-size: large;">AG TuiranFit - Manual de Usuario</div>
+        <div class="card shadow p-4" style="max-height: 90vh; overflow-y: auto; display:flex; gap:40px; flex-direction:column; width:100%">
             
             {% comment %} Aqui {% endcomment %}
+{% comment %} <div class="card"> {% endcomment %}
 <h1 style="margin-bottom:0" id="musers"><a target='_blank'>Gestionando los Usuarios del Sistema</a></h1>
 <div style="margin-top:0"><p>Esta guía detalla cómo administrar a los usuarios de la aplicación, su autenticación y límite de acceso.</p></div>
 
@@ -85,7 +87,7 @@
     <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/0c60c66b-1e2f-4509-8a8e-e4ff6d161bd7/5d5089ad-4be0-4586-a076-474e1b1326c9.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=29&mark-y=160&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03ODQmaD01NDUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Click on ×…" />
 </div>
 
-<div><h3 id="statuser">16. Por defecto, el estado de un nuevo registro de usuario es "Activo". Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión.</h3>
+<div id="statuser"><h3>16. Por defecto, el estado de un nuevo registro de usuario es "Activo". Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión.</h3>
 <p>Presione con el botón izquierdo del ratón en el botón de la columna "Estado" que corresponda al registro del usuario a bloquear.</p>
 <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/54013467-e488-449a-b69e-769aac5d9be2/1c3fcdcf-8a4c-4e07-a4d2-864ff93ada38.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=871&mark-y=220&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTAmaD01MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Por defecto, el estado de un nuevo registro de usuario es &quot;Activo&quot;. Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión." />
 </div>
@@ -312,31 +314,31 @@
                         <div class="custom-divider"></div>
                         
                         <div class="bg-white py-2 collapse-inner rounded text-center">
-                            <a href="#musers" class="collapse-item" style="font-weight:bold ;">Gestión de los Usuarios</a>
+                            <a onclick="scrollToSection('musers')" class="collapse-item" style="font-weight:bold;">Gestión de los Usuarios</a>
                         </div>
                     <ol>
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a href="#auser" class="collapse-item">Agregar Nuevo Usuario</a>
+                                <a onclick="scrollToSection('auser')" class="collapse-item">Agregar Nuevo Usuario</a>
                             </div>
                         </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#moduser" class="collapse-item">Modificar un Usuario</a>
+                            <a onclick="scrollToSection('moduser')" class="collapse-item">Modificar un Usuario</a>
                         </div>
                     </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#statuser" class="collapse-item">Cambiar Estado de un Usuario</a>
+                            <a onclick="scrollToSection('statuser')" class="collapse-item">Cambiar Estado de un Usuario</a>
                         </div>
                     </li>
 
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#sproviders" class="collapse-item">Inicio de Sesión</a>
+                            <a onclick="scrollToSection('sproviders')" class="collapse-item">Inicio de Sesión</a>
                         </div>
                     </li>
 
@@ -378,24 +380,24 @@
                         <ol>
                         <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="#acustomer">Agregar Nuevo Cliente</a>
+                            <a class="collapse-item" onclick="scrollToSection('acustomer')">Agregar Nuevo Cliente</a>
                         </div>
                         </li>
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="#modcustomer">Modificar un Cliente</a>
+                                <a class="collapse-item" onclick="scrollToSection('modcustomer')">Modificar un Cliente</a>
                             </div>
                         </li>
 
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="#statcustomer">Cambiar el Estado de un Cliente</a>
+                                <a class="collapse-item" onclick="scrollToSection('statcustomer')">Cambiar el Estado de un Cliente</a>
                             </div>
                         </li>
 
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" href="bcustomer">Buscar Clientes</a>
+                                <a class="collapse-item" onclick="scrollToSection('bcustomer')">Buscar Clientes</a>
                             </div>
                         </li>
                         </ol>
@@ -412,22 +414,22 @@
                         <ol>
                             <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="#aprovider">Agregar Nuevo Proveedor</a>
+                            <a class="collapse-item" onclick="scrollToSection('aprovider')">Agregar Nuevo Proveedor</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="#modprovider">Modificar un Proveedor</a>
+                            <a class="collapse-item" onclick="scrollToSection('modprovider')">Modificar un Proveedor</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="#statprovider">Cambiar el Estado de un Proveedor</a>
+                            <a class="collapse-item" onclick="scrollToSection('statprovider')">Cambiar el Estado de un Proveedor</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="#bprovider">Buscar Proveedores</a>
+                            <a class="collapse-item" onclick="scrollToSection('bprovider')">Buscar Proveedores</a>
                         </div>
                     </li>
                 </ol>
@@ -467,10 +469,20 @@
             target.collapse('toggle');
         });
     });
+
+    function scrollToSection(sectionId) {
+        var section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      }
+      
 </script>
 
 
 
-    
+<div style="margin-top: 7vh;"></div>
 
 {% endblock %}

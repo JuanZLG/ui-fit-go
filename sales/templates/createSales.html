@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="{% static 'css/CreateVentas.css' %}">
 </head>
 
-
-
 <section class="venta-section">
     <h1 class="venta-title">Agregar Venta</h1>
     <div class="venta-container">
@@ -98,10 +96,10 @@
 
 
 
-<section class="col-md-12 mb-4 product-section">
+<section class="product-section">
     <div class="product-content">
         <div class="product-header">
-            <label class="producto-label">Ingreso de productos</label>
+            <label class="producto-label">Ingreso de Productos</label>
             <p>Encuentra todos tus productos y finaliza las ventas de una forma fácil</p>
         </div>
         <div class="product-inputs">
@@ -128,7 +126,7 @@
 
 <section class="product-table-section" id="product-table-section">
     <label class="producto-label">Lista de Productos *</label></br>
-    <span>Aquí se acumularán los productos seleccionados para la venta</span>
+    <span>Aquí se listarán los productos seleccionados para la venta</span>
     <table class="table" id="tabla-ventas">
         <thead class="text-center">
             <tr>
@@ -136,7 +134,7 @@
                 <th class="price-column">Precio Compra (Unidad)</th>
                 <th class="price-column">Precio Venta (Unidad)</th>
                 <th class="price-column">Margen total de Ganancia</th>
-                <th class="total-column">TOTAL PRODUCTO</th>
+                <th class="total-column">Total del Producto</th>
                 <th class="icon-column"></th>
             </tr>
         </thead>
@@ -145,10 +143,10 @@
     </table>
     <div class="producto-cont-descuento">
         <div>
-            <span>Aplicar descuento a la venta</span>
+            <span>Aplicar Descuento a la Venta</span>
             <div class="input-wrapper">
                 <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1"
-                    onkeydown="return validateInput(event)" title="Aplicar descuento" id="descuento-venta"
+                    onkeydown="return validateInput(event)" title="Aplicar Descuento" id="descuento-venta"
                     style="width: 65px !important;">
                 <span class="percent-sign">%</span>
             </div>
@@ -156,15 +154,15 @@
         <div
             style="border: 1px solid #ccc; display: flex; flex-direction: column; width: auto; gap: 10px; padding: 10px 15px;">
             <div class="d-flex justify-content-between gap-3  align-items-center">
-                <span>Descuento venta:</span>
+                <span>Descuento de Venta:</span>
                 <span id="total-venta-descuento" style=" color: rgb(48, 48, 163);"></span>
             </div>
             <div class="d-flex justify-content-between gap-3  align-items-center">
-                <span>Total ganancia:</span>
+                <span>Total de Ganancia:</span>
                 <span id="total_ganancia_venta"></span>
             </div>
             <div class="d-flex justify-content-center align-items-center">
-                <span class="pt-1">TOTAL VENTA :</span>
+                <span class="pt-1">Total de la Venta:</span>
                 <span id="total-venta" class="ml-3" style="font-weight: bold; color: rgb(184, 62, 62);"></span>
             </div>
         </div>
@@ -174,13 +172,14 @@
 
 
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
-    <p id="campos-requeridos">Campos requeridos (*)</p>
-    <input type="button" value="Guardar venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
+    <p id="campos-requeridos">Campos Requeridos (*)</p>
+    <input type="button" value="Guardar Venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
 
 
 
 {% block footer %}
+
 {% endblock %}
    
 <style>

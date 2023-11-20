@@ -134,19 +134,18 @@
 </center>
 <br>
 <div class="card mb-4">
-    <div class="card-header" style="display: flex; justify-content: center; align-items:center;">
+    <div class="card-header py-3" style="display: flex; justify-content: center; align-items:center;">
         <span>
-            <a class="btn btn-success btn-icon-split btn-add" data-toggle="modal" data-target="#crearCategoriaModal">
-                <span class="icon" data-toggle="tooltip" data-placement="top" title="Crea una Categoría">
-                    <i class="fa-solid fa-plus" id="addicon"></i>
-                    <span class="text">Agregar Categoria</span>
-                </span>
+            <a class="btn btn-succes btn-adder btn-icon-split" data-toggle="modal" data-target="#crearCategoriaModal" data-toggle="tooltip" data-placement="top"
+                    title="Crear una Categoría">
+                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                        style="font-weight: 600; font-size: 16px;">Agregar Categoría</span>
             </a>
         </span>
     </div>
 </div>
 <div class="card shadow mb-4">
-    <div class="card-header py-4">
+    <div class="card-header py-4 px-5">
         <div class="table-responsive">
             <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%">
                 <thead class="theads">
@@ -161,9 +160,9 @@
                         <td>{{ ct.nombre_categoria }}</td>
                         
                         <td class="cellactions">
-                            <a class="btn btn-sm btn-danger delete-button" data-id-categoria="{{ ct.id_categoria }}"
-                                style="height:27px;" data-toggle="tooltip" data-placement="right" title="Eliminar Categoría"><i class="fa-solid fa-trash-can fa-sm"
-                                    style="color: #ffffff;"></i></a>
+                            <a class="btn btn-sm btn-danger delete-button" data-id-categoria="{{ ct.id_categoria }}"><i
+                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip"
+                                    data-placement="top" title="Eliminar Categoría"></i></a>
                         </td>
                     </tr>
                     {% endfor %}

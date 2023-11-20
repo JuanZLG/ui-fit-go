@@ -65,9 +65,9 @@
                 <tbody>
                     {% for p in Products %}
                     <tr class="{% if p.estado == 0 %}inactivo{% endif %}">
-                        <td>{% if p.id_categoria %}{{p.id_categoria.nombre_categoria}}{% else %}Sin categoria{% endif %}
+                        <td>{% if p.id_categoria %}{{p.id_categoria.nombre_categoria}}{% else %}Sin Categoría{% endif %}
                         </td>
-                        <td>{% if p.id_marca %}{{p.id_marca.nombre_marca}} {% else %}Sin marca{% endif %}</td>
+                        <td>{% if p.id_marca %}{{p.id_marca.nombre_marca}} {% else %}Sin Marca{% endif %}</td>
                         <td>{{p.nombre_producto}}</td>
                         <td>{{p.cantidad}}</td>
                         <td><span>$ </span><span class="precio-format">{{ p.precio|floatformat:"0" }}</span></td>
