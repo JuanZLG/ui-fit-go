@@ -13,6 +13,7 @@ urlpatterns=[
     path('ver_detalles_usuario', views.verDetallesUsuario, name='ver_detalles_usuario'),
     path('rol_unico/', views.rol_unico, name='rol_unico'),
     path('email_unique/', views.email_unique, name='email_unique'),
+    path('email_unique_edit/', views.email_unique_edit, name='email_unique_edit'),
     path('remove/', views.eliminar_rol, name='eliminarRol'),
     path('profile/', views.UserProfile, name="myProfile"),
     path('changepsw/', views.change_password, name='changepsw'),
