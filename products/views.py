@@ -130,7 +130,8 @@ def editProduct(request, id_producto):
             sabor=flavor,
             presentacion=services,
             precio=pPrice,
-            precio_pub=precioven
+            precio_pub=precioven,
+            estado=1
         )
 
         response_data = {'success': True}
@@ -223,11 +224,20 @@ def crear_marca(request):
     
     return render(request, 'productsHome.html', {'marcas': marcas})
 
+
 def eliminar_categoria(request):
     if request.method == 'POST':
         try:
             categoria_id = request.POST.get('idToDelete')  
             categoria = get_object_or_404(Categorias, id_categoria=categoria_id)
+            
+            productos = Productos.objects.filter(id_categoria=categoria)
+            
+            for producto in productos:
+                producto.id_categoria_id = None
+                producto.estado = 0
+                producto.save(update_fields=['id_categoria', 'estado'])
+            
             categoria.delete()
             
             return JsonResponse({'message': 'Registro eliminado con Éxito'})
@@ -236,11 +246,18 @@ def eliminar_categoria(request):
     else:
         return JsonResponse({'error': 'Método no permitido.'})
 
+
 def eliminar_marca(request):
     if request.method == 'POST':
         try:
             marca_id = request.POST.get('idToDelete')  
             marca = get_object_or_404(Marcas, id_marca=marca_id)
+            productos = Productos.objects.filter(id_marca=marca)
+            for producto in productos:
+                producto.id_marca_id = None
+                producto.estado = 0
+                producto.save(update_fields=['id_marca', 'estado'])
+            
             marca.delete()
             
             return JsonResponse({'message': 'Registro eliminado con Éxito'})

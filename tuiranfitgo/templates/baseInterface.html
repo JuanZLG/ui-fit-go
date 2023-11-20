@@ -296,7 +296,7 @@
                                     id="verNotificacionesAnteriores">
                                     Ver notificaciones anteriores
                                 </a>
-                                <div id="notificacionesHistorial" style="padding: 7px 10px; text-align: center;"></div>
+                                <div id="notificacionesHistorial" style="padding: 7px 10px; "></div>
                             </div>
                         </li>
 
@@ -308,12 +308,10 @@
                                     url: '/verificar-notificaciones/',
                                     type: 'GET',
                                     success: function (data) {
-                                        // Usando each
                                         $.each(data.mensajes, function (index, mensaje) {
                                             $('#notificacionesHistorial').append(mensaje + '<br>');
                                         });
 
-                                        // Actualizar el contador y mostrarlo
                                         contadorNotificaciones = data.mensajes.length;
                                         $('#notificacionesCounter').text(contadorNotificaciones);
                                     },

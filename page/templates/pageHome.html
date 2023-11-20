@@ -20,7 +20,7 @@
 
 {% block body %}
 <section class="mobile">
-  <div class="product-card-container" id="product-container">
+  <div class="product-card-container" id="product-container-mobile">
     {% for producto in productos %}
     <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
       <div class="product-image">
@@ -46,8 +46,8 @@
 </section>
 
 <section class="desktop mt-4">
-  <div class="col-md-10" style="display: grid; grid-template-columns: 20% 1fr; margin: auto; gap: 20px;">
-    <div class="text-muted card-panel d-md-none d-lg-block">
+  <div class="row px-3">
+    <div class="col-lg-2 col-md-3">
       <div class="container-search desk">
         <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input-desk">
         <i class="fas fa-times search-clear-icon" id="search-clear-desk"></i>
@@ -55,34 +55,59 @@
       <p id="title-search"><strong>MEJORES VENTAS</strong></p>
       <ul class="list-group d-flex gap-4" id="toggle-main-search-desk"></ul>
     </div>
-    <div class="product-card-container" id="product-container">
-      {% for producto in productos %}
-      <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
-        <div class="product-image">
-          <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
-          <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
-        </div>
-        <div class="product-details">
-          <h3 class="product-title">{{ producto.nombre_producto }}</h3>
-          <div class="product-description">
-            <p>{{ producto.descripcion }}</p>
-          </div>
-          <div class="product-price">
-            <span>${{ producto.precio_pub }}</span>
-            <span class="product-search">
-              <i class="fas fa-search"></i>
-            </span>
+    <div class="col-md-9 col-lg-10 px-4">
+      <div class="col-md-11 mx-auto pb-1 d-flex justify-content-between">
+        <h3 class="title" id="dynamic-title-desk" data-id-filter="producto-0">Suplementos</h3>
+        <div class="d-flex gap-4">
+          <div>
+            <span class="mx-2">Ordenar por:</span>
+            <select name="sortDesk" id="sortDesk" class="catalog-select">
+              <option value="defect" class="sort-option">Por defecto</option>
+              <option value="all" class="sort-option">Ver todo</option>
+              <option value="best-sellers" class="sort-option">Más vendidos</option>
+              <option value="high-price" class="sort-option">Mayor precio</option>
+              <option value="low-price" class="sort-option">Menor precio</option>
+            </select>
           </div>
         </div>
       </div>
-      {% endfor %}
+      <div class="product-card-container" id="product-container-desk">
+        {% for producto in productos %}
+        <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
+          <div class="product-image">
+            <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
+            <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
+          </div>
+          <div class="product-details">
+            <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+            <div class="product-description">
+              <p>{{ producto.descripcion }}</p>
+            </div>
+            <div class="product-price">
+              <span>${{ producto.precio_pub }}</span>
+              <span class="product-search">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-
+  <div class="row">
+    <div class="col-md-2 px-4">
+      <p><strong>OPCIONES</strong></p>
+    </div>
+  </div>
 </section>
+
+
 
 <script>
   $(document).ready(function () {
+
+
 
     cargarProductos()
 
@@ -96,13 +121,18 @@
             $("#toggle-main-search-desk").empty();
             $.each(data.data, function (index, p) {
               var productList =
-                '<li class="d-flex">' +
+                '<li class="d-flex search-card-desk productDetailsButton" data-id="' + p.id_producto + '">' +
                 '<img src="/media/' + p.presentacion + '" alt="Imagen" height="64" width="64">' +
                 '<div class="media-item px-2 d-flex gap-2 flex-column">' +
                 '<span>' + p.nombre_producto + '</span>' +
                 '<h6><strong class="text-danger">' + p.precio_pub + '</strong></h6></div></li>';
 
               $("#toggle-main-search-desk").append(productList);
+            });
+            $('.productDetailsButton').click(function () {
+              id_producto = $(this).data("id")
+              $("#search-input").val("");
+              cargarDetalle(id_producto);
             });
           }
         },
@@ -126,7 +156,7 @@
                 $.each(data.data, function (index, p) {
                   $("#toggle-main-search-desk").addClass("is-active");
                   var productList =
-                    '<li class="d-flex">' +
+                    '<li class="d-flex productDetailsButton search-card-desk" data-id="' + p.id_producto + '">' +
                     '<img  src="/media/' + p.iProductImg_name + '" alt="Imagen" height="64" width="64">' +
                     '<div class="media-item px-2 d-flex gap-2 flex-column">' +
                     '<span>' + p.nombre_producto + '</span>' +
@@ -136,13 +166,8 @@
                 });
                 $('.productDetailsButton').click(function () {
                   id_producto = $(this).data("id")
-                  closeMains()
                   $("#search-input").val("");
-                  $("#toggle-main-search-desk").empty();
-                  $("#toggle-main-search-desk").removeClass("is-active");
-                  setTimeout(function () {
-                    cargarDetalle(id_producto);
-                  }, 200);
+                  cargarDetalle(id_producto);
                 });
               } else {
                 $("#toggle-main-search-desk").empty();

@@ -274,7 +274,8 @@ input[type="number"] {
 }
 
 #tabla-ventas {
-    height: 500px;
+    height: auto;
+    max-height: 600px; 
     overflow-y:auto;
     padding-right: 30px;
     display: none;

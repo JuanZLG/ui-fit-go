@@ -53,6 +53,9 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 {% comment %} <script>
   var form = document.getElementById("usuario-form");
 
@@ -67,8 +70,7 @@
   document.getElementById("iFechaven").min = fechaActual;
 </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+
 <script>
     $(document).ready(function () {
 
@@ -76,43 +78,41 @@
             ocultarError($(this));
         });
         function validarCamposLlenos() {
-    let camposLlenos = true;
-    const nombreValue = $('#iNombre').val();
-    const emailValue = $('#iCorreo').val();
-    const roleValue = $('#iRole').val();
+            let camposLlenos = true;
+            const nombreValue = $('#iNombre').val();
+            const emailValue = $('#iCorreo').val();
+            const roleValue = $('#iRole').val();
 
-    if (!nombreValue) {
-        mostrarError('#iNombre', 'Este campo es obligatorio.');
-        camposLlenos = false;
-    } else if (!validarNombreUsuario(nombreValue)) {
-        mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
-        camposLlenos = false;
-    }
+            if (!nombreValue) {
+                mostrarError('#iNombre', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarNombreUsuario(nombreValue)) {
+                mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
+                camposLlenos = false;
+            }
 
-    if (!emailValue) {
-        mostrarError('#iCorreo', 'Este campo es obligatorio.');
-        camposLlenos = false;
-    } else if (!validarCorreo(emailValue)) {
-        mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
-        camposLlenos = false;
-    }
+            if (!emailValue) {
+                mostrarError('#iCorreo', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            } else if (!validarCorreo(emailValue)) {
+                mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
+                camposLlenos = false;
+            }
 
-    if (!roleValue) {
-        mostrarError('#iRole', 'Debe seleccionar un rol.');
-        camposLlenos = false;
-    }
+            if (!roleValue) {
+                mostrarError('#iRole', 'Debe seleccionar un rol.');
+                camposLlenos = false;
+            }
 
-    return camposLlenos;
-}
+            return camposLlenos;
+        }
 
         function validarCorreo(correo) {
-            // Debe contener al menos un "@" y un "."
             const correoRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
             return correoRegex.test(correo);
         }
         
         function validarContraseña(contraseña) {
-            // Debe tener al menos 8 caracteres, una mayúscula y un número
             const contraseñaRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
             return contraseñaRegex.test(contraseña);
         }
@@ -146,7 +146,7 @@ $('#usuario-form').submit(function (event) {
             data: $(this).serialize(),
             success: function (response) {
                 if (response.success) {
-                      wal.fire({
+                    Swal.fire({
                         title: 'Éxito',
                         text: 'Usuario modificado con éxito',
                         icon: 'success',

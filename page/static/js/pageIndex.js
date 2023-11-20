@@ -1,24 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
-  let toggleComprar = document.getElementById('toggle-comprar');
-  let menuComprar = document.getElementById('menu-comprar');
 
   let toggleInfo = document.getElementById('toggle-info');
   let menuInfo = document.getElementById('menu-info');
 
-  toggleComprar.addEventListener('mouseover', function () {
-      menuComprar.classList.add('show');
-  });
-
-  toggleComprar.addEventListener('mouseout', function () {
-      menuComprar.classList.remove('show');
-  });
-
   toggleInfo.addEventListener('mouseover', function () {
-      menuInfo.classList.add('show');
+    menuInfo.classList.add('show');
   });
 
   toggleInfo.addEventListener('mouseout', function () {
-      menuInfo.classList.remove('show');
+    menuInfo.classList.remove('show');
   });
   // Barra principal ----------------------- 
   let main = document.getElementById("main-menu");
@@ -27,19 +17,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-// Despliegue de menu productos -----------------------
+  // Despliegue de menu productos -----------------------
 
-const togglesSubmenuProducts = document.getElementById('toggle-submain-products');
-const closeSubMainOptions = document.getElementById('close-submain-options');
-const OptionsProductsMain = document.getElementById('options-submain-products');
+  const togglesSubmenuProducts = document.getElementById('toggle-submain-products');
+  const closeSubMainOptions = document.getElementById('close-submain-options');
+  const OptionsProductsMain = document.getElementById('options-submain-products');
 
-togglesSubmenuProducts.addEventListener('click', function () {
-  OptionsProductsMain.classList.toggle('is-active');
-});
+  togglesSubmenuProducts.addEventListener('click', function () {
+    OptionsProductsMain.classList.toggle('is-active');
+  });
 
-closeSubMainOptions.addEventListener('click', function () {
-  OptionsProductsMain.classList.toggle('is-active');
-});
+  closeSubMainOptions.addEventListener('click', function () {
+    OptionsProductsMain.classList.toggle('is-active');
+  });
 
   // Opciones de menu productos ----------------------- 
   const radioInputs = document.querySelectorAll('.radio input');
@@ -67,23 +57,86 @@ closeSubMainOptions.addEventListener('click', function () {
     input.addEventListener('change', showSelectedContent);
   });
 
+// Ordenar productos por Lista o Grillas ----------------------- 
+function toggleView(viewType, containerSelector) {
+  const productContainer = document.querySelector(containerSelector);
 
-  // Ordenar productos por Lista o Grillas ----------------------- 
-  const listButton = document.getElementById('list');
-  const gridButton = document.getElementById('grid');
-  const productContainer = document.getElementById('product-container');
-
-  listButton.addEventListener('click', function (e) {
+  if (viewType === 'list') {
     productContainer.classList.remove('grid-view');
     productContainer.classList.add('list-view');
-  });
-
-  gridButton.addEventListener('click', function (e) {
+  } else if (viewType === 'grid') {
     productContainer.classList.remove('list-view');
     productContainer.classList.add('grid-view');
+  }
+}
+
+// Evento de clic para la versión móvil
+document.querySelectorAll('.mobile .view-options .list').forEach(function (element) {
+  element.addEventListener('click', function (e) {
+    toggleView('list', '#product-container-mobile');
   });
+});
+
+document.querySelectorAll('.mobile .view-options .grid').forEach(function (element) {
+  element.addEventListener('click', function (e) {
+    toggleView('grid', '#product-container-mobile');
+  });
+});
+
+// Evento de clic para la versión de escritorio
+// document.querySelectorAll('.desktop .view-options .list').forEach(function (element) {
+//   element.addEventListener('click', function (e) {
+//     toggleView('list', '#product-container-desk');
+//   });
+// });
+
+// document.querySelectorAll('.desktop .view-options .grid').forEach(function (element) {
+//   element.addEventListener('click', function (e) {
+//     toggleView('grid', '#product-container-desk');
+//   });
+// });
 
 
   // Opciones SubMenu ----------------------- 
 
+
+  var activeElement = null;
+
+  document.querySelectorAll('.element-container').forEach(function (element) {
+      element.addEventListener('click', function (event) {
+          event.stopPropagation();
+          var optionElement = this.querySelector('.element-option');
+          if (activeElement && activeElement === optionElement) {
+              activeElement.style.display = 'none';
+              activeElement = null;
+          } else {
+              if (activeElement) {
+                  activeElement.style.display = 'none';
+              }
+              optionElement.style.display = 'block';
+              activeElement = optionElement;
+          }
+      });
+  });
+
+  document.addEventListener('click', function () {
+      if (activeElement) {
+          activeElement.style.display = 'none';
+          activeElement = null;
+      }
+  });
+
+  window.addEventListener('scroll', function () {
+      if (activeElement) {
+          activeElement.style.display = 'none';
+          activeElement = null;
+      }
+  });
+  document.getElementById("product-container-desk").addEventListener('scroll', function () {
+      if (activeElement) {
+          activeElement.style.display = 'none';
+          activeElement = null;
+      }
+  });
+  
 });  

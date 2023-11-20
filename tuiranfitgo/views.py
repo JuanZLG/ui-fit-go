@@ -9,21 +9,25 @@ from .models import Productos
 
 # views.py
 from django.http import JsonResponse
-
 def verificar_notificaciones(request):
     mensajes = []
 
-    productos_pocos = Productos.objects.filter(cantidad__lt=3)
+    productos_pocos = Productos.objects.filter(cantidad__lt=2)  # Cambiado de 3 a 2
     productos_muchos = Productos.objects.filter(cantidad__gt=12)
 
     if productos_pocos.exists():
         for producto in productos_pocos:
-            mensajes.append(f"{producto.nombre_producto}: ({producto.cantidad} disponibles).")
+            mensajes.append(f"⚠️ {producto.nombre_producto}: ({producto.cantidad} disponibles).") 
+
+    if productos_muchos.exists():
+        for producto in productos_muchos:
+            mensajes.append(f"➕ {producto.nombre_producto}: ({producto.cantidad} disponibles).") 
 
     if mensajes:
         return JsonResponse({"mensajes": mensajes})
     else:
         return JsonResponse({"mensajes": []})
+
 
 
 def error_view(request):  

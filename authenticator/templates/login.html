@@ -329,6 +329,8 @@
                                     validarCodigo()
                                 }
                                 else {
+                                    $("#submit-btn").removeClass("inhabilitado")
+                                    $("#forget-correo").removeClass("inhabilitado")
                                     $("#forget-error").text("No existen registros asociados con el correo electrónico ingresado");
                                 }
                             }
