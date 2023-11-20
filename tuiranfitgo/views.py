@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 import jwt
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from asgiref.sync import async_to_sync
-from django.http import JsonResponse
 from products.models import Productos
 from .models import Productos
+from functools import wraps
+from users.models import Rolespermisos
+from rest_framework_simplejwt.tokens import Token
+import jwt  
 
-# views.py
-from django.http import JsonResponse
 def verificar_notificaciones(request):
     mensajes = []
 
@@ -60,12 +61,6 @@ def logout_view(request):
     response = redirect('login_view') 
     response.delete_cookie('jwt_token')
     return response
-
-from functools import wraps
-from django.http import HttpResponseForbidden
-from users.models import Rolespermisos
-from rest_framework_simplejwt.tokens import Token
-import jwt  
 
 def module_access_required(module_name):
     def decorator(view_func):
