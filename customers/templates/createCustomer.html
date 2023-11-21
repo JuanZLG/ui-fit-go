@@ -2,7 +2,7 @@
 
 {% block title %} Agregar Cliente {% endblock %}
 {% block body %}
-<!-- Begin Page Content -->
+
 
 <center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Cliente</h1></center>
 
@@ -15,7 +15,7 @@
                 <div class="form-group col-md-4">
                     <label for="iDocumento">Documento *</label>
                     <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
-                        minlength="8" maxlength="10">
+                        minlength="8" maxlength="12">
                     <div class="error-message" id="iDocumento-error" style="color:red;"></div>
                     <div class="info-message" id="iDocumento-info"></div>
                 </div>
@@ -101,7 +101,6 @@
             habilitarBoton();
         });
 
-        // Cambiado el evento a 'input' para los otros campos
         $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
             validarCampo($(this));
             habilitarBoton();
@@ -153,7 +152,6 @@
     });
 
 
-    // Función para obtener la lista de departamentos
     function obtenerDepartamentos() {
         $.ajax({
             url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
@@ -171,12 +169,10 @@
                 }));
             });
 
-            // Inicialmente, carga los municipios para el primer departamento en la lista
             cargarMunicipios();
         });
     }
 
-    // Función para obtener la lista de municipios basados en el departamento seleccionado
     function obtenerMunicipios() {
         const departamentoSeleccionado = $("#departamento").val();
         const municipioSelect = $("#municipio");
@@ -226,22 +222,22 @@
     function validarDocumento() {
         const documento = $('#iDocumento').val();
 
-        // Verificar si el campo está vacío
         if (documento.trim() === '') {
             mostrarError($('#iDocumento'), 'Este campo es obligatorio.');
             habilitarBoton();
-            return; // No continúes con la validación si el campo está vacío
+            return; 
         }
 
-        const documentoError = /^\d{8,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+        const documentoError = /^\d{8,12}$/.test(documento) ? '' : 'Número de documento inválido.';
 
-        $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
+
+        $('#iDocumento').val(documento.replace(/\D/g, '')); 
         $('#iDocumento-error').html(documentoError);
 
-        // Verificar si el documento ya existe en la base de datos
+        
         $.ajax({
             type: 'GET',
-            url: "{% url 'validarDocumento' %}", // Asegúrate de que coincida con la URL en urls.py
+            url: "{% url 'validarDocumento' %}", 
             data: {
                 documento: documento
             },
@@ -251,7 +247,7 @@
                 } else {
                     ocultarError($('#iDocumento'));
                 }
-                habilitarBoton(); // Llamar a habilitarBoton después de la verificación
+                habilitarBoton(); 
             }
         });
     }
@@ -262,7 +258,7 @@
         const celular = $('#iCelular').val();
         const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
 
-        $('#iCelular').val(celular.replace(/\D/g, '')); // Elimina caracteres no numéricos
+        $('#iCelular').val(celular.replace(/\D/g, '')); 
         $('#iCelular-error').html(celularError);
 
 
@@ -294,7 +290,8 @@
         const departamento = $('#departamento').val();
         const municipio = $('#municipio').val();
 
-        const documentoValido = (documento.length === 8 || documento.length === 10);
+        const documentoValido = (documento.length >= 8 && documento.length <= 12);
+
         const celularValido = (celular.length === 10);
         const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
 

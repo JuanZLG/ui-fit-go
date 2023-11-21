@@ -17,7 +17,7 @@
                 <div class="form-group col-md-4">
                     <label for="iDocumento">Documento *</label>
                     <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
-                        value="{{ cliente.documento }}" minlength="8" maxlength="10">
+                        value="{{ cliente.documento }}" minlength="8" maxlength="12">
                     <div class="error-message" id="iDocumento-error" style="color:red;"></div>
                     <div class="info-message" id="iDocumento-info"></div>
                 </div>
@@ -194,7 +194,8 @@
                 return; // No continúes con la validación si el campo está vacío
             }
 
-            const documentoError = /^\d{8,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+            const documentoError = /^\d{8,12}$/.test(documento) ? '' : 'Número de documento inválido.';
+
 
             $('#iDocumento').val(documento.replace(/\D/g, '')); // Elimina caracteres no numéricos
             $('#iDocumento-error').html(documentoError);
@@ -261,7 +262,7 @@
             const departamento = $('#departamento').val();
             const municipio = $('#municipio').val();
 
-            const documentoValido = (documento.length === 8 || documento.length === 10);
+            const documentoValido = (documento.length >= 8 && documento.length <= 12);
             const celularValido = (celular.length === 10);
             const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
 
