@@ -37,7 +37,7 @@
       
       <div class="form-group">
         <label>Correo *</label>
-        <input type="email" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" value="{{ people.correo }}" autocomplete="off" autocorrect="off" autocapitalize="none"/>
+        <input type="email" data-id-user="{{ people.id_usuario}}" class="form-control" id="iCorreo" name="iCorreo" placeholder="Ingrese un email válido" value="{{ people.correo }}" autocomplete="off" autocorrect="off" autocapitalize="none"/>
         <div class="error-message" style="color:red;" id="iCorreo-error"></div>
       </div>
 
@@ -74,38 +74,80 @@
 <script>
     $(document).ready(function () {
 
-        $('#iRole, #iNombre, #iCorreo').on('change', function () {
-            ocultarError($(this));
+        // $('#iRole, #iNombre, #iCorreo').on('change', function () {
+        //     ocultarError($(this));
+        // });
+        function mostrarError(selector, mensaje) {
+    $(selector).addClass('is-invalid');
+    $(`${selector}-error`).text(mensaje);
+}
+
+function ocultarError($campo) {
+    $campo.removeClass('is-invalid');
+    $campo.siblings('.error-message').text('');
+}
+
+function validarCamposLlenos() {
+    let camposLlenos = true;
+    const nombreValue = $('#iNombre').val();
+    const emailValue = $('#iCorreo').val();
+    const roleValue = $('#iRole').val();
+
+    if (!nombreValue) {
+        mostrarError('#iNombre', 'Este campo es obligatorio.');
+        camposLlenos = false;
+    } else if (!validarNombreUsuario(nombreValue)) {
+        mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
+        camposLlenos = false;
+    }
+
+    if (!emailValue) {
+        mostrarError('#iCorreo', 'Este campo es obligatorio.');
+        camposLlenos = false;
+    } else if (!validarCorreo(emailValue)) {
+        mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
+        camposLlenos = false;
+    }
+
+    if (!roleValue) {
+        mostrarError('#iRole', 'Debe seleccionar un rol.');
+        camposLlenos = false;
+    }
+
+    return camposLlenos;
+}
+
+async function validarCorreoUnico(correo, id_usuario) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "{% url 'email_unique_edit' %}",
+            type: "GET",
+            data: {
+                id_usuario: id_usuario,
+                email: correo,
+            },
+            success: function (data) {
+                if (data.existe) {
+                    mostrarError('#iCorreo', 'Este correo ya existe.');
+                    resolve(false);
+                } else {
+                    ocultarError($('#iCorreo'));
+                    resolve(true);
+                }
+            },
+            error: function () {
+                reject();
+            }
         });
-        function validarCamposLlenos() {
-            let camposLlenos = true;
-            const nombreValue = $('#iNombre').val();
-            const emailValue = $('#iCorreo').val();
-            const roleValue = $('#iRole').val();
+    });
+}
 
-            if (!nombreValue) {
-                mostrarError('#iNombre', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarNombreUsuario(nombreValue)) {
-                mostrarError('#iNombre', 'El nombre de usuario no debe contener números ni caracteres especiales.');
-                camposLlenos = false;
-            }
+$('#iCorreo').on('input', async function () {
+    const correo = $(this).val();
+    const id = $(this).data("id-user");
+    await validarCorreoUnico(correo, id);
+});
 
-            if (!emailValue) {
-                mostrarError('#iCorreo', 'Este campo es obligatorio.');
-                camposLlenos = false;
-            } else if (!validarCorreo(emailValue)) {
-                mostrarError('#iCorreo', 'Ingrese un correo electrónico válido.');
-                camposLlenos = false;
-            }
-
-            if (!roleValue) {
-                mostrarError('#iRole', 'Debe seleccionar un rol.');
-                camposLlenos = false;
-            }
-
-            return camposLlenos;
-        }
 
         function validarCorreo(correo) {
             const correoRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -124,41 +166,36 @@
             return nombreUsuarioRegex.test(nombreFormateado);
         }
         
-        function mostrarError(selector, mensaje) {
-            $(selector).addClass('is-invalid');
-            $(`${selector}-error`).text(mensaje);
-        }
-    
-        function ocultarError($campo) {
-            $campo.removeClass('is-invalid');
-            $campo.siblings('.error-message').text('');
-        }
-    
+
     
 $('#usuario-form').submit(function (event) {
-    event.preventDefault();
-        if (!validarCamposLlenos()) {
-            return;
-        }
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'editAUser' people.id_usuario %}",
-            data: $(this).serialize(),
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: 'Usuario modificado con éxito',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1000,
-                    });
-                    setTimeout(function () {
-                        window.location.href = "{% url 'usuarios' %}";
-                    }, 2000);
+        event.preventDefault();
+        let errors = false;
+
+        $('.is-invalid').each(function () {
+            errors = true;
+        });
+        if (!errors) {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'editAUser' people.id_usuario %}",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Usuario modificado con éxito',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1000,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "{% url 'usuarios' %}";
+                        }, 2000);
+                    }
                 }
-            }
-        });          
+            });     
+        }     
     });        
 });
     

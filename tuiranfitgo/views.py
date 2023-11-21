@@ -1,32 +1,51 @@
 from django.shortcuts import render, redirect, get_object_or_404
 import jwt
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from asgiref.sync import async_to_sync
-from django.http import JsonResponse
 from products.models import Productos
 from .models import Productos
-
-# views.py
+from functools import wraps
+from users.models import Rolespermisos
+from rest_framework_simplejwt.tokens import Token
+import jwt  
 from django.http import JsonResponse
+
 def verificar_notificaciones(request):
     mensajes = []
 
-    productos_pocos = Productos.objects.filter(cantidad__lt=2)  # Cambiado de 3 a 2
-    productos_muchos = Productos.objects.filter(cantidad__gt=12)
+    token = request.COOKIES.get('jwt_token')
+    if token:
+        try:
+            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user_id = decoded_token['id_rol']
+            user_role = user_id
+
+            if user_role != 1:
+                mensajes.append({"tipo": "info", "mensaje": "Las notificaciones solo están disponibles para el administrador."})
+                return JsonResponse({"mensajes": mensajes})
+        except Exception as e:
+            print(f"Error: {e}")
+            return JsonResponse({"mensajes": []})
+
+    productos_pocos = Productos.objects.filter(cantidad__range=(1, 5))  
+    productos_muchos = Productos.objects.filter(cantidad__gt=13)
 
     if productos_pocos.exists():
         for producto in productos_pocos:
-            mensajes.append(f"⚠️ {producto.nombre_producto}: ({producto.cantidad} disponibles).") 
+            mensajes.append({"tipo": "advertencia", "mensaje": f"{producto.nombre_producto}: ({producto.cantidad} disponibles)."}) 
 
     if productos_muchos.exists():
         for producto in productos_muchos:
-            mensajes.append(f"➕ {producto.nombre_producto}: ({producto.cantidad} disponibles).") 
+            mensajes.append({"tipo": "exceso", "mensaje": f"{producto.nombre_producto}: ({producto.cantidad} disponibles)."}) 
 
     if mensajes:
         return JsonResponse({"mensajes": mensajes})
     else:
         return JsonResponse({"mensajes": []})
+
+
+
 
 
 
@@ -60,12 +79,6 @@ def logout_view(request):
     response = redirect('login_view') 
     response.delete_cookie('jwt_token')
     return response
-
-from functools import wraps
-from django.http import HttpResponseForbidden
-from users.models import Rolespermisos
-from rest_framework_simplejwt.tokens import Token
-import jwt  
 
 def module_access_required(module_name):
     def decorator(view_func):

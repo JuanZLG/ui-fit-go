@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="{% static 'css/CreatePurchases.css' %}">
 </head>
 
-
-
 <section class="compra-section">
     <h1 class="compra-title">Agregar Compra</h1>
     <div class="compra-container">
@@ -95,8 +93,8 @@
 <section class="col-md-12 mb-4 product-section">
     <div class="product-content">
         <div class="product-header">
-            <label class="producto-label">Ingreso de productos</label>
-            <p>Encuentra todos tus productos y finaliza las compras de una forma fácil</p>
+            <label class="producto-label">Ingreso de Productos</label>
+            <p>Encuentra todos tus productos y registra las compras de una forma fácil</p>
         </div>
         <div class="product-inputs">
             <div class="search-container">
@@ -122,13 +120,13 @@
 
 <section class="product-table-section" id="product-table-section">
     <label class="producto-label">Lista de Productos *</label></br>
-    <span>Aquí se acumularán los productos seleccionados para la compra</span>
+    <span>Aquí se listarán los productos seleccionados para la compra</span>
     <table class="table" id="tabla-compras">
         <thead class="text-center">
             <tr>
                 <th class="product-column">Producto</th>
                 <th class="price-column">Precio Compra (Unidad)</th>
-                <th class="total-column">TOTAL PRODUCTO</th>
+                <th class="total-column">Total del Producto</th>
                 <th class="icon-column"></th>
             </tr>
         </thead>
@@ -137,7 +135,7 @@
     </table>
     <div class="producto-cont-descuento">
         <div class="d-flex justify-content-center align-items-center">
-            <span class="pt-1">TOTAL COMPRA:</span>
+            <span class="pt-1">Total de la Compra:</span>
             <span id="total-compra" class="ml-3" style="font-weight: bold; color: rgb(184, 62, 62);"></span>
         </div>
     </div>
@@ -146,7 +144,7 @@
 
 
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
-    <p id="campos-requeridos">Campos requeridos (*)</p>
+    <p id="campos-requeridos">Campos Requeridos (*)</p>
     <input type="button" value="Guardar compra" id="crear-compra" class="btn-acciones btn-crear mx-2">
 </div>
 
@@ -264,7 +262,7 @@
                             }
                         });  });
 
-                        // ... (resto del código)
+                   
                     });
 
 

@@ -84,7 +84,7 @@
                 <ul>
                     {% for producto in categoria.productos_set.all %}
                     <li class="menu-list-item"
-                        onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
+                    onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
                         {{ producto.nombre_producto }}
                     </li>
                     {% endfor %}

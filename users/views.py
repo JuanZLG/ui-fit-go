@@ -316,6 +316,15 @@ def email_unique(request):
     return JsonResponse({"existe": email_existe})
 
 
+def email_unique_edit(request):
+    email = request.GET.get("email", "")
+    id_usuario = request.GET.get("id_usuario", "")
+    id_usuario = int(id_usuario)
+    email_existe = Usuarios.objects.exclude(id_usuario=id_usuario).filter(correo=email).exists()
+    return JsonResponse({"existe": email_existe})
+
+
+
 @jwt_cookie_required
 # @module_access_required('usuarios')
 def obtener_datos(request):
