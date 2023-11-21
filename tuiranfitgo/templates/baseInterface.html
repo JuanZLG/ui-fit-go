@@ -70,8 +70,9 @@
     <div id="wrapper" style="">
 
         <!-- Sidebar -->
-        
-        <ul class="navbar-nav sidebar sidebar-dark accordion" style="background-color: black; position:fixed" id="accordionSidebar">
+
+        <ul class="navbar-nav sidebar sidebar-dark accordion" style="background-color: black; position:fixed"
+            id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'pageHome' %}">
@@ -225,14 +226,15 @@
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
-     
+
         <div id="content-wrapper" style="margin-left:224px;">
 
             <!-- Main Content -->
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-black topbar mb-4 static-top shadow" style="background-color: black;">
+                <nav class="navbar navbar-expand navbar-light bg-black topbar mb-4 static-top shadow"
+                    style="background-color: black;">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <form class="form-inline">
@@ -283,53 +285,108 @@
                         </li> -->
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1" >
+                        <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw" style="color: white;"></i>
                                 <!-- Counter - Alerts -->
-                                <span id="notificacionesCounter" style="background-color: red;" class="badge badge-danger badge-counter">0</span>
+                                <span id="notificacionesCounter" style="background-color: red;"
+                                    class="badge badge-danger badge-counter">0</span>
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown" id="notificacionesDropdown">
-                                <h5 class="dropdown-header" style="background-color: red ;text-align: center; border-color: red;">Centro de Alertas</h5>
-                                <a class="dropdown-item text-center small text-gray-500" href="javascript:void(0)"
+                                <h5 class="dropdown-header"
+                                    style="background-color: red ;text-align: center; border-color: red;">Centro de
+                                    Alertas</h5>
+                                <!-- <a class="dropdown-item text-center small text-gray-500" href="javascript:void(0)"
                                     id="verNotificacionesAnteriores">
                                     Ver notificaciones anteriores
-                                </a>
-                                <div id="notificacionesHistorial" style="padding: 7px 10px; "></div>
+                                </a> -->
+                                <div id="notificacionesHistorial"></div>
                             </div>
                         </li>
+                        <style>
+                            #notificacionesHistorial {
+                                padding: 7px 10px;
+                                height: auto;
+                                max-height: 200px;
+                                overflow-y: auto;
 
+                            }
+
+                            .noti-item {
+                                color: #222222;
+                                font-weight: bold;
+                            }
+                        </style>
 
 
                         <script>
+
                             $(document).ready(function () {
-                                $.ajax({
-                                    url: '/verificar-notificaciones/',
-                                    type: 'GET',
-                                    success: function (data) {
-                                        $.each(data.mensajes, function (index, mensaje) {
-                                            $('#notificacionesHistorial').append(mensaje + '<br>');
-                                        });
+                                // Al cargar la página, verificar si las notificaciones ya fueron vistas
+                                cargarNotificaciones();
 
-                                        contadorNotificaciones = data.mensajes.length;
-                                        $('#notificacionesCounter').text(contadorNotificaciones);
-                                    },
-                                    error: function (error) {
-                                        console.log(error);
-                                    }
+                                // Manejar el evento de clic en las notificaciones
+                                $('#alertsDropdown').click(function () {
+                                    // Establecer el contador de notificaciones a cero
+                                    $('#notificacionesCounter').text(0);
+
+                                    // Guardar en la sesión del usuario que las notificaciones ya fueron vistas
+                                    sessionStorage.setItem('notificacionesVistas', 'true');
                                 });
+
+                                function cargarNotificaciones() {
+                                    $.ajax({
+                                        url: '/verificar-notificaciones/',
+                                        type: 'GET',
+                                        success: function (data) {
+                                            if (data.mensajes.length > 0) {
+                                                if (data.mensajes.length === 1 && data.mensajes[0].tipo === "info") {
+                                                    // Mostrar mensaje solo para el administrador
+                                                    $('#notificacionesHistorial').append('<span class="mensaje">' + data.mensajes[0].mensaje + '</span><hr>');
+                                                } else {
+                                                    // Mostrar mensajes para el administrador
+                                                    $.each(data.mensajes, function (index, notificacion) {
+                                                        var icono = '';
+                                                        var texto = notificacion.mensaje;
+
+                                                        // Verificar si el mensaje es una advertencia o una notificación de producto en exceso
+                                                        if (notificacion.tipo === 'advertencia') {
+                                                            icono = '⚠️';
+                                                        } else if (notificacion.tipo === 'exceso') {
+                                                            icono = '➕';
+                                                        }
+
+                                                        // Agregar el icono y el mensaje en span separados
+                                                        $('#notificacionesHistorial').append('<span class="mr-2">' + icono + '</span><span class="noti-item">' + texto + '</span><hr>');
+                                                    });
+
+                                                    // Actualizar el contador de notificaciones solo si las notificaciones no han sido vistas
+                                                    if (sessionStorage.getItem('notificacionesVistas') !== 'true') {
+                                                        contadorNotificaciones = data.mensajes.length;
+                                                        $('#notificacionesCounter').text(contadorNotificaciones);
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
+                                        }
+                                    });
+                                }
+
+                                const verNotificacionesAnterioresBtn = document.getElementById('verNotificacionesAnteriores');
+                                if (verNotificacionesAnterioresBtn) {
+                                    verNotificacionesAnterioresBtn.addEventListener('click', function () {
+                                        cargarNotificaciones();
+                                    });
+                                }
                             });
 
-                            const verNotificacionesAnterioresBtn = document.getElementById('verNotificacionesAnteriores');
-                            verNotificacionesAnterioresBtn.addEventListener('click', function () {
-                                notificaciones.forEach((notificacion, index) => {
-                                    console.log(`Notificación ${index + 1}: ${notificacion.mensaje}`);
-                                });
-                            });
                         </script>
+
 
 
                         <div class="topbar-divider d-none d-sm-block" style="color:white"></div>
@@ -341,7 +398,7 @@
                                 <span id="nombre-usuario" class="mr-2 d-none d-lg-inline text-black-600 bold"
                                     style="color: white; font-weight: bolder">Bienvenido(a),
                                     {{ user.nombre_usuario }}</span>
-                                    
+
                                 <img class="img-profile rounded-circle" src="{% static 'img/usir.png' %}">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -385,25 +442,25 @@
                 <div style="margin-top:7vh"></div>
 
                 <!-- Footer -->
-            {% block footer %}
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span> &copy; TuiranFit - 2023</span>
+                {% block footer %}
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span> &copy; TuiranFit - 2023</span>
+                        </div>
                     </div>
-                </div>
-            </footer>
-            {% endblock %}
-                
+                </footer>
+                {% endblock %}
+
 
             </div>
             <!-- Fin del Contenido Principal... -->
-            
+
         </div>
     </div>
     <!-- End of Page Wrapper -->
-   
-    
+
+
 
 
     <!-- Botón para volver hacia arriba de la página -->
