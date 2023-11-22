@@ -195,11 +195,19 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    alert(response.detail);
-                    $('body').addClass('animate__animated animate__fadeOut').css('animation-duration', '500ms');
-                    setTimeout(function () {
+                    Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.detail,
+                    timer: 3000,
+                    showConfirmButton: false,
+                    onClose: function() {
+                        $('body').addClass('animate__animated animate__fadeOut').css('animation-duration', '500ms');
+                        setTimeout(function () {
                         window.location.reload();
-                    }, 500); // Ajusta el tiempo según tus preferencias
+                        }, 500);
+                    }
+                    });
                 },
                 error: function (error) {
                     alert(error.responseJSON.detail);

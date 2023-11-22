@@ -282,7 +282,11 @@
                 $("#cantidad-ingresada").val("1")
                 $("#btnAgregar").addClass("is-active")
             } else {
-                alert("Este producto esta inhabilitado")
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Producto inhabilitado!"
+                });
             }
         });
 
@@ -645,7 +649,7 @@
                         text: 'Venta creada con éxito',
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 2000,
+                        timer: 3000,
                     });
                     setTimeout(function () {
                         window.location.href = "{% url 'ventas' %}";
