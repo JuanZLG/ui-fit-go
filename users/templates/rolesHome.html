@@ -228,8 +228,8 @@
             text: "¿Está seguro de eliminar este rol?",
             html: '<p>Si existen usuarios asociados a el, serán inhabilitados en el sistema.</p>',
             showCancelButton: true,
-            confirmButtonColor: '#419edd',
-            cancelButtonColor: '#ba4d4d',
+            confirmButtonColor: '#EF1B1B',
+            cancelButtonColor: '#33FF3C',
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Eliminar'
         }).then((result) => {
@@ -243,10 +243,10 @@
                     success: function (response) {
                         Swal.fire({
                             title: 'Éxito',
-                            text: 'Rol elminado con éxito',
+                            text: 'Rol eliminado con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 2000,
+                            timer: 1000,
                         });
                         setTimeout(function () {
                             window.location.reload();
@@ -512,7 +512,7 @@
                                 text: 'Rol actualizado con éxito',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 2000,
+                                timer: 1000,
                             });
                             setTimeout(function () {
                                 window.location.reload();
@@ -584,7 +584,7 @@
                     <p class="error-rol-permisos"></p>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-rol" id="createRol" data-id-rol="${param}">Guardar Rol</button>
+                    <button class="btn btn-success btn-rol" id="createRol" data-id-rol="${param}">Guardar Rol</button>
                 </div>
             </form>
         `,
@@ -673,7 +673,7 @@
                                 text: 'Rol agregado con éxito',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 2000,
+                                timer: 1000,
                             });
                             setTimeout(function () {
                                 window.location.reload();

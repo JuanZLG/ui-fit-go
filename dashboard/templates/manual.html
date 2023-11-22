@@ -4,29 +4,33 @@
 
 {% block body %}
 
-{% comment %} <center><h1 class="modtitles">Manual de Ayuda</h1></center> {% endcomment %}
+<center><h1 class="modtitles">Ayuda del Sistema</h1></center>
 <head>
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/manual.css' %}">
 </head>
 <div class="container d-flex mx-auto" style="flex-direction:flex-end; width:100%; margin-left:30px;">
     <div class="row">
-        <div class="card-header" style="text-align: center; font-weight: bold; font-size: large;">AG TuiranFit - Manual de Usuario</div>
-        <div class="card shadow p-4" style="max-height: 90vh; overflow-y: auto; display:flex; gap:40px; flex-direction:column; width:100%">
-            
-            {% comment %} Aqui {% endcomment %}
-{% comment %} <div class="card"> {% endcomment %}
-<h1 style="margin-bottom:0" id="musers"><a target='_blank'>Gestionando los Usuarios del Sistema</a></h1>
+        
+        <div class="card shadow p-4" style="max-height: 80vh; overflow-y: auto; display:flex; gap:40px; flex-direction:column; width:100%;">
+            <div class="card-header py-2" style="text-align: center; font-weight: bold; font-size: large; background-color: black; color:white;">AG TuiranFit - Manual de Usuario</div>
+
+<section id="musers">
+<h1 style="margin-bottom:0"><a target='_blank'>Gestionando los Usuarios del Sistema</a></h1>
 <div style="margin-top:0"><p>Esta guía detalla cómo administrar a los usuarios de la aplicación, su autenticación y límite de acceso.</p></div>
+</section>
 
 <div class="mb-0" style="margin-bottom: 0;"><h2 class="text-black"><a href="http://127.0.0.1:8000/admin/users/">Acceso al Módulo</a></h2></div>
 <div><h3>1. En la barra lateral izquierda, presione con el botón izquierdo del ratón en "Usuarios" y luego presione en "Gestión de Usuarios".</h3>
 <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/7fc40123-39c7-4b22-90c9-acb705fdb0b1/611b670f-65b0-441d-b6a8-0f7715b2b9c8.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.0992&fp-y=0.3133&fp-z=2.1581&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=45&mark-y=364&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MjMmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En la barra lateral izquierda, presione con el botón izquierdo del ratón en &quot;Usuarios&quot; y luego presione en &quot;Gestión de Usuarios&quot;." />
 </div>
 
-<div><h3 id="auser">2. Una vez dentro del módulo de Usuarios, si desea registrar un nuevo usuario, presione con el botón izquierdo del ratón en "Agregar Usuario", será redirigido al formulario de Agregación.</h3>
-<img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/6805a98a-01fd-4553-82dd-4ba5d04f8471/144638b4-93cd-49ac-9598-e400506f3932.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3210&fp-y=0.3227&fp-z=2.0896&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=376&mark-y=338&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NDgmaD0xNTImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Una vez dentro del módulo de Usuarios, si desea registrar un nuevo usuario, presione con el botón izquierdo del ratón en &quot;Agregar Usuario&quot;, será redirigido al formulario de Agregación." />
-</div>
+<section id="auser">
+<h3>2. Una vez dentro del módulo de Usuarios, si desea registrar un nuevo usuario, presione con el botón izquierdo del ratón en "Agregar Usuario", será redirigido al formulario de Agregación.</h3>
+</section>
+
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/6805a98a-01fd-4553-82dd-4ba5d04f8471/144638b4-93cd-49ac-9598-e400506f3932.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3210&fp-y=0.3227&fp-z=2.0896&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=376&mark-y=338&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00NDgmaD0xNTImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Una vez dentro del módulo de Usuarios, si desea registrar un nuevo usuario, presione con el botón izquierdo del ratón en &quot;Agregar Usuario&quot;, será redirigido al formulario de Agregación." />
+
 
 <div><h3>3. En el formulario, presione en el campo "Rol de Usuario", se desplegará una lista con los diferentes roles del sistema que tenga registrados.</h3>
 <p>En otro apartado del manual, podrá profundizar acerca del manejo de roles y permisos de usuario dentro de la aplicación.</p>
@@ -87,8 +91,9 @@
     <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/0c60c66b-1e2f-4509-8a8e-e4ff6d161bd7/5d5089ad-4be0-4586-a076-474e1b1326c9.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=29&mark-y=160&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03ODQmaD01NDUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Click on ×…" />
 </div>
 
-<div id="statuser"><h3>16. Por defecto, el estado de un nuevo registro de usuario es "Activo". Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión.</h3>
+<div><section id="statuser"><h3>16. Por defecto, el estado de un nuevo registro de usuario es "Activo". Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión.</h3>
 <p>Presione con el botón izquierdo del ratón en el botón de la columna "Estado" que corresponda al registro del usuario a bloquear.</p>
+</section>
 <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/54013467-e488-449a-b69e-769aac5d9be2/1c3fcdcf-8a4c-4e07-a4d2-864ff93ada38.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=871&mark-y=220&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTAmaD01MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Por defecto, el estado de un nuevo registro de usuario es &quot;Activo&quot;. Para el caso de que desee bloquear el acceso a alguno de los usuarios, podrá desactivarlo para que no pueda iniciar sesión." />
 </div>
 
@@ -100,15 +105,178 @@
 <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/5d68b4ef-aab9-44da-ab26-dd0226bdc299/14c518e7-67b4-4362-8ad9-4b1592adcab7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=14&mark-y=104&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTczJmg9MTgwJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="El estado del usuario habrá cambiado." />
 </div>
 
-<div><h3>19. Esto sucederá si el usuario que ha inactivado, intenta iniciar sesión en la aplicación:</h3>
+<div><h3>19. Esto sucederá si el usuario que ha desactivado, intenta ingresar al sistema:</h3>
     <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/bde27d74-fe7e-4888-af05-22a813c2f8c5/3897b817-808d-4b13-9448-0a5bbbc03757.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5014&fp-y=0.5054&fp-z=1.9651&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Esto sucederá si el usuario que ha bloqueado, intenta iniciar sesión en la aplicación:" />
+</div>
+
+<div><section id="init"><h3>20. Veamos como Iniciar Sesión en el sistema,para ello utilizaremos el segundo usuario registrado abajo en la imagen. Recuerde siempre que el usuario debe estar activo para poder ingresar.</h3>
+    <p>Para su primer ingreso al sistema, los desarrolladores le otorgan un usuario administrador, con el que es recomendable que cree otro usuario secundario para evitar casos de pérdida de acceso al software por falta de credenciales.</p>
+    </section>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/c2fac280-d975-4be1-8f3a-b5b9329ff984/4be458c7-517c-4d34-9ab4-dca8a07ad9ad.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=30&mark-y=139&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTM4Jmg9NzgmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Veamos como Iniciar Sesión en el sistema,para ello utilizaremos el segundo usuario registrado abajo en la imagen. Recuerde siempre que el usuario debe estar activo para poder ingresar." />
+    </div>
+    
+    <div><h3>21. En la página de "Iniciar Sesión", digite en cada campo el correo y la contraseña respectivamente.</h3>
+    <p>Si las credenciales ingresadas no cumplen con la validación, verá mensajes de error que le ayudarán a corregirlos para poder autenticarse.</p>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/234d2ba8-001f-4247-94b9-426dbd304ead/41bd0310-2171-4ad2-9513-c44762b98f9a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En la página de &quot;Iniciar Sesión&quot;, digite en cada campo el correo y la contraseña respectivamente." />
+    </div>
+    
+    <div><h3>22. Si ha diligenciado los campos, presione con el botón izquierdo del ratón en "Entrar". Para validar las credenciales e ingresar.</h3>
+    <p>Si las credenciales ingresadas no cumplen con la validación, verá mensajes de error que le ayudarán a corregirlos.</p>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/317f9e8b-5e79-47db-97ea-75e4b2c6dd30/559eeef4-161b-45f8-8a8a-613404338576.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4992&fp-y=0.7996&fp-z=1.9976&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=360&mark-y=440&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00ODEmaD0xMTMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si ha diligenciado los campos, presione con el botón izquierdo del ratón en &quot;Entrar&quot;. Para validar las credenciales e ingresar." />
+    </div>
+    
+    <div><h3>23. Si hubo éxito, habrá ingresado a Dashboard con una sesión y las credenciales de su perfil.</h3>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/41c223c3-5588-49cb-a558-0f82907c1ce0/12cbd950-fe88-456b-98bd-47686dcce74e.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=927&mark-y=7&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNjAmaD02OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si hubo éxito, habrá ingresado a Dashboard con una sesión y las credenciales de su perfil." />
+    </div>
+    
+    <div><h3>24. Si desea modificar su contraseña, presione con el botón izquierdo del ratón en la zona señalada abajo.</h3>
+    <p>Luego seleccione "Mi Perfil".</p>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/9ad03c55-ee89-4f49-9a1f-bdea70e2492a/d5887227-5a6b-4321-ac28-b8c945d90b57.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.9060&fp-y=0.1200&fp-z=2.8880&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=574&mark-y=220&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MDEmaD0xMDUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si desea modificar su contraseña, presione con el botón izquierdo del ratón en la zona señalada abajo." />
+    </div>
+    
+    <div><h3>25. Habrá ingresado a "Mi Perfil" donde podrá ver información correspondiente a su usuario en el sistema.</h3>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/4b543ab2-900a-46e7-b559-493c6c37d565/b48fe022-97b2-485b-8368-6359b5532794.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5907&fp-y=0.3860&fp-z=1.2692&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=29&mark-y=141&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTQxJmg9NDg2JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Habrá ingresado a &quot;Mi Perfil&quot; donde podrá ver información correspondiente a su usuario en el sistema." />
+    </div>
+    
+    <div><h3>26. Para cambiar la contraseña, presione en "Cambiar Contraseña". Se desplegará un formulario.</h3>
+    <p>Si desea cambiar su nombre de usuario o correo electrónico, debe contactar a un administrador.</p>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/bda772a1-1a2b-472d-8a0d-b69e185fe5be/65c25c0a-4e12-466a-b7ca-1980df3666b7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.7282&fp-y=0.4802&fp-z=2.7819&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=351&mark-y=327&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00OTcmaD0xMzAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Para cambiar la contraseña, presione en &quot;Cambiar Contraseña&quot;. Se desplegará un formulario." />
+    </div>
+    
+    <div><h3>27. Digite una contraseña nueva y repítala en el campo contiguo. Luego seleccione "Guardar"</h3>
+    <p>Si lo ingresado cumple con las validaciones, se cambiará la contraseña de acceso (debe ingresar una contraseña con una mayúscula, un número y 8 caracteres, también deben coincidir ambas contraseñas ingresadas).</p>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/e8c2e2b9-3edf-4d0f-848e-0b73a90b663a/cd3de10a-40e2-42e8-bb42-e63c6b7472c7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=274&mark-y=461&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz02ODYmaD0xODMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Digite una contraseña nueva y repítala en el campo contiguo. Luego seleccione &quot;Guardar&quot;" />
+    </div>
+    
+    <div><section id="modpsw"><h3>28. Recuperación de Contraseña: Si ha olvidado su contraseña, presione con el botón izquierdo del ratón en "¿Olvidaste tu contraseña?".</h3>
+    </section>
+        <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/30f46789-c86a-403a-8317-d2ee9d653946/c6070e92-6b22-40c5-964e-891dd6803b63.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3811&fp-y=0.7406&fp-z=2.1868&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=394&mark-y=385&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MTMmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Recuperación de Contraseña: Si ha olvidado su contraseña, presione con el botón izquierdo del ratón en &quot;¿Olvidaste tu contraseña?&quot;." />
+    </div>
+    
+    <div><h3>29. Se habrá desplegado una ventana flotante. Primeramente, debe ingresar la dirección de correo electrónico de su usuario del sistema.</h3>
+    <p>Cuando lo ingrese, presione en "Enviar". Se enviará un correo electrónico con un código de recuperación.</p>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/ce935c54-f8a7-4913-ab8e-20f96641a9e1/bbae7653-acec-4a56-9add-9fcd06bd57dd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4996&fp-y=0.5275&fp-z=1.6372&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=295&mark-y=372&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MTEmaD04NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Se habrá desplegado una ventana flotante. Primeramente, debe ingresar la dirección de correo electrónico de su usuario del sistema." />
+    </div>
+    
+    <div><h3>30. El correo enviado a su dirección, será uno similar a este. Memorice el código señalado abajo.</h3>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/73ccb08d-dbb6-48a5-a0fc-1e8f91968465/7eb752e7-bfe5-4228-9f42-e33531869153.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="El correo enviado a su dirección, será uno similar a este. Memorice el código señalado abajo." />
+    </div>
+    
+    <div><h3>31. Digite aquí el código que le fue enviado.</h3>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/a5227c4b-7b70-45a0-8c3b-77b2fe4dce61/1fb35867-3b74-4199-96e4-a4839fbaf286.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4616&fp-y=0.6189&fp-z=2.5029&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=451&mark-y=359&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yOTkmaD0xMTAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Digite el código que le fue enviado" />
+    </div>
+    
+    <div><h3>32. Podrá cambiar su contraseña diligenciando una nueva y repitiéndola en el campo inferior. Una vez lo haga, presione con el botón izquierdo del ratón en "Aceptar".</h3>
+    <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/fafdd717-f7d7-415f-b400-b573c5acf99b/48118e3b-fd2e-4b14-b195-2d2c50680958.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4996&fp-y=0.4994&fp-z=1.3926&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=297&mark-y=163&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02MDYmaD01MDImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Podrá cambiar su contraseña diligenciando una nueva y repitiéndola en el campo inferior. Una vez lo haga, presione con el botón izquierdo del ratón en &quot;Aceptar&quot;." />
+    </div>
+    
+    <div><h3>33. Si lo ingresado cumple con la validación (una mayúscula, un número y 8 caracteres) y además coinciden ambas contraseñas, se cambiará su contraseña de acceso y verá el siguiente aviso:</h3>
+        <img src="https://images.tango.us/workflows/a0f4cace-941d-4ae3-aef8-5e1d01e1af0b/steps/ad8d4c09-9f22-4e50-985e-8a1dd4b83c18/8d7600f4-491c-4a02-828a-a04a8f5bf218.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=200&mark-y=72&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03NzYmaD02ODAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si lo ingresado cumple con la validación (una mayúscula, un número y 8 caracteres) y coinciden ambas contraseñas, se cambiará su contraseña de acceso y verá el siguiente aviso." />
+    </div>
+
+<br/>
+<div class="custom-divider"></div>
+<hr/>
+
+<section id="control">
+<h1><a>Control de Acceso al Sistema</a></h1>
+<div><p>Aquí podrá conocer acerca de cómo puede controlar el acceso de otras personas al sistema y brindarle únicamente los permisos que usted considere.</p></div>
+</section>
+
+<div><h2><a href="http://127.0.0.1:8000/admin/users/Roles/">Acceso al Entorno</a></h2></div>
+
+<div><h3>1. Para acceder al entorno "Gestión de Roles", presione con el botón izquierdo del ratón en "Usuarios" y luego presione "Roles y Permisos".</h3>
+<p>Recuerde que el rol de su usuario en el sistema, debe tener habilitados los permisos de acceso al "Módulo de Usuarios" para poder acceder a ambos entornos abajo mostrados.</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/c2d3606f-a84a-41c0-81ff-1bcd6f5854ad/11fd66ad-abe1-412c-9fcd-5b9bc2156567.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.0947&fp-y=0.4031&fp-z=2.1926&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=44&mark-y=344&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MTEmaD05OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Para acceder al entorno &quot;Gestión de Roles&quot;, presione con el botón izquierdo del ratón en &quot;Usuarios&quot; y luego presione &quot;Roles y Permisos&quot;." />
+</div>
+
+
+<div><section id="arole"><h3>2. Agregar Rol: Para agregar un rol al sistema, puede hacerlo presionando con el botón izquierdo del ratón en "Agregar Rol", aparecerá una ventana flotante.</h3>
+</section>
+    <img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/ca6fce09-ee16-4e06-983b-34bf9fb4c172/7bb4aa96-cdfb-4825-afc4-7b3b0cee9296.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.2919&fp-y=0.3232&fp-z=2.2868&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=412&mark-y=321&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zNzcmaD0xNDUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Agregar Rol: Para agregar un rol al sistema, puede hacerlo presionando con el botón izquierdo del ratón en &quot;Agregar Rol&quot;, aparecerá una ventana flotante." />
+</div>
+
+<div><h3>3. En el campo "Nombre del Rol", añada un nombre que considere pertinente, luego, puede asignarle permisos de acceso a cualquiera de los módulos que considere pueden entrar los usuarios a los que asigne el respectivo rol.</h3>
+<p>Como ve en la imagen, para este rol hemos brindado acceso al "Módulo de Clientes" y al "Módulo de Proveedores".</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/dbe1ace4-693a-47d8-a978-83624a9d5587/2b35c551-a41d-4361-9431-a2440e16cbce.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=73&mark-y=47&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDIzJmg9MTIwMCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En el campo &quot;Nombre del Rol&quot;, añada un nombre que considere pertinente, luego, puede asignarle permisos de acceso a cualquiera de los módulos que considere pueden entrar los usuarios a los que asigne el respectivo rol." />
+</div>
+
+<div><h3>4. Una vez completado el formulario, presione el botón "Guardar Rol".</h3>
+<p>Será redirigido a "Gestión de Roles".</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/1fa3a170-f795-4d94-967f-1623530f6a5f/5c3022fa-dbcc-4b77-bc7e-b2cc8cb5f2e6.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=723&mark-y=479&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODImaD0xMTYmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Una vez completado el formulario, presione el botón &quot;Guardar Rol&quot;." />
+</div>
+
+<div><h3>5. Aquí verá el rol que acaba de crear y la cantidad de permisos que le ha brindado.</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/f634206b-652f-4402-8875-8cbbf170ba78/e58b6adc-644a-48ee-9130-925f5e0a0020.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=45&mark-y=242&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTA0Jmg9NzQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Aquí verá el rol que acaba de crear y la cantidad de permisos que le ha brindado." />
+</div>
+
+
+<div><h3>6. Detalle: Para ver en detalle que permisos ha habilitado para el rol, presione con el botón izquierdo del ratón en el botón azul del ojo "Ver Permisos".</h3>
+<p>Se abrirá una ventana flotante.</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/ca90b588-a080-45aa-bf5c-8ad91f189d8b/88fa9ea0-41c2-4a37-93ea-1ac44595df8a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8476&fp-y=0.5991&fp-z=2.8518&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=618&mark-y=345&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMjEmaD0xMTYmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Detalle: Para ver en detalle que permisos ha habilitado para el rol, presione con el botón izquierdo del ratón en el botón azul del ojo &quot;Ver Permisos&quot;." />
+</div>
+
+<div><h3>7. Puede ver como están habilitados "Clientes" y "Proveedores" (Verde) y los demás inhabilitados (Rojo).</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/1030abd7-2513-499b-a9c2-5a223cded5be/8b83af07-e58b-4100-95f9-500ac9787ce1.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.4994&fp-z=1.5371&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=277&mark-y=237&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02NDcmaD0zMzImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Puede ver como están habilitados &quot;Clientes&quot; y &quot;Proveedores&quot; (Verde) y los demás inhabilitados (Rojo)." />
+</div>
+
+<div><h3 id="behavior">8. Prueba de Acceso: A continuación veremos cómo se comporta el control de acceso, para ello, hemos cambiado el rol de el usuario "Mateo", por el que agregamos anteriormente.</h3>
+    <img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/8a63f66f-13ce-4b1c-bdbd-a4c6bdec9805/86e6bbdc-f4a0-475e-bc49-bd01937adfc9.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5925&fp-y=0.6112&fp-z=1.2913&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=32&mark-y=333&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0xMTM3Jmg9MTQwJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Prueba de Acceso: A continuación veremos cómo se comporta el control de acceso, para ello, hemos cambiado el rol de el usuario &quot;Mateo&quot;, por el que agregamos anteriormente." />
+</div>
+
+<div><h3>9. Hemos iniciado sesión con el usuario "Mateo" que tiene el rol de Visitante, el cual tiene permisos de acceso a "Clientes" y "Proveedores", vamos a intentar acceder a cualquier otro módulo al que no le hayamos brindado acceso, en este caso "Usuarios".</h3>
+    <img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/ecce3e4a-0654-47d8-a35d-65d7dba7c45d/e450ce44-00a7-40ce-86f5-7664ebc65bda.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.0965&fp-y=0.3139&fp-z=2.1785&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=44&mark-y=353&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MTYmaD0xMDEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Hemos iniciado sesión con el usuario &quot;Mateo&quot; que tiene el rol de Visitante, el cual tiene permisos de acceso a &quot;Clientes&quot; y &quot;Proveedores&quot;, vamos a intentar acceder a cualquier otro módulo al que no le hayamos brindado acceso, en este caso &quot;Usuarios&quot;." />
+</div>
+
+<div><h3>10. Verá que se efectivamente, se ha bloqueado el acceso de este usuario al "Módulo de Usuarios". Lo mismo sucederá con el resto de módulos no habilitados.</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/e83ad6d3-a828-4466-94ff-48941c41079e/ac046d45-0003-4be9-a0b8-93fab0c18235.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Verá que se efectivamente, se ha bloqueado el acceso de este usuario al &quot;Módulo de Usuarios&quot;. Lo mismo sucederá con el resto de módulos no habilitados." />
+</div>
+
+<div id="modrole"><h3>11. Modificar Rol: Si desea modificar algún rol, presione en el botón del lápiz, que corresponda a dicho rol.</h3>
+<p>Se abrirá una ventana flotante similar a la de "Agregar Rol".</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/43c92398-7458-4f4a-a620-c1ea29399b69/1bb2ec61-1ae4-46a7-b44d-00687b0e1b84.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=867&mark-y=222&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01NCZoPTU1JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Modificar Rol: Si desea modificar algún rol, presione en el botón del lápiz, que corresponda a dicho rol." />
+</div>
+
+<div><h3>12. Aquí, modifique lo que considere. Puede quitar o brindar más permisos, así como cambiar el nombre del rol.</h3>
+<p>Cuando haya finalizado los cambios, presione con el botón izquierdo del ratón en "Modificar Rol", el botón abajo señalado.</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/0434935b-db49-4c49-aaf2-c3d7e1b522ce/06a8f115-c68f-405e-ae0f-03ac2bf9cef8.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=130&mark-y=32&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz05NTAmaD0xMTE0JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Aquí, modifique lo que considere. Puede quitar o brindar más permisos, así como cambiar el nombre del rol." />
+</div>
+
+<div id="delrole"><h3>13. Eliminación: Si desea eliminar un rol del sistema, presione el botón rojo del recipiente de basura que corresponda al rol que quiere descartar.</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/ecd973b6-3ac8-442d-9b85-ec0fe5eb1683/b58b28b4-6831-4f41-839e-13dc6d1694ad.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1040&mark-y=272&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MSZoPTUzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Eliminación: Si desea eliminar un rol del sistema, presione el botón rojo del recipiente de basura que corresponda al rol que quiere descartar." />
+</div>
+
+<div><h3>14. Verá una ventana como esta, alertándolo de que en caso de haber usuarios con el rol que va a eliminar, estos serán inhabilitados y no podrán acceder al sistema, debido a que no contará con un rol.</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/bb992e37-b877-44da-b9f7-52bc9335673c/1da3d2c7-a3ca-4f95-ad53-74490e8591c0.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=75&mark-y=50&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDQyJmg9Nzc1JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Verá una ventana como esta, alertándolo de que en caso de haber usuarios con el rol que va a eliminar, estos serán inhabilitados y no podrán acceder al sistema, debido a que no contará con un rol." />
+</div>
+
+<div><h3>15. Efectivamente, si habían usuarios con el rol que eliminó, habrán sido inhabilitados y su registro de rol dirá "Sin rol".</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/71bacdb8-104c-4720-b69d-00b037d7c7b0/cc239501-7933-4f47-85f1-f36aea2f3512.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=39&mark-y=188&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTAwJmg9NzImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Efectivamente, si habían usuarios con el rol que eliminó, habrán sido inhabilitados y su registro de rol dirá &quot;Sin rol&quot;." />
+</div>
+
+<div><h3>16. Si intenta activar nuevamente al usuario sin rol, verá esta ventana flotante.</h3>
+<p>Si presiona "Confirmar" será redirigido a "Modificar Usuario", donde debe asignar algún rol existente para ese usuario.</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/8eeb52d2-4570-4b3e-b00f-363281c57267/d99c14d0-f070-407b-aac6-948c56cf44e6.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5006&fp-z=1.3552&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=234&mark-y=143&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz03MzEmaD01MjEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si intenta activar nuevamente al usuario sin rol, verá esta ventana flotante." />
+</div>
+
+<div><h3>17. Aquí debe seleccionar un rol existente.</h3>
+<p>Una vez lo haya hecho, presione "Guardar".</p>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/f3e778f1-1a7b-4a9c-9b35-b9a84b52d663/1597b1ed-9cb9-48a1-800e-76041d87b32c.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=194&mark-y=282&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04MDUmaD0xNzQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Aquí debe seleccionar un rol existente." />
+</div>
+
+<div><h3>18. El usuario volverá a activarse automáticamente y podrá nuevamente ingresar al sistema.</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/15264a74-ac1b-41cd-9d2d-98877b2f5c8e/1e080115-439f-4c28-bd2d-c24a13faec8f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=662&mark-y=187&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xOTkmaD03OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="El usuario volverá a activarse automáticamente y podrá nuevamente ingresar al sistema." />
+</div>
+
+<div><h3>19. Si no ha iniciado sesión e intenta ingresar a algún lugar interno del sistema, no podrá.</h3>
+<img src="https://images.tango.us/workflows/215b2fdb-cb75-4eb6-96da-d9755466584e/steps/5d5ca561-bccd-4db6-b96e-433816f1a19b/f9fd24ec-7ec0-45ea-91b2-9679e6dc5308.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si no ha iniciado sesión e intenta ingresar a algún lugar interno del sistema, no podrá." />
 </div>
 
 <br/>
 <div class="custom-divider"></div>
 <hr/>
 
-<h1 id="mcustomer"><a target='_blank'>Gestionando la Información de los Clientes</a></h1>
+<h1 id="mcustomer"><a>Gestionando la Información de los Clientes</a></h1>
 <div><p>Esta guía detalla como administrar la información de los clientes en el sistema, estos datos podrá utilizarlos externamente para gestionar los pedidos de los clientes y envíos.</p></div>
 
 <div><h2><a href="http://127.0.0.1:8000/admin/clients/">Acceso al Módulo</a></h2></div>
@@ -214,83 +382,83 @@
 <div class="custom-divider"></div>
 <hr/>
 
-<h1 id="mprovider"><a target='_blank'>Gestionando la Información de los Proveedores</a></h1>
-<div><p>Aquí puede averiguar sobre como puedes administrar la información de proveedores de los productos.</p></div>
+<h1 id="mprovider"><a>Gestionando la Información de los Proveedores</a></h1>
+<div><p>Aquí puede averiguar sobre como puede administrar la información de proveedores de los productos.</p></div>
 
 <div><h2><a href="http://127.0.0.1:8000/admin/providers/">Acceso al Módulo</a></h2></div>
 
 <div><h3>1. En la barra lateral izquierda, presione con el botón izquierdo del ratón en "Proveedores" y a continuación, presione en "Gestión de Proveedores".</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/a71cdec2-f63b-4fcb-8064-2c46127b6372/26c11c99-e548-47bd-a9b8-07f393c335d7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=31&mark-y=672&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MDMmaD0xNTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En la barra lateral izquierda, presione con el botón izquierdo del ratón en &quot;Proveedores&quot; y a continuación, presione en &quot;Gestión de Proveedores&quot;." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/a71cdec2-f63b-4fcb-8064-2c46127b6372/26c11c99-e548-47bd-a9b8-07f393c335d7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=31&mark-y=672&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MDMmaD0xNTkmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En la barra lateral izquierda, presione con el botón izquierdo del ratón en &quot;Proveedores&quot; y a continuación, presione en &quot;Gestión de Proveedores&quot;." />
 </div>
 
 <div><h3 id="aprovider">2. Una vez dentro, si desea registrar un nuevo proveedor, presione con el botón izquierdo del ratón, en "Agregar Proveedor".</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2228ba05-c2ef-4671-ab9f-23e8675a7e3b/32dc6991-0b1b-474c-9f82-49018f9bd17a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3670&fp-y=0.2935&fp-z=1.9915&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=358&mark-y=348&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00ODMmaD0xMzMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez dentro, si desea registrar un nuevo proveedor, presione con el botón izquierdo del ratón, en &quot;Agregar Proveedor&quot;." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2228ba05-c2ef-4671-ab9f-23e8675a7e3b/32dc6991-0b1b-474c-9f82-49018f9bd17a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3670&fp-y=0.2935&fp-z=1.9915&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=358&mark-y=348&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00ODMmaD0xMzMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Una vez dentro, si desea registrar un nuevo proveedor, presione con el botón izquierdo del ratón, en &quot;Agregar Proveedor&quot;." />
 </div>
 
 <div><h3>3. En el formulario, diligencie al menos los campos marcados con asterisco (*).</h3>
 <p>Los campos sin (*) son opcionales, rellénelos si así lo considera.</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/282467f1-0736-4e67-a549-434da947a48a/587fa185-f4fb-4c05-be79-4b66f09d9943.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el formulario, diligencie al menos los campos marcados con asterisco (*)." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/282467f1-0736-4e67-a549-434da947a48a/587fa185-f4fb-4c05-be79-4b66f09d9943.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En el formulario, diligencie al menos los campos marcados con asterisco (*)." />
 </div>
 
 <div><h3>4. Para los campos opcionales "Tipo de Documento" y "Número de Identificación" tenga en cuenta si el proveedor es una persona o si se trata de una empresa.</h3>
 <p>En caso de que sea una empresa, presione en el campo donde dice "Documento", se desplegará una lista, escoja el tipo de documento "NIT" y digite el número correspondiente, en el campo contiguo.</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/58224612-2f2e-46b1-b8cc-bae8dfb2391c/8bb8fddd-745d-4b1b-9855-8dd9b34519fd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=39&mark-y=5&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTI3Jmg9MjExJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Para los campos opcionales &quot;Tipo de Documento&quot; y &quot;Número de Identificación&quot; tenga en cuenta si el proveedor es una persona o si se trata de una empresa." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/58224612-2f2e-46b1-b8cc-bae8dfb2391c/8bb8fddd-745d-4b1b-9855-8dd9b34519fd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=39&mark-y=5&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTI3Jmg9MjExJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Para los campos opcionales &quot;Tipo de Documento&quot; y &quot;Número de Identificación&quot; tenga en cuenta si el proveedor es una persona o si se trata de una empresa." />
 </div>
 
 <div><h3>5. En el campo "Información Adicional", puede añadir datos extra sobre los proveedores.</h3>
 <p>Por ejemplo, puede escribir sobre el tipo de productos que ofrecen.</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/4032b682-9e60-4c5a-a0f9-817726a66a3f/eed03dd1-a528-4984-83ef-f70dea09af40.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En el campo &quot;Información Adicional&quot;, puede añadir datos extra sobre los proveedores." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/4032b682-9e60-4c5a-a0f9-817726a66a3f/eed03dd1-a528-4984-83ef-f70dea09af40.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En el campo &quot;Información Adicional&quot;, puede añadir datos extra sobre los proveedores." />
 </div>
 
 <div><h3>6. Una vez haya diligenciado al menos los campos obligatorios y todo esté en orden, presione con el botón izquierdo del ratón en "Guardar" para validar la información y registrar al nuevo proveedor.</h3>
 <p>Será redirigido a "Gestión de Proveedores".</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/059c6b62-b608-4d60-8913-cf340e5340c4/a149fbc9-f72c-48c6-9c94-5859e6d7e27d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=461&mark-y=226&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODEmaD0xNDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una vez haya diligenciado al menos los campos obligatorios y todo esté en orden, presione con el botón izquierdo del ratón en &quot;Guardar&quot; para validar la información y registrar al nuevo proveedor." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/059c6b62-b608-4d60-8913-cf340e5340c4/a149fbc9-f72c-48c6-9c94-5859e6d7e27d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=461&mark-y=226&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODEmaD0xNDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Una vez haya diligenciado al menos los campos obligatorios y todo esté en orden, presione con el botón izquierdo del ratón en &quot;Guardar&quot; para validar la información y registrar al nuevo proveedor." />
 </div>
 
 <div><h3>7. Luego de registrar exitosamente a un proveedor, irá al entorno "Gestión de Proveedores", donde podrá visualizar el registro del nuevo proveedor.</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2776f45b-b1cc-4a29-a20f-74645b66a73e/2633fa11-edca-44f0-9d4c-c055eea7cb5f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDg0Jmg9NzUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego de registrar exitosamente a un proveedor, irá al entorno &quot;Gestión de Proveedores&quot;, donde podrá visualizar el registro del nuevo proveedor." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2776f45b-b1cc-4a29-a20f-74645b66a73e/2633fa11-edca-44f0-9d4c-c055eea7cb5f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDg0Jmg9NzUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Luego de registrar exitosamente a un proveedor, irá al entorno &quot;Gestión de Proveedores&quot;, donde podrá visualizar el registro del nuevo proveedor." />
 </div>
 
 <div><h3 id="statprovider">8. Por defecto, el estado de un nuevo registro es "Activo". En caso de que haya prescindido de los servicios de algún proveedor, podrá desactivarlo para que no interfiera en nuevos registros de compra.</h3>
 <p>Para cambiar de estado un registro, presione sobre el botón de la columna "Estado", que corresponda al registro que desea modificar el estado.</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/c9d3d6aa-4986-4229-bdb4-891a9f8dea50/e19a12cc-1d50-43fc-8965-b2f993b0e25b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=802&mark-y=175&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTYmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Por defecto, el estado de un nuevo registro es &quot;Activo&quot;. En caso de que haya prescindido de los servicios de algún proveedor, podrá desactivarlo para que no interfiera en nuevos registros de compra." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/c9d3d6aa-4986-4229-bdb4-891a9f8dea50/e19a12cc-1d50-43fc-8965-b2f993b0e25b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=802&mark-y=175&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTYmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Por defecto, el estado de un nuevo registro es &quot;Activo&quot;. En caso de que haya prescindido de los servicios de algún proveedor, podrá desactivarlo para que no interfiera en nuevos registros de compra." />
 </div>
 
 <div><h3>9. Luego, presione con el botón izquierdo del ratón en "Confirmar".</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dd1069d0-d734-43f5-9188-105002bf95e7/f05e2860-0101-406b-9cb1-64f173dcd2de.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=342&mark-y=297&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzMmaD0xMjMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Luego, presione con el botón izquierdo del ratón en &quot;Confirmar&quot;." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dd1069d0-d734-43f5-9188-105002bf95e7/f05e2860-0101-406b-9cb1-64f173dcd2de.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=342&mark-y=297&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzMmaD0xMjMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Luego, presione con el botón izquierdo del ratón en &quot;Confirmar&quot;." />
 </div>
 
 <div><h3>10. El proveedor estará Inactivo y pasará a un segundo plano en la web.</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/8b40e64e-e855-488c-8294-575991d2ebd8/8b8ca860-ada2-4c37-95a7-6dfb44973ff7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=812&mark-y=8&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTUmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="El proveedor estará Inactivo y pasará a un segundo plano en la web." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/8b40e64e-e855-488c-8294-575991d2ebd8/8b8ca860-ada2-4c37-95a7-6dfb44973ff7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=812&mark-y=8&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTUmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="El proveedor estará Inactivo y pasará a un segundo plano en la web." />
 </div>
 
 <div><h3>11. Puede visualizar a detalle la información de cada registro, presionando el botón azul del ojo, a continuación señalado.</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/732af0d6-186f-477d-8927-d0e2f24887c6/f43ff153-1a48-4034-86e8-f1f93cdd9a97.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1087&mark-y=13&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MCZoPTY4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Puede visualizar a detalle la información de cada registro, presionando el botón azul del ojo, a continuación señalado." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/732af0d6-186f-477d-8927-d0e2f24887c6/f43ff153-1a48-4034-86e8-f1f93cdd9a97.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1087&mark-y=13&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MCZoPTY4JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Puede visualizar a detalle la información de cada registro, presionando el botón azul del ojo, a continuación señalado." />
 </div>
 
 <div><h2><a href="http://127.0.0.1:8000/admin/providers/"># Proveedores</a></h2></div>
 
 <div><h3>12. Se desplegará una ventana flotante con toda la información del registro.</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/b995e30a-e74c-45df-bf24-050dd13a233e/389fcda7-c3b9-4f6a-b06c-7b52bfbb6565.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4958&fp-y=0.4989&fp-z=1.4215&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=256&mark-y=194&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02ODgmaD00NDEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Se desplegará una ventana flotante con toda la información del registro." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/b995e30a-e74c-45df-bf24-050dd13a233e/389fcda7-c3b9-4f6a-b06c-7b52bfbb6565.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4958&fp-y=0.4989&fp-z=1.4215&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=256&mark-y=194&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz02ODgmaD00NDEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Se desplegará una ventana flotante con toda la información del registro." />
 </div>
 
 <div><h3 id="modprovider">13. Si desea actualizar la información de un proveedor, para modificar el registro presione en el botón del lápiz "Editar", a continuación señalado:</h3>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2fb2055f-aa7c-4ef8-8a62-20ebae0f7334/dce716b2-3aa4-443b-8e3e-f026ab91f59f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1007&mark-y=11&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03NiZoPTcyJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Si desea actualizar la información de un proveedor, para modificar el registro presione en el botón del lápiz &quot;Editar&quot;, a continuación señalado:" />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/2fb2055f-aa7c-4ef8-8a62-20ebae0f7334/dce716b2-3aa4-443b-8e3e-f026ab91f59f.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1007&mark-y=11&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03NiZoPTcyJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Si desea actualizar la información de un proveedor, para modificar el registro presione en el botón del lápiz &quot;Editar&quot;, a continuación señalado:" />
 </div>
 
 <div><h3>14. Será redireccionado a un formulario como este, similar al de "Agregar Proveedor".</h3>
 <p>Modifique los datos de los campos que desee actualizar y presione en el botón "Guardar".</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/68e095d6-8fc1-43b1-8f02-6186c14b1ef5/6cbb75d9-7dcd-4706-9359-dd6d6d99b158.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MzAmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Será redireccionado a un formulario como este, similar al de &quot;Agregar Proveedor&quot;." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/68e095d6-8fc1-43b1-8f02-6186c14b1ef5/6cbb75d9-7dcd-4706-9359-dd6d6d99b158.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=62&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MzAmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Será redireccionado a un formulario como este, similar al de &quot;Agregar Proveedor&quot;." />
 </div>
 
 <div><h3 id="bprovider">15. En caso de que tenga muchos registros y necesite encontrar a uno en particular, utilice la barra de búsqueda.</h3>
 <p>Puede hallar un proveedor utilizando cualquiera de sus datos, ya sea su nombre, su teléfono o su correo.</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/78623405-aa66-4191-b4f1-7559aef7a801/29b3c01a-5af0-4c28-a6d7-6470108b4eaf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=920&mark-y=31&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTEmaD01MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="En caso de que tenga muchos registros y necesite encontrar a uno en particular, utilice la barra de búsqueda." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/78623405-aa66-4191-b4f1-7559aef7a801/29b3c01a-5af0-4c28-a6d7-6470108b4eaf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=920&mark-y=31&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTEmaD01MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="En caso de que tenga muchos registros y necesite encontrar a uno en particular, utilice la barra de búsqueda." />
 </div>
 
 <div><h3>16. Una sola página de la tabla no mostrará la totalidad de registros existentes, la página limitará el número de registros que puede visualizar y creará más "Páginas".</h3>
 <p>Estas páginas aparecerán en la parte inferior derecha (abajo señalada) y ahí podrá desplazarse entre los proveedores.</p>
-<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dfb7bc93-f7a0-40d0-bfe4-4a6b671089b3/00ba5eba-fbbf-48e1-b858-574ab4165743.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8701&fp-y=0.9394&fp-z=4.0000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=159&mark-y=525&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz04ODMmaD0yMDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="Una sola página de la tabla no mostrará la totalidad de registros existentes, la página limitará el número de registros que puede visualizar y creará más &quot;Páginas&quot;." />
+<img src="https://images.tango.us/workflows/965d4850-f0b3-4d7a-abb1-2cb34e668134/steps/dfb7bc93-f7a0-40d0-bfe4-4a6b671089b3/00ba5eba-fbbf-48e1-b858-574ab4165743.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8701&fp-y=0.9394&fp-z=4.0000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=159&mark-y=525&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz04ODMmaD0yMDQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="100%" alt="Una sola página de la tabla no mostrará la totalidad de registros existentes, la página limitará el número de registros que puede visualizar y creará más &quot;Páginas&quot;." />
 </div>
 
 <br/>
@@ -303,7 +471,7 @@
     </div>
     <div class="container" style="width:70%">
         <div class="card shadow">
-            <div class="card-header" style="background-color:red">
+            <div class="card-header" style="background-color:black">
                 <h6 class="text-center" style="margin-top:5px; color:white; font-weight:bold; font-size:25px">Secciones</h6>
             </div>
             <ul class="list-group" style="border-radius:0;">
@@ -314,37 +482,37 @@
                         <div class="custom-divider"></div>
                         
                         <div class="bg-white py-2 collapse-inner rounded text-center">
-                            <a onclick="scrollToSection('musers')" class="collapse-item" style="font-weight:bold;">Gestión de los Usuarios</a>
+                            <a class="scroll-to-section" data-target-section="musers" class="collapse-item" style="font-weight:bold;">Gestión de los Usuarios</a>
                         </div>
                     <ol>
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a onclick="scrollToSection('auser')" class="collapse-item">Agregar Nuevo Usuario</a>
+                                <a class="scroll-to-section" data-target-section="auser" class="collapse-item">Agregar Nuevo Usuario</a>
                             </div>
                         </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a onclick="scrollToSection('moduser')" class="collapse-item">Modificar un Usuario</a>
+                            <a class="scroll-to-section" data-target-section="moduser" class="collapse-item">Modificar un Usuario</a>
                         </div>
                     </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a onclick="scrollToSection('statuser')" class="collapse-item">Cambiar Estado de un Usuario</a>
+                            <a class="scroll-to-section" data-target-section="statuser" class="collapse-item">Cambiar Estado de un Usuario</a>
                         </div>
                     </li>
 
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a onclick="scrollToSection('sproviders')" class="collapse-item">Inicio de Sesión</a>
+                            <a class="scroll-to-section" data-target-section="init" class="collapse-item">Inicio de Sesión</a>
                         </div>
                     </li>
 
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a href="#sproviders" class="collapse-item">Recuperación de Contraseña</a>
+                            <a class="scroll-to-section" data-target-section="modpsw" class="collapse-item">Recuperación de Contraseña</a>
                         </div>
                     </li>
 
@@ -355,16 +523,28 @@
                     <center><a href="#section2" data-toggle="collapse" data-target="#collapseSec2" aria-expanded="false">Control de Acceso al Sistema</a></center>
                     <div id="collapseSec2" class="collapse">
                         <div class="custom-divider"></div>
-                        
+                        <div class="bg-white py-2 collapse-inner rounded text-center">
+                            <a class="scroll-to-section" data-target-section="control" class="collapse-item" style="font-weight:bold ;">Gestión de Roles - Permisos</a>
+                        </div>
                         <ol>
                             <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{% url 'proveedores' %}">Manejo de Roles</a>
+                            <a class="scroll-to-section" data-target-section="arole" class="collapse-item">Agregar Rol</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" href="{% url 'proveedores' %}">Manejo de Permisos de Acceso</a>
+                            <a class="scroll-to-section" data-target-section="modrole" class="collapse-item">Modificar Rol</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="scroll-to-section" data-target-section="delrole" class="collapse-item">Eliminar Rol</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="scroll-to-section" data-target-section="behavior" class="collapse-item">Prueba de Acceso</a>
                         </div>
                     </li>
                 </ol>
@@ -375,29 +555,29 @@
                     <div id="collapseSec3" class="collapse" aria-labelledby="headingTwo">
                         <div class="custom-divider"></div>
                         <div class="bg-white py-2 collapse-inner rounded text-center">
-                            <a href="#mcustomer" class="collapse-item" style="font-weight:bold ;">Gestión de los Clientes</a>
+                            <a class="scroll-to-section" data-target-section="mcustomer" class="collapse-item" style="font-weight:bold ;">Gestión de los Clientes</a>
                         </div>
                         <ol>
                         <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" onclick="scrollToSection('acustomer')">Agregar Nuevo Cliente</a>
+                            <a class="scroll-to-section" data-target-section="acustomer" class="collapse-item">Agregar Nuevo Cliente</a>
                         </div>
                         </li>
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" onclick="scrollToSection('modcustomer')">Modificar un Cliente</a>
+                                <a class="scroll-to-section" data-target-section="modcustomer" class="collapse-item">Modificar un Cliente</a>
                             </div>
                         </li>
 
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" onclick="scrollToSection('statcustomer')">Cambiar el Estado de un Cliente</a>
+                                <a class="scroll-to-section" data-target-section="statcustomer" class="collapse-item">Cambiar el Estado de un Cliente</a>
                             </div>
                         </li>
 
                         <li>
                             <div class="bg-white py-2 collapse-inner rounded">
-                                <a class="collapse-item" onclick="scrollToSection('bcustomer')">Buscar Clientes</a>
+                                <a class="scroll-to-section" data-target-section="bcustomer" class="collapse-item">Buscar Clientes</a>
                             </div>
                         </li>
                         </ol>
@@ -409,27 +589,27 @@
                     <div id="collapseSec4" class="collapse" aria-labelledby="headingTwo">
                         <div class="custom-divider"></div>
                         <div class="bg-white py-2 collapse-inner rounded text-center">
-                            <a href="#mcustomer" class="collapse-item" style="font-weight:bold ;">Gestión de los Proveedores</a>
+                            <a class="scroll-to-section" data-target-section="mprovider" class="collapse-item" style="font-weight:bold ;">Gestión de los Proveedores</a>
                         </div>
                         <ol>
                             <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" onclick="scrollToSection('aprovider')">Agregar Nuevo Proveedor</a>
+                            <a class="scroll-to-section" data-target-section="aprovider" class="collapse-item">Agregar Nuevo Proveedor</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" onclick="scrollToSection('modprovider')">Modificar un Proveedor</a>
+                            <a class="scroll-to-section" data-target-section="modprovider" class="collapse-item">Modificar un Proveedor</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" onclick="scrollToSection('statprovider')">Cambiar el Estado de un Proveedor</a>
+                            <a class="scroll-to-section" data-target-section="statprovider" class="collapse-item">Cambiar el Estado de un Proveedor</a>
                         </div>
                     </li>
                     <li>
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item" onclick="scrollToSection('bprovider')">Buscar Proveedores</a>
+                            <a class="scroll-to-section" data-target-section="bprovider" class="collapse-item">Buscar Proveedores</a>
                         </div>
                     </li>
                 </ol>
@@ -448,18 +628,69 @@
                 </ol>
                     </div>
                 </li>
+                <li class="list-group-item">
+                    <center><a href="#scustomers" data-toggle="collapse" data-target="#collapseSec6" aria-expanded="false" aria-controls="collapseTwo">Módulo de Compras</a></center>
+                    <div id="collapseSec6" class="collapse" aria-labelledby="headingTwo">
+                        <div class="custom-divider"></div>
+                        <div class="bg-white py-2 collapse-inner rounded text-center">
+                            <a href="#mpurchase" class="collapse-item" style="font-weight:bold ;">Gestión de las Compras</a>
+                        </div>
+                        <ol>
+                            <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#scustomers">Registrar una Compra</a>
+                        </div>
+                    </li>
+                </ol>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <center><a href="#scustomers" data-toggle="collapse" data-target="#collapseSec7" aria-expanded="false" aria-controls="collapseTwo">Módulo de Ventas</a></center>
+                    <div id="collapseSec7" class="collapse" aria-labelledby="headingTwo">
+                        <div class="custom-divider"></div>
+                        <div class="bg-white py-2 collapse-inner rounded text-center">
+                            <a href="#msales" class="collapse-item" style="font-weight:bold ;">Gestión de las Ventas</a>
+                        </div>
+                        <ol>
+                            <li>
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#scustomers">Gestión de los Clientes</a>
+                        </div>
+                    </li>
+                </ol>
+                    </div>
+                </li>
                 
             </ul>
         </div>
     </div>
 </div>
 
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://unpkg.com/scroll-into-view-if-needed"></script>
 <script>
-    $(document).ready(function() {
-        $('.list-group-item').click(function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        function scrollToSection(sectionId) {
+            var section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoViewIfNeeded({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+        }
+        // Asignamos el evento de clic a los enlaces con la clase "scroll-to-section"
+        $('.scroll-to-section').click(function (event) {
+        event.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
+        var targetSection = $(this).attr('data-target-section');
+        scrollToSection(targetSection);
+    });
+
+        // Resto del código
+        $('.list-group-item').click(function () {
             var target = $($(this).find('[data-toggle="collapse"]').data('target'));
 
             if (!target.hasClass('show')) {
@@ -469,19 +700,7 @@
             target.collapse('toggle');
         });
     });
-
-    function scrollToSection(sectionId) {
-        var section = document.getElementById(sectionId);
-        if (section) {
-          section.scrollIntoView({
-            behavior: 'smooth'
-          });
-        }
-      }
-      
 </script>
-
-
 
 <div style="margin-top: 7vh;"></div>
 
