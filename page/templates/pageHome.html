@@ -75,19 +75,15 @@
         {% for producto in productos %}
         <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
           <div class="product-image">
-            <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
             <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
           </div>
           <div class="product-details">
-            <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+            <h3 class="product-title">
+              {{ producto.nombre_producto }}
+              <span>${{ producto.precio_pub }}</span>
+            </h3>
             <div class="product-description">
               <p>{{ producto.descripcion }}</p>
-            </div>
-            <div class="product-price">
-              <span>${{ producto.precio_pub }}</span>
-              <span class="product-search">
-                <i class="fas fa-search"></i>
-              </span>
             </div>
           </div>
         </div>
