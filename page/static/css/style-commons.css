@@ -196,6 +196,11 @@ body {
 }
 
 .search-card-desk {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+.search-card-desk {
   transition: transform .1s ease-in-out;
 }
 
@@ -260,20 +265,6 @@ body {
   justify-content: space-between;
 }
 
-.login-button {
-  text-decoration: none;
-  color: #fff !important;
-  border-radius: 10px;
-  border: 1px solid #fff;
-  padding: 7px 30px;
-  transition: all .1s ease-in-out;
-
-}
-
-.login-button:active {
-  background-color: #222222;
-  transform: scale(1.1);
-}
 
 /* ------------------ */
 

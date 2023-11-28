@@ -161,7 +161,7 @@ def createUser(request):
         contrasena = create_password()
         rl = Roles.objects.get(id_rol=id_rol)
         Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
-        send_email(nombre_usuario, contrasena, correo)
+        send_email_create(nombre_usuario, contrasena, correo)
 
         return JsonResponse({'success': True})
 
@@ -169,7 +169,7 @@ def createUser(request):
 
 # @jwt_cookie_required
 # @module_access_required('usuarios')
-def send_email(user, password, email):
+def send_email_create(user, password, email):
     load_dotenv()
     remitente = os.getenv("USER")
     destinatario = email
@@ -206,6 +206,9 @@ def create_password(length=8):
     return password
 
 
+
+
+
 @jwt_cookie_required
 def editUser(request, id_usuario):
     roles = Roles.objects.all()
@@ -217,17 +220,53 @@ def editUser(request, id_usuario):
         
         rl = Roles.objects.get(id_rol=role)
         
-        Usuarios.objects.filter(id_usuario=id_usuario).update(
-            id_rol=rl,
-            nombre_usuario=nombre_usuario,
-            correo=correo,
-            estado=1
-        )
-        
+        usuario = Usuarios.objects.get(id_usuario=id_usuario)
+        correo_original = usuario.correo  
+
+        usuario.id_rol = rl
+        usuario.nombre_usuario = nombre_usuario
+        usuario.correo = correo
+        usuario.estado = 1
+        usuario.save()
+
+        if correo_original != correo:
+            send_email_edit(nombre_usuario, correo, correo_original)  
+
         response_data = {'success': True}
         return JsonResponse(response_data)    
     users = Usuarios.objects.get(id_usuario=id_usuario)
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
+
+
+
+
+def send_email_edit(user, email, email_original):
+    load_dotenv()
+    remitente = os.getenv("USER")
+    destinatario = email_original
+    asunto = "Cambio de correo electrónico"
+
+    msg = MIMEMultipart()
+    msg["Subject"] = asunto
+    msg["From"] = remitente
+    msg["To"] = destinatario
+
+    template = get_template("email_edit.html")
+    context = {
+        'user': user,
+        'email': email
+    }
+    html = template.render(context)
+
+    msg.attach(MIMEText(html, "html"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(remitente, os.getenv("PASS"))
+    
+    server.sendmail(remitente, destinatario, msg.as_string())
+    server.quit()
+
+
 
 
 

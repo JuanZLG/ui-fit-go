@@ -13,6 +13,9 @@
           <div class="card-body p-4">
             <form class="form" id="usuario-form" method="post">
             {% csrf_token %}
+            <svg viewBox="25 25 50 50" id="loading">
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
             <div class="form-group">
               <label for="categoria">Rol del Usuario</label>
               <select class="form-select" aria-label="Default" name="iRole" id="iRole">
@@ -71,12 +74,58 @@
 </script>
 
 
+<style>
+    svg {
+      z-index: 999;
+      position: absolute;
+      top: 40%;
+      left: 40%;
+      margin: auto;
+      width: 3.25em;
+      transform-origin: center;
+      animation: rotate4 2s linear infinite;
+    }
+  
+    circle {
+      fill: none;
+      stroke: rgb(128, 128, 255);
+      stroke-width: 3;
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+      stroke-linecap: round;
+      animation: dash4 1.5s ease-in-out infinite;
+    }
+  
+    @keyframes rotate4 {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  
+    @keyframes dash4 {
+      0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+      }
+  
+      50% {
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -35px;
+      }
+  
+      100% {
+        stroke-dashoffset: -125px;
+      }
+    }
+  </style>
 <script>
     $(document).ready(function () {
 
         // $('#iRole, #iNombre, #iCorreo').on('change', function () {
         //     ocultarError($(this));
         // });
+    $("#loading").hide();
+
         function mostrarError(selector, mensaje) {
     $(selector).addClass('is-invalid');
     $(`${selector}-error`).text(mensaje);
@@ -175,6 +224,17 @@ $('#usuario-form').submit(function (event) {
         $('.is-invalid').each(function () {
             errors = true;
         });
+
+        
+      $(document).ajaxStart(function () {
+        $("#loading").show();
+      });
+
+      $(document).ajaxStop(function () {
+        $("#loading").hide();
+      });
+
+
         if (!errors) {
             $.ajax({
                 type: 'POST',

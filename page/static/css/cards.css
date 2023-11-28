@@ -40,9 +40,12 @@
 }
 
 .product-card-container.list-view .product-description {
-    display: block;
-    max-height: 100px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 100px;
 }
 
 .product-card-container.list-view .product-image {
@@ -81,17 +84,21 @@
 }
 
 .product-details {
-    padding: 10px;
+    padding: 5px;
     width: 100%;
 }
 
 .product-title {
+    max-height: 20px;
+    overflow: hidden;
     margin-top: 5px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     font-size: 1rem;
     font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 
