@@ -3,10 +3,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let showDetailsElements = document.querySelectorAll("[data-url-details]");
 
     function formatearPrecios(valor) {
-        valor = Math.round(valor * 100) / 100;
-        let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        return '$' + precioFormateado;
+        valor = parseFloat(valor);
+        if (!isNaN(valor)) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$' + precioFormateado;
+        } 
     }
+    
 
     changeStateElements.forEach(function (element) {
         element.addEventListener("click", function () {
@@ -63,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "GET",
                 success: function (response) {
                     var venta = response.success;
-
                     Swal.fire({
                         html: `  
                             <div class="modal-container">
@@ -107,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="modal-footer">
                                 <div>
                                     <span>Descuento de venta:</span>
-                                    <span>${venta.descuentoVenta !== "0" ? detalle.descuentoVenta + '%' : 'No aplica'}</span>
+                                    <span>${venta.descuentoVenta !== "0" ? venta.descuentoVenta + '%' : 'No aplica'}</span>
                                 </div>
                                 <div>
                                     <span>Total descontado:</span>
