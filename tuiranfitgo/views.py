@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import Token
 import jwt  
 from django.http import JsonResponse
 
+
 def verificar_notificaciones(request):
     mensajes = []
 
@@ -23,10 +24,10 @@ def verificar_notificaciones(request):
 
             if user_role != 1:
                 mensajes.append({"tipo": "info", "mensaje": "Las notificaciones solo están disponibles para el administrador."})
-                return JsonResponse({"mensajes": mensajes})
+                return JsonResponse({"mensajes": mensajes, "cantidad": len(mensajes)})
         except Exception as e:
             print(f"Error: {e}")
-            return JsonResponse({"mensajes": []})
+            return JsonResponse({"mensajes": [], "cantidad": 0})
 
     productos_pocos = Productos.objects.filter(cantidad__range=(1, 5))  
     productos_muchos = Productos.objects.filter(cantidad__gt=13)
@@ -39,10 +40,16 @@ def verificar_notificaciones(request):
         for producto in productos_muchos:
             mensajes.append({"tipo": "exceso", "mensaje": f"{producto.nombre_producto}: ({producto.cantidad} disponibles)."}) 
 
+    cantidadMensajes = len(mensajes)
+    cantidadMensajesAnterior = request.session.get('cantidadMensajes', 0)
+
+    request.session['cantidadMensajes'] = cantidadMensajes
+
     if mensajes:
-        return JsonResponse({"mensajes": mensajes})
+        return JsonResponse({"mensajes": mensajes, "cantidad": cantidadMensajes, "nuevosMensajes": cantidadMensajes > cantidadMensajesAnterior})
     else:
-        return JsonResponse({"mensajes": []})
+        return JsonResponse({"mensajes": [], "cantidad": 0, "nuevosMensajes": False})
+
 
 
 

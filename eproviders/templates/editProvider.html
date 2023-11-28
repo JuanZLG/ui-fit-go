@@ -19,7 +19,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="#">Nombre del Proveedor *</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
-                            placeholder="Nombre" value="{{proveedor.nombre_proveedor}}">
+                            placeholder="Nombre" data-id-prov="{{ proveedor.id_proveedor}}"  value="{{proveedor.nombre_proveedor}}">
                         <span class="error-message" id="nombre_proveedor-error"></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -78,6 +78,18 @@
 
 <script>
     $(document).ready(function () {
+
+        function mostrarError(selector, mensaje) {
+            $(selector).addClass('is-invalid');
+            $(`${selector}-error`).text(mensaje).css('color', 'red');
+        }
+        
+        function ocultarError($campo) {
+            $campo.removeClass('is-invalid');
+            $campo.siblings('.error-message').text('');
+        }
+
+
         function validarCamposObligatorios() {
             let camposLlenos = true;
             const nombreValue = $('#nombre_proveedor').val();
@@ -130,43 +142,71 @@
 
 
 
-        function mostrarError(selector, mensaje) {
-            $(selector).addClass('is-invalid');
-            $(`${selector}-error`).text(mensaje).css('color', 'red');
-        }
-
         function validarFormatoCorreo(correo) {
             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
             return emailRegex.test(correo);
         }
 
+        async function validarProvUnico(nombre, id_prov) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: "{% url 'proveedor_unico_edit' %}",
+                    type: "GET",
+                    data: {
+                        id_prov: id_prov,
+                        nombre: nombre,
+                    },
+                    success: function (data) {
+                        if (data.existe) {
+                            mostrarError('#nombre_proveedor', 'Este proveedor ya existe.');
+                            resolve(false);
+                        } else {
+                            ocultarError($('#nombre_proveedor'));
+                            resolve(true);
+                        }
+                    },
+                    error: function () {
+                        reject();
+                    }
+                });
+            });
+        }
+        $('#nombre_proveedor').on('input', async function () {
+            const nombre = $(this).val();
+            const id = $(this).data("id-prov");
+            await validarProvUnico(nombre, id);
+        });
+
 
         $('#proveedor-form').submit(function (event) {
             event.preventDefault();
+            let errors = false;
 
-            if (!validarCamposObligatorios()) {
-                return;
-            }
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'editarProveedor' proveedor.id_proveedor %}",
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Éxito',
-                            text: 'Proveedor modificado con éxito',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 3000,
-                        });
-                        setTimeout(function () {
-                            window.location.href = "{% url 'proveedores' %}";
-                        }, 2000); 
-                    }
-                }
+            $('.is-invalid').each(function () {
+                errors = true;
             });
-            
+
+            if (!errors) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'editarProveedor' proveedor.id_proveedor %}",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Proveedor modificado con éxito',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1000,
+                            });
+                            setTimeout(function () {
+                                window.location.href = "{% url 'proveedores' %}";
+                            }, 2000); 
+                        }
+                    }
+                });
+            }
         });
     });
 </script>

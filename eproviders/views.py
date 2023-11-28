@@ -44,6 +44,15 @@ def proveedor_unico(request):
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
 
+
+def proveedor_unico_edit(request):
+    nombre = request.GET.get("nombre", "")
+    id_prov = request.GET.get("id_prov", "")
+    id_prov = int(id_prov)
+    prov_existe = Proveedores.objects.exclude(id_proveedor=id_prov).filter(nombre_proveedor=nombre).exists()
+    return JsonResponse({"existe": prov_existe})
+
+
 @jwt_cookie_required
 @module_access_required('proveedores')
 def editarProveedor(request, id_proveedor):

@@ -54,12 +54,13 @@
             <hr class="divider">
             <li class="menu-item info">
                 <a href="#" class="menu-link">
-                    <i class="fas fa-info-circle icon"></i> Sobre Brutality
+                    <span style="width: 25px; background-color: red;"><i class="fas fa-shopping-cart icon"></i></span>
+                     ¿Cómo comprar?
                 </a>
                 <a href="#" class="menu-link">
-                    <i class="fas fa-shopping-cart icon"></i> ¿Cómo comprar?
+                    <span style="width: 25px;"><i class="fas fa-question"></i></span>
+                    Preguntas
                 </a>
-
                 <span class="menu-contact">
                     <i class="fas fa-envelope icon"></i> brutality@gmail.com
                 </span>
@@ -68,7 +69,6 @@
                         <a href="#" class="mx-2"><i class="fab fa-instagram icon"></i></a>
                         <a href="#"><i class="fab fa-whatsapp icon"></i></a>
                     </div>
-                    <a href="#" class="login-button">Ingresar</a>
                 </div>
             </li>
         </ul>
@@ -84,10 +84,10 @@
                 <ul>
                     {% for producto in categoria.productos_set.all %}
                     <li class="menu-list-item"
-                    onclick="closeMains(); setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
-                    {{ producto.nombre_producto }}
+                        onclick="closeMains(); setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
+                        {{ producto.nombre_producto }}
                     </li>
-                    
+
                     {% endfor %}
                 </ul>
             </li>
@@ -100,7 +100,8 @@
         </div>
         <ul id="main-options-marcas" class="options-menu-list marcas">
             {% for marca in marcas %}
-            <li class="menu-list-item menu-list-item-mobile" data-id-filter="marca-{{ marca.id_marca }}">{{ marca.nombre_marca }}</li>
+            <li class="menu-list-item menu-list-item-mobile" data-id-filter="marca-{{ marca.id_marca }}">{{
+                marca.nombre_marca }}</li>
             {% endfor %}
         </ul>
         <hr class="divider">
@@ -159,15 +160,11 @@
                             </svg>
                         </a>
                         <ul id="menu-info">
-                            <li> Sobre nosotros </li>
                             <li> ¿Cómo comprar? </li>
                             <li> Preguntas </li>
                         </ul>
                     </li>
                 </ul>
-                <a href="#" class="nav-link nav-item">Ingresar
-                    <i class="fas fa-sign-in-alt mx-2"></i>
-                </a>
             </nav>
             <!-- <div class="extra-header">
                 {% block extraHeaderDesk %}
@@ -217,18 +214,21 @@
                 <div class="d-flex align-items-center justify-content-center mx-2 element-container">
                     <span>CATEGORIAS</span>
                     <ul class="element-option">
-                        <span class="menu-comprar-title">CATEGORIAS</span>
+                        <!-- <span class="menu-comprar-title">CATEGORIAS</span> -->
                         {% for categoria in categorias %}
-                        <li class="menu-list-item menu-list-item-desk" data-id-filter="categoria-{{ categoria.id_categoria }}">{{ categoria.nombre_categoria }}</li>
+                        <li class="menu-list-item menu-list-item-desk"
+                            data-id-filter="categoria-{{ categoria.id_categoria }}">{{ categoria.nombre_categoria }}
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="d-flex align-items-center justify-content-center mx-2 element-container">
                     <span>MARCAS</span>
                     <ul class="element-option">
-                        <span class="menu-comprar-title">MARCAS</span>
+                        <!-- <span class="menu-comprar-title">MARCAS</span> -->
                         {% for marca in marcas %}
-                        <li class="menu-list-item menu-list-item-desk" data-id-filter="marca-{{ marca.id_marca }}">{{ marca.nombre_marca }}
+                        <li class="menu-list-item menu-list-item-desk" data-id-filter="marca-{{ marca.id_marca }}">
+                            {{ marca.nombre_marca }}
                         </li>
                         {% endfor %}
                     </ul>
@@ -239,7 +239,9 @@
 
     <style>
         .element-container {
+            z-index: 999;
             position: relative;
+            cursor: pointer;
         }
 
         .element-option {
@@ -254,6 +256,7 @@
             padding-top: 10px;
             background-color: #222222;
             color: #fff;
+            border-bottom: 3px solid #ccc;
         }
     </style>
 
@@ -424,48 +427,46 @@
         }
 
         function filterProductsDesk(valor, tipo = "productos") {
-      $.ajax({
-        url: filterProductsUrl,
-        method: 'GET',
-        data: { valor: valor, tipo: tipo },
-        success: function (data) {
-          if (data.success) {
-            $("#product-container-desk").empty();
+            $.ajax({
+                url: filterProductsUrl,
+                method: 'GET',
+                data: { valor: valor, tipo: tipo },
+                success: function (data) {
+                    if (data.success) {
+                        $("#product-container-desk").empty();
 
-            $.each(data.data, function (index, p) {
-              var productCard =
-                '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
-                '<div class="product-image">' +
-                '<img src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                '<div class="product-details">' +
-                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-                '<div class="product-description">' +
-                '<p>' + p.descripcion + '</p></div>' +
-                '<div class="product-price">' +
-                '<span>' + p.precio_pub + '</span>' +
-                '<span class="product-search">' +
-                '<i class="fas fa-search"></i></span></div>' +
-                '</div ></div >';
+                        $.each(data.data, function (index, p) {
+                            var productCard =
+                                '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
+                                '<div class="product-image">' +
+                                '<img src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                                '<div class="product-details">' +
+                                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
+                                '<div class="product-description">' +
+                                '<p>' + p.descripcion + '</p></div>' +
+                                '<div class="product-price">' +
+                                '<span>' + p.precio_pub + '</span></div>' +
+                                '</div ></div >';
 
-              $("#dynamic-title-desk").text(p.dynamicTitle);
-              $("#dynamic-title-desk").data("id-filter", p.identificador);
-              $("#product-container-desk").append(productCard);
+                            $("#dynamic-title-desk").text(p.dynamicTitle);
+                            $("#dynamic-title-desk").data("id-filter", p.identificador);
+                            $("#product-container-desk").append(productCard);
+                        });
+                        $('.productDetailsButton').click(function () {
+                            id_producto = $(this).data("id")
+                            cargarDetalle(id_producto);
+                        });
+                    }
+                }
             });
-            $('.productDetailsButton').click(function () {
-              id_producto = $(this).data("id")
-              cargarDetalle(id_producto);
-            });
-          }
         }
-      });
-    }
 
-    $("#sortDesk").change(function () {
-      let selectedValue = $(this).val();
-      if (selectedValue == "defect") location.reload();
-      const tipo = $("#dynamic-title-desk").data('id-filter');
-      filterProductsDesk(selectedValue, tipo);
-    });
+        $("#sortDesk").change(function () {
+            let selectedValue = $(this).val();
+            if (selectedValue == "defect") location.reload();
+            const tipo = $("#dynamic-title-desk").data('id-filter');
+            filterProductsDesk(selectedValue, tipo);
+        });
 
 
         /***********************++++++++++++++ */

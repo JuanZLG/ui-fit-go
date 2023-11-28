@@ -40,31 +40,30 @@
 }
 
 .product-card-container.list-view .product-description {
-    display: block;
-    max-height: 100px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 100px;
 }
 
 .product-card-container.list-view .product-image {
     height: 250px;
 }
 
-.product-card-container.list-view .product-price {
-    margin-top: 15px;
-}
-
 .product-card {
-    background-color: #Fff;
-    border-radius: 20px;
-    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 250px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: all .1s ease-in-out;
 }
-
+.product-card:hover {
+    opacity: 0.8;
+    transform: scale(1.020);
+}
 .product-card a {
     color: #000;
     text-decoration: none;
@@ -85,56 +84,45 @@
 }
 
 .product-details {
-    padding: 10px;
+    padding: 5px;
     width: 100%;
 }
 
 .product-title {
+    max-height: 20px;
+    overflow: hidden;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     font-size: 1rem;
     font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 
 .product-description {
     display: none;
     padding: 10px 0;
 }
 
-.product-price {
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.product-search {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ccc;
-    padding: 10px;
-    color: #222222;
-    font-size: 0.7rem;
-    border-radius: 100%;
-    text-decoration: none;
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-}
 
 
 
 @media screen and (min-width: 768px) {
     .product-card-container {
-        height: 600px;
         overflow-y: scroll;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 35px;
         grid-auto-rows: min-content;
         row-gap: 40px;
     }
     
     .product-card {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        min-height: 300px;
+        height: auto;
+        max-height: 250px;
+
     }
 
     .product-image {
