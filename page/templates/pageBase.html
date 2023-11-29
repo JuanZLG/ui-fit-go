@@ -55,7 +55,7 @@
             <li class="menu-item info">
                 <a href="#" class="menu-link">
                     <span style="width: 25px; background-color: red;"><i class="fas fa-shopping-cart icon"></i></span>
-                     ¿Cómo comprar?
+                    ¿Cómo comprar?
                 </a>
                 <a href="#" class="menu-link">
                     <span style="width: 25px;"><i class="fas fa-question"></i></span>
@@ -150,19 +150,25 @@
                             <img src="{% static 'img/gorille.png' %}" class="logo img-fluid" alt="Logo de Brutálity">
                         </a>
                         <h1>BRUTALITY</h1>
+                        <li id="toggle-info" class="nav-item">
+                            <a href="#" class="nav-link">Información
+                                <svg style="height: 24px;" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 8.25l-7.5 7.5-7.5-7.5">
+                                    </path>
+                                </svg>
+                            </a>
+                            <ul id="menu-info">
+                                <li> ¿Cómo comprar? </li>
+                                <li> Preguntas </li>
+                            </ul>
+                        </li>
                     </div>
-                    <li id="toggle-info" class="nav-item">
-                        <a href="#" class="nav-link">Información
-                            <svg style="height: 24px;" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5">
-                                </path>
-                            </svg>
-                        </a>
-                        <ul id="menu-info">
-                            <li> ¿Cómo comprar? </li>
-                            <li> Preguntas </li>
-                        </ul>
+
+                    <li class="nav-item d-flex align-items-center justify-content-center">
+                        <a href="#" class="nav-link">Mi pedido</a>
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                     </li>
                 </ul>
             </nav>

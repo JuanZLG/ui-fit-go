@@ -120,7 +120,7 @@ def verificar_stock(request):
     except Productos.DoesNotExist:
         supera_stock = False
 
-    return JsonResponse({'supera_stock': supera_stock})
+    return JsonResponse({'supera_stock': supera_stock, 'cantidad_disponible': producto_obj.cantidad})
 
 
 def buscar_cliente(request):

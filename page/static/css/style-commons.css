@@ -684,8 +684,9 @@ footer {
 
 
   .nav-list {
+    width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     gap: 10px;
     list-style: none;
     margin: auto 0;

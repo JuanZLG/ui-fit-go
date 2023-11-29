@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'customers',
     'purchases',
     'sales',
+    'orders',
     'users',
     'dashboard',
     'page',
@@ -79,7 +80,8 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'dashboard', 'templates'),
                  os.path.join(BASE_DIR, 'users', 'templates'),
                  os.path.join(BASE_DIR, 'page', 'templates'),
-                 os.path.join(BASE_DIR, 'authenticator', 'templates')
+                 os.path.join(BASE_DIR, 'authenticator', 'templates'),
+                 os.path.join(BASE_DIR, 'orders', 'templates')
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -168,7 +170,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'dashboard', 'static'),
     os.path.join(BASE_DIR, 'page', 'static'),
     os.path.join(BASE_DIR, 'products', 'static'),
-    os.path.join(BASE_DIR, 'authenticator', 'static')
+    os.path.join(BASE_DIR, 'authenticator', 'static'),
+    os.path.join(BASE_DIR, 'orders', 'static')
 ]
 
 # Ruta en el sistema de archivos donde se guardarán los archivos subidos

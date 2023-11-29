@@ -105,17 +105,19 @@
 }
 
 .cliente-item.inactivo,
-.producto-item.inactivo {
+.producto-item.inactivo,
+.producto-item.inactivo-stock{
     opacity: 0.8 !important;
     color: #222222 !important;
 }
 
 .cliente-item:hover,
 .producto-item:hover,
-.producto-item.inactivo {
+.producto-item.inactivo:hover,
+.producto-item.inactivo-stock:hover {
     cursor: pointer;
     color: #000;
-    transform: scale(1.01);
+    transform: scale(1.010);
 }
 
 .producto-item .product-details-container p {
@@ -331,13 +333,13 @@ input[type="number"] {
     margin-bottom: 5px;
 }
 
-
 .input-wrapper {
     position: relative;
     display: inline-block;
     margin-right: 50px;
     margin-left: 10px;
 }
+
 
 .input-wrapper .descuento {
     margin: auto;
@@ -357,6 +359,7 @@ input[type="number"] {
     transform: translateY(-50%);
     pointer-events: none;
 }
+
 .precio_diferencia_descuento {
     color: rgb(48, 48, 163);
     display: block;
@@ -381,29 +384,6 @@ input[type="number"] {
 }
 
 
-.product-update-button {
-    pointer-events: none;
-    opacity: 0.5;
-    font-weight: 500;
-    width: 150px;
-    padding: 5px 15px;
-    border: none;
-    background-color: rgb(247, 247, 99) !important;
-    height: 40px;
-    transition: all 100ms ease-in-out;
-}
-
-.product-update-button.is-active {
-    opacity: 1;
-    pointer-events: all;
-}
-.product-update-button.update {
-    background-color: #72d072 !important;
-    color: #fff !important;
-}
-.product-update-button:active {
-    transform: scale(0.97);
-}
 
 .eliminar-fila:hover {
     cursor: pointer;
