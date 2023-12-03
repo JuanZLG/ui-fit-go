@@ -8,7 +8,9 @@
 ::-webkit-scrollbar {
   display: none;
 }
-
+.scrollbar-add-descrip::-webkit-scrollbar {
+  display: block;
+  }
 body {
   /* font-family: 'Alatsi', sans-serif; */
   font-family: Helvetica;
@@ -18,25 +20,45 @@ body {
   display: none;
 }
 
+.desktop .añadir {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .mobile {
   display: block;
 }
 
+.fa-trash {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.fa-trash:hover {
+  cursor: pointer;
+  transform: scale(1.080);
+  animation-duration: .2s ease-in-out;
+}
 .whatsapp-button {
+  z-index: 999;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 30px;
+  right: 40px;
   background-color: #25d366;
   color: #fff;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   text-align: center;
-  font-size: 24px;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
   line-height: 40px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
   cursor: pointer;
-  transition: transform 0.1s ease-in-out;
+  transition: transform .2s ease-in-out;
 }
 
 .whatsapp-button:hover {
@@ -44,7 +66,10 @@ body {
   background-color: #1aa34d;
   transform: scale(1.1);
 }
-
+.whatsapp-button:hover i {
+  transform: rotate(-11deg);
+  transition-duration: .2s;
+}
 .hamburger {
   padding: 0;
   cursor: pointer;
@@ -181,8 +206,30 @@ body {
   border-bottom: 2px solid #ccc;
 }
 
+.item-order {
+  cursor: pointer;
+  background-color: #222222;
+}
 
-/* Resto de tu CSS... */
+.item-order .order-cont-cant {
+  position: relative;
+}
+.item-order .order-cont-cant span{
+  position: absolute;
+  right: -11px;
+  top: -5px;
+  border-radius: 10px;
+  width: 1.1em;
+  height: 1.1em;
+  background-color: #DC3545;
+  font-weight: bold;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.order-cont-cant .order-cant.show {
+  display: flex;
+}
 
 
 .search-card {
@@ -201,6 +248,7 @@ body {
   gap: 5px;
   justify-content: center;
 }
+
 .search-card-desk {
   transition: transform .1s ease-in-out;
 }
@@ -266,6 +314,80 @@ body {
   justify-content: space-between;
 }
 
+.CartBtn:hover .IconContainer {
+  transform: translateX(58px);
+  border-radius: 40px;
+  transition-duration: .5s;
+  
+}
+
+.CartBtn:hover .text {
+  transform: translate(10px, 0px);
+  transition-duration: .5s;
+}
+
+.CartBtn:active {
+  opacity: 0.9;
+  transition-duration: .5s;
+}
+
+.CartBtn {
+  width: 100%;
+  height: 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: height .4s ease-in-out;
+  overflow: hidden;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.103);
+  position: relative;
+}
+
+.IconContainer {
+  position: absolute;
+  left: -50px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  transition-duration: .5s;
+}
+
+.star-icon {
+  margin: auto;
+  color: #fff;
+  font-size: 12px;
+}
+
+.icon {
+  border-radius: 1px;
+}
+
+.text {
+  color: #fff;
+  height: 100%;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition-duration: .5s;
+  font-size: 0.9em;
+  font-weight: 600;
+  margin: 0;
+}
+
+
+.product-card:hover .CartBtn {
+  height: 40px;
+}
 
 /* ------------------ */
 
@@ -439,20 +561,23 @@ body {
   transition: all 0.1s ease-in-out;
   position: relative;
 }
+
 .menu-list-item::before {
   content: '';
   display: inline-block;
   width: 0;
   margin-right: 10px;
   color: #ccc;
-  font-size: 10px; /* Ajusta el tamaño del ícono */
+  font-size: 10px;
+  /* Ajusta el tamaño del ícono */
   transition: all 0.2s ease-in-out;
 }
 
 .menu-list-item:hover::before {
   content: '\2192';
   width: 10px;
-  color: #ccc; /* Cambia el color del ícono */
+  color: #ccc;
+  /* Cambia el color del ícono */
 }
 
 
@@ -630,6 +755,11 @@ footer {
 @media screen and (min-width: 768px) {
   .desktop {
     display: block;
+  }
+
+  .desktop .añadir {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .mobile {

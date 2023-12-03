@@ -21,7 +21,7 @@
               {% for c in categorias %}
               <option value="{{ c.id_categoria }}"
                   {% if c.id_categoria == Product.id_categoria.id_categoria %} selected {% endif %}>
-                  {{ c.nombre_categoria }}
+                  {{c.nombre_categoria }} 
               </option>
               {% endfor %}
           </select>

@@ -214,7 +214,6 @@ def detalles_venta(request):
 
 
 
-
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib import colors

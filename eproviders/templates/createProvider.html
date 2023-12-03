@@ -16,6 +16,22 @@
             <form id="proveedor-form" method="post">
                 {% csrf_token %}
                 <div class="form-row">
+                    <div class="col-md-4 mb-3" style=" display: flex; flex-direction: column;">
+                        <label>Tipo de Documento</label>
+                        <select id="tipoIdentificacion" class="select-tipo" name="tipoIdentificacion">
+                            <option value="">Seleccionar</option>
+                            <option value="DOC">Documento</option>
+                            <option value="NIT">NIT</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label>Número de Identificación</label>
+                        <input type="text" class="form-control" id="identificacion" name="identificacion"
+                            placeholder="Documento o NIT">
+                        <span class="error-message" id="identificacion-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
                     <div class="col-md-7 mb-3">
                         <label for="nombre_proveedor">Nombre del Proveedor *</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
@@ -37,25 +53,9 @@
                         <span class="error-message" id="correo-error"></span>
                     </div>
                     <div class="col-md-5 mb-3">
-                        <label for="direccion">Dirección</label>
+                        <label for="direccion">Dirección *</label>
                         <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
                         <span class="error-message" id="direccion-error"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3" style=" display: flex; flex-direction: column;">
-                        <label>Tipo de Documento</label>
-                        <select id="tipoIdentificacion" class="select-tipo" name="tipoIdentificacion">
-                            <option value="">Seleccionar</option>
-                            <option value="DOC">Documento</option>
-                            <option value="NIT">NIT</option>
-                        </select>
-                    </div>
-                    <div class="col-md-8 mb-3">
-                        <label>Número de Identificación</label>
-                        <input type="text" class="form-control" id="identificacion" name="identificacion"
-                            placeholder="Documento o NIT">
-                        <span class="error-message" id="identificacion-error"></span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -97,9 +97,14 @@
             const correoValue = $('#correo').val();
             const tipoIdentificacionValue = $('#tipoIdentificacion').val();
             const identificacionValue = $('#identificacion').val();
+            const direccionValue = $('#direccion').val();
 
             if (!nombreValue) {
                 mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            }
+            if (!nombreValue) {
+                mostrarError('#direccion', 'Este campo es obligatorio.');
                 camposLlenos = false;
             }
             if (!telefonoValue) {
@@ -122,22 +127,56 @@
             }
 
 
-            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
-                mostrarError('#identificacion', 'Debe ingresar una identificación.');
+            if (tipoIdentificacionValue !== '' && identificacionValue === '' || tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
+                mostrarError('#identificacion', 'Debe ingresar una identificación válida.');
                 camposLlenos = false;
             } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
                 mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
                 camposLlenos = false;
             } else {
+                if (tipoIdentificacionValue === 'NIT' && !/^\d{3}\.\d{3}\.\d{3}-\d$/.test(identificacionValue)) {
+                    mostrarError('#identificacion', 'El NIT debe tener el formato 123.456.789-0');
+                    camposLlenos = false;
+                } else if (tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
+                    mostrarError('#identificacion', 'El Documento debe tener entre 8 y 10 dígitos.');
+                    camposLlenos = false;
+                } else {
+                    $("#identificacion").removeClass("is-invalid")
+                    $("#identificacion-error").text("")
+                }
+            }
+            return camposLlenos;
+
+        }
+        $('#tipoIdentificacion').change(function () {
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val();
+            const identificacionValue = $('#identificacion').val();
+
+            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
+                mostrarError('#identificacion', 'Debe ingresar una identificación válida.');
+            } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
+                mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
+            } else {
                 $("#identificacion").removeClass("is-invalid")
                 $("#identificacion-error").text("")
             }
+        });
 
-            return camposLlenos;
-        }
+        $('#identificacion').on('input', function () {
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val();
+            const identificacionValue = $('#identificacion').val();
 
+            if (tipoIdentificacionValue === 'NIT' && !/^\d{3}\.\d{3}\.\d{3}-\d$/.test(identificacionValue)) {
+                mostrarError('#identificacion', 'El NIT debe tener el formato 123.456.789-0');
+            } else if (tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
+                mostrarError('#identificacion', 'El Documento debe tener entre 8 y 10 dígitos.');
+            } else {
+                $("#identificacion").removeClass("is-invalid")
+                $("#identificacion-error").text("")
+            }
+        });
 
-        $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
+        $('#nombre_proveedor, #telefono, #correo, #direccion').on('input', function () {
             const campo = $(this);
             const campoValue = campo.val();
 
