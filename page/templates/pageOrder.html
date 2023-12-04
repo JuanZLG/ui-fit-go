@@ -1,0 +1,124 @@
+{% extends "pageBase.html" %}
+{% block title %}Ver pedido{% endblock %}
+
+{% block urls %}
+{% load static %}
+<script src="{% static 'js/pageOrder.js' %}"></script>
+{% endblock %}
+{% block mobile-home %}{% endblock %}
+{% block mobile-title %}{% endblock %}
+
+{% block body %}
+
+<section class="order">
+    <div class="col-12 col-lg-10 m-auto">
+        <table class="table table-hover" id="table-order">
+            <thead class="text-center">
+                <tr style="background-color: #ccc;">
+                    <th class="product-column">Producto</th>
+                    <th class="price-column">Precio (Unidad)</th>
+                    <th class="price-column">Cantidad</th>
+                    <th class="total-column">Total del Producto</th>
+                    <th class="icon-column"></th>
+                </tr>
+            </thead>
+            <tbody id="producto-tbody">
+
+            </tbody>
+        </table>
+    </div>
+    <div id="info-client" class="m-3">
+        <div class="d-flex flex-wrap">
+            <div class="container p-5 pb-4 card shadow" style="width: 70%;">
+                <form class="form" id="cliente-form" method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="iDocumento">Documento *</label>
+                            <input type="text" class="form-control" id="iDocumento" name="iDocumento"
+                                placeholder="Documento" minlength="8" maxlength="12">
+                            <div class="error-message" id="iDocumento-error" style="color:red;"></div>
+                            <div class="info-message" id="iDocumento-info"></div>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                            <label for="iNombres">Nombres *</label>
+                            <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
+                            <div class="error-message" id="iNombres-error"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="iApellidos">Apellidos *</label>
+                            <input type="text" class="form-control" id="iApellidos" name="iApellidos"
+                                placeholder="Apellidos">
+                            <div class="error-message" id="iApellidos-error"></div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="iCelular">Celular *</label>
+                            <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
+                                minlength="10" maxlength="10">
+                            <div class="error-message" id="iCelular-error"></div>
+                            <div class="info-message" id="iCelular-info"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="departamento">Departamento *</label>
+                            <select class="form-control" id="departamento" name="nombre_departamento">
+                            </select>
+                            <div class="error-message" id="departamento-error"></div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="municipio">Municipio *</label>
+                            <select class="form-control" id="municipio" name="nombre_municipio">
+                                <option value="Municipio por Defecto">Selecciona un Municipio</option>
+                            </select>
+                            <div class="error-message" id="municipio-error"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="iBarrio">Barrio *</label>
+                            <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
+                            <div class="error-message" id="iBarrio-error"></div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="iDireccion">Dirección *</label>
+                            <input type="text" class="form-control" id="iDireccion" name="iDireccion"
+                                placeholder="Dirección">
+                            <div class="error-message" id="iDireccion-error"></div>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button class="btn btn-success" type="submit" id="submit-button" disabled>Guardar</button>
+                    </div>
+                </form>
+            </div>
+            <div style="width: 30%;">
+                <h3 style="background-color: #ccc">Recibo</h3>
+            </div>
+        </div>
+    </div>
+    <div class="text-align-end">
+        <button type="button" id="continuar">Continuar</button>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $('#info-client').hide();
+
+        $('#continuar').on('click', function () {
+            $('#table-order').toggle();
+            $('#info-client').toggle();
+        });
+    });
+</script>
+<style>
+    .table thead tr th {
+        border: none;
+    }
+</style>
+
+{% endblock %}

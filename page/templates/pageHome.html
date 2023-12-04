@@ -28,13 +28,19 @@
         <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"
           style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid">
       </div>
-      <div class="product-details  text-end">
-        <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+      <div class="product-details ">
+        <h3 class="product-title" style="text-transform: capitalize;">{{ producto.nombre_producto }}</h3>
         <div class="product-description">
           <p>{{ producto.descripcion }}</p>
         </div>
         <strong><span class="text-danger">${{ producto.precio_pub }}</span></strong>
       </div>
+      <a class="CartBtn bg-danger color-white" href="{% url 'añadir_pedido' producto.id_producto %}">
+        <span class="IconContainer">
+            <i class="fas fa-star star-icon"></i>
+        </span>
+        <p class="text">Elegir producto</p>
+      </a>
     </div>
 
     {% endfor %}
@@ -75,7 +81,7 @@
             <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
           </div>
           <div class="product-details">
-            <h3 class="product-title">
+            <h3 class="product-title" style="text-transform: capitalize;">
               {{ producto.nombre_producto }}
             </h3>
             <strong><span class="text-danger">${{ producto.precio_pub }}</span></strong>

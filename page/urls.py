@@ -8,5 +8,7 @@ urlpatterns=[
     path('Detalles/=', views.filter_products, name="filter_products"),
     path('Detalles/?', views.search_products, name="search_products"),
     path('añadir_pedido/<int:id_producto>/', views.añadir_pedido, name='añadir_pedido'),
+    path('ver_pedido/', views.ver_pedido, name='pageOrder'),
+
 ]
 

@@ -39,7 +39,7 @@ def pageDetails(request):
     
     # Construye un diccionario con los datos del producto
     response_data = {
-        'nombre_producto': productoDetalle.nombre_producto,
+        'nombre_producto': productoDetalle.nombre_producto.capitalize(),
         'precio_pub': productoDetalle.precio_pub,
         'descripcion': productoDetalle.descripcion,
         'sabor': productoDetalle.sabor,
@@ -99,7 +99,7 @@ def filter_products(request):
         precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         data.append({
             'id_producto': producto.id_producto,
-            'nombre_producto': producto.nombre_producto,
+            'nombre_producto': producto.nombre_producto.capitalize(),
             'descripcion': producto.descripcion,
             'precio_pub': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
@@ -124,7 +124,7 @@ def search_products(request):
         precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         data.append({
             'id_producto': producto.id_producto,
-            'nombre_producto': producto.nombre_producto,
+            'nombre_producto': producto.nombre_producto.capitalize(),
             'descripcion': producto.descripcion,
             'precio_pub': precio_formateado,
             'iProductImg_name': get_image_name(producto.iProductImg),
@@ -143,7 +143,7 @@ def mas_vendidos(request):
         precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         data.append({
             'id_producto': producto.id_producto,
-            'nombre_producto': producto.nombre_producto,
+            'nombre_producto': producto.nombre_producto.capitalize(),
             'precio_pub': precio_formateado,
             'presentacion': producto.iProductImg.decode('utf8')
         })
@@ -163,4 +163,11 @@ def añadir_pedido(request, id_producto):
     sabores = producto.sabor.split(',')
     presentaciones = producto.presentacion.split(',')
 
-    return render(request, 'pageAñadir.html', {'producto': producto, 'sabores': sabores, 'presentaciones': presentaciones})
+    return render(request, 'pageAdd.html', {'producto': producto, 'sabores': sabores, 'presentaciones': presentaciones})
+
+
+def ver_pedido(request):
+    if request.method == 'POST':
+        pass
+
+    return render(request, 'pageOrder.html')

@@ -25,8 +25,8 @@
                     <swiper-container class="mySwiper my-auto" keyboard="true" space-between="30" pagination="true"
                         pagination-clickable="true" navigation="true" loop="true" style="width: 100% !important;">
                         <swiper-slide class="p-4"><a href="/media/{{ producto.iProductImg }}"
-                                data-lightbox="image-1"><img src="/media/{{ producto.iProductImg }}" id="img-producto" class="img-fluid"
-                                    alt="Imagen"></a></swiper-slide>
+                                data-lightbox="image-1"><img src="/media/{{ producto.iProductImg }}" id="img-producto"
+                                    class="img-fluid" alt="Imagen"></a></swiper-slide>
                         <swiper-slide class="p-4"><a href="/media/{{ producto.iInfoImg }}" data-lightbox="image-2"><img
                                     src="/media/{{ producto.iInfoImg }}" class="img-fluid"
                                     alt="Imagen"></a></swiper-slide>
@@ -36,7 +36,8 @@
                     <div class="d-flex justify-content-between">
                         <h3 class="my-3"> <strong style="text-transform: capitalize;"
                                 id="producto">{{producto.nombre_producto}}</strong> </h3>
-                        <strong style="float:right; margin: 10px; font-size: 2rem;" class="text-danger" id="precio">{{producto.precio_pub}}</strong>
+                        <strong style="float:right; margin: 10px; font-size: 2rem;" class="text-danger"
+                            id="precio">{{producto.precio_pub}}</strong>
                     </div>
                     <div class="mb-3 scrollbar-add-descrip"
                         style="max-height: 150px; height: auto; overflow-y: scroll;">
@@ -69,11 +70,11 @@
                         <li class="d-flex align-items-center gap-4">
                             <strong>Cantidad:</strong>
                             <div class="number-input">
-                                <button type="button" id="decrement">-</button>
+                                <button type="button" class="decrement">-</button>
                                 <input class="quantity" min="1" name="cantidad" value="1" type="number"
                                     autocomplete="off" step="1" id="cantidad-ingresada" max="100" required readonly
                                     oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
-                                <button type="button" id="increment">+</button>
+                                <button type="button" class="increment">+</button>
                             </div>
                         </li>
                     </ul>
@@ -81,7 +82,7 @@
             </div>
             <hr>
             <div class="col-md-11  mx-auto pb-1 gap-3 d-flex justify-content-center">
-                <button type="submit" class="btn CartBtn bg-danger">
+                <button type="submit" class="btn CartBtn bg-danger" style="width: 200px; height: auto;">
                     <span class="IconContainer">
                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" fill="#fff"
                             class="cart">
@@ -98,51 +99,92 @@
 
 </section>
 
-<style>
-    /* DIFERENTES ESTILOS EN HOME Y EN AÑADIR */
-    .CartBtn {
-        width: 200px;
-        height: auto;
-    }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+{% block mobile-home %}
+{% endblock %}
+{% block mobile-title %}
+{% endblock %}
 
-    input[type="number"] {
-        -moz-appearance: textfield;
-    }
+<section class="mobile añadir mt-4">
+    <a class="d-flex gap-2 justify-content-end"  href="{% url 'pageOrder' %}">
+        <div class="order-cont-cant me-4">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            <span class="order-cant-mobile"></span>
+        </div>
+    </a>
+    <form class="px-4 form" data-id="{{ producto.id_producto }}">
+        <div class="col-md-12">
+            <swiper-container class="mySwiper my-auto" keyboard="true" space-between="30" pagination="true"
+                pagination-clickable="true" navigation="true" loop="true" style="width: 100% !important;">
+                <swiper-slide class="p-4"><a href="/media/{{ producto.iProductImg }}" data-lightbox="image-1"><img
+                            src="/media/{{ producto.iProductImg }}" id="img-producto-mobile" class="img-fluid"
+                            alt="Imagen"></a></swiper-slide>
+                <swiper-slide class="p-4"><a href="/media/{{ producto.iInfoImg }}" data-lightbox="image-2"><img
+                            src="/media/{{ producto.iInfoImg }}" class="img-fluid" alt="Imagen"></a></swiper-slide>
+            </swiper-container>
+        </div>
+        <div class=" m-auto" style="text-align:left;">
+            <div class="d-flex justify-content-between">
+                <h3 class="my-3"> <strong style="text-transform: capitalize;"
+                        id="producto-mobile">{{producto.nombre_producto}}</strong> </h3>
+                <strong style="float:right; margin: 10px; font-size: 2rem;" class="text-danger"
+                    id="precio-mobile">{{producto.precio_pub}}</strong>
+            </div>
+            <div class="mb-3 scrollbar-add-descrip" style="max-height: 150px; height: auto; overflow-y: scroll;">
+                {{producto.descripcion}} </div>
+            <hr>
+            <ul class="list-group list-group-flush mt-4">
+                <li class="d-flex align-items-center gap-4">
+                    <strong>Sabores:</strong>
+                    <select class="form-select" style="text-transform: capitalize;" aria-label="Default select example"
+                        required name="sabor-mobile">
+                        <option value="" selected>- - -</option>
+                        {% for sabor in sabores %}
+                        <option value="{{sabor}}">{{ sabor }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <hr>
+                <li class="d-flex align-items-center gap-4">
+                    <strong>Presentaciones por libras:</strong>
+                    <select class="form-select" style="text-transform: capitalize;" aria-label="Default select example"
+                        required name="presentacion-mobile">
+                        <option value="" selected>- - -</option>
+                        {% for presentacion in presentaciones %}
+                        <option value="{{presentacion}}">{{ presentacion }} lbs</option>
 
-    .number-input {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ccc;
-        overflow: hidden;
-        height: 40px;
-        max-width: 140px;
-    }
+                        {% endfor %}
+                    </select>
+                </li>
+                <hr>
+                <li class="d-flex align-items-center gap-4">
+                    <strong>Cantidad:</strong>
+                    <div class="number-input">
+                        <button type="button" class="decrement">-</button>
+                        <input class="quantity" min="1" name="cantidad" value="1" type="number" autocomplete="off"
+                            step="1" id="cantidad-ingresada" max="100" required readonly
+                            oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                        <button type="button" class="increment">+</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <hr>
+        <div class="col-md-11  mx-auto pb-1 gap-3 d-flex justify-content-center">
+            <button type="submit" class="btn CartBtn bg-danger" style="width: 200px;">
+                <span class="IconContainer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" fill="#fff" class="cart">
+                        <path
+                            d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z">
+                        </path>
+                    </svg>
+                </span>
+                <p class="text">Añadir al pedido</p>
+            </button>
+        </div>
+    </form>
+</section>
 
-    .number-input button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #f2f2f2;
-        border: none;
-        width: 40px;
-        height: 100%;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .number-input input[type=number] {
-        border: none;
-        text-align: center;
-        width: 60px;
-        padding: 10px;
-    }
-</style>
 <!-- <ol>
     <li><strong>Selecciona tu producto:</strong> Explora y elige tu producto favorito.</li>
     <li><strong>Personaliza tu producto:</strong> Selecciona la presentación que prefieras, elige entre nuestra variedad de sabores y decide cuántos necesitas.</li>
@@ -154,86 +196,8 @@
 
 
 <script>
-    function increment(button) {
-        let input = button.parentNode.querySelector('.quantity');
-        input.value = parseInt(input.value) + 1;
-        $(input).trigger('input');
-    }
-
-    function decrement(button) {
-        let input = button.parentNode.querySelector('.quantity');
-        if (input.value > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
-        $(input).trigger('input');
-    }
-    document.querySelector('#increment').addEventListener('click', function () {
-        increment(this);
-    });
-
-    document.querySelector('#decrement').addEventListener('click', function () {
-        decrement(this);
-    });
-
-
-    function actualizarCantidadProductos() {
-        let carrito = JSON.parse(localStorage.getItem('carrito'));
-        let orderCant = document.querySelector('.order-cant');
-
-        if (!carrito) {
-            carrito = {};
-            orderCant.classList.remove('show');
-            return;
-        }
-
-        let cantidadTotal = Object.keys(carrito).length;
-
-        if (cantidadTotal === 0) {
-            orderCant.classList.remove('show');
-            return;
-        }
-
-        orderCant.textContent = cantidadTotal;
-        cantidadTotal = 0
-        orderCant.classList.add('show');
-    }
-
-
-    let carrito = localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : {};
 
     $(document).ready(function () {
-        actualizarCantidadProductos()
-
-        document.querySelector('form').addEventListener('submit', function (event) {
-
-            let imgSrc = document.getElementById('img-producto').src;
-            let nombreProducto = document.getElementById('producto').textContent.trim();
-            let precio = document.getElementById('precio').textContent.trim();
-            let sabor = document.querySelector('select[name="sabor"]').value;
-            let presentacion = document.querySelector('select[name="presentacion"]').value;
-            let cantidad = document.querySelector('input[name="cantidad"]').value;
-
-            let idProducto = this.dataset.id;
-
-            let producto = {
-                imgSrc: imgSrc,
-                nombreProducto: nombreProducto,
-                precio: precio,
-                sabor: sabor,
-                presentacion: presentacion,
-                cantidad: cantidad
-            };
-
-            carrito[idProducto] = producto;
-
-            localStorage.setItem('carrito', JSON.stringify(carrito));
-
-            actualizarCantidadProductos();
-
-            alert('Datos guardados exitosamente!');
-        });
-
-
 
         cargarProductos()
 
