@@ -123,13 +123,21 @@
     }
 
     .active-status {
-        background-color: #95eea5;
-        color: #09711c;
+        background-color: rgb(45, 124, 242);
+        color: white;
+        border: solid 1px black;
     }
 
     .inactive-status {
-        background-color: #ec8080;
-        color: #8a0404;
+        background-color: #ff3838;
+        color: white;
+        border:solid 1px black
+    }
+
+    .inactive-status:hover{
+        background-color: #ed5959;
+        border:solid 1px black;
+        color:white;
     }
 
 
@@ -201,11 +209,7 @@
         max-height: 100px;
         overflow-y: scroll;
     }
-    .inactive-status {
-        background-color: #ef6d6d;
-        color: #8a0404;
-        opacity: 0.5;
-    }
+    
     
     .modal-state {
         width: 1rem;
@@ -214,7 +218,7 @@
     }
     
     .modal-state.activo {
-        background-color: #72d072;
+        background-color: #377AFF;
     }
     
     .modal-state.inactivo {

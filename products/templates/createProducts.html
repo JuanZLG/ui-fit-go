@@ -31,7 +31,7 @@
   <h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Producto</h1>
 </center>
 
-<div class="card shadow" style="position:relative; margin-bottom: 30px;">
+<div class="card shadow" style="position:relative;">
   <div class="container p-4">
     <form id="producto-form" method="post" enctype="multipart/form-data" action=" {% url 'createAProduct' %} ">
       {% csrf_token %}
@@ -171,7 +171,7 @@
     </div>
 
       <div class="text-center p-2">
-        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+        <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
       </div>
 
     </form>

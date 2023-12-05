@@ -206,9 +206,6 @@ def create_password(length=8):
     return password
 
 
-
-
-
 @jwt_cookie_required
 def editUser(request, id_usuario):
     roles = Roles.objects.all()
@@ -265,9 +262,6 @@ def send_email_edit(user, email, email_original):
     
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
-
-
-
 
 
 @jwt_cookie_required

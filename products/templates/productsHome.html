@@ -17,8 +17,8 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'createAProduct' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
-                    data-placement="top" title="Crear un Producto">
+                <a href="{% url 'createAProduct' %}" class="btn btn-primary btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear un Producto" style="border:solid 1px black">
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Producto</span>
                 </a>
@@ -64,7 +64,7 @@
                 </thead>
                 <tbody>
                     {% for p in Products %}
-                    <tr class="{% if p.estado == 0 %}inactivo{% endif %}">
+                    <tr>
                         <td>{% if p.id_categoria %}{{p.id_categoria.nombre_categoria}}{% else %}Sin Categoría{% endif %}
                         </td>
                         <td>{% if p.id_marca %}{{p.id_marca.nombre_marca}} {% else %}Sin Marca{% endif %}</td>
@@ -312,7 +312,7 @@
                     </div>
                 </div>
                 <div class="text-end">
-                    <button type="button" class="btn btn-success mx-auto" id="guardarCategoria">Guardar</button>
+                    <button type="button" class="btn btn-primary mx-auto" id="guardarCategoria">Guardar</button>
                 </div>
                 </form>
             </div>
@@ -361,7 +361,7 @@
                             text: 'Se ha agregado la categoria con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 3000,
+                            timer: 1000,
                         }).then(() => {
                             location.reload();
                         });
@@ -399,7 +399,7 @@
                     </div>
                 </div>
                 <div class="text-end">
-                    <button type="button" class="btn btn-success mx-auto" id="guardarMarca">Guardar</button>
+                    <button type="button" class="btn btn-primary mx-auto" id="guardarMarca">Guardar</button>
                 </div>
                 </form>
             </div>
@@ -448,7 +448,7 @@
                             text: 'Se ha agregado la marca con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 3000,
+                            timer: 1000,
                         }).then(() => {
                             location.reload();
                         });

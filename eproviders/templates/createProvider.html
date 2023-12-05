@@ -64,7 +64,7 @@
                         style="resize: none; max-height: 200px;"></textarea>
                 </div>
                 <div class="text-end mt-3">
-                    <button id="btnCrearProv" class="btn btn-success mx-auto" type="submit"
+                    <button id="btnCrearProv" class="btn btn-primary mx-auto" type="submit"
                         data-url-crear="{% url 'crearProveedor' %}"
                         data-url-validar="{% url 'proveedor_unico' %}">Guardar</button>
                 </div>
@@ -198,11 +198,11 @@
                             text: 'Proveedor agregado con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 3000,
+                            timer: 1000,
                         });
                         setTimeout(function () {
                             window.location.href = "{% url 'proveedores' %}";
-                        }, 3000);
+                        }, 1000);
                     }
                 }
             });

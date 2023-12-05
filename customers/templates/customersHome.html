@@ -18,8 +18,8 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'agregarCliente' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
-                    data-placement="top" title="Crear un Cliente">
+                <a href="{% url 'agregarCliente' %}" class="btn btn-primary btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear un Cliente" style="border: solid 1px black">
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Cliente</span>
                 </a>
@@ -52,7 +52,7 @@
                 </thead>
                 <tbody class="tbody">
                     {% for cliente in clientes %}
-                    <tr class="{% if cliente.estado == 0 %}inactivo{% endif %}">
+                    <tr>
                         <td>{{ cliente.documento }}</td>
                         <td>{{ cliente.nombres }} {{ cliente.apellidos }}</td>
                         <td>{{ cliente.celular }}</td>
