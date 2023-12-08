@@ -25,21 +25,24 @@
     <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
       <div class="product-image">
         <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
-        <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
+        <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"
+          style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid">
       </div>
-      <div class="product-details">
-        <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+      <div class="product-details ">
+        <h3 class="product-title" style="text-transform: capitalize;">{{ producto.nombre_producto }}</h3>
         <div class="product-description">
           <p>{{ producto.descripcion }}</p>
         </div>
-        <div class="product-price">
-          <span>${{ producto.precio_pub }}</span>
-          <span class="product-search">
-            <i class="fas fa-search"></i>
-          </span>
-        </div>
+        <strong><span class="text-danger">${{ producto.precio_pub }}</span></strong>
       </div>
+      <a class="CartBtn bg-danger color-white" href="{% url 'añadir_pedido' producto.id_producto %}">
+        <span class="IconContainer">
+            <i class="fas fa-star star-icon"></i>
+        </span>
+        <p class="text">Elegir producto</p>
+      </a>
     </div>
+
     {% endfor %}
   </div>
 
@@ -75,21 +78,23 @@
         {% for producto in productos %}
         <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
           <div class="product-image">
-            <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
             <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
           </div>
           <div class="product-details">
-            <h3 class="product-title">{{ producto.nombre_producto }}</h3>
+            <h3 class="product-title" style="text-transform: capitalize;">
+              {{ producto.nombre_producto }}
+            </h3>
+            <strong><span class="text-danger">${{ producto.precio_pub }}</span></strong>
             <div class="product-description">
               <p>{{ producto.descripcion }}</p>
             </div>
-            <div class="product-price">
-              <span>${{ producto.precio_pub }}</span>
-              <span class="product-search">
-                <i class="fas fa-search"></i>
-              </span>
-            </div>
           </div>
+          <a class="CartBtn bg-danger color-white" href="{% url 'añadir_pedido' producto.id_producto %}">
+            <span class="IconContainer">
+                <i class="fas fa-star star-icon"></i>
+            </span>
+            <p class="text">Elegir producto</p>
+          </a>
         </div>
         {% endfor %}
       </div>
@@ -97,17 +102,18 @@
   </div>
   <div class="row">
     <div class="col-md-2 px-4">
-      <p><strong>OPCIONES</strong></p>
+      <!-- <p><strong>OPCIONES</strong></p> -->
     </div>
   </div>
 </section>
 
+<style>
+</style>
 
 
 <script>
+  
   $(document).ready(function () {
-
-
 
     cargarProductos()
 
@@ -122,18 +128,21 @@
             $.each(data.data, function (index, p) {
               var productList =
                 '<li class="d-flex search-card-desk productDetailsButton" data-id="' + p.id_producto + '">' +
-                '<img src="/media/' + p.presentacion + '" alt="Imagen" height="64" width="64">' +
-                '<div class="media-item px-2 d-flex gap-2 flex-column">' +
-                '<span>' + p.nombre_producto + '</span>' +
+                '<div style="width:50px; height:50px; overflow: hidden;"><img src="/media/' + p.presentacion + '" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid"></div>' +
+                '<div class="px-2 d-flex gap-2 flex-column">' +
+                '<span style="width: 100px; height:20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">' + p.nombre_producto + '</span>' +
                 '<h6><strong class="text-danger">' + p.precio_pub + '</strong></h6></div></li>';
 
               $("#toggle-main-search-desk").append(productList);
             });
-            $('.productDetailsButton').click(function () {
-              id_producto = $(this).data("id")
-              $("#search-input").val("");
-              cargarDetalle(id_producto);
-            });
+            $('.productDetailsButton').click(function (event) {
+              if (!$(event.target).closest('.CartBtn').length) {
+                  var id_producto = $(this).data("id");
+                  $("#search-input").val("");
+                  cargarDetalle(id_producto);
+              }
+          });
+
           }
         },
       });
@@ -156,10 +165,10 @@
                 $.each(data.data, function (index, p) {
                   $("#toggle-main-search-desk").addClass("is-active");
                   var productList =
-                    '<li class="d-flex productDetailsButton search-card-desk" data-id="' + p.id_producto + '">' +
-                    '<img  src="/media/' + p.iProductImg_name + '" alt="Imagen" height="64" width="64">' +
-                    '<div class="media-item px-2 d-flex gap-2 flex-column">' +
-                    '<span>' + p.nombre_producto + '</span>' +
+                    '<li class="d-flex search-card-desk productDetailsButton data-id="' + p.id_producto + '">' +
+                    '<div style="width:50px; height:50px; overflow: hidden;"><img src="/media/' + p.iProductImg_name + '" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid"></div>' +
+                    '<div class="px-2 d-flex gap-2 flex-column">' +
+                    '<span  style="width: 100px; height:20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">' + p.nombre_producto + '</span>' +
                     '<h6><strong class=" text-danger">' + p.precio_pub + '</strong></h6></div></li>';
 
                   $("#toggle-main-search-desk").append(productList);

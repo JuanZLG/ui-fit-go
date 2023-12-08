@@ -104,13 +104,21 @@
     }
 
     .active-status {
-        background-color: #95eea5;
-        color: #09711c;
+        background-color: rgb(45, 124, 242);
+        color: white;
+        border: solid 1px black;
     }
 
     .inactive-status {
-        background-color: #ec8080;
-        color: #8a0404;
+        background-color: #ff3838;
+        color: white;
+        border:solid 1px black
+    }
+
+    .inactive-status:hover{
+        background-color: #ed5959;
+        border:solid 1px black;
+        color:white;
     }
 
     .admin {
@@ -141,8 +149,8 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'createAUser' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
-                    data-placement="top" title="Crear un Usuario">
+                <a href="{% url 'createAUser' %}" class="btn btn-primary btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear un Usuario" style="border:solid 1px black">
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Usuario</span>
                 </a>
@@ -175,7 +183,7 @@
                 </thead>
                 <tbody>
                     {% for u in Usuarios %}
-                    <tr class="{% if u.id_usuario == 1 %}admin{% endif %} {% if u.estado == 0 %}inactivo{% endif %}">
+                    <tr class="{% if u.id_usuario == 1 %}admin{% endif %}">
                         <td>{% if u.id_rol %}{{u.id_rol.nombre_rol}}{% else %}Sin rol{% endif %}</td>
                         <td>{{u.nombre_usuario}}</td>
                         <td>{{u.correo}}</td>
@@ -227,6 +235,8 @@
             text: 'Para habilitar nuevamente este usuario deberá asociarle un rol.',
             icon: 'warning',
             showCancelButton: true,
+            confirmButtonColor: '#0975B7',
+            cancelButtonColor: '#DF3131',
             confirmButtonText: 'Confirmar',
             cancelButtonText: 'Cancelar',
         }).then((result) => {
@@ -239,8 +249,8 @@
             title: 'Estado',
             text: '¿Desea cambiar el estado de este usuario?',
             showCancelButton: true,
-            confirmButtonColor: '#419edd',
-            cancelButtonColor: '#ba4d4d',
+            confirmButtonColor: '#0975B7',
+            cancelButtonColor: '#DF3131',
             confirmButtonText: 'Confirmar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
@@ -316,10 +326,10 @@ $(".cambiar-estado").click(function () {
         
     }
     .modal-permissions .permis.activo{
-        background-color: #77B677;
+        background-color: #0F80F2;
     }
     .modal-permissions .permis.inactivo{
-        background-color: #ba4d4d;
+        background-color: #B83737;
     }
 
     .modal-state {

@@ -94,13 +94,21 @@ tr.inactivo {
 }
 
 .active-status {
-    background-color: #95eea5;
-    color: #09711c;
+    background-color: rgb(45, 124, 242);
+    color: white;
+    border: solid 1px black;
 }
 
 .inactive-status {
-    background-color: #ec8080;
-    color: #8a0404;
+    background-color: #ff3838;
+    color: white;
+    border:solid 1px black
+}
+
+.inactive-status:hover{
+    background-color: #ed5959;
+    border:solid 1px black;
+    color:white;
 }
 
 

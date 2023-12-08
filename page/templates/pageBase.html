@@ -11,15 +11,15 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{% static 'css/style-commons.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/pageIndex.js' %}"></script>
-    <!-- <script src="{% static 'js/main.js' %}"></script> -->
+    <script src="{% static 'js/pageAdd.js' %}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alatsi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
     {% block urls %} {% endblock %}
@@ -54,12 +54,13 @@
             <hr class="divider">
             <li class="menu-item info">
                 <a href="#" class="menu-link">
-                    <i class="fas fa-info-circle icon"></i> Sobre Brutality
+                    <span style="width: 25px;"><i class="fas fa-shopping-cart icon"></i></span>
+                    ¿Cómo comprar?
                 </a>
                 <a href="#" class="menu-link">
-                    <i class="fas fa-shopping-cart icon"></i> ¿Cómo comprar?
+                    <span style="width: 25px;"><i class="fas fa-question"></i></span>
+                    Preguntas
                 </a>
-
                 <span class="menu-contact">
                     <i class="fas fa-envelope icon"></i> brutality@gmail.com
                 </span>
@@ -68,7 +69,6 @@
                         <a href="#" class="mx-2"><i class="fab fa-instagram icon"></i></a>
                         <a href="#"><i class="fab fa-whatsapp icon"></i></a>
                     </div>
-                    <a href="#" class="login-button">Ingresar</a>
                 </div>
             </li>
         </ul>
@@ -84,10 +84,10 @@
                 <ul>
                     {% for producto in categoria.productos_set.all %}
                     <li class="menu-list-item"
-                    onclick="closeMains(); setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
-                    {{ producto.nombre_producto }}
+                        onclick="closeMains(); setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
+                        {{ producto.nombre_producto }}
                     </li>
-                    
+
                     {% endfor %}
                 </ul>
             </li>
@@ -100,7 +100,8 @@
         </div>
         <ul id="main-options-marcas" class="options-menu-list marcas">
             {% for marca in marcas %}
-            <li class="menu-list-item menu-list-item-mobile" data-id-filter="marca-{{ marca.id_marca }}">{{ marca.nombre_marca }}</li>
+            <li class="menu-list-item menu-list-item-mobile" data-id-filter="marca-{{ marca.id_marca }}">{{
+                marca.nombre_marca }}</li>
             {% endfor %}
         </ul>
         <hr class="divider">
@@ -148,57 +149,127 @@
                         <a href="{% url 'pageHome' %}">
                             <img src="{% static 'img/gorille.png' %}" class="logo img-fluid" alt="Logo de Brutálity">
                         </a>
-                        <h1>BRUTALITY</h1>
+                        <h1><strong>BRUTALITY</strong></h1>
+                        <li id="toggle-info" class="nav-item">
+                            <a href="#" class="nav-link">Información
+                                <svg style="height: 24px;" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 8.25l-7.5 7.5-7.5-7.5">
+                                    </path>
+                                </svg>
+                            </a>
+                            <ul id="menu-info">
+                                <li> ¿Cómo comprar? </li>
+                                <li> Preguntas </li>
+                            </ul>
+                        </li>
                     </div>
-                    <li id="toggle-info" class="nav-item">
-                        <a href="#" class="nav-link">Información
-                            <svg style="height: 24px;" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5">
-                                </path>
-                            </svg>
-                        </a>
-                        <ul id="menu-info">
-                            <li> Sobre nosotros </li>
-                            <li> ¿Cómo comprar? </li>
-                            <li> Preguntas </li>
-                        </ul>
-                    </li>
+                    <div>
+                        <div class="nav-link item-order d-flex align-items-center justify-content-center gap-2">
+                            <span>Mi pedido</span>
+                            <div class="order-cont-cant">
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                <span class="order-cant"></span>
+                            </div>
+                        </div>
+                        <div class="position-relative list-cont-order">
+                            <div class="list-order position-absolute top-0 end-0 bg-dark">
+                                <ul class="list-unstyled list-item"
+                                    style="width: 300px; max-height: 500px; overflow-y: auto;">
+                                </ul>
+                                <div class="d-flex justify-content-center align-items-center flex-column px-3">
+                                    <div class="d-flex justify-content-between gap-1 p-1 mt-2 w-100">
+                                        <div class="d-flex justify-content-start">
+                                            <strong>TOTAL:</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <strong id="total-order"></strong>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'pageOrder' %}" class="btn d-flex align-items-center bg-danger my-3"
+                                        style="height: auto;">
+                                        <p class="text">Ir al pedido</p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"
+                                            fill="#fff" class="cart mx-2">
+                                            <path
+                                                d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </ul>
-                <a href="#" class="nav-link nav-item">Ingresar
-                    <i class="fas fa-sign-in-alt mx-2"></i>
-                </a>
             </nav>
-            <!-- <div class="extra-header">
+        </div>
+        <!-- <div class="extra-header">
                 {% block extraHeaderDesk %}
                 {% endblock %}
             </div> -->
         </div>
     </header>
+    <style>
+        .list-cont-order {
+            margin: auto;
+            position: absolute;
+            top: 2px;
+        }
 
+        .list-cont-order .CartBtn {
+            width: 200px;
+        }
+
+        .list-order {
+            border-radius: 0 0 5px 5px;
+            z-index: 999;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+
+        .list-order.show {
+            max-height: 600px;
+        }
+    </style>
+
+
+    {% block mobile-home %}
     <div class="mobile">
         <div class="catalog-section">
-            <select name="sortMobile" id="sortMobile" class="catalog-select">
-                <option value="defect" class="sort-option">Por defecto</option>
-                <option value="all" class="sort-option">Ver todo</option>
-                <option value="best-sellers" class="sort-option">Más vendidos</option>
-                <option value="high-price" class="sort-option">Mayor precio</option>
-                <option value="low-price" class="sort-option">Menor precio</option>
-            </select>
-            <div class="view-options">
-                <a href="#" class="list"><i class="fas fa-th-list fa-lg"></i></a>
-                <a href="#" class="grid"><i class="fas fa-th-large fa-lg"></i></a>
+            <div class="d-flex gap-2">
+                <span class="mx-2 m-auto">Ordenar por</span>
+                <select name="sortMobile" id="sortMobile" class="catalog-select">
+                    <option value="defect" class="sort-option">Por defecto</option>
+                    <option value="all" class="sort-option">Ver todo</option>
+                    <option value="best-sellers" class="sort-option">Más vendidos</option>
+                    <option value="high-price" class="sort-option">Mayor precio</option>
+                    <option value="low-price" class="sort-option">Menor precio</option>
+                </select>
+                <div class="view-options">
+                    <a href="#" class="list"><i class="fas fa-th-list fa-lg"></i></a>
+                    <a href="#" class="grid"><i class="fas fa-th-large fa-lg"></i></a>
+                </div>
             </div>
+            <a class="nav-link item-order-mobile d-flex align-items-center justify-content-center gap-2"
+                href="{% url 'pageOrder' %}" style="background-color: transparent;">
+                <div class="order-cont-cant">
+                    <i class="fa fa-shopping-cart" aria-hidden="true" style="color: #000;"></i>
+                    <span class="order-cant-mobile"></span>
+                </div>
+            </a>
         </div>
     </div>
 
+    {% endblock %}
 
 
-    <div class="desktop" style="border: 2px solid #ccc;">
+    <div class="desktop" style="border-bottom: 2px solid #f2f2f2; background-color: #f2f2f2;">
         <div class="catalog-section col-md-10 m-auto py-1">
             <div class="d-flex gap-3 justify-content-center col-md-12">
                 <div class="d-flex align-items-center justify-content-center mx-2 element-container">
-                    <span>SUPLEMENTOS</span>
+                    <span><strong>SUPLEMENTOS</strong></span>
                     <ul class="element-option" style="list-style: none;">
                         {% for categoria in categorias %}
                         <li>{{ categoria.nombre_categoria }}:
@@ -215,20 +286,23 @@
                     </ul>
                 </div>
                 <div class="d-flex align-items-center justify-content-center mx-2 element-container">
-                    <span>CATEGORIAS</span>
+                    <span><strong>CATEGORIAS</strong></span>
                     <ul class="element-option">
-                        <span class="menu-comprar-title">CATEGORIAS</span>
+                        <!-- <span class="menu-comprar-title">CATEGORIAS</span> -->
                         {% for categoria in categorias %}
-                        <li class="menu-list-item menu-list-item-desk" data-id-filter="categoria-{{ categoria.id_categoria }}">{{ categoria.nombre_categoria }}</li>
+                        <li class="menu-list-item menu-list-item-desk"
+                            data-id-filter="categoria-{{ categoria.id_categoria }}">{{ categoria.nombre_categoria }}
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="d-flex align-items-center justify-content-center mx-2 element-container">
-                    <span>MARCAS</span>
+                    <span><strong>MARCAS</strong></span>
                     <ul class="element-option">
-                        <span class="menu-comprar-title">MARCAS</span>
+                        <!-- <span class="menu-comprar-title">MARCAS</span> -->
                         {% for marca in marcas %}
-                        <li class="menu-list-item menu-list-item-desk" data-id-filter="marca-{{ marca.id_marca }}">{{ marca.nombre_marca }}
+                        <li class="menu-list-item menu-list-item-desk" data-id-filter="marca-{{ marca.id_marca }}">
+                            {{ marca.nombre_marca }}
                         </li>
                         {% endfor %}
                     </ul>
@@ -239,7 +313,9 @@
 
     <style>
         .element-container {
+            z-index: 990;
             position: relative;
+            cursor: pointer;
         }
 
         .element-option {
@@ -254,20 +330,20 @@
             padding-top: 10px;
             background-color: #222222;
             color: #fff;
+            border-bottom: 3px solid #ccc;
         }
     </style>
 
+    {% block mobile-title %}
     <div class="mobile">
         <div class="product-featured">
             <h3 class="title" id="dynamic-title-mobile" data-id-filter="producto-0">Suplementos</h3>
         </div>
     </div>
+    {% endblock %}
+
     {% block body %}{% endblock %}
 
-
-    <footer>
-        <p>&copy; 2023 Brutality</p>
-    </footer>
 
     <style>
         swiper-container {
@@ -275,14 +351,12 @@
             height: 100%;
             display: flex;
             align-items: center;
-            /* Centra verticalmente las imágenes */
         }
 
         swiper-slide img {
             display: block;
             width: 80%;
             max-height: 500px;
-            /* Establece un tamaño máximo para la altura de la imagen */
             margin: 0 auto;
             object-fit: cover;
         }
@@ -317,7 +391,7 @@
             <hr >
             <ul class="list-group list-group-flush mt-4">
                 <li><strong>Sabores:</strong> ${data.sabor}</li>
-                <hr >
+                <hr>
                 <li><strong>Presentaciones por libras:</strong> ${data.presentacion}lbs</li>
             </ul>
         </div>
@@ -424,48 +498,46 @@
         }
 
         function filterProductsDesk(valor, tipo = "productos") {
-      $.ajax({
-        url: filterProductsUrl,
-        method: 'GET',
-        data: { valor: valor, tipo: tipo },
-        success: function (data) {
-          if (data.success) {
-            $("#product-container-desk").empty();
+            $.ajax({
+                url: filterProductsUrl,
+                method: 'GET',
+                data: { valor: valor, tipo: tipo },
+                success: function (data) {
+                    if (data.success) {
+                        $("#product-container-desk").empty();
 
-            $.each(data.data, function (index, p) {
-              var productCard =
-                '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
-                '<div class="product-image">' +
-                '<img src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
-                '<div class="product-details">' +
-                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
-                '<div class="product-description">' +
-                '<p>' + p.descripcion + '</p></div>' +
-                '<div class="product-price">' +
-                '<span>' + p.precio_pub + '</span>' +
-                '<span class="product-search">' +
-                '<i class="fas fa-search"></i></span></div>' +
-                '</div ></div >';
+                        $.each(data.data, function (index, p) {
+                            var productCard =
+                                '<div class="product-card productDetailsButton" data-id="' + p.id_producto + '">' +
+                                '<div class="product-image">' +
+                                '<img src="/media/' + p.iProductImg_name + '" alt="Imagen"></div>' +
+                                '<div class="product-details">' +
+                                '<h3 class="product-title">' + p.nombre_producto + '</h3>' +
+                                '<div class="product-description">' +
+                                '<p>' + p.descripcion + '</p></div>' +
+                                '<div class="product-price">' +
+                                '<span>' + p.precio_pub + '</span></div>' +
+                                '</div ></div >';
 
-              $("#dynamic-title-desk").text(p.dynamicTitle);
-              $("#dynamic-title-desk").data("id-filter", p.identificador);
-              $("#product-container-desk").append(productCard);
+                            $("#dynamic-title-desk").text(p.dynamicTitle);
+                            $("#dynamic-title-desk").data("id-filter", p.identificador);
+                            $("#product-container-desk").append(productCard);
+                        });
+                        $('.productDetailsButton').click(function () {
+                            id_producto = $(this).data("id")
+                            cargarDetalle(id_producto);
+                        });
+                    }
+                }
             });
-            $('.productDetailsButton').click(function () {
-              id_producto = $(this).data("id")
-              cargarDetalle(id_producto);
-            });
-          }
         }
-      });
-    }
 
-    $("#sortDesk").change(function () {
-      let selectedValue = $(this).val();
-      if (selectedValue == "defect") location.reload();
-      const tipo = $("#dynamic-title-desk").data('id-filter');
-      filterProductsDesk(selectedValue, tipo);
-    });
+        $("#sortDesk").change(function () {
+            let selectedValue = $(this).val();
+            if (selectedValue == "defect") location.reload();
+            const tipo = $("#dynamic-title-desk").data('id-filter');
+            filterProductsDesk(selectedValue, tipo);
+        });
 
 
         /***********************++++++++++++++ */
@@ -586,7 +658,13 @@
         }
 
 
+
+
     </script>
+
+    <!-- <footer>
+    <p>&copy; 2023 Brutality</p>
+</footer> -->
 </body>
 
 </html>

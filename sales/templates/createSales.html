@@ -12,10 +12,13 @@
     <div class="venta-container">
         <div class="cliente-container">
             <div class="cliente-header">
-                <label class="cliente-label">Cliente *</label>
-                <label id="cont-docu"></label>
+                <span class="cliente-label">Cliente *</span>
+                <div>
+                    <span id="cont-docu"></span>
+                    <span id="cont-icon-pedido" class="ml-2"></span>
+                </div>
             </div>
-            <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+            <input type="search" class="form-control" id="nombreCliente" autocomplete="off"
                 placeholder="Ingrese el nombre del cliente">
             <div class="error-container">
                 <span class="error-text" id="error-docu"></span>
@@ -27,74 +30,6 @@
         </div>
     </div>
 </section>
-
-<script>
-    $(document).ready(function () {
-        let listadoClientes = $("#resultado-cliente");
-
-        $("#nombreCliente").on("input", function () {
-            let nombreCliente = $(this).val();
-            $("#nombreCliente").removeClass("is-invalid")
-            $("#campos-requeridos").css("color", "");
-
-            listadoClientes.show();
-            $("#cont-docu").empty()
-            $("#nombreCliente").removeClass("is-valid")
-
-            if (nombreCliente.length >= 3) {
-                $.ajax({
-                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
-                    type: "GET",
-                    success: function (data) {
-                        listadoClientes.empty();
-                        listadoClientes.removeClass("show");
-
-                        if (data.resultados.length > 0) {
-                            for (let i = 0; i < data.resultados.length; i++) {
-                                listadoClientes.addClass("show");
-                                let documento = data.resultados[i].documento;
-                                let nomClienteDato = data.resultados[i].nombre_cliente;
-                                let estadoCliente = data.resultados[i].estado;
-
-                                let itemLista = `
-                                <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}">
-                                    <div>
-                                    <span id="nombreDato">${nomClienteDato}</span> -
-                                    <span id="documentoDato">${documento}</span>
-                                    </div>
-                                        ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
-                                </li>
-                            `;
-
-                                listadoClientes.append(itemLista);
-                            }
-                        }
-                    },
-                });
-            } else {
-                listadoClientes.removeClass("show");
-                listadoClientes.empty();
-            }
-        });
-
-        listadoClientes.on("click", ".cliente-item", function () {
-            if (!$(this).hasClass("inactivo")) {
-                let nombreApellido = $(this).find("#nombreDato").text();
-                let documento = $(this).find("#documentoDato").text();
-
-                $("#error-docu").text("")
-                let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
-                $("#cont-docu").html(identificacionCompleta);
-
-                $("#nombreCliente").val(nombreApellido).addClass("is-valid");
-                listadoClientes.hide();
-            }
-        });
-    });
-
-</script>
-
-
 
 <section class="product-section">
     <div class="product-content">
@@ -111,7 +46,7 @@
             <div class="number-input">
                 <button onclick="decrement(this)" id="decrement">-</button>
                 <input class="quantity" min="1" name="quantity" value="1" type="number" autocomplete="off" step="1"
-                    id="cantidad-ingresada"
+                    id="cantidad-ingresada" max="100" readonly
                     oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
                 <button onclick="increment(this)" id="increment">+</button>
             </div>
@@ -177,11 +112,346 @@
 </div>
 
 
+<script>
+    function ClientesConPedidos(documento, pedidos) {
+        function generarFilasPedidos(pedidos) {
+            pedidos.sort((a, b) => {
+                if (a.estado === "cancelado" && b.estado !== "cancelado") {
+                    return 1;
+                } else if (a.estado !== "cancelado" && b.estado === "cancelado") {
+                    return -1;
+                }
+                return 0;
+            });
+            return pedidos.map((pedido, index) => {
+                return `
+        <tr class="pedido" style="text-align: center; vertical-align: middle; position: relative;">
+            <td><input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}" ${pedido.estado === "cancelado" ? "disabled" : ""}></td>
+            <td>${pedido.fecha_pedido}</td>
+            <td>${pedido.total_pedido}</td>
+            <td>
+                <button class="btn btn-secondary btn-detalle" data-index="${index}">
+                    Detalle <i class="fas fa-chevron-down icono-detalle" data-index="${index}"></i>
+                </button>
+            </td>
+            <td><span style="border-radius: 50%; width: 15px; height: 15px; display: block; position: absolute; top: 10px; right: 10px;" class="${pedido.estado === "cancelado" ? "inactive-status" : pedido.estado === "en proceso" ? "en_proceso_pedido" : "active-status"}" data-pedido-id="${pedido.id_pedido}"></span></td>
+        </tr>
+
+        <tr class="fila-detalle detalle-${index}" style="display: none;">
+            <td colspan="4" style="padding:0;">
+                <div class="detalle-contenedor" style="text-align: center;">
+                    <table class="table table-detalle-pedido" style="width: 100%; overflow-x: auto; border-collapse: collapse; background-color: #f8f9fa; margin: auto;">
+                        <thead>
+                            <tr style="background-color: #e9ecef;">
+                                <th style="width:200px;">Producto</th>
+                                <th>Presentación</th>
+                                <th>Sabor</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total del Producto</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${pedido.detalles.map(detalle => `
+                                <tr style="text-align: center; vertical-align: middle; position: relative;">
+                                    <td>${detalle.nombre_producto}</td>
+                                    <td>${detalle.presentacion} lbs</td>
+                                    <td>${detalle.sabor}</td>
+                                    <td>${detalle.cantidad}</td>
+                                    <td>${detalle.precio_uni}</td>
+                                    <td>${detalle.precio_tot}</td>
+                                    <td> <a href="/admin/orders/Editar_pedido/${pedido.id_pedido}" %}" class="btn btn-sm mr-2"
+                                    id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    `;
+            }).join('');
+        }
+        Swal.fire({
+            html: `
+        <div class="container mt-4">
+            <div class="row mb-3">
+                <div class="col d-flex justify-content-between">
+                    <p id="nombreCliente"><strong>${$("#nombreCliente").val()}</strong></p>
+                    <p id="documentoCliente"><strong>Documento: ${documento}</strong></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <input type="checkbox" id="seleccionarTodos">
+                                </th>
+                                <th scope="col">Fecha del Pedido</th>
+                                <th scope="col">Total del Pedido</th>
+                                <th></th>
+                                <th style="width:30px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPedidos">
+                            ${generarFilasPedidos(pedidos)}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <p class="text-start text-danger" id="error-pedido"></p>
+                <div class="col">
+                    <button id="cargarPedidos" class="btn btn-primary">Cargar Pedidos</button>
+                    <button id="nuevoPedido" class="btn btn-secondary ml-2">Cargar nuevo</button>
+                </div>
+            </div>
+        </div>
+        `,
+            showCloseButton: true,
+            showConfirmButton: false,
+            width: 'auto',
+            maxWidth: '85%',
+            customClass: {
+                closeButton: 'custom-close-button'
+            },
+
+            didOpen: () => {
+                const seleccionarTodosCheckbox = document.getElementById('seleccionarTodos');
+                const checkboxes = document.querySelectorAll('.pedido-checkbox');
+
+                seleccionarTodosCheckbox.addEventListener('click', (event) => {
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.disabled) {
+                            checkbox.checked = event.target.checked;
+                        }
+                    });
+                });
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        document.getElementById('error-pedido').textContent = '';
+                        const todosSeleccionados = Array.from(checkboxes).every(cb => cb.checked || cb.disabled);
+                        seleccionarTodosCheckbox.checked = todosSeleccionados;
+                    });
+                });
+
+                document.getElementById('cargarPedidos').addEventListener('click', async () => {
+                    const idsSeleccionados = Array.from(document.querySelectorAll('.pedido-checkbox:checked')).map(cb => cb.value);
+
+                    if (idsSeleccionados.length === 0) {
+                        document.getElementById('error-pedido').textContent = 'Debe seleccionar al menos un pedido';
+                        return;
+                    } else {
+                        document.getElementById('error-pedido').textContent = '';
+                    }
+                    const seccionTabla = document.querySelector('.product-table-section');
+                    seccionTabla.style.height = 'auto';
+                    for (const id_pedido of idsSeleccionados) {
+                        const pedidoEncontrado = pedidos.find(pedido => pedido.id_pedido.toString() === id_pedido);
+                        if (pedidoEncontrado && pedidoEncontrado.detalles.length > 0) {
+                            for (const detalle of pedidoEncontrado.detalles) {
+                                await agregarDetalleATabla(detalle.id_producto, detalle.cantidad, detalle.precio_uni);
+                            }
+                        } else {
+                            console.log(`No se encontraron detalles para el pedido con ID: ${id_pedido}`);
+                        }
+                    }
+                });
+
+                function agregarDetalleATabla(id_producto, cantidad, precio_uni) {
+                    return new Promise((resolve, reject) => {
+                        var url = "{% url 'agregarDetalleATabla' %}";
+
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data: {
+                                id_producto: id_producto,
+                                cantidad: cantidad,
+                                precio_uni: precio_uni
+                            },
+                            success: function (response) {
+                                let resultado = response.resultado;
+                                agregarFilaPedido(resultado);
+                                resolve(); 
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error en la petición AJAX:', error);
+                                reject(error); // Rechaza la promesa si hay un error
+                            }
+                        });
+                    });
+                }
+
+
+                document.getElementById('nuevoPedido').addEventListener('click', () => {
+                    Swal.close();
+                });
+            }
+        });
+        
+        function agregarFilaPedido(resultado) {
+            let tbody = $("#producto-tbody");
+            let itemFila = `
+                <tr class="producto-row" data-id-producto="${resultado.id_producto}" data-precio-venta="${resultado.precio_venta}">
+                    <td class="p-2 celda-producto">
+                        <div class="product-info">
+                            <div class="product-details-container">
+                                <div class="cont-img">
+                                    <img src="/media/${resultado.presentacion}" alt="Imagen" class="img-fluid">
+                                </div>
+                                <ul class="product-details">
+                                    <li><strong>${resultado.nombre_producto}</strong></li>
+                                    <li>
+                                        <span><strong class="mr-2">Marca:</strong>${resultado.marca}</span>
+                                    </li>
+                                    <li><strong class="mr-2">Categoria:</strong>${resultado.categoria}</li>
+                                    <li class="mt-3 d-flex align-items-center gap-3">
+                                        <div>
+                                            <div class="number-input">
+                                                <button onclick="decrement(this)" id="decrement"><strong>-</strong></button>
+                                                <input class="quantity cantidad-fila" min="1" max="${resultado.cantidad}" name="quantity" type="number" readonly value="1" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                                                <button onclick="increment(this)" id="increment"><strong>+</strong></button>
+                                            </div>      
+                                        </div>
+                                        <div class="input-wrapper">
+                                            <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento" onkeydown="return validateInput(event)">
+                                            <span class="percent-sign">%</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="precio_compra"> ${resultado.precio_compra} </td>
+                    <td> <span class="precio_venta">${resultado.precio_venta}</span></td>
+                    <td class="total_ganancia_producto"> ${resultado.precio_ganancia} </td>
+                    <td class="total_producto"> ${resultado.precio_venta} </td>
+                    <td class="eliminar-fila"> 
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+                `;
+            tbody.append(itemFila);
+            Swal.close();
+        }
+    }
+
+    $("#cont-icon-pedido").on("click", function () {
+        if ($(this).find(".fa-truck").css("color") === "rgb(0, 128, 0)") {
+            let documento = $("#documento").text();
+            let pedidos = $(".cliente-item.activo").data('pedidos');
+            ClientesConPedidos(documento, pedidos);
+        }
+    });
+
+    $(document).on('click', '.btn-detalle', function () {
+        let index = $(this).data('index');
+        let detalleActual = $(`.detalle-${index}`);
+        let iconoActual = $(this).find('.icono-detalle');
+
+        if (detalleActual.is(':visible')) {
+            detalleActual.hide();
+            iconoActual.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        } else {
+            $('.fila-detalle').hide();
+            $('.icono-detalle').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+
+            detalleActual.show();
+            iconoActual.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        }
+    });
+
+    $(document).ready(function () {
+        let listadoClientes = $("#resultado-cliente");
+
+        $("#nombreCliente").on("input", function () {
+            let nombreCliente = $(this).val();
+            $("#nombreCliente").removeClass("is-invalid")
+            $("#campos-requeridos").css("color", "");
+
+            listadoClientes.show();
+            $("#cont-docu").empty()
+            $("#cont-icon-pedido").empty()
+            $("#nombreCliente").removeClass("is-valid")
+
+            if (nombreCliente.length >= 3) {
+                $.ajax({
+                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
+                    type: "GET",
+                    success: function (data) {
+                        listadoClientes.empty();
+                        listadoClientes.removeClass("show");
+                        if (data.resultados.length > 0) {
+                            for (let i = 0; i < data.resultados.length; i++) {
+                                listadoClientes.addClass("show");
+                                let documento = data.resultados[i].documento;
+                                let nomClienteDato = data.resultados[i].nombre_cliente;
+                                let estadoCliente = data.resultados[i].estado;
+                                let pedidos = data.resultados[i].pedidos;
+                                let tienePedidos = data.resultados[i].pedidos.length > 0;
+
+                                let itemLista = `
+                                <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}" data-pedidos='${JSON.stringify(pedidos)}' >
+                                    <div class="d-flex justify-content-between" style="width:100%;">
+                                    <span id="nombreDato">${nomClienteDato}</span>
+                                    <div>
+                                        <span id="documentoDato">${documento}</span>
+                                        <i class="fas fa-truck mx-2" style="${tienePedidos ? "color:green;" : "color:#0000006e"}" data-toggle="tooltip" data-placement="right" title="Pedidos pendientes"></i>
+                                    </div>
+                                    </div>
+                                    ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                </li>
+                                `;
+
+                                listadoClientes.append(itemLista);
+                            }
+                        }
+                    },
+                });
+            } else {
+                listadoClientes.removeClass("show");
+                listadoClientes.empty();
+            }
+        });
+
+
+        listadoClientes.on("click", ".cliente-item", function () {
+            if (!$(this).hasClass("inactivo")) {
+                let nombreApellido = $(this).find("#nombreDato").text();
+                let documento = $(this).find("#documentoDato").text();
+                let pedidos = JSON.parse($(this).attr('data-pedidos'));
+                let tienePedidos = pedidos.length > 0;
+
+                $("#error-docu").text("");
+                let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
+                $("#cont-docu").html(identificacionCompleta);
+                $("#nombreCliente").val(nombreApellido).addClass("is-valid");
+                listadoClientes.hide();
+
+                let iconoCarrito = `<i class="fas fa-truck" style="color:${tienePedidos ? "green" : "#0000006e"}"></i>`;
+                $("#cont-icon-pedido").html(iconoCarrito)
+
+                if (pedidos && pedidos.length > 0) {
+                    ClientesConPedidos(documento, pedidos);
+                }
+            }
+        });
+    });
+
+</script>
 
 {% block footer %}
 
 {% endblock %}
-   
+
 <style>
     .details-title {
         color: #333;
@@ -250,14 +520,14 @@
                                 // <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                 // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
                                 let itemLista = `
-                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"} ${cantidad <= 0 ? "inactivo" : ""}">
+                                <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"} ${cantidad <= 0 ? "inactivo-stock" : ""}">
                                     <div class="product-details-container">
                                         <img src="/media/${img}" alt="Imagen" class="img-fluid">
                                         <p><strong>STOCK:</strong><span class="${cantidad <= 5 ? "text-danger" : "font-weight-bold"} ml-1">${cantidad}</span></p>
                                     </div>
                                     <div class="text-end">
                                         <span id="nombreDato">${producto}</span></br>
-                                        ${estadoProducto === 0 ? '<span style="color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                        ${estadoProducto === 0 ? '<span style="color: red; opacity: 0.5">Inhabilitado</span>' : cantidad === 0 ? '<span style="color: red; opacity: 0.5">Producto sin stock</span>' : ''}
                                     </div>
                                 </li>
                             `;
@@ -271,37 +541,35 @@
                 listadoProductos.empty();
             }
         });
+
+
         listadoProductos.on("click", ".producto-item", function () {
             if (!$(this).hasClass("inactivo")) {
-                listadoProductos.hide();
-                let index = $(this).index();
-                productoSeleccionado = resultadosBusqueda[index];
-                $("#buscarProducto").val(productoSeleccionado.nombre_producto).addClass("is-valid");
-                $("#buscarProducto").data('id-producto', productoSeleccionado.id_producto);
-                $(".search-icon").hide()
-                $("#cantidad-ingresada").val("1")
-                $("#btnAgregar").addClass("is-active")
+                if ($(this).hasClass("inactivo-stock")) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Producto sin stock!"
+                    });
+                } else {
+                    listadoProductos.hide();
+                    let index = $(this).index();
+                    productoSeleccionado = resultadosBusqueda[index];
+                    $("#buscarProducto").val(productoSeleccionado.nombre_producto).addClass("is-valid");
+                    $("#buscarProducto").data('id-producto', productoSeleccionado.id_producto);
+                    $(".search-icon").hide()
+                    $("#cantidad-ingresada").val("1")
+                    $("#btnAgregar").addClass("is-active")
+                }
             } else {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
+                    confirmButtonColor: '#0975B7',
                     text: "Producto inhabilitado!"
                 });
             }
         });
-
-
-        function productoExiste(id_producto) {
-            let existe = false;
-            $("#tabla-ventas tr.producto-row").each(function () {
-                if ($(this).data('id-producto') == id_producto) {
-                    existe = true;
-                    return false;
-                }
-            });
-            return existe;
-        }
-
 
 
         function totalVenta() {
@@ -333,34 +601,72 @@
         }
 
 
+        function verificarStock(producto, callback) {
+            let id_producto = producto.id_producto;
+            let cantidad = producto.cantidadSeleccionada;
+
+            $("#tabla-ventas tr.producto-row").each(function () {
+                if ($(this).data('id-producto') == id_producto) {
+                    let cantidadExistente = parseInt($(this).find(".cantidad-fila").val(), 10);
+                    cantidad += cantidadExistente;
+                }
+            });
+
+            $.ajax({
+                url: "{% url 'verificar_stock' %}",
+                type: 'GET',
+                data: {
+                    'id_producto': id_producto,
+                    'cantidad': cantidad
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.supera_stock) {
+                        alert("La cantidad ingresada supera el stock disponible.");
+                        callback(false);
+                    } else {
+                        callback(true);
+                    }
+                }
+            });
+        }
+
         $("#btnAgregar").click(function () {
             if (productoSeleccionado) {
-                if (productoExiste(productoSeleccionado.id_producto)) {
-                    alert('El producto ya existe en la lista de productos');
-                    $("#buscarProducto").val("")
-                    $("#cantidad-ingresada").val("1")
-                    $("#buscarProducto").val("").removeClass("is-valid");
-                    return;
-                }
-                $("#buscarProducto").val("").removeClass("is-valid");
-                $(".search-icon").show()
-                $("#buscarProducto").data('id-producto', "");
                 productoSeleccionado.cantidadSeleccionada = parseInt($("#cantidad-ingresada").val(), 10);
-                $("#cantidad-ingresada").val("1")
-                agregarFila(productoSeleccionado)
-                totalVenta()
-                productoSeleccionado = null;
-                $("#btnAgregar").removeClass("is-active")
-                $("#product-table-section").addClass("show");
-                $("#tabla-ventas").addClass("show");
-                $(".producto-cont-descuento").addClass("show")
+
+                verificarStock(productoSeleccionado, function (puedeAgregar) {
+                    if (puedeAgregar) {
+                        let productoExistente = false;
+                        let id_producto = productoSeleccionado.id_producto;
+                        let cantidad = productoSeleccionado.cantidadSeleccionada;
+
+                        $("#tabla-ventas tr.producto-row").each(function () {
+                            if ($(this).data('id-producto') == id_producto) {
+                                productoExistente = true;
+                                let cantidadExistente = parseInt($(this).find(".cantidad-fila").val(), 10);
+                                cantidad += cantidadExistente;
+                                $(this).find(".cantidad-fila").val(cantidad);
+                            }
+                        });
+
+                        if (!productoExistente) {
+                            agregarFila(productoSeleccionado);
+                        }
+
+                        totalVenta();
+                        productoSeleccionado = null;
+                        $("#btnAgregar").removeClass("is-active");
+                        $("#product-table-section").addClass("show");
+                        $("#tabla-ventas").addClass("show");
+                        $(".producto-cont-descuento").addClass("show");
+                        $("#buscarProducto").val("").removeClass("is-valid");
+                        $(".search-icon").show();
+                        $("#buscarProducto").data('id-producto', "");
+                        $("#cantidad-ingresada").val("1");
+                    }
+                });
             }
-        });
-
-
-        $(document).on("input", ".cantidad-fila, .descuento", function () {
-            let fila = $(this).closest("tr.producto-row");
-            fila.find(".product-update-button").addClass("is-active");
         });
 
 
@@ -378,35 +684,6 @@
             totalVenta()
         });
 
-        $("#cantidad-ingresada").on("input", function () {
-            if ($("#cantidad-ingresada").val() === '') {
-                $("#btnAgregar").removeClass("is-active")
-            } else {
-                $("#btnAgregar").addClass("is-active")
-            }
-            let id_producto = $("#buscarProducto").data('id-producto'); 
-            let cantidad = parseInt($(this).val());
-
-            if (id_producto) {
-                $.ajax({
-                    url: "{% url 'verificar_stock' %}",
-                    type: 'GET',
-                    data: {
-                        'id_producto': id_producto,
-                        'cantidad': cantidad
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.supera_stock) {
-                            $("#btnAgregar").removeClass("is-active")
-                            alert("La cantidad ingresada supera el stock disponible.");
-                        }
-                    }
-                });
-            }
-        });
-
-
 
         function formatearPrecios(valor) {
             valor = Math.round(valor * 100) / 100;
@@ -414,23 +691,8 @@
             return '$' + precioFormateado;
         }
 
-        $(document).on("click", ".product-update-button", function () {
-            let btn = $(this);
-            btn.val('ACTUALIZADO');
-            btn.addClass("update");
-            btn.fadeIn(100);
-
-            setTimeout(function () {
-                btn.fadeOut(100, function () {
-                    btn.removeClass("update");
-                    btn.val('ACTUALIZAR');
-                    btn.removeClass("is-active");
-                    btn.fadeIn(100);
-                });
-            }, 1000);
-
+        $(document).on("input", ".cantidad-fila, .descuento", function () {
             $("#campos-requeridos").css("color", "");
-            $('.product-update-button.is-active').tooltip('dispose');
             let fila = $(this).closest("tr.producto-row");
             let descuento = parseFloat(fila.find(".descuento").val().replace(/[%]/g, '')) / 100;
             let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
@@ -444,14 +706,17 @@
                 precio_venta_final = precio_venta - precio_descuento;
             }
 
-            let precio_ganancia = formatearPrecios(cantidad_seleccionada * (precio_venta_final - precio_compra));
+            let ganancia = precio_venta_final - precio_compra;
+            if (ganancia < 0) {
+                ganancia = 0;
+            }
+
+            let precio_ganancia = formatearPrecios(cantidad_seleccionada * ganancia);
             let total_producto = formatearPrecios(precio_venta_final * cantidad_seleccionada);
             let precio_venta_con_descuento = formatearPrecios(precio_venta_final);
             let descuento_html = ""
             if (descuento > 0) {
-                descuento_html = "<span style='color: rgb(48, 48, 163);'>- (<span id='total_producto_descuento'>" + formatearPrecios(precio_descuento) + "</span>)</span>";
-            } else {
-                fila.find(".descuento").val("0")
+                descuento_html = "<span style='color: rgb(48, 48, 163);'> - (<span id='total_producto_descuento'>" + formatearPrecios(precio_descuento) + "</span>)</span>";
             }
 
             fila.find(".precio_venta").html(precio_venta_con_descuento + descuento_html);
@@ -459,8 +724,6 @@
             fila.find(".total_producto").text(total_producto);
             totalVenta()
         });
-
-
 
 
         function calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada) {
@@ -498,21 +761,22 @@
                                 </div>
                                 <ul class="product-details">
                                     <li><strong>${nombre_producto}</strong></li>
-                                    <li class="d-flex justify-content-between">
+                                    <li>
                                         <span><strong class="mr-2">Marca:</strong>${marca}</span>
+                                    </li>
+                                    <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
+                                    <li class="mt-3 d-flex align-items-center gap-3">
+                                        <div>
+                                            <div class="number-input">
+                                                <button onclick="decrement(this)" id="decrement"><strong>-</strong></button>
+                                                <input class="quantity cantidad-fila" min="1" max="${cantidad}" name="quantity" type="number" readonly value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                                                <button onclick="increment(this)" id="increment"><strong>+</strong></button>
+                                            </div>      
+                                        </div>
                                         <div class="input-wrapper">
                                             <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento" onkeydown="return validateInput(event)">
                                             <span class="percent-sign">%</span>
                                         </div>
-                                    </li>
-                                    <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
-                                    <li class="d-flex gap-3">
-                                        <div class="number-input mt-3">
-                                            <button onclick="decrement(this)" id="decrement">-</button>
-                                            <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
-                                            <button onclick="increment(this)" id="increment">+</button>
-                                        </div>   
-                                        <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
                                     </li>
                                 </ul>
                             </div>
@@ -530,6 +794,14 @@
             tbody.append(itemFila);
         }
     });
+
+    $("#cantidad-ingresada").on("input", function () {
+        if ($("#cantidad-ingresada").val() === '') {
+            $("#btnAgregar").removeClass("is-active")
+        } else {
+            $("#btnAgregar").addClass("is-active")
+        }
+    })
 
 </script>
 
@@ -555,7 +827,22 @@
 
     function increment(button) {
         let input = button.parentNode.querySelector('.quantity');
-        input.value = parseInt(input.value) + 1;
+        let maxVal = parseInt(input.getAttribute('max'));
+        if (parseInt(input.value) < maxVal) {
+            input.value = parseInt(input.value) + 1;
+            $(input).tooltip('dispose');
+        } else {
+            if (parseInt(input.value) + 1 > maxVal) {
+                $(input).tooltip({
+                    title: "Cantidad máxima",
+                    trigger: "manual",
+                    placement: "right"
+                }).tooltip('show');
+                setTimeout(function () {
+                    $(input).tooltip('dispose');
+                }, 2000);
+            }
+        }
         $(input).trigger('input');
     }
 
@@ -567,25 +854,15 @@
         $(input).trigger('input');
     }
 
-
     $("#crear-venta").click(function () {
         let invalid = false;
 
-        if ($("#cont-docu").text() == "") {
-            $("#nombreCliente").addClass("is-invalid");
+        if ($(".producto-row").length === 0) {
             invalid = true;
         }
 
-        if ($('.product-update-button').hasClass('is-active')) {
-            $('.product-update-button.is-active').tooltip({
-                title: "Actualizar primero",
-                trigger: "manual",
-                placement: "right"
-            }).tooltip('show');
-            invalid = true;
-        }
-        var tbody = document.getElementById('producto-tbody');
-        if (tbody.children.length === 0) {
+        if ($("#cont-docu").text() == "") {
+            $("#nombreCliente").addClass("is-invalid");
             invalid = true;
         }
 
@@ -593,7 +870,7 @@
             $("#campos-requeridos").css("color", "red");
         } else {
             $("#campos-requeridos").css("color", "");
-            enviarDatosVentas()
+            enviarDatosVentas();
         }
     });
 
@@ -635,8 +912,6 @@
             productos: productos
         };
 
-        console.log(venta);
-
         $.ajax({
             type: "POST",
             url: "{% url 'crear_venta' %}",
@@ -658,8 +933,6 @@
             },
         });
     }
-
-
 
 </script>
 

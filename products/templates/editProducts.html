@@ -21,7 +21,7 @@
               {% for c in categorias %}
               <option value="{{ c.id_categoria }}"
                   {% if c.id_categoria == Product.id_categoria.id_categoria %} selected {% endif %}>
-                  {{ c.nombre_categoria }}
+                  {{c.nombre_categoria }} 
               </option>
               {% endfor %}
           </select>
@@ -158,7 +158,7 @@
     
       <div class="form-row">
         <div class="col-md-12 text-center">
-          <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+          <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
           {% if not Product.id_marca or not Product.id_categoria %}
           <a href="{% url 'productos' %}" class="btn btn-secondary mx-2">Cancelar</a>
           {% endif %}

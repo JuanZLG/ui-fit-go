@@ -8,14 +8,14 @@ from .models import Proveedores
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
 
-@jwt_cookie_required
-@module_access_required('proveedores')
+# @jwt_cookie_required
+# @module_access_required('proveedores')
 def Home(request):
     proveedores = Proveedores.objects.all()
     return render(request, 'providersHome.html', {"proveedores":proveedores}) 
 
-@jwt_cookie_required
-@module_access_required('proveedores')
+# @jwt_cookie_required
+# @module_access_required('proveedores')
 def crearProveedor(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_proveedor')
@@ -44,8 +44,17 @@ def proveedor_unico(request):
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
 
-@jwt_cookie_required
-@module_access_required('proveedores')
+
+def proveedor_unico_edit(request):
+    nombre = request.GET.get("nombre", "")
+    id_prov = request.GET.get("id_prov", "")
+    id_prov = int(id_prov)
+    prov_existe = Proveedores.objects.exclude(id_proveedor=id_prov).filter(nombre_proveedor=nombre).exists()
+    return JsonResponse({"existe": prov_existe})
+
+
+# @jwt_cookie_required
+# @module_access_required('proveedores')
 def editarProveedor(request, id_proveedor):
     if request.method == 'POST':
         nombre = request.POST.get('nombre_proveedor')
@@ -70,7 +79,7 @@ def editarProveedor(request, id_proveedor):
     return render(request, 'editProvider.html', {"proveedor":proveedor}) 
 
 
-@module_access_required('proveedores')
+# @module_access_required('proveedores')
 def cambiarEstadoProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')
@@ -86,7 +95,7 @@ def cambiarEstadoProveedor(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
-@module_access_required('proveedores')
+# @module_access_required('proveedores')
 def verDetallesProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')

@@ -183,7 +183,18 @@
                     </div>
                 </div>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-truck"></i>
+                    <span>Pedidos</span>
+                </a>
+                <div id="collapseOrders" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'pedidos' %}">Gestión de Pedidos</a>
+                    </div>
+                </div>
+            </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -323,17 +334,15 @@
 
 
                         <script>
-
                             $(document).ready(function () {
-                                // Al cargar la página, verificar si las notificaciones ya fueron vistas
                                 cargarNotificaciones();
 
-                                // Manejar el evento de clic en las notificaciones
-                                $('#alertsDropdown').click(function () {
-                                    // Establecer el contador de notificaciones a cero
-                                    $('#notificacionesCounter').text(0);
+                                if (sessionStorage.getItem('notificacionesVistas') !== 'true') {
+                                    sessionStorage.setItem('cantidadMensajes', $('#notificacionesHistorial .noti-item').length);
+                                }
 
-                                    // Guardar en la sesión del usuario que las notificaciones ya fueron vistas
+                                $('#alertsDropdown').click(function () {
+                                    $('#notificacionesCounter').text(0);
                                     sessionStorage.setItem('notificacionesVistas', 'true');
                                 });
 
@@ -342,9 +351,8 @@
                                         url: '/verificar-notificaciones/',
                                         type: 'GET',
                                         success: function (data) {
-                                            if (data.mensajes.length > 0) {
+                                            if (data.cantidad > sessionStorage.getItem('cantidadMensajes')) {
                                                 if (data.mensajes.length === 1 && data.mensajes[0].tipo === "info") {
-                                                    // Mostrar mensaje solo para el administrador
                                                     $('#notificacionesHistorial').append('<span class="mensaje">' + data.mensajes[0].mensaje + '</span><hr>');
                                                 } else {
                                                     // Mostrar mensajes para el administrador
@@ -352,22 +360,19 @@
                                                         var icono = '';
                                                         var texto = notificacion.mensaje;
 
-                                                        // Verificar si el mensaje es una advertencia o una notificación de producto en exceso
                                                         if (notificacion.tipo === 'advertencia') {
-                                                            icono = '⚠️';
+                                                            icono = '<i class="fas fa-exclamation-triangle" data-tooltip="Alerta de stock mínimo"></i>';
                                                         } else if (notificacion.tipo === 'exceso') {
-                                                            icono = '➕';
+                                                            icono = '<i class="fas fa-bell" data-tooltip="Alerta de stock máximo"></i>';
                                                         }
-
-                                                        // Agregar el icono y el mensaje en span separados
                                                         $('#notificacionesHistorial').append('<span class="mr-2">' + icono + '</span><span class="noti-item">' + texto + '</span><hr>');
                                                     });
 
-                                                    // Actualizar el contador de notificaciones solo si las notificaciones no han sido vistas
-                                                    if (sessionStorage.getItem('notificacionesVistas') !== 'true') {
-                                                        contadorNotificaciones = data.mensajes.length;
-                                                        $('#notificacionesCounter').text(contadorNotificaciones);
-                                                    }
+                                                    // Calcular la diferencia entre la cantidad de mensajes y la cantidad almacenada en la sesión
+                                                    var diferencia = data.cantidad - sessionStorage.getItem('cantidadMensajes');
+
+                                                    $('#notificacionesCounter').text(diferencia);
+                                                    sessionStorage.setItem('cantidadMensajes', data.cantidad);
                                                 }
                                             }
                                         },
@@ -439,7 +444,7 @@
                 <!-- /.container-fluid -->
 
                 <!-- Separador de Contenidos -->
-                <div style="margin-top:7vh"></div>
+                <div style="margin-top:20vh"></div>
 
                 <!-- Footer -->
                 {% block footer %}
@@ -538,7 +543,8 @@
                     "lengthMenu": "Mostrar _MENU_ registros por página",
                     "info": "Mostrando _START_ al _END_ de _TOTAL_ registro(s)",
                     "infoEmpty": "",
-                    "infoFiltered": "(filtración de _MAX_ registros en total)"
+                    "infoFiltered": "(filtración de _MAX_ registros en total)",
+                    "zeroRecords": "No hay registros."
                 },
                 "scrollY": "40vh",
                 "scrollX": "auto",

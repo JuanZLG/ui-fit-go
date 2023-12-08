@@ -73,12 +73,12 @@
                     </div>
                 </div>
 
-                <div class="text-center" style="margin-top: 10px;">
-                    <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
-                </div>
-            </form>
-        </div>
+            <div class="text-center" style="margin-top: 10px;">
+                <button class="btn btn-primary" type="submit" id="submit-button" disabled>Guardar</button>
+            </div>
+        </form>
     </div>
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -135,16 +135,18 @@
                                 text: 'Cliente agregado con éxito',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 3000,
+                                timer: 1000, 
                             });
                             setTimeout(function () {
                                 window.location.href = "{% url 'Clientes' %}";
-                            }, 2000);
+                            }, 1000); 
                         }
                     }
                 });
             }
         });
+
+        // ... (código anterior)
     });
 
     function obtenerDepartamentos() {

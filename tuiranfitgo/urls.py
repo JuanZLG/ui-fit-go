@@ -18,6 +18,7 @@ urlpatterns = [
     path('admin/providers/', include('eproviders.urls')),  
     path('admin/clients/', include('customers.urls')),  
     path('admin/sales/', include('sales.urls')),  
+    path('admin/orders/', include('orders.urls')),  
     path('admin/purchases/', include('purchases.urls')),
     path('error/', views.error_view, name="initerror"),
     path('unauthorized/', views.mixin_view, name="mixint"),

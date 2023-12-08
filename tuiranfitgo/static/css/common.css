@@ -104,3 +104,8 @@ tr.inactivo {
     background-color: #95eea5;
     color: #09711c;
 }
+
+.en_proceso_pedido {
+    background-color: #f9d56e;
+    color: #7a5c11;
+}

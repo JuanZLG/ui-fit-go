@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!-->
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css"><!--<![endif]-->
+<style>
+    * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    font-family: 'Roboto Slab', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+.container {
+    text-align: center;
+    width: 650px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.header {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+.header h1 {
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    line-height: 120%;
+}
+
+.content {
+    background-color: #000;
+    text-align: center;
+    width: 650px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+.info {
+    padding: 20px;
+}
+
+.info p {
+    color: #f3f6fe;
+    font-size: 20px;
+    line-height: 120%;
+}
+
+.info ul.credentials {
+    color: #fcfcfc;
+    font-size: 16px;
+    list-style: disc;
+    text-align: left;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.login-button {
+    text-decoration: none;
+    display: inline-block;
+    color: #0068a5;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px 25px;
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid #3F4D75;
+    margin: 20px 0;
+}
+
+.content p {
+    color: #fff;
+    font-size: 14px;
+    line-height: 120%;
+    text-align: center;
+}
+.content p:first-child {
+    font-size: 22px;
+}
+</style>
+<body>
+    <div class="content">
+        <div class="container">
+            <img src="https://8839072152.imgdist.com/public/users/Integrators/BeeProAgency/1078667_1063969/gorille.png" alt="BRUTALITY" class="logo">
+            <div class="header">
+                <h1>¡Hola, {{ user }}!</h1>
+            </div>
+        </div>
+        <div class="info">
+            <p>Queremos informarte que hemos actualizado el correo electrónico asociado a tu cuenta.</p>
+            <p>A continuación, te proporcionamos tus nuevas credenciales:</p>
+            <ul class="credentials">
+                <li><strong>Nuevo correo:</strong> {{ email }}</li>
+            </ul>
+        </div>
+        <p>Por favor, ten en cuenta que a partir de ahora deberás utilizar este nuevo correo electrónico para acceder al sistema.</p>
+        <p>Si tienes alguna pregunta o necesitas ayuda comunícate con el administrador.</p>
+    </div>
+</body>
+
+</html>
+
