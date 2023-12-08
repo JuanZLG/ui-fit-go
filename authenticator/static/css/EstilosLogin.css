@@ -32,7 +32,7 @@ body {
 .wrapper {
     width: 520px;
     background: transparent;
-    border: 2px solid rgba(255, 255, 255, .2);
+    border: 2px solid rgba(116, 109, 109, 0.635);
     backdrop-filter: blur(5px);
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
     color: #fff;
@@ -166,7 +166,7 @@ body {
 }
 
 #cong:hover{
-    border:solid 4px magenta;
+    border:solid 4px rgb(255, 51, 0);
     border-radius:50%;
 }
 

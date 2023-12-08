@@ -18,15 +18,15 @@
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
-                <a href="{% url 'crear_venta' %}" class="btn btn-succes btn-adder btn-lg" data-toggle="tooltip"
-                    data-placement="top" title="Crear una Venta">
+                <a href="{% url 'crear_venta' %}" class="btn btn-primary btn-lg" data-toggle="tooltip"
+                    data-placement="top" title="Crear una Venta" style="border:solid 1px black">
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Venta</span>
                 </a>
             </span>
         </div>
 
-        <a href="#" id="abrir-modal" class="btn btn-danger btn-dash btn-lg" data-toggle="modal" data-target="#miModal">
+        <a href="#" id="abrir-modal" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#miModal" style="border:solid 1px black">
             <i class="fa-solid fa-download mr-2"></i><span class="text"
                 style="font-weight: 600; font-size: 16px;">Generar Informe</span>
         </a>
@@ -55,7 +55,7 @@
                                     <br>
                                 </div>
                                 <div class="modal-footer" style="margin-top:5%">
-                                    <div style="margin-top:2%"><button class="btn btn-success" type="submit" id="generar-informe-button">Generar</button></div>
+                                    <div style="margin-top:2%"><button class="btn btn-primary" type="submit" id="generar-informe-button">Generar</button></div>
                                 </div>
                         </form>
                     </div>
