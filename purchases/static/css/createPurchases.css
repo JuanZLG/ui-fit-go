@@ -306,6 +306,7 @@ input[type="number"] {
     display: flex;
     align-items: center;
     gap: 5px;
+    
 }
 
 .product-details-container img {
@@ -316,7 +317,7 @@ input[type="number"] {
 
 .product-info .product-details-container .cont-img,
 .product-info .product-details-container .cont-img img {
-    width: 100%;
+    width: 80%;
 }
 
 
@@ -324,6 +325,7 @@ input[type="number"] {
 .product-details {
     text-align: start;
     font-size: 14px;
+    
 }
 
 .product-details li:first-child {
