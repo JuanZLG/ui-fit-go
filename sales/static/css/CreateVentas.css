@@ -106,7 +106,7 @@
 
 .cliente-item.inactivo,
 .producto-item.inactivo,
-.producto-item.inactivo-stock{
+.producto-item.inactivo-stock {
     opacity: 0.8 !important;
     color: #222222 !important;
 }
@@ -233,33 +233,38 @@ input[type="number"] {
     cursor: pointer;
 }
 
-.btn-crear, .btn-verificar {
+.btn-crear,
+.btn-verificar {
     background-color: #72d072;
 }
 
 .btn-resumen {
     background-color: #419edd;
 }
+
 .btn-descuento {
     margin-right: 10px;
     background-color: rgb(48, 48, 163);
 }
+
 .product-button:active {
     transform: scale(0.97);
 }
 
 .product-table-section {
     height: auto;
-    max-height: 300px; 
+    max-height: 300px;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 4px 2px 14px #cccccc70;
     padding: 20px !important;
-    transition: max-height 300ms ease-in-out; 
+    transition: max-height 300ms ease-in-out;
 }
+
 .product-table-section.show {
-    max-height: 900px; 
+    max-height: 900px;
 }
+
 
 
 .producto-cont-descuento {
@@ -277,8 +282,8 @@ input[type="number"] {
 
 #tabla-ventas {
     height: auto;
-    max-height: 600px; 
-    overflow-y:auto;
+    max-height: 600px;
+    overflow-y: auto;
     padding-right: 30px;
     display: none;
 }
@@ -286,9 +291,11 @@ input[type="number"] {
 #tabla-ventas.show {
     display: block;
 }
+
 .producto-cont-descuento {
     display: none;
 }
+
 .producto-cont-descuento.show {
     display: flex;
 }
@@ -350,6 +357,7 @@ input[type="number"] {
     border: 1px solid #ccc;
     text-align: center;
 }
+
 .input-wrapper .percent-sign {
     color: rgb(48, 48, 163);
     font-weight: bold;
@@ -364,6 +372,7 @@ input[type="number"] {
     color: rgb(48, 48, 163);
     display: block;
 }
+
 .product-column {
     width: 30% !important;
     vertical-align: middle !important;
@@ -388,4 +397,29 @@ input[type="number"] {
 .eliminar-fila:hover {
     cursor: pointer;
     transform: scale(1.080);
+}
+
+.table-detalle-pedido tr {
+    text-align: center;
+    border: 1px solid #dee2e6; 
+}
+
+.pedido td,
+.table-detalle-pedido td {
+    padding: 10px !important;
+}
+
+.fila-detalle {
+    height: 0; overflow: hidden; transition: height 0.5s;
+}
+.fila-detalle.show {
+    height: auto;
+}
+
+.inactive-status {
+    background-color: #ec8080;
+    color: #8a0404;
+    opacity: 0.5;
+    pointer-events: none; 
+    cursor: default; 
 }

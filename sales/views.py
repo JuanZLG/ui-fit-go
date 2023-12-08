@@ -1,11 +1,12 @@
+import locale
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
-from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias
+from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias, Pedidos, DetallePedido
+
 from django.db.models import Q
-# from .models import Notification
 
 @jwt_cookie_required
 @module_access_required('ventas')
@@ -106,6 +107,39 @@ def buscar_productos(request):
     return JsonResponse({"resultados": resultados})
 
 
+def agregarDetalleATabla(request):
+    id_producto = request.GET.get("id_producto")
+    producto = Productos.objects.get(id_producto=id_producto)
+
+    precio_ganancia = producto.precio_pub - producto.precio 
+
+    try:
+        marca = producto.id_marca.nombre_marca
+    except Productos.id_marca.RelatedObjectDoesNotExist:
+        marca = "No tiene marca"
+
+    try:
+        categoria = producto.id_categoria.nombre_categoria
+    except Productos.id_categoria.RelatedObjectDoesNotExist:
+        categoria = "No tiene categorías"
+
+    resultado = {
+        'id_producto': producto.id_producto,
+        'estado': producto.estado,
+        'nombre_producto': producto.nombre_producto,
+        'cantidad': producto.cantidad,
+        'descripcion': producto.descripcion,
+        'precio_compra': producto.precio,
+        'precio_venta': producto.precio_pub,
+        'precio_ganancia': precio_ganancia,
+        'marca': marca,
+        'categoria': categoria,
+        'presentacion': producto.iProductImg.decode('utf8')
+    }
+
+    return JsonResponse({"resultado": resultado})
+
+
 
 def verificar_stock(request):
     producto = request.GET.get('id_producto')
@@ -122,10 +156,42 @@ def verificar_stock(request):
 
     return JsonResponse({'supera_stock': supera_stock, 'cantidad_disponible': producto_obj.cantidad})
 
+from django.http import JsonResponse
+from django.db.models import Q
 
+def buscar_detalles_pedidos(id_pedido):
+    detalles = DetallePedido.objects.filter(id_pedido=id_pedido).select_related('id_producto')
+    detalles_formateados = []
+    for detalle in detalles:
+        detalles_formateados.append({
+            "id_detallepedido": detalle.id_detallepedido,
+            "id_producto": detalle.id_producto.id_producto,
+            "nombre_producto": detalle.id_producto.nombre_producto,
+            "sabor": detalle.sabor,
+            "presentacion": detalle.presentacion,
+            "cantidad": detalle.cantidad,
+            "precio_uni": "${:,.2f}".format(detalle.precio_uni).rstrip('0').rstrip('.'),
+            "precio_tot": "${:,.2f}".format(detalle.precio_tot).rstrip('0').rstrip('.')
+        })
+    return detalles_formateados if detalles.exists() else []
+
+def buscar_pedidos(cliente):
+    pedidos = Pedidos.objects.filter(id_cliente=cliente)
+    pedidos_con_detalles = []
+    for pedido in pedidos:
+        detalles = buscar_detalles_pedidos(pedido.id_pedido)
+        pedidos_con_detalles.append({
+            "id_pedido": pedido.id_pedido,
+            "fecha_pedido": pedido.fecha_pedido,
+            "total_pedido": "${:,.2f}".format(pedido.total_pedido).rstrip('0').rstrip('.'),
+            "estado": pedido.estado,
+            "detalles": detalles
+        })
+    return pedidos_con_detalles
+    
+    
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("q", "")
-
     palabras_clave = nombre_cliente.split()
     clientes_encontrados = Clientes.objects.all()
 
@@ -134,17 +200,17 @@ def buscar_cliente(request):
             Q(nombres__icontains=palabra_clave) | Q(apellidos__icontains=palabra_clave)
         )
 
-    resultados = [
-        {
+    resultados = []
+    for cliente in clientes_encontrados:
+        pedidos_cliente = buscar_pedidos(cliente)
+        resultados.append({
             "documento": cliente.documento,
             "nombre_cliente": f"{cliente.nombres} {cliente.apellidos}",
             "estado": cliente.estado,
-        }
-        for cliente in clientes_encontrados
-    ]
+            "pedidos": pedidos_cliente,  
+        })
 
     return JsonResponse({"resultados": resultados})
-
 
 
 
@@ -212,6 +278,11 @@ def detalles_venta(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
+
+def cargar_pedidos(request):
+    ids_pedidos = request.GET.getlist('ids_pedidos[]')
+    detalles_pedidos = list(DetallePedido.objects.filter(id_pedido__in=ids_pedidos).values())
+    return JsonResponse({'detalles': detalles_pedidos})
 
 
 from reportlab.lib.pagesizes import letter

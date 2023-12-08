@@ -12,10 +12,13 @@
     <div class="venta-container">
         <div class="cliente-container">
             <div class="cliente-header">
-                <label class="cliente-label">Cliente *</label>
-                <label id="cont-docu"></label>
+                <span class="cliente-label">Cliente *</span>
+                <div>
+                    <span id="cont-docu"></span>
+                    <span id="cont-icon-pedido" class="ml-2"></span>
+                </div>
             </div>
-            <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
+            <input type="search" class="form-control" id="nombreCliente" autocomplete="off"
                 placeholder="Ingrese el nombre del cliente">
             <div class="error-container">
                 <span class="error-text" id="error-docu"></span>
@@ -27,74 +30,6 @@
         </div>
     </div>
 </section>
-
-<script>
-    $(document).ready(function () {
-        let listadoClientes = $("#resultado-cliente");
-
-        $("#nombreCliente").on("input", function () {
-            let nombreCliente = $(this).val();
-            $("#nombreCliente").removeClass("is-invalid")
-            $("#campos-requeridos").css("color", "");
-
-            listadoClientes.show();
-            $("#cont-docu").empty()
-            $("#nombreCliente").removeClass("is-valid")
-
-            if (nombreCliente.length >= 3) {
-                $.ajax({
-                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
-                    type: "GET",
-                    success: function (data) {
-                        listadoClientes.empty();
-                        listadoClientes.removeClass("show");
-
-                        if (data.resultados.length > 0) {
-                            for (let i = 0; i < data.resultados.length; i++) {
-                                listadoClientes.addClass("show");
-                                let documento = data.resultados[i].documento;
-                                let nomClienteDato = data.resultados[i].nombre_cliente;
-                                let estadoCliente = data.resultados[i].estado;
-
-                                let itemLista = `
-                                <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}">
-                                    <div>
-                                    <span id="nombreDato">${nomClienteDato}</span> -
-                                    <span id="documentoDato">${documento}</span>
-                                    </div>
-                                        ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
-                                </li>
-                            `;
-
-                                listadoClientes.append(itemLista);
-                            }
-                        }
-                    },
-                });
-            } else {
-                listadoClientes.removeClass("show");
-                listadoClientes.empty();
-            }
-        });
-
-        listadoClientes.on("click", ".cliente-item", function () {
-            if (!$(this).hasClass("inactivo")) {
-                let nombreApellido = $(this).find("#nombreDato").text();
-                let documento = $(this).find("#documentoDato").text();
-
-                $("#error-docu").text("")
-                let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
-                $("#cont-docu").html(identificacionCompleta);
-
-                $("#nombreCliente").val(nombreApellido).addClass("is-valid");
-                listadoClientes.hide();
-            }
-        });
-    });
-
-</script>
-
-
 
 <section class="product-section">
     <div class="product-content">
@@ -177,6 +112,341 @@
 </div>
 
 
+<script>
+    function ClientesConPedidos(documento, pedidos) {
+        function generarFilasPedidos(pedidos) {
+            pedidos.sort((a, b) => {
+                if (a.estado === "cancelado" && b.estado !== "cancelado") {
+                    return 1;
+                } else if (a.estado !== "cancelado" && b.estado === "cancelado") {
+                    return -1;
+                }
+                return 0;
+            });
+            return pedidos.map((pedido, index) => {
+                return `
+        <tr class="pedido" style="text-align: center; vertical-align: middle; position: relative;">
+            <td><input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}" ${pedido.estado === "cancelado" ? "disabled" : ""}></td>
+            <td>${pedido.fecha_pedido}</td>
+            <td>${pedido.total_pedido}</td>
+            <td>
+                <button class="btn btn-secondary btn-detalle" data-index="${index}">
+                    Detalle <i class="fas fa-chevron-down icono-detalle" data-index="${index}"></i>
+                </button>
+            </td>
+            <td><span style="border-radius: 50%; width: 15px; height: 15px; display: block; position: absolute; top: 10px; right: 10px;" class="${pedido.estado === "cancelado" ? "inactive-status" : pedido.estado === "en proceso" ? "en_proceso_pedido" : "active-status"}" data-pedido-id="${pedido.id_pedido}"></span></td>
+        </tr>
+
+        <tr class="fila-detalle detalle-${index}" style="display: none;">
+            <td colspan="4" style="padding:0;">
+                <div class="detalle-contenedor" style="text-align: center;">
+                    <table class="table table-detalle-pedido" style="width: 100%; overflow-x: auto; border-collapse: collapse; background-color: #f8f9fa; margin: auto;">
+                        <thead>
+                            <tr style="background-color: #e9ecef;">
+                                <th style="width:200px;">Producto</th>
+                                <th>Presentación</th>
+                                <th>Sabor</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total del Producto</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${pedido.detalles.map(detalle => `
+                                <tr style="text-align: center; vertical-align: middle; position: relative;">
+                                    <td>${detalle.nombre_producto}</td>
+                                    <td>${detalle.presentacion} lbs</td>
+                                    <td>${detalle.sabor}</td>
+                                    <td>${detalle.cantidad}</td>
+                                    <td>${detalle.precio_uni}</td>
+                                    <td>${detalle.precio_tot}</td>
+                                    <td> <a href="/admin/orders/Editar_pedido/${pedido.id_pedido}" %}" class="btn btn-sm mr-2"
+                                    id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    `;
+            }).join('');
+        }
+        Swal.fire({
+            html: `
+        <div class="container mt-4">
+            <div class="row mb-3">
+                <div class="col d-flex justify-content-between">
+                    <p id="nombreCliente"><strong>${$("#nombreCliente").val()}</strong></p>
+                    <p id="documentoCliente"><strong>Documento: ${documento}</strong></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <input type="checkbox" id="seleccionarTodos">
+                                </th>
+                                <th scope="col">Fecha del Pedido</th>
+                                <th scope="col">Total del Pedido</th>
+                                <th></th>
+                                <th style="width:30px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPedidos">
+                            ${generarFilasPedidos(pedidos)}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <p class="text-start text-danger" id="error-pedido"></p>
+                <div class="col">
+                    <button id="cargarPedidos" class="btn btn-primary">Cargar Pedidos</button>
+                    <button id="nuevoPedido" class="btn btn-secondary ml-2">Cargar nuevo</button>
+                </div>
+            </div>
+        </div>
+        `,
+            showCloseButton: true,
+            showConfirmButton: false,
+            width: 'auto',
+            maxWidth: '85%',
+            customClass: {
+                closeButton: 'custom-close-button'
+            },
+
+            didOpen: () => {
+                const seleccionarTodosCheckbox = document.getElementById('seleccionarTodos');
+                const checkboxes = document.querySelectorAll('.pedido-checkbox');
+
+                seleccionarTodosCheckbox.addEventListener('click', (event) => {
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.disabled) {
+                            checkbox.checked = event.target.checked;
+                        }
+                    });
+                });
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        document.getElementById('error-pedido').textContent = '';
+                        const todosSeleccionados = Array.from(checkboxes).every(cb => cb.checked || cb.disabled);
+                        seleccionarTodosCheckbox.checked = todosSeleccionados;
+                    });
+                });
+
+                document.getElementById('cargarPedidos').addEventListener('click', async () => {
+                    const idsSeleccionados = Array.from(document.querySelectorAll('.pedido-checkbox:checked')).map(cb => cb.value);
+
+                    if (idsSeleccionados.length === 0) {
+                        document.getElementById('error-pedido').textContent = 'Debe seleccionar al menos un pedido';
+                        return;
+                    } else {
+                        document.getElementById('error-pedido').textContent = '';
+                    }
+                    const seccionTabla = document.querySelector('.product-table-section');
+                    seccionTabla.style.height = 'auto';
+                    for (const id_pedido of idsSeleccionados) {
+                        const pedidoEncontrado = pedidos.find(pedido => pedido.id_pedido.toString() === id_pedido);
+                        if (pedidoEncontrado && pedidoEncontrado.detalles.length > 0) {
+                            for (const detalle of pedidoEncontrado.detalles) {
+                                await agregarDetalleATabla(detalle.id_producto, detalle.cantidad, detalle.precio_uni);
+                            }
+                        } else {
+                            console.log(`No se encontraron detalles para el pedido con ID: ${id_pedido}`);
+                        }
+                    }
+                });
+
+                function agregarDetalleATabla(id_producto, cantidad, precio_uni) {
+                    return new Promise((resolve, reject) => {
+                        var url = "{% url 'agregarDetalleATabla' %}";
+
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data: {
+                                id_producto: id_producto,
+                                cantidad: cantidad,
+                                precio_uni: precio_uni
+                            },
+                            success: function (response) {
+                                let resultado = response.resultado;
+                                agregarFilaPedido(resultado);
+                                resolve(); 
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error en la petición AJAX:', error);
+                                reject(error); // Rechaza la promesa si hay un error
+                            }
+                        });
+                    });
+                }
+
+
+                document.getElementById('nuevoPedido').addEventListener('click', () => {
+                    Swal.close();
+                });
+            }
+        });
+        
+        function agregarFilaPedido(resultado) {
+            let tbody = $("#producto-tbody");
+            let itemFila = `
+                <tr class="producto-row" data-id-producto="${resultado.id_producto}" data-precio-venta="${resultado.precio_venta}">
+                    <td class="p-2 celda-producto">
+                        <div class="product-info">
+                            <div class="product-details-container">
+                                <div class="cont-img">
+                                    <img src="/media/${resultado.presentacion}" alt="Imagen" class="img-fluid">
+                                </div>
+                                <ul class="product-details">
+                                    <li><strong>${resultado.nombre_producto}</strong></li>
+                                    <li>
+                                        <span><strong class="mr-2">Marca:</strong>${resultado.marca}</span>
+                                    </li>
+                                    <li><strong class="mr-2">Categoria:</strong>${resultado.categoria}</li>
+                                    <li class="mt-3 d-flex align-items-center gap-3">
+                                        <div>
+                                            <div class="number-input">
+                                                <button onclick="decrement(this)" id="decrement"><strong>-</strong></button>
+                                                <input class="quantity cantidad-fila" min="1" max="${resultado.cantidad}" name="quantity" type="number" readonly value="1" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                                                <button onclick="increment(this)" id="increment"><strong>+</strong></button>
+                                            </div>      
+                                        </div>
+                                        <div class="input-wrapper">
+                                            <input class="descuento" name="descuento" type="number" value="0" autocomplete="off" step="1" title="Aplicar descuento" onkeydown="return validateInput(event)">
+                                            <span class="percent-sign">%</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="precio_compra"> ${resultado.precio_compra} </td>
+                    <td> <span class="precio_venta">${resultado.precio_venta}</span></td>
+                    <td class="total_ganancia_producto"> ${resultado.precio_ganancia} </td>
+                    <td class="total_producto"> ${resultado.precio_venta} </td>
+                    <td class="eliminar-fila"> 
+                        <i class="fas fa-trash"></i>
+                    </td>
+                </tr>
+                `;
+            tbody.append(itemFila);
+            Swal.close();
+        }
+    }
+
+    $("#cont-icon-pedido").on("click", function () {
+        if ($(this).find(".fa-truck").css("color") === "rgb(0, 128, 0)") {
+            let documento = $("#documento").text();
+            let pedidos = $(".cliente-item.activo").data('pedidos');
+            ClientesConPedidos(documento, pedidos);
+        }
+    });
+
+    $(document).on('click', '.btn-detalle', function () {
+        let index = $(this).data('index');
+        let detalleActual = $(`.detalle-${index}`);
+        let iconoActual = $(this).find('.icono-detalle');
+
+        if (detalleActual.is(':visible')) {
+            detalleActual.hide();
+            iconoActual.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        } else {
+            $('.fila-detalle').hide();
+            $('.icono-detalle').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+
+            detalleActual.show();
+            iconoActual.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        }
+    });
+
+    $(document).ready(function () {
+        let listadoClientes = $("#resultado-cliente");
+
+        $("#nombreCliente").on("input", function () {
+            let nombreCliente = $(this).val();
+            $("#nombreCliente").removeClass("is-invalid")
+            $("#campos-requeridos").css("color", "");
+
+            listadoClientes.show();
+            $("#cont-docu").empty()
+            $("#cont-icon-pedido").empty()
+            $("#nombreCliente").removeClass("is-valid")
+
+            if (nombreCliente.length >= 3) {
+                $.ajax({
+                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
+                    type: "GET",
+                    success: function (data) {
+                        listadoClientes.empty();
+                        listadoClientes.removeClass("show");
+                        if (data.resultados.length > 0) {
+                            for (let i = 0; i < data.resultados.length; i++) {
+                                listadoClientes.addClass("show");
+                                let documento = data.resultados[i].documento;
+                                let nomClienteDato = data.resultados[i].nombre_cliente;
+                                let estadoCliente = data.resultados[i].estado;
+                                let pedidos = data.resultados[i].pedidos;
+                                let tienePedidos = data.resultados[i].pedidos.length > 0;
+
+                                let itemLista = `
+                                <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}" data-pedidos='${JSON.stringify(pedidos)}' >
+                                    <div class="d-flex justify-content-between" style="width:100%;">
+                                    <span id="nombreDato">${nomClienteDato}</span>
+                                    <div>
+                                        <span id="documentoDato">${documento}</span>
+                                        <i class="fas fa-truck mx-2" style="${tienePedidos ? "color:green;" : "color:#0000006e"}" data-toggle="tooltip" data-placement="right" title="Pedidos pendientes"></i>
+                                    </div>
+                                    </div>
+                                    ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
+                                </li>
+                                `;
+
+                                listadoClientes.append(itemLista);
+                            }
+                        }
+                    },
+                });
+            } else {
+                listadoClientes.removeClass("show");
+                listadoClientes.empty();
+            }
+        });
+
+
+        listadoClientes.on("click", ".cliente-item", function () {
+            if (!$(this).hasClass("inactivo")) {
+                let nombreApellido = $(this).find("#nombreDato").text();
+                let documento = $(this).find("#documentoDato").text();
+                let pedidos = JSON.parse($(this).attr('data-pedidos'));
+                let tienePedidos = pedidos.length > 0;
+
+                $("#error-docu").text("");
+                let identificacionCompleta = `Identificación: <span id="documento">${documento}</span>`;
+                $("#cont-docu").html(identificacionCompleta);
+                $("#nombreCliente").val(nombreApellido).addClass("is-valid");
+                listadoClientes.hide();
+
+                let iconoCarrito = `<i class="fas fa-truck" style="color:${tienePedidos ? "green" : "#0000006e"}"></i>`;
+                $("#cont-icon-pedido").html(iconoCarrito)
+
+                if (pedidos && pedidos.length > 0) {
+                    ClientesConPedidos(documento, pedidos);
+                }
+            }
+        });
+    });
+
+</script>
 
 {% block footer %}
 
@@ -532,7 +802,6 @@
         }
     })
 
-
 </script>
 
 
@@ -555,39 +824,41 @@
 </script>
 <script>
 
-function increment(button) {
-    let input = button.parentNode.querySelector('.quantity');
-    let maxVal = parseInt(input.getAttribute('max'));
-    if (parseInt(input.value) < maxVal) {
-        input.value = parseInt(input.value) + 1;
-        $(input).tooltip('dispose');
-    } else {
-        if (parseInt(input.value) + 1 > maxVal) {
-            $(input).tooltip({
-                title: "Cantidad máxima",
-                trigger: "manual",
-                placement: "right"
-            }).tooltip('show');
-            setTimeout(function() {
-                $(input).tooltip('dispose');
-            }, 2000);
+    function increment(button) {
+        let input = button.parentNode.querySelector('.quantity');
+        let maxVal = parseInt(input.getAttribute('max'));
+        if (parseInt(input.value) < maxVal) {
+            input.value = parseInt(input.value) + 1;
+            $(input).tooltip('dispose');
+        } else {
+            if (parseInt(input.value) + 1 > maxVal) {
+                $(input).tooltip({
+                    title: "Cantidad máxima",
+                    trigger: "manual",
+                    placement: "right"
+                }).tooltip('show');
+                setTimeout(function () {
+                    $(input).tooltip('dispose');
+                }, 2000);
+            }
         }
+        $(input).trigger('input');
     }
-    $(input).trigger('input');
-}
 
-function decrement(button) {
-    let input = button.parentNode.querySelector('.quantity');
-    if (input.value > 1) {
-        input.value = parseInt(input.value) - 1;
+    function decrement(button) {
+        let input = button.parentNode.querySelector('.quantity');
+        if (input.value > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+        $(input).trigger('input');
     }
-    $(input).trigger('input');
-}
-
-
 
     $("#crear-venta").click(function () {
         let invalid = false;
+
+        if ($(".producto-row").length === 0) {
+            invalid = true;
+        }
 
         if ($("#cont-docu").text() == "") {
             $("#nombreCliente").addClass("is-invalid");
@@ -598,7 +869,7 @@ function decrement(button) {
             $("#campos-requeridos").css("color", "red");
         } else {
             $("#campos-requeridos").css("color", "");
-            enviarDatosVentas()
+            enviarDatosVentas();
         }
     });
 
@@ -639,8 +910,6 @@ function decrement(button) {
             documentoCliente: documentoCliente,
             productos: productos
         };
-
-        console.log(venta);
 
         $.ajax({
             type: "POST",

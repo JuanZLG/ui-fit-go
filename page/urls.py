@@ -9,6 +9,7 @@ urlpatterns=[
     path('Detalles/?', views.search_products, name="search_products"),
     path('añadir_pedido/<int:id_producto>/', views.añadir_pedido, name='añadir_pedido'),
     path('ver_pedido/', views.ver_pedido, name='pageOrder'),
-
+    path('documento/', views.document_exist, name='document_exist'),
+    path('obtener_cliente/', views.obtener_cliente, name='obtener_cliente'),
 ]
 

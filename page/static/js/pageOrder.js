@@ -93,30 +93,35 @@ $(document).ready(function () {
     });
 
     function upListOrder() {
-    let html = '';
-    for (let idProducto in carrito) {
-        let producto = carrito[idProducto];
-
-        html += `
-            <li class="p-3 d-flex position-relative" data-id="${idProducto}">
-                <div style="width:95%;">
-                    <div class="d-flex justify-content-start gap-3">
-                        <img src="${producto.imgSrc}" id="img-producto" class="img-fluid" alt="Imagen" style="width:50px; height:50px;">
-                        <span style="width: 110px; word-wrap: break-word;
-                        overflow-wrap: break-word;">${producto.nombreProducto}</span>
+        let html = '';
+        let total = 0;
+    
+        for (let idProducto in carrito) {
+            let producto = carrito[idProducto];
+            let subtotal = Number(producto.precio.replace('$', '').replace(/,/g, '')) * producto.cantidad;
+            total += subtotal;
+    
+            html += `
+                <li class="p-3 d-flex position-relative" data-id="${idProducto}">
+                    <div style="width:95%;">
+                        <div class="d-flex justify-content-start gap-3">
+                            <img src="${producto.imgSrc}" id="img-producto" class="img-fluid" alt="Imagen" style="width:50px; height:50px;">
+                            <span style="width: 110px; word-wrap: break-word;
+                            overflow-wrap: break-word;">${producto.nombreProducto}</span>
+                        </div>
+                        <div class="d-flex gap-2 justify-content-end m-1">
+                            <span><strong>${producto.precio} x ${producto.cantidad}</strong></span>
+                        </div>
                     </div>
-                    <div class="d-flex gap-2 justify-content-end m-1">
-                        <span><strong>${producto.precio} x ${producto.cantidad}</strong></span>
-                    </div>
-                </div>
-                <span class="remove-order position-absolute top-0 end-0" style="width:5%; font-size: 14px"><i class="fas fa-trash"></i></span>
-            </li>
-            <hr class="m-0">
-        `;
+                    <span class="remove-order position-absolute top-0 end-0" style="width:5%; font-size: 14px"><i class="fas fa-trash"></i></span>
+                </li>
+                <hr class="m-0">
+            `;
+        }
+    
+        $('.list-item').html(html);
+        document.getElementById('total-order').textContent = "$" + total.toLocaleString();
     }
-    $('.list-item').html(html);
-    }
-
     
     $('.producto-row').each(function () {
         let row = $(this);

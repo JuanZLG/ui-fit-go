@@ -1,7 +1,9 @@
+from datetime import timezone
+import json
 import re
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from .models import Productos, Marcas, Categorias, Detalleventa, Ventas
+from .models import Productos, Marcas, Categorias, Pedidos, DetallePedido, Clientes, Departamentos, Municipios
 from django.db.models import Sum
 from django.db.models import Count
 
@@ -166,8 +168,121 @@ def añadir_pedido(request, id_producto):
     return render(request, 'pageAdd.html', {'producto': producto, 'sabores': sabores, 'presentaciones': presentaciones})
 
 
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 def ver_pedido(request):
     if request.method == 'POST':
-        pass
+        try:
+            documento_cliente = request.POST['documento']
+            nombre_departamento = request.POST['departamento']
+            nombre_municipio = request.POST['municipio']
+
+            cliente = Clientes.objects.filter(documento=documento_cliente).first()
+
+            if cliente:
+                municipio_actual = cliente.id_municipio
+                departamento_actual = municipio_actual.id_departamento
+
+                if departamento_actual.nombre_departamento != nombre_departamento:
+                    departamento_actual.nombre_departamento = nombre_departamento
+                    departamento_actual.save()
+
+                if municipio_actual.nombre_municipio != nombre_municipio:
+                    municipio_actual.nombre_municipio = nombre_municipio
+                    municipio_actual.save()
+
+                cliente.nombres = request.POST['nombre']
+                cliente.apellidos = request.POST['apellido']
+                cliente.celular = request.POST['celular']
+                cliente.barrio = request.POST['barrio']
+                cliente.direccion = request.POST['direccion']
+                cliente.correo = request.POST['correo']
+                cliente.save()
+            else:
+                departamento = Departamentos.objects.create(nombre_departamento=nombre_departamento)
+                municipio = Municipios.objects.create(nombre_municipio=nombre_municipio, id_departamento=departamento)
+
+                cliente = Clientes.objects.create(
+                    id_municipio=municipio,
+                    documento=documento_cliente,
+                    nombres=request.POST['nombre'],
+                    apellidos=request.POST['apellido'],
+                    celular=request.POST['celular'],
+                    barrio=request.POST['barrio'],
+                    direccion=request.POST['direccion'],
+                    correo=request.POST['correo'],
+                )
+
+            carrito = json.loads(request.POST.get('carrito', '{}'))
+
+            pedido = Pedidos.objects.create(
+                id_venta=None,
+                id_cliente=cliente,
+                total_pedido=0,  
+                estado='en proceso',
+            )
+
+            total_pedido = 0
+            for idProducto, detalles in carrito.items():
+                precio_uni = float(detalles['precio'].replace('$', '').replace(',', ''))
+                cantidad = int(detalles['cantidad'])
+                idDelProducto = int(detalles['idDelProducto'])
+                precio_tot = precio_uni * cantidad
+                total_pedido += precio_tot  
+
+                producto_obj = Productos.objects.get(id_producto=idDelProducto)
+                DetallePedido.objects.create(
+                    id_pedido=pedido,
+                    id_producto=producto_obj,
+                    sabor=detalles['sabor'],
+                    presentacion=detalles['presentacion'],
+                    cantidad=cantidad,
+                    precio_uni=precio_uni,
+                    precio_tot=precio_tot,
+                )
+
+            pedido.total_pedido = total_pedido
+            pedido.save()
+
+
+
+            return JsonResponse({'message': 'Datos guardados correctamente'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
     return render(request, 'pageOrder.html')
+
+
+
+
+def document_exist(request):
+    documento = request.GET.get("documento", "")
+    cliente = Clientes.objects.filter(documento=documento).exists()
+    return JsonResponse({"existe": cliente})
+
+
+
+def obtener_cliente(request):
+    documento = request.GET.get('documento')
+    try:
+        cliente = Clientes.objects.get(documento=documento)
+        data = {
+            'nombres': cliente.nombres,
+            'apellidos': cliente.apellidos,
+            'celular': cliente.celular,
+            'correo': cliente.correo,
+            'barrio': cliente.barrio,
+            'direccion': cliente.direccion,
+            'municipio': cliente.id_municipio.nombre_municipio,
+            'departamento': cliente.id_municipio.id_departamento.nombre_departamento,
+        }
+        return JsonResponse({'success': data})
+    except Clientes.DoesNotExist:
+        return JsonResponse({'error': 'No se encontró un cliente con el documento proporcionado.'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+
+
+
+

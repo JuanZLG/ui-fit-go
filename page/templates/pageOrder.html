@@ -5,6 +5,7 @@
 {% load static %}
 <script src="{% static 'js/pageOrder.js' %}"></script>
 {% endblock %}
+
 {% block mobile-home %}{% endblock %}
 {% block mobile-title %}{% endblock %}
 
@@ -28,74 +29,86 @@
         </table>
     </div>
     <div id="info-client" class="m-3">
-        <div class="d-flex flex-wrap">
+        <div class="d-flex">
             <div class="container p-5 pb-4 card shadow" style="width: 70%;">
                 <form class="form" id="cliente-form" method="post">
+                    <div id="show-avis"></div>
                     {% csrf_token %}
+                    <svg viewBox="25 25 50 50" id="loading">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
                     <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="iDocumento">Documento *</label>
-                            <input type="text" class="form-control" id="iDocumento" name="iDocumento"
-                                placeholder="Documento" minlength="8" maxlength="12">
-                            <div class="error-message" id="iDocumento-error" style="color:red;"></div>
-                            <div class="info-message" id="iDocumento-info"></div>
-                        </div>
-
-                        <div class="form-group col-md-8">
-                            <label for="iNombres">Nombres *</label>
-                            <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
-                            <div class="error-message" id="iNombres-error"></div>
+                        <div class="form-group col-md-12">
+                            <label for="documento">Documento <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="documento" name="documento"
+                                placeholder="Documento" minlength="8" maxlength="12" required>
+                            <div class="error-message" id="documento-error"></div>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row row">
                         <div class="form-group col-md-6">
-                            <label for="iApellidos">Apellidos *</label>
-                            <input type="text" class="form-control" id="iApellidos" name="iApellidos"
-                                placeholder="Apellidos">
-                            <div class="error-message" id="iApellidos-error"></div>
+                            <label for="nombre">Nombres <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombres"
+                                required>
+                            <div class="error-message" id="nombre-error"></div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="iCelular">Celular *</label>
-                            <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                                minlength="10" maxlength="10">
-                            <div class="error-message" id="iCelular-error"></div>
-                            <div class="info-message" id="iCelular-info"></div>
+                            <label for="apellido">Apellidos <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="apellido" name="apellido"
+                                placeholder="Apellidos" required>
+                            <div class="error-message" id="apellido-error"></div>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row row">
                         <div class="form-group col-md-6">
-                            <label for="departamento">Departamento *</label>
-                            <select class="form-control" id="departamento" name="nombre_departamento">
+                            <label for="celular">Celular <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="celular" name="celular" placeholder="Celular"
+                                minlength="10" maxlength="10" required>
+                            <div class="error-message" id="celular-error"></div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="correo">Correo <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="correo" name="correo"
+                                placeholder="Correo Electrónico" required>
+                            <div class="error-message" id="correo-error"></div>
+                        </div>
+                    </div>
+                    <div class="form-row row">
+                        <div class="form-group col-md-6">
+                            <label for="departamento">Departamento <span class="text-danger">*</span></label>
+                            <select class="form-control" id="departamento" name="departamento" required>
+                                <option value="" selected>--</option>
                             </select>
                             <div class="error-message" id="departamento-error"></div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="municipio">Municipio *</label>
-                            <select class="form-control" id="municipio" name="nombre_municipio">
-                                <option value="Municipio por Defecto">Selecciona un Municipio</option>
+                            <label for="municipio">Municipio <span class="text-danger">*</span></label>
+                            <select class="form-control" id="municipio" name="municipio" required>
+                                <option value="" selected>--</option>
                             </select>
                             <div class="error-message" id="municipio-error"></div>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row row">
                         <div class="form-group col-md-6">
-                            <label for="iBarrio">Barrio *</label>
-                            <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
-                            <div class="error-message" id="iBarrio-error"></div>
+                            <label for="barrio">Barrio <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="barrio" name="barrio" placeholder="Barrio"
+                                required>
+                            <div class="error-message" id="barrio-error"></div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="iDireccion">Dirección *</label>
-                            <input type="text" class="form-control" id="iDireccion" name="iDireccion"
-                                placeholder="Dirección">
-                            <div class="error-message" id="iDireccion-error"></div>
+                            <label for="direccion">Dirección <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="direccion" name="direccion"
+                                placeholder="Dirección" required>
+                            <div class="error-message" id="direccion-error"></div>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top: 10px;">
-                        <button class="btn btn-success" type="submit" id="submit-button" disabled>Guardar</button>
+                        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
                     </div>
                 </form>
             </div>
-            <div style="width: 30%;">
+            <div style="width: 30%;" class="card shadow">
                 <h3 style="background-color: #ccc">Recibo</h3>
             </div>
         </div>
@@ -104,9 +117,59 @@
         <button type="button" id="continuar">Continuar</button>
     </div>
 </section>
+<style>
+    #loading svg {
+        z-index: 999;
+        position: absolute;
+        top: 40%;
+        left: 40%;
+        margin: auto;
+        width: 3.25em;
+        transform-origin: center;
+        animation: rotate4 2s linear infinite;
+    }
 
+    #loading circle {
+        fill: none;
+        stroke: rgb(128, 128, 255);
+        stroke-width: 3;
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+        stroke-linecap: round;
+        animation: dash4 1.5s ease-in-out infinite;
+    }
+
+    @keyframes rotate4 {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes dash4 {
+        0% {
+            stroke-dasharray: 1, 200;
+            stroke-dashoffset: 0;
+        }
+
+        50% {
+            stroke-dasharray: 90, 200;
+            stroke-dashoffset: -35px;
+        }
+
+        100% {
+            stroke-dashoffset: -125px;
+        }
+    }
+</style>
+<style>
+    .form-row {
+        margin-top: 10px !important;
+    }
+</style>
 <script>
     $(document).ready(function () {
+        $("#loading").hide();
+
         $('#info-client').hide();
 
         $('#continuar').on('click', function () {
@@ -114,6 +177,114 @@
             $('#info-client').toggle();
         });
     });
+
+    $('#cliente-form').on('submit', function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        var carrito = localStorage.getItem('carrito');
+        if (carrito) {
+            formData.append('carrito', carrito);
+        }
+
+        $.ajax({
+            url: "{% url 'pageOrder' %}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert(response.message);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Imprime el mensaje de error completo
+                console.error('Error response:', jqXHR.responseText);
+                alert('Error al guardar los datos: ' + jqXHR.responseText);
+            }
+        });
+    });
+
+
+    async function documentoExist(documento) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "{% url 'document_exist' %}",
+                type: "GET",
+                data: {
+                    documento: documento,
+                },
+                success: function (data) {
+                    if (data.existe) {
+                        resolve(false);
+                    } else {
+                        resolve(true);
+                    }
+                }
+            });
+        });
+    }
+
+    function mostrarAviso(cliente) {
+        var aviso = document.getElementById('show-avis');
+        aviso.style.cssText = 'background-color: #ccc; color: #2222222; text-align: center; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,.2); position:absolute; top:0;';
+        aviso.innerText = 'Bienvenido de nuevo, ' + cliente.nombres + '. Hemos cargado tus datos previos.';
+
+        aviso.style.display = 'block';
+
+        setTimeout(function () {
+            aviso.style.display = 'none';
+        }, 5000);
+    }
+
+
+    function obtenerCliente(documento) {
+        $(document).ajaxStart(function () {
+            $("#loading").show();
+        });
+
+        $(document).ajaxStop(function () {
+            $("#loading").hide();
+        });
+
+        $.ajax({
+            url: "{% url 'obtener_cliente' %}",
+            type: 'GET',
+            data: { documento: documento },
+            success: function (response) {
+                if (response.success) {
+                    var cliente = response.success;
+                    llenarFormulario(cliente)
+                    mostrarAviso(cliente);
+                    console.log('Cliente:', cliente);
+                }
+            },
+            error: function (error) {
+                console.error('Error en la solicitud AJAX:', error.responseText);
+            }
+        });
+    }
+
+    function llenarFormulario(cliente) {
+        document.getElementById('nombre').value = cliente.nombres;
+        document.getElementById('apellido').value = cliente.apellidos;
+        document.getElementById('celular').value = cliente.celular;
+        document.getElementById('correo').value = cliente.correo;
+        document.getElementById('departamento').value = cliente.departamento;
+        document.getElementById('municipio').value = cliente.municipio;
+        document.getElementById('barrio').value = cliente.barrio;
+        document.getElementById('direccion').value = cliente.direccion;
+    }
+
+    document.getElementById('documento').addEventListener('input', async function () {
+        const documento = this.value;
+        const resultDocument = await documentoExist(documento);
+        if (!resultDocument) {
+            obtenerCliente(documento);
+        }
+    });
+
+
+
 </script>
 <style>
     .table thead tr th {

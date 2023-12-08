@@ -28,3 +28,35 @@
                                 {% endfor %}
                             </ul>
                         </div>
+
+
+
+
+                        
+
+            # # sum(float(producto['precio'].replace('$', '').replace(',', '')) for producto in carrito.values())
+            # pedido = Pedidos.objects.create(
+            #     id_venta=None,  
+            #     id_cliente=cliente,
+            #     # fecha_pedido=timezone.now(),
+            #     total_pedido = 3000,
+            #     estado='en proceso',
+            # )
+
+
+            # for id_producto, producto in carrito.items():
+            #     detalle = DetallePedido.objects.create(
+            #         id_pedido=pedido,
+            #         # id_producto=int(id_producto),
+            #         id_producto=31,
+            #         sabor=producto['sabor'],
+            #         presentacion=producto['presentacion'],
+            #         # cantidad=int(producto['cantidad']),
+            #         cantidad=33,
+            #         # precio_uni=float(producto['precio'].replace('$', '').replace(',', '')),
+            #         # precio_tot=float(producto['precio'].replace('$', '').replace(',', '')) * int(producto['cantidad']),
+            #         precio_uni=3000,
+            #         precio_tot=3000,
+                
+            #     )
+                

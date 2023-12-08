@@ -163,7 +163,9 @@
             <table class="table table-bordered  mx-auto text-center" id="dataTable" width="100%" cellspacing="3">
                 <thead class="theads">
                     <tr>
+                        <th>ID</th>
                         <th>Fecha de Registro</th>
+                        <th>Identificación</th>
                         <th>Cliente</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -172,7 +174,9 @@
                 <tbody>
                     {% for venta in ventas %}
                     <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
+                        <td>{{ venta.id_venta }}</td>
                         <td>{{ venta.fechareg }}</td>
+                        <td>{{ venta.id_cliente.documento }}</td>
                         <td class="d-flex">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>
                             <button data-toggle="tooltip" data-placement="right" title="Cambiar de Estado"
