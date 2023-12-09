@@ -3,72 +3,75 @@
 {% block title %} Agregar Cliente {% endblock %}
 {% block body %}
 
-
-<center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Cliente</h1></center>
+<center>
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Cliente</h1>
+</center>
 
 <div class="container d-flex justify-content-center">
-<div class="card shadow" style="width:60%">
-    <div class="container p-5 pb-4">
-        <form class="form" id="cliente-form" method="post">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="iDocumento">Documento *</label>
-                    <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
-                        minlength="8" maxlength="12">
-                    <div class="error-message" id="iDocumento-error" style="color:red;"></div>
-                    <div class="info-message" id="iDocumento-info"></div>
+    <div class="card shadow" style="width:60%">
+        <div class="container p-5 pb-4">
+            <form class="form" id="cliente-form" method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="iDocumento">Documento *</label>
+                        <input type="text" class="form-control" id="iDocumento" name="iDocumento"
+                            placeholder="Documento" maxlength="10" minlength="6"">
+                        <div class="error-message" id="iDocumento-error" style="color:red;"></div>
+                        <div class="info-message" id="iDocumento-info"></div>
+                    </div>
+
+                    <div class="form-group col-md-8">
+                        <label for="iNombres">Nombres *</label>
+                        <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
+                        <div class="error-message" id="iNombres-error" style="color:red;"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="iApellidos">Apellidos *</label>
+                        <input type="text" class="form-control" id="iApellidos" name="iApellidos"
+                            placeholder="Apellidos">
+                        <div class="error-message" id="iApellidos-error" style="color:red;"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iCelular">Celular *</label>
+                        <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
+                            minlength="10" maxlength="10">
+                        <div class="error-message" id="iCelular-error" style="color:red;"></div>
+                        <div class="info-message" id="iCelular-info" style="color:red;"></div>
+                    </div>
                 </div>
 
-                <div class="form-group col-md-8">
-                    <label for="iNombres">Nombres *</label>
-                    <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
-                    <div class="error-message" id="iNombres-error"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="departamento">Departamento *</label>
+                        <select class="form-control" id="departamento" name="nombre_departamento">
+                        </select>
+                        <div class="error-message" id="departamento-error" style="color:red;"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="municipio">Municipio *</label>
+                        <select class="form-control" id="municipio" name="nombre_municipio">
+                            <option value="Municipio por Defecto">Selecciona un Municipio</option>
+                        </select>
+                        <div class="error-message" id="municipio-error" style="color:red;"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="iApellidos">Apellidos *</label>
-                    <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos">
-                    <div class="error-message" id="iApellidos-error"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="iCelular">Celular *</label>
-                    <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                        minlength="10" maxlength="10">
-                    <div class="error-message" id="iCelular-error"></div>
-                    <div class="info-message" id="iCelular-info"></div>
-                </div>
-            </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="departamento">Departamento *</label>
-                    <select class="form-control" id="departamento" name="nombre_departamento">
-                    </select>
-                    <div class="error-message" id="departamento-error"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="iBarrio">Barrio *</label>
+                        <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
+                        <div class="error-message" id="iBarrio-error" style="color:red;"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iDireccion">Dirección *</label>
+                        <input type="text" class="form-control" id="iDireccion" name="iDireccion"
+                            placeholder="Dirección">
+                        <div class="error-message" id="iDireccion-error" style="color:red;"></div>
+                    </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="municipio">Municipio *</label>
-                    <select class="form-control" id="municipio" name="nombre_municipio">
-                        <option value="Municipio por Defecto">Selecciona un Municipio</option>
-                    </select>
-                    <div class="error-message" id="municipio-error"></div>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="iBarrio">Barrio *</label>
-                    <input type="text" class="form-control" id="iBarrio" name="iBarrio" placeholder="Barrio">
-                    <div class="error-message" id="iBarrio-error"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="iDireccion">Dirección *</label>
-                    <input type="text" class="form-control" id="iDireccion" name="iDireccion" placeholder="Dirección">
-                    <div class="error-message" id="iDireccion-error"></div>
-                </div>
-            </div>
 
             <div class="text-center" style="margin-top: 10px;">
                 <button class="btn btn-primary" type="submit" id="submit-button" disabled>Guardar</button>
@@ -81,31 +84,24 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Obtener la lista de departamentos al cargar la página
         obtenerDepartamentos();
 
-        // Manejar cambios en el departamento seleccionado
         $("#departamento").change(function () {
             cargarMunicipios();
         });
 
-        // ... (código anterior)
-
         $('#iDocumento').on('input', function () {
             validarDocumento();
-            habilitarBoton();
         });
 
         $('#iCelular').on('input', function () {
             validarCelular();
-            habilitarBoton();
         });
 
         $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
             validarCampo($(this));
-            habilitarBoton();
-
         });
+
         $('#iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #iDocumento, #departamento, #municipio')
             .on('input', function () {
                 if ($(this).val() === '') {
@@ -115,16 +111,18 @@
                 }
             });
 
-
         $('#cliente-form').submit(function (event) {
             event.preventDefault();
-            let errors = false;
+            validarDocumento();
+            validarCelular();
             validarCampo($('#iNombres'));
             validarCampo($('#iApellidos'));
             validarCampo($('#iBarrio'));
             validarCampo($('#iDireccion'));
             validarCampo($('#departamento'));
             validarCampo($('#municipio'));
+            validarDocumento();
+            validarCelular();
             if ($('.error-message').text() === '') {
                 $.ajax({
                     type: 'POST',
@@ -144,12 +142,12 @@
                             }, 1000); 
                         }
                     }
-                });                
+                });
             }
         });
 
+        // ... (código anterior)
     });
-
 
     function obtenerDepartamentos() {
         $.ajax({
@@ -167,7 +165,6 @@
                     text: depto
                 }));
             });
-
             cargarMunicipios();
         });
     }
@@ -184,7 +181,7 @@
                 "departamento": departamentoSeleccionado
             }
         }).done(function (data) {
-            municipioSelect.empty(); // Limpiar opciones anteriores
+            municipioSelect.empty();
             data.forEach(function (item) {
                 municipioSelect.append($("<option>", {
                     value: item.municipio,
@@ -194,7 +191,6 @@
         });
     }
 
-    // Función para cargar los municipios basados en el departamento seleccionado
     function cargarMunicipios() {
         obtenerMunicipios();
     }
@@ -217,26 +213,28 @@
         $campo.siblings('.info-message').text('');
     }
 
-
     function validarDocumento() {
-        const documento = $('#iDocumento').val();
+        const documento = $('#iDocumento').val().replace(/\D/g, '');
 
         if (documento.trim() === '') {
             mostrarError($('#iDocumento'), 'Este campo es obligatorio.');
-            habilitarBoton();
-            return; 
+            return;
         }
 
-        const documentoError = /^\d{8,12}$/.test(documento) ? '' : 'Número de documento inválido.';
+        const documentoError = /^\d{6,10}$/.test(documento) ? '' : 'Número de documento inválido.';
 
+        if (documentoError) {
+            mostrarError($('#iDocumento'), documentoError);
+        } else {
+            ocultarError($('#iDocumento'));
+            verificarExistenciaDocumento(documento);
+        }
+    }
 
-        $('#iDocumento').val(documento.replace(/\D/g, '')); 
-        $('#iDocumento-error').html(documentoError);
-
-        
+    function verificarExistenciaDocumento(documento) {
         $.ajax({
             type: 'GET',
-            url: "{% url 'validarDocumento' %}", 
+            url: "{% url 'validarDocumento' %}",
             data: {
                 documento: documento
             },
@@ -246,7 +244,6 @@
                 } else {
                     ocultarError($('#iDocumento'));
                 }
-                habilitarBoton(); 
             }
         });
     }
@@ -255,20 +252,21 @@
 
     function validarCelular() {
         const celular = $('#iCelular').val();
-        const celularError = /^\d{0,10}$/.test(celular) ? '' : 'Número inválido.';
 
-        $('#iCelular').val(celular.replace(/\D/g, '')); 
+        if (celular.trim() === '') {
+            mostrarError($('#iCelular'), 'Este campo es obligatorio.');
+            return;
+        }
+
+        const celularError = /^\d{10}$/.test(celular) ? '' : 'Número inválido.';
+        $('#iCelular').val(celular.replace(/\D/g, ''));
         $('#iCelular-error').html(celularError);
-
-
     }
 
-    // Asociar funciones a eventos de cambio en los campos
     $('#iDocumento').on('input', validarDocumento);
     $('#iDocumento').on('keypress', validarDocumento);
     $('#iCelular').on('input', validarCelular);
     $('#iCelular').on('keypress', validarCelular);
-
 
     function validarCampo($campo) {
         const valor = $campo.val();
@@ -276,28 +274,6 @@
             mostrarError($campo, 'Este campo es obligatorio.');
         } else {
             ocultarError($campo);
-        }
-    }
-
-    function habilitarBoton() {
-        const documento = $('#iDocumento').val();
-        const celular = $('#iCelular').val();
-        const nombres = $('#iNombres').val();
-        const apellidos = $('#iApellidos').val();
-        const barrio = $('#iBarrio').val();
-        const direccion = $('#iDireccion').val();
-        const departamento = $('#departamento').val();
-        const municipio = $('#municipio').val();
-
-        const documentoValido = (documento.length >= 8 && documento.length <= 12);
-
-        const celularValido = (celular.length === 10);
-        const camposCompletos = (nombres && apellidos && barrio && direccion && departamento && municipio);
-
-        if (documentoValido && celularValido && camposCompletos) {
-            $('#submit-button').prop('disabled', false);
-        } else {
-            $('#submit-button').prop('disabled', true);
         }
     }
 </script>
