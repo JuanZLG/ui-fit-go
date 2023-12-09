@@ -306,18 +306,19 @@ input[type="number"] {
     display: flex;
     align-items: center;
     gap: 5px;
+    width: 550px;
     
 }
 
 .product-details-container img {
     object-fit: contain;
-    width: 50px;
+    width: 30px;
     max-height: 80px;
 }
 
 .product-info .product-details-container .cont-img,
 .product-info .product-details-container .cont-img img {
-    width: 80%;
+    width: 100%;
 }
 
 

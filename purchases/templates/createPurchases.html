@@ -331,10 +331,7 @@
         });
 
 
-        $(document).on("input", ".cantidad-fila, .descuento", function () {
-            let fila = $(this).closest("tr.producto-row");
-            fila.find(".product-update-button").addClass("is-active");
-        });
+        
 
 
         $(document).on("click", ".eliminar-fila", function () {
@@ -357,39 +354,21 @@
             return '$' + precioFormateado;
         }
 
-        $(document).on("click", ".product-update-button", function () {
-            let btn = $(this);
-            btn.val('ACTUALIZADO');
-            btn.addClass("update");
-            btn.fadeIn(100);
-
-            setTimeout(function () {
-                btn.fadeOut(100, function () {
-                    btn.removeClass("update");
-                    btn.val('ACTUALIZAR');
-                    btn.removeClass("is-active");
-                    btn.fadeIn(100);
-                });
-            }, 1000);
-
-            $("#campos-requeridos").css("color", "");
-            $('.product-update-button.is-active').tooltip('dispose');
+        $(document).on("input", ".cantidad-fila", function () {
             let fila = $(this).closest("tr.producto-row");
-            let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
-            let precio_compra = parseFloat(fila.find(".precio_compra").text().replace(
-                /[$,.]/g, ''));
+            fila.find(".product-update-button").addClass("is-active");
+            actualizarDatos(fila);
+        });
 
+        function actualizarDatos(fila) {
+            let cantidad_seleccionada = parseInt(fila.find(".cantidad-fila").val());
+            let precio_compra = parseFloat(fila.find(".precio_compra").text().replace(/[$,.]/g, ''));
 
             let total_producto = formatearPrecios(precio_compra * cantidad_seleccionada);
-            let total_compraa = formatearPrecios(precio_compra)
-
-
-
-            fila.find(".precio_compra").html(total_compraa);
-
             fila.find(".total_producto").text(total_producto);
-            totalCompra()
-        });
+            totalCompra();
+        }
+
 
 
 
@@ -431,18 +410,19 @@
                                 </div>
                                 <ul class="product-details">
                                     <li><strong>${nombre_producto}</strong></li>
-                                    <li class="d-flex justify-content-between">
+                                    <li>
                                         <span><strong class="mr-2">Marca:</strong>${marca}</span>
                                     </li>
                                     <li><strong class="mr-2">Categoria:</strong>${categoria}</li>
-                                </ul>
-                                <ul>
-                                    <div class="number-input mt-3">
+                                    <li class="mt-3 d-flex align-items-center gap-3">
+                                    
+                                    <div class="number-input">
                                             <button onclick="decrement(this)" id="decrement">-</button>
                                             <input class="quantity cantidad-fila" min="1" name="quantity" type="number" value="${cantidad_seleccionada}" autocomplete="off" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
                                             <button onclick="increment(this)" id="increment">+</button>
-                                        </div>   
-                                        <input type="button" value="ACTUALIZAR" class="product-update-button mt-3">
+                                        </div>  
+                                    
+                                </li>
                                 </ul>
                             </div>
                         </div>
