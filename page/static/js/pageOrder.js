@@ -29,48 +29,49 @@ $(document).ready(function () {
     let carrito = JSON.parse(localStorage.getItem('carrito'));
 
     let html = '';
-    for (let idProducto in carrito) {
-        let producto = carrito[idProducto];
-        let total = Number(producto.precio.replace('$', '').replace(/,/g, '')) * producto.cantidad;
-        let precioUni = Number(producto.precio.replace('$', '').replace(/,/g, ''));
-
-        html += `
-<tr class="producto-row" data-id-producto="${idProducto}">
-    <td class="p-2 ">
-        <div class="d-flex">
-            <div class="cont-img">
-                <img src="${producto.imgSrc}" id="img-producto" class="img-fluid"
-                    alt="Imagen" style="width:70px; height:70px;">
-            </div>
-            <ul class="product-details">
-                <li><strong class="">${producto.nombreProducto}</strong></li>
-                <li>
-                    <span><strong class="mr-2">Sabor:</strong><span class="mx-2">${producto.sabor}</span></span>
-                </li>
-                <li><strong class="mr-2">Presentación:</strong><span class="mx-2">${producto.presentacion} Libras</span>
-                </li>
-            </ul>
-        </div>
-    </td>
-    <td class="precio">$${precioUni.toLocaleString()}</td>
-    <td> <span class="cantidad">
-            <div>
-                <div class="number-input">
-                    <button type="button" class="decrement">-</button>
-                    <input class="quantity" min="1" name="cantidad" value="${producto.cantidad}" type="number"
-                        autocomplete="off" step="1" id="cantidad-ingresada" max="100" required readonly
-                        oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
-                    <button type="button" class="increment">+</button>
+    if (Object.keys(carrito).length === 0) {
+        html = '<p class="mt-2">No hay productos en el carrito, <a href="/Brutality/">agregar productos aquí.</a></p>';
+    } else {
+        for (let idProducto in carrito) {
+            let producto = carrito[idProducto];
+            let total = Number(producto.precio.replace('$', '').replace(/,/g, '')) * producto.cantidad;
+            let precioUni = Number(producto.precio.replace('$', '').replace(/,/g, ''));
+            html += `
+    <tr class="producto-row" data-id-producto="${idProducto}">
+        <td class="p-2 ">
+            <div class="d-flex">
+                <div class="cont-img">
+                    <img src="${producto.imgSrc}" id="img-producto" class="img-fluid"
+                        alt="Imagen" style="width:70px; height:70px;">
                 </div>
+                <ul class="product-details">
+                    <li><strong class="">${producto.nombreProducto}</strong></li>
+                    <li>
+                        <span><strong class="mr-2">Sabor:</strong><span class="mx-2">${producto.sabor}</span></span>
+                    </li>
+                </ul>
             </div>
-    </td>
-    <td class="total_producto">$${total.toLocaleString()}</td>
-    <td class="remove-order">
-        <i class="fas fa-trash" style="color: #000;"></i>
-        x
-    </td>
-</tr>
-`;
+        </td>
+        <td class="precio">$${precioUni.toLocaleString()}</td>
+        <td> <span class="cantidad">
+                <div>
+                    <div class="number-input">
+                        <button type="button" class="decrement">-</button>
+                        <input class="quantity" min="1" name="cantidad" value="${producto.cantidad}" type="number"
+                            autocomplete="off" step="1" id="cantidad-ingresada" max="100" required readonly
+                            oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                        <button type="button" class="increment">+</button>
+                    </div>
+                </div>
+        </td>
+        <td class="total_producto">$${total.toLocaleString()}</td>
+        <td class="remove-order">
+            <i class="fas fa-trash" style="color: #000;"></i>
+            x
+        </td>
+    </tr>
+    `;
+        }
     }
     $('#producto-tbody').html(html);
 
@@ -107,7 +108,7 @@ $(document).ready(function () {
                         <div class="d-flex justify-content-start gap-3">
                             <img src="${producto.imgSrc}" id="img-producto" class="img-fluid" alt="Imagen" style="width:50px; height:50px;">
                             <span style="width: 110px; word-wrap: break-word;
-                            overflow-wrap: break-word;">${producto.nombreProducto}</span>
+                            overflow-wrap: break-word;">${producto.nombreProducto} x ${producto.sabor}</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-end m-1">
                             <span><strong>${producto.precio} x ${producto.cantidad}</strong></span>

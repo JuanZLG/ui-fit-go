@@ -149,7 +149,7 @@
                         <a href="{% url 'pageHome' %}">
                             <img src="{% static 'img/gorille.png' %}" class="logo img-fluid" alt="Logo de Brutálity">
                         </a>
-                        <h1><strong>BRUTALITY</strong></h1>
+                        <h1><strong>TUIRANFIT</strong></h1>
                         <li id="toggle-info" class="nav-item">
                             <a href="#" class="nav-link">Información
                                 <svg style="height: 24px;" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -386,14 +386,10 @@
             alt="Imagen"></a></swiper-slide>
     </swiper-container>
         <div class="col-lg-12 mb-4 mt-4" style="text-align:left;">
-            <h3 class="my-3"> ${data.nombre_producto} <strong style="float:right;">$${data.precio_pub}</strong></h3>
+            <h3 class="my-3"> ${data.nombre_producto} <strong style="float:right;" class="text-danger">$${data.precio_pub}</strong></h3>
             <div class="mb-3" style="max-height: 100px; height: auto;overflow-y: scroll;"> ${data.descripcion}</div>
             <hr >
-            <ul class="list-group list-group-flush mt-4">
-                <li><strong>Sabores:</strong> ${data.sabor}</li>
-                <hr>
-                <li><strong>Presentaciones por libras:</strong> ${data.presentacion}lbs</li>
-            </ul>
+            <span><strong>Sabores:</strong> ${data.sabor}</span>
         </div>
   </div>
 `,

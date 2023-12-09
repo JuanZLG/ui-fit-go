@@ -85,7 +85,7 @@ $(document).ready(function () {
                         <div class="d-flex justify-content-start gap-3">
                             <img src="${producto.imgSrc}" id="img-producto" class="img-fluid" alt="Imagen" style="width:50px; height:50px;">
                             <span style="width: 110px; word-wrap: break-word;
-                            overflow-wrap: break-word;">${producto.nombreProducto}</span>
+                            overflow-wrap: break-word;">${producto.nombreProducto} x ${producto.sabor}</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-end m-1">
                             <span><strong>${producto.precio} x ${producto.cantidad}</strong></span>
@@ -126,18 +126,15 @@ $(document).ready(function () {
             let nombreProducto = document.getElementById('producto').textContent.trim();
             let precio = document.getElementById('precio').textContent.trim();
             let sabor = document.querySelector('select[name="sabor"]').value;
-            let presentacion = document.querySelector('select[name="presentacion"]').value;
             let cantidad = parseInt(document.querySelector('input[name="cantidad"]').value);
 
             let idProducto = this.dataset.id;
 
             let carrito = JSON.parse(localStorage.getItem('carrito')) || {};
 
-            // Generar un ID único numérico para el producto
-            let idPedido = generarIdUnico(nombreProducto, sabor, presentacion);
+            let idPedido = generarIdUnico(nombreProducto, sabor);
 
-            // Verificar si el producto ya existe en el carrito
-            if (carrito[idPedido] && carrito[idPedido].nombreProducto === nombreProducto && carrito[idPedido].sabor === sabor && carrito[idPedido].presentacion === presentacion) {
+            if (carrito[idPedido] && carrito[idPedido].nombreProducto === nombreProducto && carrito[idPedido].sabor === sabor) {
                 carrito[idPedido].cantidad += cantidad;
             } else {
                 carrito[idPedido] = {
@@ -146,7 +143,6 @@ $(document).ready(function () {
                     nombreProducto: nombreProducto,
                     precio: precio,
                     sabor: sabor,
-                    presentacion: presentacion,
                     cantidad: cantidad
                 };
             }
@@ -160,9 +156,9 @@ $(document).ready(function () {
     });
 
     // Función para generar un ID único numérico basado en el nombre, sabor y presentación del producto
-    function generarIdUnico(nombre, sabor, presentacion) {
+    function generarIdUnico(nombre, sabor) {
         let hash = 0;
-        let identificador = nombre + sabor + presentacion;
+        let identificador = nombre + sabor;
         for (let i = 0; i < identificador.length; i++) {
             let char = identificador.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
@@ -173,9 +169,9 @@ $(document).ready(function () {
 
 
     // Función para generar un ID único numérico basado en el nombre, sabor y presentación del producto
-    function generarIdUnico(nombre, sabor, presentacion) {
+    function generarIdUnico(nombre, sabor) {
         let hash = 0;
-        let identificador = nombre + sabor + presentacion;
+        let identificador = nombre + sabor;
         for (let i = 0; i < identificador.length; i++) {
             let char = identificador.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;

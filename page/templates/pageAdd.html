@@ -56,18 +56,6 @@
                         </li>
                         <hr>
                         <li class="d-flex align-items-center gap-4">
-                            <strong>Presentaciones por libras:</strong>
-                            <select class="form-select" style="text-transform: capitalize;"
-                                aria-label="Default select example" required name="presentacion">
-                                <option value="" selected>- - -</option>
-                                {% for presentacion in presentaciones %}
-                                <option value="{{presentacion}}">{{ presentacion }} lbs</option>
-
-                                {% endfor %}
-                            </select>
-                        </li>
-                        <hr>
-                        <li class="d-flex align-items-center gap-4">
                             <strong>Cantidad:</strong>
                             <div class="number-input">
                                 <button type="button" class="decrement">-</button>
@@ -141,18 +129,6 @@
                         <option value="" selected>- - -</option>
                         {% for sabor in sabores %}
                         <option value="{{sabor}}">{{ sabor }}</option>
-                        {% endfor %}
-                    </select>
-                </li>
-                <hr>
-                <li class="d-flex align-items-center gap-4">
-                    <strong>Presentaciones por libras:</strong>
-                    <select class="form-select" style="text-transform: capitalize;" aria-label="Default select example"
-                        required name="presentacion-mobile">
-                        <option value="" selected>- - -</option>
-                        {% for presentacion in presentaciones %}
-                        <option value="{{presentacion}}">{{ presentacion }} lbs</option>
-
                         {% endfor %}
                     </select>
                 </li>

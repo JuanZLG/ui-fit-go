@@ -7,4 +7,245 @@
 <center>
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Editar Pedido</h1>
 </center>
+
+
+<section class="product-section-pedido" id="product-table-section">
+        <span style="font-size: 1.1rem;"><strong>Listado de Productos</strong></span>
+        <p style="display: block; width: 100%; text-align: justify; margin-top: 10px;">
+            Esta sección está dedicada exclusivamente a la edición de referencias y cantidades de productos para
+            asegurar la
+            coherencia del inventario con las ventas realizadas y facilitar la generación de recibos para los clientes.
+        </p>
+        <table class="table mt-4" id="tabla-detalles">
+            <thead class="text-center">
+                <tr>
+                    <th style="width: 200px;">Producto</th>
+                    <th>Sabor</th>
+                    <th>Cantidad</th>
+                    <th>Precio Venta</th>
+                    <th>Total del producto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in detalles %}
+                <tr data-id-detalle="{{ item.id_detallepedido }}" class="detalle-producto">
+                    <td class="d-flex align-items-center" style="gap: 1rem; width: 250px;">
+                        <div class="cont-img" style="flex: 0 0 80px; height: 80px;">
+                            <img src="/media/{{item.imagen_data}}" alt="Imagen del producto" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="flex-grow: 1; overflow: hidden; text-align:start;">
+                            <span style="text-overflow: ellipsis;">
+                                {{ item.detalle.id_producto.nombre_producto }}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <select name="sabor_{{ item.detalle.id_detallepedido }}" class="form-select">
+                            <option value="{{ item.detalle.sabor }}" selected>{{ item.detalle.sabor }}</option>
+                            {% for sabor in item.sabores %}
+                            {% if sabor != item.detalle.sabor %}
+                            <option value="{{ sabor }}">{{ sabor }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <div class="number-input">
+                            <button type="button" class="decrement" {% if item.detalle.cantidad > item.stock %}disabled{% endif %}><strong>-</strong></button>
+                            <input class="quantity cantidad-fila" min="1" max="{{ item.stock }}" name="quantity" type="number"
+                                readonly value="{{ item.detalle.cantidad }}" autocomplete="off" step="1"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = '';"
+                                {% if item.detalle.cantidad > item.stock %}disabled{% endif %}>
+                            <button type="button" class="increment" {% if item.detalle.cantidad > item.stock %}disabled{% endif %}><strong>+</strong></button>
+                        </div>
+                        <span class="text-danger text-center" {% if item.detalle.cantidad <= item.stock %}style="display: none;"{% endif %}>Sin stock</span>
+                    </td>
+                    <td class="precio-uni precio-format">{{ item.detalle.precio_uni }}</td>
+                    <td class="precio-tot precio-format">{{ item.detalle.precio_tot }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-2">
+            <p><strong>Total del pedido:<span class="mx-1 text-danger" id="total-venta"></span></strong></p>
+        </div>
+        <div style="text-align: end;">
+            <input type="button" value="Guardar" id="crear-pedido" class="btn btn-primary" type="submit">
+        </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        let precioElements = document.querySelectorAll('.precio-format');
+        precioElements.forEach(function (element) {
+            let precio = parseFloat(element.textContent);
+            element.textContent = formatearPrecios(precio);
+        });
+
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$' + precioFormateado;
+        }
+
+        calcularTotales()
+        
+        function calcularTotales() {
+            let totalVenta = 0;
+            document.querySelectorAll('.detalle-producto').forEach(function(row) {
+                const cantidad = parseInt(row.querySelector('.quantity').value);
+                const precioUni = row.querySelector('.precio-uni').textContent.replace(/[$.]/g, '').replace(/,/g, '.');
+                const totalProducto = cantidad * precioUni;
+                row.querySelector('.precio-tot').textContent = formatearPrecios(totalProducto);
+                totalVenta += totalProducto;
+            });
+            document.getElementById('total-venta').textContent = formatearPrecios(totalVenta);
+        }
+
+
+
+        // const form = document.querySelector('.product-section-pedido form');
+
+        // form.addEventListener('submit', function (e) {
+        //     e.preventDefault();
+
+        //     const formData = new FormData(this);
+
+        //     const formValues = {};
+
+        //     for (const [key, value] of formData.entries()) {
+        //         formValues[key] = value;
+        //     }
+
+        //     console.log('Datos del formulario:', formValues);
+        // });
+
+    function increment(input) {
+        let maxVal = parseInt(input.getAttribute('max'));
+        if (parseInt(input.value) < maxVal) {
+            input.value = parseInt(input.value) + 1;
+            $(input).tooltip('dispose');
+        } else {
+            if (parseInt(input.value) + 1 > maxVal) {
+                $(input).tooltip({
+                    title: "Cantidad máxima",
+                    trigger: "manual",
+                    placement: "right"
+                }).tooltip('show');
+                setTimeout(function () {
+                    $(input).tooltip('dispose');
+                }, 2000);
+            }
+        }
+        $(input).trigger('input');
+        calcularTotales();
+    }
+
+    function decrement(input) {
+        if (input.value > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+        $(input).trigger('input');
+        calcularTotales();
+    }
+
+    $('.increment').on('click', function () {
+        let input = $(this).siblings('.quantity')[0];
+        increment(input);
+    });
+
+    $('.decrement').on('click', function () {
+        let input = $(this).siblings('.quantity')[0];
+        decrement(input);
+    });
+
+
+    function checkDefaultValue(selectElement, defaultValue) {
+        if (selectElement.value === defaultValue) {
+            selectElement.classList.add('default-selected');
+        } else {
+            selectElement.classList.remove('default-selected');
+        }
+    }
+
+    var selects = document.querySelectorAll('.form-select');
+
+    selects.forEach(function(select) {
+        var defaultValue = select.querySelector('option[selected]').value;
+        checkDefaultValue(select, defaultValue);
+        select.addEventListener('change', function() {
+            checkDefaultValue(this, defaultValue);
+        });
+    });
+});
+
+
+</script>
+<style>
+    .product-section-pedido {
+        height: auto;
+        max-height: 900px;
+        border-radius: 5px;
+        overflow-y: auto;
+        box-shadow: 4px 2px 14px #cccccc70;
+        padding: 20px !important;
+    }
+
+    .product-section-pedido.table thead th,
+    .table tbody td {
+        text-align: center;
+        padding-top: 40px;
+    }
+    .form-select {
+        text-transform: capitalize;
+    }
+
+    .default-selected {
+        background-color: #e9ecef;
+        color: #000;
+    }
+
+
+
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .number-input {
+        margin: auto;
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        height: 40px;
+        max-width: 140px;
+    }
+
+    .number-input button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f2f2f2;
+        border: none;
+        width: 40px;
+        height: 100%;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .number-input input[type=number] {
+        border: none;
+        text-align: center;
+        width: 60px;
+        padding: 10px;
+    }
+</style>
 {% endblock %}

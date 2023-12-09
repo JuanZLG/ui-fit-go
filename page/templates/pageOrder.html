@@ -11,6 +11,7 @@
 
 {% block body %}
 
+
 <section class="order">
     <div class="col-12 col-lg-10 m-auto">
         <table class="table table-hover" id="table-order">
@@ -34,9 +35,9 @@
                 <form class="form" id="cliente-form" method="post">
                     <div id="show-avis"></div>
                     {% csrf_token %}
-                    <svg viewBox="25 25 50 50" id="loading">
+                    <!-- <svg viewBox="25 25 50 50" id="loading">
                         <circle r="20" cy="50" cx="50"></circle>
-                    </svg>
+                    </svg> -->
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="documento">Documento <span class="text-danger">*</span></label>
@@ -103,20 +104,27 @@
                             <div class="error-message" id="direccion-error"></div>
                         </div>
                     </div>
-                    <div class="text-center" style="margin-top: 10px;">
+                    <div class="text-end" style="margin-top: 20px;">
                         <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
                     </div>
                 </form>
             </div>
-            <div style="width: 30%;" class="card shadow">
+            <div style="width: 30%;" class="card shadow mx-2">
                 <h3 style="background-color: #ccc">Recibo</h3>
             </div>
         </div>
     </div>
-    <div class="text-align-end">
-        <button type="button" id="continuar">Continuar</button>
+    <div style="width: 80%; margin: auto; text-align: end;">
+        <button class="btn btn-secondary" type="button" id="continuar">Continuar</button>
     </div>
 </section>
+<style>
+    .order {
+        width: 80%;
+        margin: 3rem auto;
+    }
+</style>
+
 <style>
     #loading svg {
         z-index: 999;
@@ -165,18 +173,49 @@
     .form-row {
         margin-top: 10px !important;
     }
+    .disabled {
+        pointer-events: none;
+        opacity: 0.8;
+    }
 </style>
+
 <script>
+     function actualizarBoton() {
+        var carrito = JSON.parse(localStorage.getItem('carrito'));
+
+        var botonContinuar = $('#continuar');
+
+        if ($('#info-client').is(':visible')) {
+            botonContinuar.text('Volver');
+            botonContinuar.removeClass('disabled');
+        } else if ($('#table-order').is(':visible')) {
+            botonContinuar.text('Continuar');
+
+            if (!carrito || carrito.length === 0) {
+                botonContinuar.addClass('disabled');
+            } else {
+                botonContinuar.removeClass('disabled');
+            }
+        }
+    }
+
+    // Evento click para el botón continuar
+    $('#continuar').on('click', function () {
+        $('#table-order').toggle();
+        $('#info-client').toggle();
+        actualizarBoton(); // Llamar a la función para actualizar el botón
+    });
+
     $(document).ready(function () {
         $("#loading").hide();
 
         $('#info-client').hide();
+        actualizarBoton();
 
-        $('#continuar').on('click', function () {
-            $('#table-order').toggle();
-            $('#info-client').toggle();
-        });
+
     });
+
+
 
     $('#cliente-form').on('submit', function (event) {
         event.preventDefault();
@@ -264,13 +303,36 @@
         });
     }
 
+    
+    function obtenerMunicipios() {
+        const departamentoSeleccionado = $("#departamento").val();
+        const municipioSelect = $("#municipio");
+
+        $.ajax({
+            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
+            type: "GET",
+            data: {
+                "$limit": 5000,
+                "departamento": departamentoSeleccionado
+            }
+        }).done(function (data) {
+            municipioSelect.empty();
+            data.forEach(function (item) {
+                municipioSelect.append($("<option>", {
+                    value: item.municipio,
+                    text: item.municipio
+                }));
+            });
+        });
+    }
+    
     function llenarFormulario(cliente) {
         document.getElementById('nombre').value = cliente.nombres;
         document.getElementById('apellido').value = cliente.apellidos;
         document.getElementById('celular').value = cliente.celular;
         document.getElementById('correo').value = cliente.correo;
         document.getElementById('departamento').value = cliente.departamento;
-        document.getElementById('municipio').value = cliente.municipio;
+        obtenerMunicipios()
         document.getElementById('barrio').value = cliente.barrio;
         document.getElementById('direccion').value = cliente.direccion;
     }

@@ -236,7 +236,6 @@ def ver_pedido(request):
                     id_pedido=pedido,
                     id_producto=producto_obj,
                     sabor=detalles['sabor'],
-                    presentacion=detalles['presentacion'],
                     cantidad=cantidad,
                     precio_uni=precio_uni,
                     precio_tot=precio_tot,

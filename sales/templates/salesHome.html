@@ -164,7 +164,7 @@
                 <thead class="theads">
                     <tr>
                         <th>ID</th>
-                        <th>Fecha de Registro</th>
+                        <th style="width: 100px">Fecha de Registro</th>
                         <th>Identificación</th>
                         <th>Cliente</th>
                         <th>Estado</th>
@@ -175,7 +175,7 @@
                     {% for venta in ventas %}
                     <tr class="{% if venta.estado == 0 %}inactivo{% endif %}">
                         <td>{{ venta.id_venta }}</td>
-                        <td>{{ venta.fechareg }}</td>
+                        <td>{{ venta.fechareg|date:"d/m/y" }}</td>
                         <td>{{ venta.id_cliente.documento }}</td>
                         <td class="d-flex">{{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}</td>
                         <td>

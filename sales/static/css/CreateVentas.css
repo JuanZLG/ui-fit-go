@@ -265,8 +265,6 @@ input[type="number"] {
     max-height: 900px;
 }
 
-
-
 .producto-cont-descuento {
     width: 100%;
     display: flex;
@@ -423,3 +421,4 @@ input[type="number"] {
     pointer-events: none; 
     cursor: default; 
 }
+

@@ -73,12 +73,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="modal-state ${venta.estado == 1 ? 'activo' : 'inactivo'}"></div>
                                 <h2>Información de la Venta</h2>
                                 <div class="flex">
-                                    <span>Documento: ${venta.documento} </span>
-                                    <span>Fecha de venta: ${venta.fechareg}</span>
-                                    <span>Cliente: ${venta.cliente}</span>
+                                    <span><strong class="me-2">Documento:</strong>${venta.documento} </span>
+                                    <span><strong class="me-2">Fecha de venta:</strong>${venta.fechareg}</span>
+                                    <span><strong class="me-2">Cliente:</strong>${venta.cliente}</span>
                                 </div>
                                 <table class="table modal-table">
-                                    <h3 class="modal-subtitle text-start mt-3">Productos</h3>
+                                    <h3 class="modal-subtitle text-start mt-3">Detalles</h3>
                                     <thead class="text-center">
                                         <tr>
                                             <th>Producto</th>
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <tbody id="modalDetallesVenta">
                                         ${venta.detalles.map(detalle => `
                                             <tr>
-                                                <td>${detalle.producto}</td>
+                                                <td style="text-align:start; width:50px;">${detalle.producto}</td>
                                                 <td>${detalle.cantidad}</td>
                                                 <td>${formatearPrecios(detalle.precio_compra)}</td>
                                                 <td>${formatearPrecios(detalle.precio_venta)}</td>
@@ -109,15 +109,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </table>
                             <div class="modal-footer">
                                 <div>
-                                    <span>Descuento de venta:</span>
+                                    <span><strong class="me-2">Descuento de venta:</strong></span>
                                     <span>${venta.descuentoVenta !== "0" ? venta.descuentoVenta + '%' : 'No aplica'}</span>
                                 </div>
                                 <div>
-                                    <span>Total descontado:</span>
+                                    <span><strong class="me-2">Total descontado:</strong></span>
                                     <span>${venta.descuentoVenta !== "0" ? formatearPrecios(venta.totalVentaDescuento) : "$0"}</span>
                                 </div>
                                 <div>
-                                    <span>Margen de ganancia:</span>
+                                    <span><strong class="me-2">Margen de ganancia:</strong></span>
                                     <span>${formatearPrecios(venta.margenGanancia)}</span>
                                 </div>
                                 <div class="font-weight-bold total-venta mt-2 p-2" style="border-top: 2px dotted #ccc">

@@ -121,7 +121,6 @@ class DetallePedido(models.Model):
     id_pedido = models.ForeignKey('Pedidos', models.DO_NOTHING, db_column='id_pedido')
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
     sabor = models.CharField(max_length=50)
-    presentacion = models.CharField(max_length=50)
     cantidad = models.IntegerField()
     precio_uni = models.FloatField()
     precio_tot = models.FloatField()

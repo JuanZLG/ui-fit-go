@@ -33,6 +33,7 @@ def crear_venta(request):
                 return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=400)
 
             for idProducto, producto_datos in productos.items():
+                idPedido = producto_datos["idPedido"]
                 cantidad_vendida = producto_datos['cantidad']
                 precioCompra = producto_datos['precioCompra']
                 precioVenta = producto_datos['precioVenta']
@@ -40,6 +41,12 @@ def crear_venta(request):
                 totalProductoDescuento = producto_datos['totalProductoDescuento']
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
+
+                if isinstance(idPedido, int):
+                    pedido = Pedidos.objects.get(id_pedido=idPedido)
+                    pedido.id_venta = venta
+                    pedido.estado = "confirmado"
+                    pedido.save()
 
                 producto = Productos.objects.get(id_producto=idProducto)
 
@@ -108,10 +115,15 @@ def buscar_productos(request):
 
 
 def agregarDetalleATabla(request):
+    id_pedido = request.GET.get("id_pedido")
     id_producto = request.GET.get("id_producto")
+    sabor = request.GET.get("sabor")
+    precio_venta_pagina = float(request.GET.get("precio_uni").replace('$', '').replace(',', ''))
+    cantidad_pagina = request.GET.get("cantidad")
+
     producto = Productos.objects.get(id_producto=id_producto)
 
-    precio_ganancia = producto.precio_pub - producto.precio 
+    precio_ganancia = precio_venta_pagina - producto.precio 
 
     try:
         marca = producto.id_marca.nombre_marca
@@ -122,15 +134,18 @@ def agregarDetalleATabla(request):
         categoria = producto.id_categoria.nombre_categoria
     except Productos.id_categoria.RelatedObjectDoesNotExist:
         categoria = "No tiene categorías"
-
+    
     resultado = {
+        'id_pedido': id_pedido,
         'id_producto': producto.id_producto,
         'estado': producto.estado,
+        'sabor': sabor,
         'nombre_producto': producto.nombre_producto,
+        'cantidad_pagina': cantidad_pagina,
         'cantidad': producto.cantidad,
         'descripcion': producto.descripcion,
         'precio_compra': producto.precio,
-        'precio_venta': producto.precio_pub,
+        'precio_venta_pagina': precio_venta_pagina,
         'precio_ganancia': precio_ganancia,
         'marca': marca,
         'categoria': categoria,
@@ -168,10 +183,9 @@ def buscar_detalles_pedidos(id_pedido):
             "id_producto": detalle.id_producto.id_producto,
             "nombre_producto": detalle.id_producto.nombre_producto,
             "sabor": detalle.sabor,
-            "presentacion": detalle.presentacion,
             "cantidad": detalle.cantidad,
-            "precio_uni": "${:,.2f}".format(detalle.precio_uni).rstrip('0').rstrip('.'),
-            "precio_tot": "${:,.2f}".format(detalle.precio_tot).rstrip('0').rstrip('.')
+            "precio_uni": detalle.precio_uni,
+            "precio_tot": detalle.precio_tot  
         })
     return detalles_formateados if detalles.exists() else []
 
@@ -183,7 +197,7 @@ def buscar_pedidos(cliente):
         pedidos_con_detalles.append({
             "id_pedido": pedido.id_pedido,
             "fecha_pedido": pedido.fecha_pedido,
-            "total_pedido": "${:,.2f}".format(pedido.total_pedido).rstrip('0').rstrip('.'),
+            "total_pedido": pedido.total_pedido,
             "estado": pedido.estado,
             "detalles": detalles
         })
