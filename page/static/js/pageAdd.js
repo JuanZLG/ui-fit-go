@@ -67,7 +67,13 @@ $(document).ready(function () {
         let carrito = localStorage.getItem('carrito');
         if (carrito) {
             carrito = JSON.parse(carrito);
+            if (Object.keys(carrito).length === 0) {
+                $("#enlace-ver-pedido").addClass("enlace-inactivo-pedido");
+            } else {
+                $("#enlace-ver-pedido").removeClass("enlace-inactivo-pedido");
+            }
         } else {
+            $("#enlace-ver-pedido").addClass("enlace-inactivo-pedido");
             carrito = {};
         }
 
@@ -80,7 +86,7 @@ $(document).ready(function () {
             total += subtotal;
 
             html += `
-                <li class="p-3 d-flex position-relative" data-id="${idProducto}">
+                <li class="p-3 d-flex position-relative" data-id="${idProducto}" style="font-size:14px">
                     <div style="width:95%;">
                         <div class="d-flex justify-content-start gap-3">
                             <img src="${producto.imgSrc}" id="img-producto" class="img-fluid" alt="Imagen" style="width:50px; height:50px;">
@@ -88,7 +94,7 @@ $(document).ready(function () {
                             overflow-wrap: break-word;">${producto.nombreProducto} x ${producto.sabor}</span>
                         </div>
                         <div class="d-flex gap-2 justify-content-end m-1">
-                            <span><strong>${producto.precio} x ${producto.cantidad}</strong></span>
+                            <span ><strong>${producto.precio} x ${producto.cantidad}</strong></span>
                         </div>
                     </div>
                     <span class="remove-order position-absolute top-0 end-0" style="width:5%; font-size: 14px"><i class="fas fa-trash"></i></span>
@@ -113,32 +119,45 @@ $(document).ready(function () {
         localStorage.setItem('carrito', JSON.stringify(carrito));
 
         $(this).parent().remove();
-
         actualizarCantidadProductos();
     });
 
+    function productoAlCarrito() {
+        var avisos = document.querySelectorAll('.show-avis-carrito');
+        avisos.forEach(function (aviso) {
+            aviso.style.cssText = 'width:100%; background-color: #28a746a8; color: #222; text-align: center; padding: 2px 10px; box-shadow: 0 2px 4px rgba(0,0,0,.2); position:absolute; top:0;';
+            aviso.innerHTML = '¡Producto agregado al carrito con éxito! <a href="/Brutality/ver_pedido/" style="color: #000; text-decoration: underline; padding-left: 10px;">Ver aquí</a>';
+            aviso.style.display = 'block';
+        });
 
-    document.querySelectorAll('form').forEach(function (form) {
+        setTimeout(function () {
+            avisos.forEach(function (aviso) {
+                aviso.style.display = 'none';
+            });
+        }, 4000);
+    }
+
+    document.querySelectorAll('.product-form-mobile').forEach(function (form) {
         form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Evitar que el formulario se envíe
+            event.preventDefault();
 
-            let imgSrc = document.getElementById('img-producto').src;
-            let nombreProducto = document.getElementById('producto').textContent.trim();
-            let precio = document.getElementById('precio').textContent.trim();
-            let sabor = document.querySelector('select[name="sabor"]').value;
-            let cantidad = parseInt(document.querySelector('input[name="cantidad"]').value);
-
-            let idProducto = this.dataset.id;
+            let imgSrc = form.querySelector('#img-producto').src;
+            let nombreProducto = form.querySelector('#producto').textContent.trim();
+            let precio = form.querySelector('#precio').textContent.trim();
+            let sabor = form.querySelector('select[name="sabor"]').value;
+            let cantidad = parseInt(form.querySelector('input[name="cantidad"]').value);
+            let idProducto = form.dataset.id;
 
             let carrito = JSON.parse(localStorage.getItem('carrito')) || {};
 
             let idPedido = generarIdUnico(nombreProducto, sabor);
 
             if (carrito[idPedido] && carrito[idPedido].nombreProducto === nombreProducto && carrito[idPedido].sabor === sabor) {
+                carrito[idPedido].cantidad = parseInt(carrito[idPedido].cantidad);
                 carrito[idPedido].cantidad += cantidad;
             } else {
                 carrito[idPedido] = {
-                    idDelProducto: idProducto, 
+                    idDelProducto: idProducto,
                     imgSrc: imgSrc,
                     nombreProducto: nombreProducto,
                     precio: precio,
@@ -149,37 +168,58 @@ $(document).ready(function () {
 
             localStorage.setItem('carrito', JSON.stringify(carrito));
 
-            actualizarCantidadProductos(); // Asegúrate de que esta función esté definida
-
-            alert('Datos guardados exitosamente!');
+            actualizarCantidadProductos();
+            productoAlCarrito();
         });
     });
 
-    // Función para generar un ID único numérico basado en el nombre, sabor y presentación del producto
+    document.querySelectorAll('.product-form-desk').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            let imgSrc = form.querySelector('#img-producto').src;
+            let nombreProducto = form.querySelector('#producto').textContent.trim();
+            let precio = form.querySelector('#precio').textContent.trim();
+            let sabor = form.querySelector('select[name="sabor"]').value;
+            let cantidad = parseInt(form.querySelector('input[name="cantidad"]').value);
+            let idProducto = form.dataset.id;
+
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || {};
+
+            let idPedido = generarIdUnico(nombreProducto, sabor);
+
+            if (carrito[idPedido] && carrito[idPedido].nombreProducto === nombreProducto && carrito[idPedido].sabor === sabor) {
+                carrito[idPedido].cantidad = parseInt(carrito[idPedido].cantidad);
+                carrito[idPedido].cantidad += cantidad;
+            } else {
+                carrito[idPedido] = {
+                    idDelProducto: idProducto,
+                    imgSrc: imgSrc,
+                    nombreProducto: nombreProducto,
+                    precio: precio,
+                    sabor: sabor,
+                    cantidad: cantidad
+                };
+            }
+
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+
+            actualizarCantidadProductos();
+            productoAlCarrito();
+        });
+    });
+
+
     function generarIdUnico(nombre, sabor) {
         let hash = 0;
         let identificador = nombre + sabor;
         for (let i = 0; i < identificador.length; i++) {
             let char = identificador.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
-            hash |= 0; // Convertir a entero de 32 bits
+            hash |= 0;
         }
-        return Math.abs(hash); // Asegurarse de que el ID sea positivo
+        return Math.abs(hash);
     }
-
-
-    // Función para generar un ID único numérico basado en el nombre, sabor y presentación del producto
-    function generarIdUnico(nombre, sabor) {
-        let hash = 0;
-        let identificador = nombre + sabor;
-        for (let i = 0; i < identificador.length; i++) {
-            let char = identificador.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash |= 0; // Convertir a entero de 32 bits
-        }
-        return Math.abs(hash); // Asegurarse de que el ID sea positivo
-    }
-
 
 
     obtenerDepartamentos();

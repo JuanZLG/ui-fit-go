@@ -397,6 +397,12 @@ input[type="number"] {
     transform: scale(1.080);
 }
 
+.cont-pedidos-alto {
+    height: auto !important;
+    max-height: 300px !important;
+    overflow-y: auto;
+}
+
 .table-detalle-pedido tr {
     text-align: center;
     border: 1px solid #dee2e6; 
@@ -407,12 +413,6 @@ input[type="number"] {
     padding: 10px !important;
 }
 
-.fila-detalle {
-    height: 0; overflow: hidden; transition: height 0.5s;
-}
-.fila-detalle.show {
-    height: auto;
-}
 
 .inactive-status {
     background-color: #ec8080;

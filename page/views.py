@@ -9,14 +9,12 @@ from django.db.models import Count
 
 def build_context(request, extra_context=None):
     context = {}
-    context["productos"] =  Productos.objects.filter(estado=1).all()
+    context["productos"] = Productos.objects.filter(estado=1, cantidad__gt=1).all()
     context["marcas"] = Marcas.objects.annotate(num_productos=Count('productos')).filter(num_productos__gt=0)
     context["categorias"] = Categorias.objects.annotate(num_productos=Count('productos')).filter(num_productos__gt=0)
     if extra_context:
         context.update(extra_context)
     return context
-
-
 
 def Home(request):
     contexto = build_context(request)
@@ -69,16 +67,16 @@ def filter_products(request):
 
     if re.match(r'^marca-\d+$', tipo):
         id_marca = tipo.split('-')[1]
-        productos = Productos.objects.filter(id_marca=id_marca)
+        productos = Productos.objects.filter(id_marca=id_marca, cantidad__gt=1)
         marca = Marcas.objects.get(id_marca=id_marca) 
         dynamicTitle = marca.nombre_marca
     elif re.match(r'^categoria-\d+$', tipo):
         id_categoria = tipo.split('-')[1]
-        productos = Productos.objects.filter(id_categoria=id_categoria)
+        productos = Productos.objects.filter(id_categoria=id_categoria, cantidad__gt=1)
         categoria = Categorias.objects.get(id_categoria=id_categoria) 
         dynamicTitle = categoria.nombre_categoria
     elif re.match(r'^producto-\d+$', tipo):
-        productos = Productos.objects.filter(estado=1).all()
+        productos = Productos.objects.filter(estado=1, cantidad__gt=1).all()
         dynamicTitle = "Suplementos"
 
     if productos:
@@ -118,8 +116,9 @@ def search_products(request):
     buscar = request.GET.get('search')
     productos = Productos.objects.filter(
         Q(estado=1),
-        Q(nombre_producto__icontains=buscar)
-    )[:5]  
+        Q(nombre_producto__icontains=buscar),
+        Q(cantidad__gt=1) 
+    )[:5]
 
     data = []
     for producto in productos:
@@ -135,10 +134,12 @@ def search_products(request):
 
     return JsonResponse({'success': True, 'data': data})
 
+
+
 def mas_vendidos(request):
-    productos = Productos.objects.all().annotate(
+    productos = Productos.objects.annotate(
         total_vendido=Sum('detalleventa__cantidad')
-    ).filter(estado=1).order_by('-total_vendido')[:5]
+    ).filter(estado=1, cantidad__gt=1).order_by('-total_vendido')[:5]
 
     data = []
     for producto in productos:
@@ -244,8 +245,6 @@ def ver_pedido(request):
             pedido.total_pedido = total_pedido
             pedido.save()
 
-
-
             return JsonResponse({'message': 'Datos guardados correctamente'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -261,12 +260,12 @@ def document_exist(request):
     return JsonResponse({"existe": cliente})
 
 
-
 def obtener_cliente(request):
     documento = request.GET.get('documento')
     try:
         cliente = Clientes.objects.get(documento=documento)
         data = {
+            'estado': cliente.estado,
             'nombres': cliente.nombres,
             'apellidos': cliente.apellidos,
             'celular': cliente.celular,

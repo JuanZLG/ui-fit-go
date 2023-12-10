@@ -38,20 +38,20 @@
             <p>Encuentra todos tus productos y finaliza las ventas de una forma fácil</p>
         </div>
         <div class="product-inputs">
-                <div class="search-container">
-                    <input type="search" class="form-control product-search" id="buscarProducto"
-                        placeholder="Ingrese el nombre del producto" data-id-producto="">
-                    <i class="fas fa-search search-icon"></i>
-                </div>
-                <div class="number-input">
-                    <button onclick="decrement(this)" id="decrement">-</button>
-                    <input class="quantity" min="1" name="quantity" value="1" type="number" autocomplete="off" step="1"
-                        id="cantidad-ingresada" max="100" readonly
-                        oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
-                    <button onclick="increment(this)" id="increment">+</button>
-                </div>
-                <input type="button" value="Añadir a lista" class="btn-acciones btn-verificar" id="btnAgregar">
+            <div class="search-container">
+                <input type="search" class="form-control product-search" id="buscarProducto"
+                    placeholder="Ingrese el nombre del producto" data-id-producto="">
+                <i class="fas fa-search search-icon"></i>
             </div>
+            <div class="number-input">
+                <button onclick="decrement(this)" id="decrement">-</button>
+                <input class="quantity" min="1" name="quantity" value="1" type="number" autocomplete="off" step="1"
+                    id="cantidad-ingresada" max="100" readonly
+                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = ''">
+                <button onclick="increment(this)" id="increment">+</button>
+            </div>
+            <input type="button" value="Añadir a lista" class="btn-acciones btn-verificar" id="btnAgregar">
+        </div>
         <div class="resultado-container">
             <ul id="resultado-producto">
             </ul>
@@ -109,9 +109,12 @@
     <input type="button" value="Guardar Venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
 
+<style>
 
+</style>
 <script>
     function ClientesConPedidos(documento, pedidos) {
+        const pedidosSelect = JSON.parse(localStorage.getItem('pedidos-select')) || {};
         function generarFilasPedidos(pedidos) {
             pedidos.sort((a, b) => {
                 if ((a.estado === "cancelado" || a.estado === "confirmado") && (b.estado !== "cancelado" && b.estado !== "confirmado")) {
@@ -122,9 +125,15 @@
                 return 0;
             });
             return pedidos.map((pedido, index) => {
+                const isDisabled = pedidosSelect[pedido.id_pedido] === 'disable';
                 return `
         <tr class="pedido" style="text-align: center; vertical-align: middle; position: relative;">
-            <td><input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}" ${pedido.estado === "cancelado" || pedido.estado === "confirmado" ? "disabled" : ""}></td>
+            <td>
+                    <input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}"
+                        ${pedido.estado === "cancelado" || pedido.estado === "confirmado" || isDisabled ? "disabled" : ""}
+                        ${isDisabled ? 'style="color: green !important;"' : ''} 
+                        ${isDisabled ? 'checked' : ''}>
+                </td>
             <td>${pedido.fecha_pedido}</td>
             <td>${formatearPrecios(pedido.total_pedido)}</td>
             <td>
@@ -183,7 +192,7 @@
                     <p id="documentoCliente"><strong>Documento: ${documento}</strong></p>
                 </div>
             </div>
-            <div class="row">
+            <div class="row cont-pedidos-alto">
                 <div class="col">
                     <table class="table">
                         <thead>
@@ -209,16 +218,15 @@
                 <p class="text-start text-danger" id="error-pedido"></p>
                 <div class="col">
                     <button id="cargarPedidos" class="btn btn-primary">Cargar Pedidos</button>
-                    <button id="volverPedidos" class="btn btn-danger">Volver</button>
+                    <button id="volverPedidos" class="btn btn-danger">Volver atrás</button>
                 </div>
             </div>
         </div>
         `,
-            showCloseButton: false,
+            showCloseButton: true,
             showConfirmButton: false,
             width: 'auto',
             maxWidth: '85%',
-            allowOutsideClick: false,
             didOpen: () => {
                 const seleccionarTodosCheckbox = document.getElementById('seleccionarTodos');
                 const checkboxes = document.querySelectorAll('.pedido-checkbox');
@@ -243,9 +251,12 @@
                     window.location.reload();
                 });
 
+
                 document.getElementById('cargarPedidos').addEventListener('click', async () => {
-                    const idsSeleccionados = Array.from(document.querySelectorAll('.pedido-checkbox:checked')).map(cb => cb.value);
+                    const checkboxes = document.querySelectorAll('.pedido-checkbox');
+                    const idsSeleccionados = Array.from(checkboxes).filter(cb => cb.checked && !cb.disabled).map(cb => cb.value);
                     const resultadosAjax = [];
+                    const pedidosSelect = {};
 
                     if (idsSeleccionados.length === 0) {
                         document.getElementById('error-pedido').textContent = 'Debe seleccionar al menos un pedido';
@@ -253,6 +264,12 @@
                     } else {
                         document.getElementById('error-pedido').textContent = '';
                     }
+
+                    checkboxes.forEach(cb => {
+                        pedidosSelect[cb.value] = cb.checked ? 'disable' : 'no-disable';
+                    });
+
+                    localStorage.setItem('pedidos-select', JSON.stringify(pedidosSelect));
 
                     async function agregarDetalles(ids) {
                         for (const id_pedido of ids) {
@@ -270,6 +287,8 @@
 
                     await agregarDetalles(idsSeleccionados);
                     resultadosAjax.forEach(resultado => agregarFilaPedido(resultado));
+                    $(".producto-cont-descuento").addClass("show");
+                    totalVenta()
 
                     Swal.close();
                 });
@@ -313,6 +332,35 @@
             let total_venta = formatearPrecios(precio_venta * cantidad_seleccionada);
             precio_venta = formatearPrecios(precio_venta);
             return { ganancia_total, total_venta, precio_venta };
+        }
+
+
+        function totalVenta() {
+            let descuentoInput = $("#descuento-venta").val();
+            let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
+            let totalVenta = 0;
+            let totalGanancia = 0;
+
+            $("#tabla-ventas tr.producto-row").each(function () {
+                let fila = $(this);
+                let totalProducto = parseFloat(fila.find(".total_producto").text().replace(/[$,.]/g, ''));
+                let gananciaProducto = parseFloat(fila.find(".total_ganancia_producto").text().replace(/[$,.]/g, ''));
+                totalVenta += totalProducto;
+                totalGanancia += gananciaProducto;
+            });
+            let descuentoValor = totalVenta * descuento;
+            totalVenta = totalVenta - descuentoValor;
+            totalGanancia = totalGanancia - descuentoValor;
+            if (totalGanancia < 0) {
+                totalGanancia = 0;
+            }
+            $("#total-venta").text(formatearPrecios(totalVenta));
+            $("#total_ganancia_venta").text(formatearPrecios(totalGanancia));
+            if (descuentoInput) {
+                $("#total-venta-descuento").text(formatearPrecios(descuentoValor));
+            } else {
+                $("#total_ganancia_venta").text(formatearPrecios(0));
+            }
         }
 
         function agregarFilaPedido(resultado) {
@@ -393,6 +441,7 @@
     });
 
     $(document).ready(function () {
+        localStorage.removeItem('pedidos-select');
 
 
         Swal.fire({
@@ -430,7 +479,7 @@
                     $(".product-section").hide()
                     $("#tipo-pedido-frase").text("Los productos listados a continuación corresponden al pedido actual.")
                 });
-                
+
                 document.getElementById('ventaSinPedidoBtn').addEventListener('click', function () {
                     document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'sin pedido');
                     Swal.close();
@@ -509,7 +558,7 @@
                 $("#cont-icon-pedido").html(iconoCarrito)
 
                 if (tipoPedido === "con pedido" && pedidos && pedidos.length > 0) {
-                ClientesConPedidos(documento, pedidos);
+                    ClientesConPedidos(documento, pedidos);
                 }
             }
         });

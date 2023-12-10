@@ -4,6 +4,8 @@
 {% block urls %}
 {% load static %}
 <script src="{% static 'js/pageOrder.js' %}"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
 {% endblock %}
 
 {% block mobile-home %}{% endblock %}
@@ -11,52 +13,79 @@
 
 {% block body %}
 
-
-<section class="order">
-    <div class="col-12 col-lg-10 m-auto">
-        <table class="table table-hover" id="table-order">
-            <thead class="text-center">
-                <tr style="background-color: #ccc;">
-                    <th class="product-column">Producto</th>
-                    <th class="price-column">Precio (Unidad)</th>
-                    <th class="price-column">Cantidad</th>
-                    <th class="total-column">Total del Producto</th>
-                    <th class="icon-column"></th>
-                </tr>
-            </thead>
-            <tbody id="producto-tbody">
-
-            </tbody>
-        </table>
+<div class="container-order row">
+    <div class="col-lg-3 col-xl-2 col-md-3 desktop">
+        <div class="container-search desk">
+            <input placeholder="Realizar búsqueda..." type="text" name="search" class="search" id="search-input-desk">
+            <i class="fas fa-times search-clear-icon" id="search-clear-desk"></i>
+        </div>
+        <p id="title-search"><strong>MEJORES VENTAS</strong></p>
+        <ul class="list-group d-flex gap-4" id="toggle-main-search-desk"></ul>
     </div>
-    <div id="info-client" class="m-3">
-        <div class="d-flex">
-            <div class="container p-5 pb-4 card shadow" style="width: 70%;">
+    <section class="col-xl-10 col-md-9" >
+        <div class="cont-pasos-detalle d-flex justify-content-between my-2 shadow">
+            <div class="paso-detalle-pedido">
+                <span>1</span>
+                <strong>Detalle de tu pedido</strong>
+            </div>
+            <div class="paso-formulario-datos">
+                <span>2</span>
+                <strong>Información de envío</strong>
+            </div>
+            <div class=" paso-confirmacion-pedido">
+                <span>3</span>
+                <strong>Confirmación de tu pedido</strong>
+            </div>
+        </div>
+        <div id="contenedor-informacion" class="mt-4"></div>
+        <div class="cont-table-order" id="table-order"
+            style="width: 100% !important; height: auto;max-height: 500px; overflow-y: auto;">
+            <table class="table table-hover table-detalle-pedido desktop" style="width: 100% !important; margin: auto; ">
+                <thead class="text-center">
+                    <tr style="background-color: #ccc;">
+                        <th>Producto</th>
+                        <th>Precio (Unidad)</th>
+                        <th>Cantidad</th>
+                        <th>Total del Producto</th>
+                    </tr>
+                </thead>
+                <tbody id="producto-tbody-desk">
+                </tbody>
+            </table>
+        </div>
+        <div class="table-container mobile" style="display: flex; height: auto;max-height: 500px; overflow-y: auto;">
+            <table class="table table-hover table-detalle-pedido mobile" style="font-size: 15px !important;">
+                <tbody id="producto-tbody-mobile" class="d-flex gap-2 flex-column align-items-center">
+                    
+                </tbody>
+            </table>
+        </div>
+        <div id="info-client" class="row">
+            <div class="cont-form-pedido card shadow col-lg-7 col-md-7 me-3">
                 <form class="form" id="cliente-form" method="post">
                     <div id="show-avis"></div>
                     {% csrf_token %}
                     <!-- <svg viewBox="25 25 50 50" id="loading">
                         <circle r="20" cy="50" cx="50"></circle>
                     </svg> -->
-                    <div class="form-row">
+                    <div class="form-row row">
                         <div class="form-group col-md-12">
                             <label for="documento">Documento <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="documento" name="documento"
-                                placeholder="Documento" minlength="8" maxlength="12" required>
+                                placeholder="Documento" minlength="8" maxlength="12">
                             <div class="error-message" id="documento-error"></div>
                         </div>
                     </div>
                     <div class="form-row row">
                         <div class="form-group col-md-6">
                             <label for="nombre">Nombres <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombres"
-                                required>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombres">
                             <div class="error-message" id="nombre-error"></div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="apellido">Apellidos <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="apellido" name="apellido"
-                                placeholder="Apellidos" required>
+                                placeholder="Apellidos">
                             <div class="error-message" id="apellido-error"></div>
                         </div>
                     </div>
@@ -64,27 +93,27 @@
                         <div class="form-group col-md-6">
                             <label for="celular">Celular <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="celular" name="celular" placeholder="Celular"
-                                minlength="10" maxlength="10" required>
+                                minlength="10" maxlength="10">
                             <div class="error-message" id="celular-error"></div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="correo">Correo <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="correo" name="correo"
-                                placeholder="Correo Electrónico" required>
+                                placeholder="Correo Electrónico">
                             <div class="error-message" id="correo-error"></div>
                         </div>
                     </div>
                     <div class="form-row row">
                         <div class="form-group col-md-6">
                             <label for="departamento">Departamento <span class="text-danger">*</span></label>
-                            <select class="form-control" id="departamento" name="departamento" required>
+                            <select class="form-control" id="departamento" name="departamento">
                                 <option value="" selected>--</option>
                             </select>
                             <div class="error-message" id="departamento-error"></div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="municipio">Municipio <span class="text-danger">*</span></label>
-                            <select class="form-control" id="municipio" name="municipio" required>
+                            <select class="form-control" id="municipio" name="municipio">
                                 <option value="" selected>--</option>
                             </select>
                             <div class="error-message" id="municipio-error"></div>
@@ -93,37 +122,43 @@
                     <div class="form-row row">
                         <div class="form-group col-md-6">
                             <label for="barrio">Barrio <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="barrio" name="barrio" placeholder="Barrio"
-                                required>
+                            <input type="text" class="form-control" id="barrio" name="barrio" placeholder="Barrio">
                             <div class="error-message" id="barrio-error"></div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="direccion">Dirección <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="direccion" name="direccion"
-                                placeholder="Dirección" required>
+                                placeholder="Dirección">
                             <div class="error-message" id="direccion-error"></div>
                         </div>
                     </div>
-                    <div class="text-end" style="margin-top: 20px;">
-                        <button class="btn btn-success" type="submit" id="submit-button">Guardar</button>
+                    <div class="text-end" style="margin: 20px 10px;">
+                        <div class="my-2">
+                            <span id="requerido">Campos requeridos *</span>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div style="width: 30%;" class="card shadow mx-2">
-                <h3 style="background-color: #ccc">Recibo</h3>
+            <div class="col-lg-4 col-md-4 card shadow col-md-3 cont-recibo"
+                style="height: 500px; overflow-y: auto; display: flex; flex-direction: column;">
+                <div style="flex: 1; overflow-y: auto;">
+                    <h4 class="text-center my-3"><strong>Resumen pedido</strong></h4>
+                    <div id="recibo-pedido"></div>
+                </div>
+                <div style="position: sticky; bottom: 0; background: white; padding-top: 10px;">
+                    <div class="d-flex justify-content-between gap-1">
+                        <strong>TOTAL: </strong>
+                        <strong id="total-recibo"></strong>
+                    </div>
+                    <button class="btn btn-success w-100 mx-auto my-3" id="envio-pedido">Realizar Pedido</button>
+                </div>
             </div>
         </div>
-    </div>
-    <div style="width: 80%; margin: auto; text-align: end;">
-        <button class="btn btn-secondary" type="button" id="continuar">Continuar</button>
-    </div>
-</section>
-<style>
-    .order {
-        width: 80%;
-        margin: 3rem auto;
-    }
-</style>
+    </section>
+</div>
+<div style="width: 80%; margin: auto; text-align: end;">
+    <button class="btn btn-secondary" type="button" id="continuar">Continuar</button>
+</div>
 
 <style>
     #loading svg {
@@ -173,37 +208,146 @@
     .form-row {
         margin-top: 10px !important;
     }
+
     .disabled {
         pointer-events: none;
         opacity: 0.8;
     }
 </style>
 
-<script>
-     function actualizarBoton() {
-        var carrito = JSON.parse(localStorage.getItem('carrito'));
 
+<script>
+
+    $(document).ready(function () {
+
+        cargarProductos()
+
+        function cargarProductos() {
+            $("#title-search").text("MEJORES VENTAS")
+            $.ajax({
+                url: "{% url 'mas_vendidos' %}",
+                type: "GET",
+                success: function (data) {
+                    if (data.success) {
+                        $("#toggle-main-search-desk").empty();
+                        $.each(data.data, function (index, p) {
+                            var productList =
+                                '<li class="d-flex search-card-desk productDetailsButton" data-id="' + p.id_producto + '">' +
+                                '<div style="width:50px; height:50px; overflow: hidden;"><img src="/media/' + p.presentacion + '" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid"></div>' +
+                                '<div class="px-2 d-flex gap-2 flex-column">' +
+                                '<span style="width: 100px; height:20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">' + p.nombre_producto + '</span>' +
+                                '<h6><strong class="text-danger">' + p.precio_pub + '</strong></h6></div></li>';
+
+                            $("#toggle-main-search-desk").append(productList);
+                        });
+                        $('.productDetailsButton').click(function (event) {
+                            if (!$(event.target).closest('.CartBtn').length) {
+                                var id_producto = $(this).data("id");
+                                $("#search-input").val("");
+                                cargarDetalle(id_producto);
+                            }
+                        });
+
+                    }
+                },
+            });
+
+        }
+
+        $(document).on("input", "#search-input-desk", function () {
+            let search = $(this).val();
+            $("#title-search").text("RESULTADOS...")
+
+            if (search.length >= 2) {
+                $.ajax({
+                    url: "{% url 'search_products' %}",
+                    method: 'GET',
+                    data: { search: search },
+                    success: function (data) {
+                        if (data.success) {
+                            if (data.data.length > 0) {
+                                $("#toggle-main-search-desk").empty();
+                                $.each(data.data, function (index, p) {
+                                    $("#toggle-main-search-desk").addClass("is-active");
+                                    var productList =
+                                        '<li class="d-flex search-card-desk productDetailsButton data-id="' + p.id_producto + '">' +
+                                        '<div style="width:50px; height:50px; overflow: hidden;"><img src="/media/' + p.iProductImg_name + '" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid"></div>' +
+                                        '<div class="px-2 d-flex gap-2 flex-column">' +
+                                        '<span  style="width: 100px; height:20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">' + p.nombre_producto + '</span>' +
+                                        '<h6><strong class=" text-danger">' + p.precio_pub + '</strong></h6></div></li>';
+
+                                    $("#toggle-main-search-desk").append(productList);
+                                });
+                                $('.productDetailsButton').click(function () {
+                                    id_producto = $(this).data("id")
+                                    $("#search-input").val("");
+                                    cargarDetalle(id_producto);
+                                });
+                            } else {
+                                $("#toggle-main-search-desk").empty();
+                                $("#toggle-main-search-desk").removeClass("is-active");
+                                $("#title-search").text("NO SE HAN ENCONTRADO RESULTADOS")
+                            }
+                        }
+                    }
+                });
+            } else {
+                $("#toggle-main-search-desk").empty();
+                $("#toggle-main-search-desk").removeClass("is-active");
+                cargarProductos()
+            }
+        });
+
+        $("#search-clear-desk").on("click", function () {
+            $("#search-input-desk").val("");
+            $("#toggle-main-search-desk").empty();
+            $("#toggle-main-search-desk").removeClass("is-active");
+            cargarProductos()
+        });
+    });
+
+</script>
+
+<script>
+    function actualizarBoton() {
+        let carrito = JSON.parse(localStorage.getItem('carrito') || '{}');
         var botonContinuar = $('#continuar');
+        var contenedorInformacion = $('#contenedor-informacion');
+        var pasoDetallePedido = $('.paso-detalle-pedido');
+        var pasoFormularioDatos = $('.paso-formulario-datos');
+        var pasoConfirmacionPedido = $('.paso-confirmacion-pedido');
+
+        pasoDetallePedido.css('background-color', '');
+        pasoFormularioDatos.css('background-color', '');
+        pasoConfirmacionPedido.css('background-color', '');
 
         if ($('#info-client').is(':visible')) {
             botonContinuar.text('Volver');
-            botonContinuar.removeClass('disabled');
+            $("#text-info-order").hide();
+            contenedorInformacion.html('<h3>Información de envío</h3><p>Completa los campos con tus datos personales para el envío de tu pedido.</p>');
+            pasoFormularioDatos.css('background-color', '#ccc');
         } else if ($('#table-order').is(':visible')) {
             botonContinuar.text('Continuar');
+            $("#text-info-order").show();
+            contenedorInformacion.html('<h3>Detalle de tu pedido</h3><p>Revisa con atención el detalle de tu pedido a continuación antes de proceder con el segundo paso.</p>');
+            pasoDetallePedido.css('background-color', '#ccc');
+        }
 
-            if (!carrito || carrito.length === 0) {
-                botonContinuar.addClass('disabled');
-            } else {
-                botonContinuar.removeClass('disabled');
-            }
+        if (Object.keys(carrito).length === 0 && $('#table-order').is(':visible')) {
+            botonContinuar.addClass("btn-inhabilitar-pasos");
+        } else {
+            botonContinuar.removeClass("btn-inhabilitar-pasos");
         }
     }
+
+
+
 
     // Evento click para el botón continuar
     $('#continuar').on('click', function () {
         $('#table-order').toggle();
         $('#info-client').toggle();
-        actualizarBoton(); // Llamar a la función para actualizar el botón
+        actualizarBoton();
     });
 
     $(document).ready(function () {
@@ -211,15 +355,32 @@
 
         $('#info-client').hide();
         actualizarBoton();
-
-
     });
-
-
 
     $('#cliente-form').on('submit', function (event) {
         event.preventDefault();
         var formData = new FormData(this);
+
+        var aviso = document.getElementById('show-avis');
+        var estadoPermitido = aviso.getAttribute('data-estado');
+        var camposRequeridosLlenos = Array.from(this.elements).every(function (element) {
+            if (element.tagName === 'INPUT' && element.type !== 'submit') {
+                return element.value.trim() !== '';
+            }
+            return true;
+        });
+
+        var spanRequerido = document.getElementById('requerido');
+        if (estadoPermitido !== null && estadoPermitido === 'false') {
+            spanRequerido.textContent = "Actualmente tu cuenta está inhabilitada y no puedes realizar pedidos. *";
+            spanRequerido.style.color = '#d9534f';
+            return;
+        }
+        if (!camposRequeridosLlenos) {
+            spanRequerido.textContent = "Campos requeridos *";
+            spanRequerido.style.color = '#d9534f';
+            return;
+        }
 
         var carrito = localStorage.getItem('carrito');
         if (carrito) {
@@ -233,15 +394,80 @@
             processData: false,
             contentType: false,
             success: function (response) {
-                alert(response.message);
+                Swal.fire({
+                    html: `
+                        <div>
+                            <h5><strong>¡Pedido exitoso!</strong></h5>
+                            <p>Tu pedido ha sido recibido y está siendo procesado.</p>
+                            <p>Por favor, espera la confirmación por mensaje de correo electrónico.</p>
+                            <div class="col-auto text-center">
+                                <a href="/Brutality/" class="btn btn-success" style="text-decoration:none; padding:6px 15px;">Entendido</a>
+                            </div>
+                        </div>
+                    `,
+                    showCloseButton: false,
+                    showConfirmButton: false,
+                    width: '300px',
+                    allowOutsideClick: false,
+                });
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // Imprime el mensaje de error completo
-                console.error('Error response:', jqXHR.responseText);
-                alert('Error al guardar los datos: ' + jqXHR.responseText);
+        });
+    });
+
+    document.getElementById('envio-pedido').addEventListener('click', function () {
+        $('#cliente-form').submit();
+    });
+
+    var aviso = document.getElementById('show-avis');
+
+    function vaciarCamposFormulario() {
+        document.querySelectorAll('#cliente-form input, #cliente-form select').forEach(function (element) {
+            if (element.type === 'checkbox' || element.type === 'radio') {
+                element.checked = false;
+            } else {
+                element.value = '';
+            }
+        });
+    }
+
+    var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-estado') {
+                var nuevoEstado = aviso.getAttribute('data-estado');
+                if (nuevoEstado === null) {
+                    vaciarCamposFormulario();
+                }
             }
         });
     });
+
+    var config = { attributes: true };
+    observer.observe(aviso, config);
+
+
+
+    document.querySelectorAll('#cliente-form input').forEach(function (input) {
+        input.addEventListener('input', function () {
+            var spanRequerido = document.getElementById('requerido');
+            spanRequerido.textContent = "Campos requeridos *";
+            spanRequerido.style.color = '#000';
+
+            if (this.id === 'documento') {
+                var aviso = document.getElementById('show-avis');
+                aviso.removeAttribute('data-estado');
+            }
+        });
+    });
+
+    document.querySelectorAll('#cliente-form select').forEach(function (select) {
+        select.addEventListener('change', function () {
+            var spanRequerido = document.getElementById('requerido');
+            spanRequerido.textContent = "Campos requeridos *";
+            spanRequerido.style.color = '#000';
+        });
+    });
+
+
 
 
     async function documentoExist(documento) {
@@ -265,8 +491,9 @@
 
     function mostrarAviso(cliente) {
         var aviso = document.getElementById('show-avis');
-        aviso.style.cssText = 'background-color: #ccc; color: #2222222; text-align: center; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,.2); position:absolute; top:0;';
+        aviso.style.cssText = 'background-color: #ccc; color: #222; text-align: center; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,.2); position:absolute; top:0;';
         aviso.innerText = 'Bienvenido de nuevo, ' + cliente.nombres + '. Hemos cargado tus datos previos.';
+        aviso.setAttribute('data-estado', true);
 
         aviso.style.display = 'block';
 
@@ -275,6 +502,18 @@
         }, 5000);
     }
 
+    function mostrarAvisoEstado(cliente) {
+        var aviso = document.getElementById('show-avis');
+        aviso.style.cssText = 'background-color: #d9534f; color: #222; text-align: center; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,.2); position:absolute; top:0;';
+        aviso.innerText = 'Lo sentimos, actualmente tu cuenta está inhabilitada y no puedes realizar pedidos. Por favor, contacta con soporte para más información.';
+        aviso.setAttribute('data-estado', false);
+
+        aviso.style.display = 'block';
+
+        setTimeout(function () {
+            aviso.style.display = 'none';
+        }, 5000);
+    }
 
     function obtenerCliente(documento) {
         $(document).ajaxStart(function () {
@@ -292,8 +531,12 @@
             success: function (response) {
                 if (response.success) {
                     var cliente = response.success;
-                    llenarFormulario(cliente)
-                    mostrarAviso(cliente);
+                    if (cliente.estado === 0) {
+                        mostrarAvisoEstado(cliente);
+                    } else {
+                        llenarFormulario(cliente);
+                        mostrarAviso(cliente);
+                    }
                     console.log('Cliente:', cliente);
                 }
             },
@@ -303,7 +546,9 @@
         });
     }
 
-    
+
+
+
     function obtenerMunicipios() {
         const departamentoSeleccionado = $("#departamento").val();
         const municipioSelect = $("#municipio");
@@ -325,7 +570,7 @@
             });
         });
     }
-    
+
     function llenarFormulario(cliente) {
         document.getElementById('nombre').value = cliente.nombres;
         document.getElementById('apellido').value = cliente.apellidos;

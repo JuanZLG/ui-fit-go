@@ -100,8 +100,8 @@
         </div>
         <ul id="main-options-marcas" class="options-menu-list marcas">
             {% for marca in marcas %}
-            <li class="menu-list-item menu-list-item-mobile" data-id-filter="marca-{{ marca.id_marca }}">{{
-                marca.nombre_marca }}</li>
+            <li class="menu-list-item menu-list-item-mobile" data-id-filter="marca-{{ marca.id_marca }}">
+                {{marca.nombre_marca }}</li>
             {% endfor %}
         </ul>
         <hr class="divider">
@@ -125,7 +125,7 @@
                 <a href="{% url 'pageHome' %}">
                     <img src="{% static 'img/gorille.png' %}" class="logo" alt="Logo de Brutálity">
                 </a>
-                <label class="hamburger">
+                <label class="hamburger" style="z-index: 999;">
                     <input type="checkbox" id="hamburgerCheckbox">
                     <svg viewBox="0 0 32 32">
                         <path class="line line-top-bottom"
@@ -187,8 +187,8 @@
                                             <strong id="total-order"></strong>
                                         </div>
                                     </div>
-                                    <a href="{% url 'pageOrder' %}" class="btn d-flex align-items-center bg-danger my-3"
-                                        style="height: auto;">
+                                    <a href="{% url 'pageOrder' %}" id="enlace-ver-pedido"
+                                        class="btn d-flex align-items-center bg-danger my-3" style="height: auto;">
                                         <p class="text">Ir al pedido</p>
                                         <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"
                                             fill="#fff" class="cart mx-2">
@@ -253,9 +253,9 @@
                 </div>
             </div>
             <a class="nav-link item-order-mobile d-flex align-items-center justify-content-center gap-2"
-                href="{% url 'pageOrder' %}" style="background-color: transparent;">
+                href="{% url 'pageOrder' %}" style="background-color: #c00808; color: #fff; border-radius: 5px 0 0 5px;">
                 <div class="order-cont-cant">
-                    <i class="fa fa-shopping-cart" aria-hidden="true" style="color: #000;"></i>
+                    <i class="fa fa-shopping-cart" aria-hidden="true" style="color: #fff;"></i>
                     <span class="order-cant-mobile"></span>
                 </div>
             </a>
@@ -265,7 +265,7 @@
     {% endblock %}
 
 
-    <div class="desktop" style="border-bottom: 2px solid #f2f2f2; background-color: #f2f2f2;">
+    <div class="desktop" style="color:#fff; background-color: #000; padding-bottom: 10px;">
         <div class="catalog-section col-md-10 m-auto py-1">
             <div class="d-flex gap-3 justify-content-center col-md-12">
                 <div class="d-flex align-items-center justify-content-center mx-2 element-container">
@@ -301,7 +301,7 @@
                     <ul class="element-option">
                         <!-- <span class="menu-comprar-title">MARCAS</span> -->
                         {% for marca in marcas %}
-                        <li class="menu-list-item menu-list-item-desk" data-id-filter="marca-{{ marca.id_marca }}">
+                    <li class="menu-list-item menu-list-item-desk" data-id-filter="marca-{{ marca.id_marca }}">
                             {{ marca.nombre_marca }}
                         </li>
                         {% endfor %}
@@ -657,10 +657,59 @@
 
 
     </script>
+    <footer class="text-center text-lg-start bg-light text-muted mt-5">
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <div>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="" class="me-4 text-reset">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </section>
 
-    <!-- <footer>
-    <p>&copy; 2023 Brutality</p>
-</footer> -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <div class="row">
+                    <div class="col-md-3 col-lg-4 col-xl-8 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>TUIRANFIT
+                        </h6>
+                        <p>
+                            Distribuidora de Suplementos Deportivos, con sede en Medellín y más de 3 años de
+                            experiencia, se destaca en Colombia por su servicio de distribución nacional y compromisocon la calidad y el servicio al cliente.
+                        </p>
+                    </div>
+                    <!-- Sección de pedidos -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Pedidos
+                        </h6>
+                        <p>
+                            <a href="#!" class="text-reset">Cómo realizar un pedido</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Preguntas frecuentes</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Ayuda</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2023 Derechos de Autor:
+            <a class="text-reset fw-bold" href="https://tu-dominio.com/">TuiranFit.com</a>
+            <p>Esta es una página para realizar pedidos, no para compras en línea.</p>
+        </div>
+    </footer>
+
 </body>
 
 </html>
