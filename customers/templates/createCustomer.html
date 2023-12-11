@@ -227,14 +227,14 @@
         $campo.siblings('.info-message').text('');
     }
    
-     function validarDocumento() {
+async function validarDocumento() {
     const documentoInput = $('#iDocumento');
     const documento = documentoInput.val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
 
     if (documento.trim() === '') {
         mostrarError(documentoInput, 'Este campo es obligatorio.');
         return;
-    }async
+    }
 
     const documentoError = /^\d{6,10}$/.test(documento) ? '' : 'Número de documento inválido.';
 
@@ -261,6 +261,7 @@
 }
 
 function verificarExistenciaDocumento(documento) {
+    // Retornamos una promesa
     return new Promise((resolve, reject) => {
         $.ajax({
             type: 'GET',
