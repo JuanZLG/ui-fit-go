@@ -33,6 +33,19 @@ from django.db.models.functions import ExtractMonth
 from django.http import JsonResponse
 from django.utils import timezone
 from .models import Compras, Ventas
+from .models import Pedidos
+
+
+
+
+
+def contar_pedidos_en_proceso(request):
+    # Obtén el número de pedidos en proceso
+    pedidos_en_proceso = Pedidos.objects.filter(estado='en proceso').count()
+
+    # Devuelve la respuesta en formato JSON
+    data = {'pedidos_en_proceso': pedidos_en_proceso}
+    return JsonResponse(data)
 
 def calcular_total_compras_y_ventas(request):
     try:

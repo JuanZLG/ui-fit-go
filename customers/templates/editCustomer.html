@@ -8,41 +8,41 @@
 </center>
 
 <div class="container d-flex justify-content-center">
-<div class="card shadow" style="width:70%">
-    <div class="container p-5 pb-4">
-        <form id="cliente-form" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="cliente_id" value="{{ cliente.id_cliente }}">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="iDocumento">Documento *</label>
-                    <input type="text" class="form-control" id="iDocumento" name="iDocumento" placeholder="Documento"
-                        value="{{ cliente.documento }}" minlength="8" maxlength="12">
-                    <div class="error-message" id="iDocumento-error" style="color:red;"></div>
-                    <div class="info-message" id="iDocumento-info"></div>
+    <div class="card shadow" style="width:70%">
+        <div class="container p-5 pb-4">
+            <form id="cliente-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="cliente_id" value="{{ cliente.id_cliente }}">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="iDocumento">Documento *</label>
+                        <input type="text" class="form-control" id="iDocumento" name="iDocumento"
+                            placeholder="Documento" value="{{ cliente.documento }}" minlength="8" maxlength="12">
+                        <div class="error-message" id="iDocumento-error" style="color:red;"></div>
+                        <div class="info-message" id="iDocumento-info"></div>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="iNombres">Nombres *</label>
+                        <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres"
+                            value="{{ cliente.nombres }}">
+                        <div class="error-message" id="iNombres-error" style="color:red;"></div>
+                    </div>
                 </div>
-                <div class="form-group col-md-8">
-                    <label for="iNombres">Nombres *</label>
-                    <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres"
-                        value="{{ cliente.nombres }}">
-                    <div class="error-message" id="iNombres-error" style="color:red;"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="iApellidos">Apellidos *</label>
+                        <input type="text" class="form-control" id="iApellidos" name="iApellidos"
+                            placeholder="Apellidos" value="{{ cliente.apellidos }}">
+                        <div class="error-message" id="iApellidos-error" style="color:red;"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iCelular">Celular *</label>
+                        <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
+                            value="{{ cliente.celular }}" minlength="10" maxlength="10">
+                        <div class="error-message" id="iCelular-error" style="color:red;"></div>
+                        <div class="info-message" id="iCelular-info"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="iApellidos">Apellidos *</label>
-                    <input type="text" class="form-control" id="iApellidos" name="iApellidos" placeholder="Apellidos"
-                        value="{{ cliente.apellidos }}">
-                    <div class="error-message" id="iApellidos-error" style="color:red;"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="iCelular">Celular *</label>
-                    <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                        value="{{ cliente.celular }}" minlength="10" maxlength="10">
-                    <div class="error-message" id="iCelular-error" style="color:red;"></div>
-                    <div class="info-message" id="iCelular-info"></div>
-                </div>
-            </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -77,13 +77,21 @@
                         <div class="error-message" id="iDireccion-error" style="color:red;"></div>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="iCorreo">Correo *</label>
+                        <input type="email" class="form-control" id="iCorreo" name="iCorreo" placeholder="Correo"
+                            value="{{ cliente.correo}}">
+                        <div class="error-message" id="iCorreo-error" style="color:red;"></div>
+                    </div>
+                </div>
 
-            <div class="text-center" style="margin-top: 10px;">
-                <button class="btn btn-primary" type="submit" id="submit-button" >Guardar</button>
-            </div>
-        </form>
+                <div class="text-center" style="margin-top: 10px;">
+                    <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -94,6 +102,8 @@
             cargarMunicipios();
         });
 
+        let documentoAnterior = ""; // Inicializar documentoAnterior
+
         $('#iDocumento').on('input', validarDocumento);
         $('#iDocumento').on('keypress', function (e) {
             if (e.which === 13) {
@@ -101,6 +111,7 @@
                 validarDocumento();
             }
         });
+
 
         $('#iCelular').on('input', validarCelular);
         $('#iCelular').on('keypress', function (e) {
@@ -110,10 +121,19 @@
             }
         });
 
+        $('#iCorreo').on('input', validarCorreo);
+        $('#iCorreo').on('keypress', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                validarCorreo();
+            }
+        });
+
         $('#cliente-form').submit(function (event) {
             event.preventDefault();
             validarDocumento();
             validarCelular();
+            validarCorreo();
             validarCampo($('#iNombres'));
             validarCampo($('#iApellidos'));
             validarCampo($('#iBarrio'));
@@ -161,6 +181,7 @@
                         }));
                     });
                     cargarMunicipios();
+
                 }
             });
         }
@@ -192,31 +213,82 @@
             obtenerMunicipios();
         }
 
-        function validarDocumento() {
-            const documento = $('#iDocumento').val().replace(/\D/g, '');
-            const documentoError = /^\d{8,10}$/.test(documento) ? '' : 'Número de documento inválido.';
-            mostrarError($('#iDocumento'), documentoError);
+        async function validarDocumento() {
+    const documentoInput = $('#iDocumento');
+    const documento = documentoInput.val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
 
-            if (documentoError === '') {
-                verificarExistenciaDocumento(documento);
-            }
+    if (documento.trim() === '') {
+        mostrarError(documentoInput, 'Este campo es obligatorio.');
+        return;
+    }
+
+    const documentoError = /^\d{6,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+
+    if (documentoError) {
+        mostrarError(documentoInput, documentoError);
+        return;
+    }
+
+    try {
+        // Llamamos a verificarExistenciaDocumento y esperamos la resolución de la promesa
+        const clienteRegistrado = await verificarExistenciaDocumento(documento);
+
+        // Comparamos si el valor del documento es igual al valor del cliente
+        const valorCliente = "{{ cliente.documento }}";
+
+        if (documento === valorCliente) {
+            // Cliente registrado, quitar el mensaje de error
+            ocultarError(documentoInput);
+            console.log('El documento coincide con el cliente, el mensaje de error ha sido quitado.');
+        } else if (clienteRegistrado) {
+            // Cliente no registrado, mostrar mensaje de error
+            mostrarError(documentoInput, 'Este cliente ya está registrado.');
+        } else {
+            // Cliente no registrado, proceder con el envío del formulario
+            ocultarError(documentoInput);
+            console.log('Cliente no registrado, proceder con el envío del formulario.');
         }
+    } catch (error) {
+        console.error('Error en la verificación de existencia del cliente:', error);
+    }
+}
 
         function verificarExistenciaDocumento(documento) {
-            $.ajax({
-                type: 'GET',
-                url: "{% url 'validarDocumento' %}",
-                data: {
-                    documento: documento
-                },
-                success: function (response) {
-                    if (response.existe) {
-                        mostrarError($('#iDocumento'), 'Este cliente ya está registrado.');
-                    } else {
-                        ocultarError($('#iDocumento'));
+            
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'validarDocumento' %}",
+                    data: {
+                        documento: documento
+                    },
+                    success: function (response) {
+                        const clienteRegistrado = response.existe;
+                        resolve(clienteRegistrado);
+                    },
+                    error: function (error) {
+                        reject(error);
                     }
-                }
+                });
             });
+        }
+
+        function validarCorreo() {
+            const correoInput = $('#iCorreo');
+            const correo = correoInput.val().trim();
+
+            if (correo === '') {
+                mostrarError(correoInput, 'Este campo es obligatorio.');
+                return;
+            }
+
+            const correoError = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? '' : 'Correo electrónico inválido.';
+
+            if (correoError) {
+                mostrarError(correoInput, correoError);
+            } else {
+                ocultarError(correoInput);
+            }
         }
 
         function validarCelular() {
@@ -237,7 +309,12 @@
                 $campo.addClass('is-invalid').siblings('.error-message').text(mensaje);
             }
         }
+
+        function ocultarError($campo) {
+            $campo.removeClass('is-invalid').siblings('.error-message').text('');
+        }
     });
 </script>
+
 
 {% endblock %}

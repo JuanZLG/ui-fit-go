@@ -140,6 +140,35 @@ class Ventas(models.Model):
     class Meta:
         managed = False
         db_table = 'ventas'
+
+
+class Pedidos(models.Model):
+    ESTADO_CHOICES = [
+        ('cancelado', 'Cancelado'),
+        ('en proceso', 'En Proceso'),
+        ('confirmado', 'Confirmado'),
+    ]
+    id_pedido = models.AutoField(primary_key=True)
+    id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
+    id_cliente = models.ForeignKey('Clientes', models.DO_NOTHING, db_column='id_cliente')
+    fecha_pedido = models.DateField(default=timezone.now)
+    total_pedido = models.FloatField()
+    estado = models.CharField(max_length=12, choices=ESTADO_CHOICES)
+    class Meta:
+        managed = False
+        db_table = 'pedidos'
+
+class DetallePedido(models.Model):
+    id_detallepedido = models.AutoField(primary_key=True)
+    id_pedido = models.ForeignKey('Pedidos', models.DO_NOTHING, db_column='id_pedido')
+    id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
+    sabor = models.CharField(max_length=50)
+    cantidad = models.IntegerField()
+    precio_uni = models.FloatField()
+    precio_tot = models.FloatField()
+    class Meta:
+        managed = False
+        db_table = 'detallepedido'
        
 
 

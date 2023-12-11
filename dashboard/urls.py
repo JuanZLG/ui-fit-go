@@ -11,6 +11,8 @@ urlpatterns=[
     path('obtener_datos_ventas_y_compras/', views.obtener_datos_ventas_y_compras, name='obtener_datos_ventas_y_compras'),
     path('obtener_todos_los_productos/', views.obtener_todos_los_productos, name='obtener_todos_los_productos'),
     path('obtener_margen_ganancia/', views.obtener_margen_ganancia, name='obtener_margen_ganancia'),
+    path('contar_pedidos_en_proceso/', views.contar_pedidos_en_proceso, name='contar_pedidos_en_proceso'),
+
 
 
 

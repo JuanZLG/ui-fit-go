@@ -16,7 +16,7 @@
                     <div class="form-group col-md-4">
                         <label for="iDocumento">Documento *</label>
                         <input type="text" class="form-control" id="iDocumento" name="iDocumento"
-                            placeholder="Documento" maxlength="10" minlength="6"">
+                            placeholder="Documento" maxlength="10" minlength="6">
                         <div class="error-message" id="iDocumento-error" style="color:red;"></div>
                         <div class="info-message" id="iDocumento-info"></div>
                     </div>
@@ -73,13 +73,22 @@
                     </div>
                 </div>
 
-            <div class="text-center" style="margin-top: 10px;">
-                <button class="btn btn-primary" type="submit" id="submit-button" >Guardar</button>
-            </div>
-        </form>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="iCorreo">Correo *</label>
+                        <input type="email" class="form-control" id="iCorreo" name="iCorreo" placeholder="Correo">
+                        <div class="error-message" id="iCorreo-error" style="color:red;"></div>
+                    </div>
+                </div>
+
+                <div class="text-center" style="margin-top: 10px;">
+                    <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -98,11 +107,15 @@
             validarCelular();
         });
 
+        $('#iCorreo').on('input', function () {
+            validarCorreo();
+        });
+
         $('#iNombres, #iApellidos, #iBarrio, #iDireccion, #departamento, #municipio').on('input', function () {
             validarCampo($(this));
         });
 
-        $('#iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #iDocumento, #departamento, #municipio')
+        $('#iCelular, #iNombres, #iApellidos, #iBarrio, #iDireccion, #iDocumento, #departamento, #municipio', '#iCorreo')
             .on('input', function () {
                 if ($(this).val() === '') {
                     mostrarError($(this), 'Este campo es obligatorio.');
@@ -115,6 +128,7 @@
             event.preventDefault();
             validarDocumento();
             validarCelular();
+            validarCorreo();
             validarCampo($('#iNombres'));
             validarCampo($('#iApellidos'));
             validarCampo($('#iBarrio'));
@@ -135,11 +149,11 @@
                                 text: 'Cliente agregado con éxito',
                                 icon: 'success',
                                 showConfirmButton: false,
-                                timer: 1000, 
+                                timer: 1000,
                             });
                             setTimeout(function () {
                                 window.location.href = "{% url 'Clientes' %}";
-                            }, 1000); 
+                            }, 1000);
                         }
                     }
                 });
@@ -212,50 +226,88 @@
     function ocultarInfo($campo) {
         $campo.siblings('.info-message').text('');
     }
-
-    function validarDocumento() {
+   
+     function validarDocumento() {
     const documentoInput = $('#iDocumento');
     const documento = documentoInput.val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
 
     if (documento.trim() === '') {
         mostrarError(documentoInput, 'Este campo es obligatorio.');
         return;
-    }
+    }async
 
     const documentoError = /^\d{6,10}$/.test(documento) ? '' : 'Número de documento inválido.';
 
     if (documentoError) {
         mostrarError(documentoInput, documentoError);
-    } else {
-        ocultarError(documentoInput);
-        verificarExistenciaDocumento(documento);
+        return;
+    }
+
+    try {
+        // Llamamos a verificarExistenciaDocumento y esperamos la resolución de la promesa
+        const clienteRegistrado = await verificarExistenciaDocumento(documento);
+
+        if (clienteRegistrado) {
+            // Cliente registrado, mostrar mensaje de error
+            mostrarError(documentoInput, 'Este cliente ya está registrado.');
+        } else {
+            // Cliente no registrado, proceder con el envío del formulario
+            ocultarError(documentoInput);
+            console.log('Cliente no registrado, proceder con el envío del formulario.');
+        }
+    } catch (error) {
+        console.error('Error en la verificación de existencia del cliente:', error);
     }
 }
 
 function verificarExistenciaDocumento(documento) {
-    $.ajax({
-        type: 'GET',
-        url: "{% url 'validarDocumento' %}",
-        data: {
-            documento: documento
-        },
-        success: function (response) {
-            const documentoInput = $('#iDocumento');
-
-            if (response.existe) {
-                mostrarError(documentoInput, 'Este cliente ya está registrado.');
-            } else {
-                ocultarError(documentoInput);
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'validarDocumento' %}",
+            data: {
+                documento: documento
+            },
+            success: function (response) {
+                const clienteRegistrado = response.existe;
+                resolve(clienteRegistrado);
+            },
+            error: function (error) {
+                reject(error);
             }
-        }
+        });
     });
 }
 
-// Bloquear la entrada de letras y otros caracteres no numéricos
-$('#iDocumento').on('input', function () {
-    const valor = $(this).val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
-    $(this).val(valor);
-});
+// Resto del código...
+
+// Resto del código...
+
+
+
+    // Bloquear la entrada de letras y otros caracteres no numéricos
+    $('#iDocumento').on('input', function () {
+        const valor = $(this).val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
+        $(this).val(valor);
+    });
+
+    function validarCorreo() {
+        const correoInput = $('#iCorreo');
+        const correo = correoInput.val().trim();
+
+        if (correo === '') {
+            mostrarError(correoInput, 'Este campo es obligatorio.');
+            return;
+        }
+
+        const correoError = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? '' : 'Correo electrónico inválido.';
+
+        if (correoError) {
+            mostrarError(correoInput, correoError);
+        } else {
+            ocultarError(correoInput);
+        }
+    }
 
 
 

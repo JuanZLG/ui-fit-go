@@ -9,34 +9,41 @@
 <style>
     .card {
         border: none;
-        background-color: #f7f8fa;
-        padding: 0;
+        background-color: #fff;
+        padding: 0px;
         border-radius: 10px;
-    }
-
-    .card-effect:hover {
-        transform: scale(1.02);
-        transition: transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
     }
 
 
-
-    .card-effect .fas {
-        margin-left: 50px;
+    .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .card-effect .fas.fa-user-slash {
-        margin-left: 40px;
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+        /* Color del título */
     }
 
-    .card-effect .fas .fa-shopping-bag {
-        margin-left: 50px;
+    .card-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: #555;
+        /* Color del valor */
     }
 
-    .card-effect .fas .fa-dollar-sign {
-        margin-left: 50px;
+    .card-icon {
+        font-size: 36px;
+        margin-right: 15px;
+        color: #888;
+        /* Color del icono */
     }
-
 
 
     .chart-area {
@@ -78,43 +85,50 @@
     <div class="row">
 
         <!-- Earnings (Monthly) Card Example -->
+        <!-- Pedidos en Proceso Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-dark shadow h-100 card-effect">
-                <div class="card-body px-5 py-1 d-flex align-items-center" data-toggle="modal"
-                    data-target="#totalComprasPorMes">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-purple text-uppercase mb-1">
-                                Clientes Activos
-                            </div>
-                            <div id="clientes-activos" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
-                            </div>
-                        </div>
-                        <div class="col-auto ml-auto">
-                            <i class="fas fa-user-check fa-2x text-purple mt-2"></i>
-                        </div>
+            <div class="card border-left-warning shadow h-100">
+                <div class="card-body" data-toggle="modal" data-target="#pedidosEnProcesoModal">
+                    <div>
+                        <div class="card-title text-warning">Pedidos Pendientes</div>
+                        <div id="pedidos-en-proceso" class="card-value text-gray-800">Actualizando...</div>
                     </div>
+                    <i class="fas fa-exclamation-circle card-icon text-warning"></i>
                 </div>
             </div>
         </div>
 
 
+        <script>
+            function actualizarContadorPedidosEnProceso() {
+                $.ajax({
+                    url: "{% url 'contar_pedidos_en_proceso' %}", // Ajusta la URL según tu configuración en Django
+                    method: "GET",
+                    success: function (data) {
+                        const pedidosEnProceso = data.pedidos_en_proceso;
+                        $("#pedidos-en-proceso").text(pedidosEnProceso);
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener el número de pedidos en proceso:', error);
+                    }
+                });
+            }
+
+            setInterval(actualizarContadorPedidosEnProceso, 5000);
+
+            actualizarContadorPedidosEnProceso();
+        </script>
+
+
+
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-danger shadow h-100 card-effect">
-                <div class="card-body px-5 py-1 d-flex align-items-center" data-toggle="modal"
-                    data-target="#totalMargenGanancia">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Margen de Ganancia Mes Actual
-                            </div>
-                            <div id="margen-ganancia" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...
-                            </div>
-                        </div>
-                        <div class="col-auto ml-auto">
-                            <i class="fas fa-chart-line fa-2x text-danger mt-2"></i>
-                        </div>
+            <div class="card border-left-danger shadow h-100">
+                <div class="card-body" data-toggle="modal" data-target="#totalMargenGanancia">
+                    <div>
+                        <div class="card-title text-danger">Margen de Ganancia</div>
+                        <div id="margen-ganancia" class="card-value text-gray-800">Actualizando...</div>
                     </div>
+                    <i class="fas fa-chart-line card-icon text-danger"></i>
                 </div>
             </div>
         </div>
@@ -124,8 +138,9 @@
                     url: "{% url 'obtener_margen_ganancia' %}",
                     type: 'GET',
                     success: function (data) {
-                        const margenGanancia = parseFloat(data.margen_ganancia_total.replace(',', ''));
-        
+                        const margenGanancia = parseFloat(data.margen_ganancia_total.replace(',',
+                            ''));
+
                         if (!isNaN(margenGanancia)) {
                             const formatter = new Intl.NumberFormat('es-CO', {
                                 style: 'currency',
@@ -145,66 +160,33 @@
                 });
             });
         </script>
-        
-        
 
 
 
-        <script>
-            function actualizarContadorClientes() {
-                $.ajax({
-                    url: "{% url 'contar_clientes_activos' %}",
-                    method: "GET",
-                    success: function (data) {
-                        const clientesActivos = data.clientes_activos;
-                        const clientesInactivos = data.clientes_inactivos;
-                        $("#clientes-activos").text(clientesActivos);
-                        $("#clientes-inactivos").text(clientesInactivos);
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener el número de clientes:', error);
-                    }
-                });
-            }
 
-            setInterval(actualizarContadorClientes, 5000);
 
-            actualizarContadorClientes();
-        </script>
 
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 card-effect">
-                <div class="card-body px-5 py-1 d-flex align-items-center">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total de Compras
-                            </div>
-                            <div id="total-compras" class="h5 mb-0 font-weight-bold text-gray-800">Actualizando...</div>
-                        </div>
-                        <div class="col-auto ml-auto">
-                            <i class="fas fa-shopping-bag fa-2x text-primary mt-2"></i>
-                        </div>
+            <div class="card border-left-primary shadow h-100">
+                <div class="card-body">
+                    <div>
+                        <div class="card-title text-primary">Total de Compras</div>
+                        <div id="total-compras" class="card-value text-gray-800">Actualizando...</div>
                     </div>
+                    <i class="fas fa-shopping-bag card-icon text-primary"></i>
                 </div>
             </div>
         </div>
 
+
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 card-effect">
-                <div class="card-body px-5 py-1 d-flex align-items-center">
-                    <div class="row no-gutters">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total de Ventas
-                            </div>
-                            <div id="total-ventas" class="h5 mb-0 font-weight-bold text-gray-800">Cargando...
-                            </div>
-                        </div>
-                        <div class="col-auto ml-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-success mt-2"></i>
-                        </div>
+            <div class="card border-left-success shadow h-100">
+                <div class="card-body">
+                    <div>
+                        <div class="card-title text-success">Total de Ventas</div>
+                        <div id="total-ventas" class="card-value text-gray-800">Cargando...</div>
                     </div>
+                    <i class="fas fa-dollar-sign card-icon text-success"></i>
                 </div>
             </div>
         </div>
@@ -222,7 +204,7 @@
                 });
                 $('#total-compras').text(totalComprasFormatted);
             }
-        
+
             // Función para actualizar el valor en la carta de ventas
             function actualizarValorEnCartaVentas(totalVentas) {
                 const totalVentasFormatted = totalVentas.toLocaleString('es-CO', {
@@ -233,7 +215,7 @@
                 });
                 $('#total-ventas').text(totalVentasFormatted);
             }
-        
+
             $(document).ready(function () {
                 $.ajax({
                     url: "{% url 'calcular_total_compras_y_ventas' %}",
@@ -242,33 +224,34 @@
                         console.log(data);
                         var totalComprasPorMes = data.total_compras_por_mes;
                         var totalVentasPorMes = data.total_ventas_por_mes;
-        
+
                         // Calcula el total de compras para mostrar en la carta de compras
                         var totalCompras = 0;
                         totalComprasPorMes.forEach(function (total) {
                             totalCompras += total.total_compras;
                         });
-        
+
                         // Calcula el total de ventas para mostrar en la carta de ventas
                         var totalVentas = 0;
                         totalVentasPorMes.forEach(function (total) {
                             totalVentas += total.total_ventas;
                         });
-        
+
                         // Actualiza el valor en la carta de compras al cargar la página
                         actualizarValorEnCartaCompras(totalCompras);
-        
+
                         // Actualiza el valor en la carta de ventas al cargar la página
                         actualizarValorEnCartaVentas(totalVentas);
                     },
                     error: function (error) {
-                        console.error('Error al obtener los totales de compras y ventas por mes:', error);
+                        console.error('Error al obtener los totales de compras y ventas por mes:',
+                            error);
                     }
                 });
             });
         </script>
-        
-        
+
+
 
 
 
@@ -283,7 +266,8 @@
     <div class="row">
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background-color:black;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                    style="background-color:black;">
                     <h6 class="m-0 font-weight-bold text-white">Compras y Ventas</h6>
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown"
@@ -403,7 +387,8 @@
 
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background-color: black;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                    style="background-color: black;">
                     <h6 class="m-0 font-weight-bold text-white">Productos y Cantidades</h6>
                 </div>
                 <div class="card-body">

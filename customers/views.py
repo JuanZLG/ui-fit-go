@@ -42,6 +42,9 @@ def agregarClientePost(request):
         celular = request.POST.get('iCelular')
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
+        correo = request.POST.get('iCorreo')
+
+
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
@@ -72,6 +75,7 @@ def agregarClientePost(request):
             celular=celular,
             barrio=barrio,
             direccion=direccion,
+            correo=correo,
             estado=1,
         )
 
@@ -104,6 +108,7 @@ def editarCliente(request, cliente_id):
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
         estado = request.POST.get('id_estado')
+        correo = request.POST.get('iCorreo')
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
@@ -124,6 +129,7 @@ def editarCliente(request, cliente_id):
         cliente.celular = celular
         cliente.barrio = barrio
         cliente.direccion = direccion
+        cliente.correo = correo
         cliente.id_estado = estado
         cliente.save()
 
@@ -165,6 +171,7 @@ def verDetallesCliente(request):
                     'celular': cliente.celular,
                     'barrio': cliente.barrio,
                     'direccion': cliente.direccion,
+                    'correo': cliente.correo,
                     'estado': cliente.estado,
                     'municipio': cliente.id_municipio.nombre_municipio,
                     'departamento': cliente.id_municipio.id_departamento.nombre_departamento,
