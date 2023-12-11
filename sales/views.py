@@ -1,7 +1,11 @@
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import locale
+import smtplib
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from dotenv import load_dotenv
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias, Pedidos, DetallePedido
@@ -31,7 +35,7 @@ def crear_venta(request):
             venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta, descuentoVenta=descuentoVenta, totalVentaDescuento=totalVentaDescuento, margenGanancia= margenGananciaVenta)
             if cliente is None:
                 return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=400)
-
+            pedido = None
             for idProducto, producto_datos in productos.items():
                 idPedido = producto_datos["idPedido"]
                 cantidad_vendida = producto_datos['cantidad']
@@ -41,12 +45,21 @@ def crear_venta(request):
                 totalProductoDescuento = producto_datos['totalProductoDescuento']
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
-
                 if isinstance(idPedido, int):
                     pedido = Pedidos.objects.get(id_pedido=idPedido)
                     pedido.id_venta = venta
                     pedido.estado = "confirmado"
+                    pedido.total_pedido = totalVenta
                     pedido.save()
+
+                if pedido:
+                    detalles_pedido = DetallePedido.objects.filter(id_pedido=pedido)
+
+                    for detalle in detalles_pedido:
+                        if detalle.id_producto.id_producto == int(idProducto):
+                            detalle.precio_uni = precioVenta
+                            detalle.precio_tot = totalProducto
+                            detalle.save()
 
                 producto = Productos.objects.get(id_producto=idProducto)
 
@@ -65,15 +78,43 @@ def crear_venta(request):
                     margenGanancia=margenGananciaProducto,
                     precio_tot=totalProducto,
                 )
+
+            pedido_email_confirmacion(venta, cliente.correo)
             response_data = {'success': True}
             return JsonResponse(response_data)
         except json.JSONDecodeError as e:
             response_data = {'success': False, 'error': str(e)}
             return JsonResponse(response_data, status=400)
-    
+
     clientes = Clientes.objects.all()
     return render(request, 'createSales.html', {'clientes': clientes})
 
+
+from django.template.loader import get_template
+
+def pedido_email_confirmacion(venta, email):
+    load_dotenv()
+    remitente = os.getenv("USER")
+    destinatario = email
+    asunto = "Recibo"
+
+    msg = MIMEMultipart()
+    msg["Subject"] = asunto
+    msg["From"] = remitente
+    msg["To"] = destinatario
+
+    template = get_template("emailConfirmacion.html")
+    context = {'venta': venta}
+    
+    html = template.render(context)
+
+    msg.attach(MIMEText(html, "html"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(remitente, os.getenv("PASS"))
+    
+    server.sendmail(remitente, destinatario, msg.as_string())
+    server.quit()
 
 
 def buscar_productos(request):
@@ -184,6 +225,8 @@ def buscar_detalles_pedidos(id_pedido):
             "nombre_producto": detalle.id_producto.nombre_producto,
             "sabor": detalle.sabor,
             "cantidad": detalle.cantidad,
+            "cantidad_stock": detalle.id_producto.cantidad,
+            "estado_producto": detalle.id_producto.estado,
             "precio_uni": detalle.precio_uni,
             "precio_tot": detalle.precio_tot  
         })

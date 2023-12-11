@@ -8,6 +8,7 @@ class Clientes(models.Model):
     nombres = models.CharField(max_length=60)
     apellidos = models.CharField(max_length=60)
     estado = models.IntegerField(default=1)
+    correo = models.CharField(max_length=60)
 
     class Meta:
         managed = False

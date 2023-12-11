@@ -1,5 +1,7 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from orders.models import Pedidos, DetallePedido, Clientes, Detalleventa, Ventas, Productos
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
@@ -21,40 +23,60 @@ def cambiarEstadoPedido(request):
 
 
 
-from django.shortcuts import render
-from .models import Pedidos, DetallePedido, Productos
 @jwt_cookie_required
 @module_access_required('ventas')
-def editarPedido(request, id_pedido):
-    if request.method == 'POST':
-        # Aquí iría la lógica para manejar la actualización del pedido
-        pass
-
-    # Obtener el pedido y sus detalles
-    pedidos = Pedidos.objects.get(id_pedido=id_pedido)
-    detalle = DetallePedido.objects.filter(id_pedido=pedidos)
-
+def editarPedidoHome(request, id_pedido):
+    pedido = Pedidos.objects.get(id_pedido=id_pedido)
+    detalle = DetallePedido.objects.filter(id_pedido=pedido)
     detalles = []
 
     for item in detalle:
         producto = Productos.objects.get(id_producto=item.id_producto.id_producto)
         imagen_data = producto.iProductImg.decode('utf-8') if producto.iProductImg else None
         sabores = producto.sabor.split(',') if producto.sabor else []
-        # Suponiendo que el modelo Productos tiene un campo 'stock'
         stock = producto.cantidad
         detalles.append({
             'detalle': item,
             'imagen_data': imagen_data,
             'sabores': sabores,
-            'stock': stock 
+            'stock': stock,
         })
 
-
     return render(request, 'editOrder.html', {
-        "pedidos": pedidos,
+        "pedido": pedido,
         "detalles": detalles
     })
 
+
+@csrf_exempt
+def editarPedido(request):
+    if request.method == 'POST':
+        try:
+            datos_pedido = json.loads(request.body)
+            detalles_pedido = datos_pedido.get('detalles')
+            id_pedido = datos_pedido.get('dataIdPedido')
+            total_pedido = datos_pedido.get('total_pedido')
+
+            pedido = Pedidos.objects.get(id_pedido=id_pedido)
+            pedido.total_pedido = total_pedido
+            pedido.save()
+
+            ids_detalles_actuales = [detalle['id_detalle'] for detalle in detalles_pedido]
+
+            DetallePedido.objects.filter(id_pedido=pedido).exclude(id_detallepedido__in=ids_detalles_actuales).delete()
+
+            for detalle in detalles_pedido:
+                detalle_pedido = DetallePedido.objects.get(id_detallepedido=detalle['id_detalle'])
+                detalle_pedido.sabor = detalle['sabor']
+                detalle_pedido.cantidad = detalle['cantidad']
+                detalle_pedido.precio_tot = detalle['total_producto']
+                detalle_pedido.save()
+
+            response_data = {'success': True}
+            return JsonResponse(response_data)
+        except Exception as e:
+            response_data = {'success': False, 'error_message': str(e)}
+            return JsonResponse(response_data, status=500)
 
 
 

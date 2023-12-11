@@ -51,8 +51,8 @@ class Productos(models.Model):
     sabor = models.CharField(max_length=50)
     presentacion = models.CharField(max_length=45)
     precio_pub = models.FloatField()
-    
     iProductImg = models.BinaryField(null=True, blank=True)
+    estado = models.IntegerField(default=1)
 
     class Meta:
         managed = False

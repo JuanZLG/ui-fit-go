@@ -60,10 +60,12 @@
                     </td>
                     <td>
                         <a href="{% url 'editarProveedor' proveedor.id_proveedor %}" class="btn btn-sm mr-2"
-                            id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                            id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                            title="Editar Proveedor"></i></a>
                         <button type="button" class="btn btn-sm btn-primary verProveedor ml-2"
                             data-prov-id="{{ proveedor.id_proveedor }}" data-url-details="{% url 'verDetallesProveedor' %}">
-                            <i class="fa-solid fa-eye"></i>
+                            <i class="fa-solid fa-eye" data-toggle="tooltip" data-placement="top"
+                            title="Ver Detalles"></i>
                         </button>
                     </td>
                 </tr>
