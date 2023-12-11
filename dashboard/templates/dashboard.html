@@ -138,8 +138,10 @@
                     url: "{% url 'obtener_margen_ganancia' %}",
                     type: 'GET',
                     success: function (data) {
-                        const margenGanancia = parseFloat(data.margen_ganancia_total.replace(',',
-                            ''));
+                        console.log(data);
+
+                        // Accede directamente a la propiedad margen_ganancia_total
+                        const margenGanancia = parseFloat(data.margen_ganancia_total);
 
                         if (!isNaN(margenGanancia)) {
                             const formatter = new Intl.NumberFormat('es-CO', {
@@ -160,6 +162,8 @@
                 });
             });
         </script>
+
+
 
 
 

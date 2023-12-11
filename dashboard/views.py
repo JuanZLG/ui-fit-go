@@ -155,21 +155,22 @@ def obtener_todos_los_productos(request):
         return JsonResponse({'error': str(e)})
     
 def obtener_margen_ganancia(request):
-    hoy = datetime.now().date()
+    try:
+        # Obtén el año y mes actuales
+        current_year = timezone.now().year
+        current_month = timezone.now().month
 
-    # Filtrar las ventas del mes actual
-    ventas = Ventas.objects.filter(fechareg__year=hoy.year, fechareg__month=hoy.month)
+        # Filtra las ventas activas del año y mes actuales y calcula el margen de ganancia total
+        margen_ganancia = Ventas.objects.filter(
+            fechareg__year=current_year,
+            fechareg__month=current_month,
+            estado=1  # Filtra solo ventas activas
+        ).aggregate(margen_ganancia_total=Sum('margenGanancia'))
 
-    # Calcular el margen de ganancia total para las ventas del mes actual
-    margen_ganancia_total = ventas.aggregate(Sum('margenGanancia'))['margenGanancia__sum'] or 0
+        return JsonResponse({'margen_ganancia_total': margen_ganancia['margen_ganancia_total']})
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
 
-    # Formatear el margen de ganancia total
-    margen_ganancia_total_formatted = "{:,.2f}".format(margen_ganancia_total)
+    
 
-    data = {
-        'margen_ganancia_total': margen_ganancia_total_formatted,
-    }
-    print(data)
-
-    return JsonResponse(data)
 
