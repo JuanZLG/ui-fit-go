@@ -8,6 +8,10 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.cont-recibo::-webkit-scrollbar {
+  display: block !important; 
+}
 .scrollbar-add-descrip::-webkit-scrollbar {
   display: block;
   }
@@ -118,7 +122,7 @@ body {
   left: 100%;
   display: block;
   transition: left 0.3s ease-in-out;
-  z-index: 2;
+  z-index: 888;
 }
 
 .main-menu.is-active {
@@ -370,6 +374,11 @@ body {
   border-radius: 1px;
 }
 
+.enlace-inactivo-pedido {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
 .text {
   color: #fff;
   height: 100%;
@@ -386,12 +395,12 @@ body {
   .desktop .product-card:hover .CartBtn {
     height: 40px;
   }
-
+/* 
 @media (min-width: 768px) {
   .desktop .CartBtn {
   }
 
-}
+} */
 
 @media (max-width: 767px) {
   .mobile .CartBtn {
@@ -818,7 +827,35 @@ input[type="number"] {
     padding: 10px;
 }
 
+.container-order {
+  width: 100% !important;
+  margin: 30px auto !important;
+}
+
+.cont-form-pedido form .row { 
+  margin: 10px 20px;
+}
+.cont-form-pedido form .row .form-group{ 
+  margin-top: 10px;
+}
+
+.cont-pasos-detalle {
+  display: none !important;
+}
+
 @media screen and (min-width: 768px) {
+
+  .cont-pasos-detalle{
+    width: 90%; 
+    margin: auto !important;
+    display: flex !important;
+  }
+  .cont-form-pedido { 
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 20px;
+  }
+  
   .desktop {
     display: block;
   }
@@ -939,6 +976,32 @@ input[type="number"] {
 
 }
 
+.btn-inhabilitar-pasos {
+  pointer-events: none;
+  opacity: 0.8;
+  
+}
+
+.paso-detalle-pedido,
+.paso-formulario-datos,
+.paso-confirmacion-pedido  {
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.paso-detalle-pedido span,
+.paso-formulario-datos span,
+.paso-confirmacion-pedido span {
+    background-color: #bd140e;
+    color: #fff;
+    font-weight: bold;
+    padding: 6px 15px;
+}
 
 @media (min-width: 992px) {
   .catalog-select {

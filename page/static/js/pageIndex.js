@@ -99,19 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Evento de clic para la versión de escritorio
-  // document.querySelectorAll('.desktop .view-options .list').forEach(function (element) {
-  //   element.addEventListener('click', function (e) {
-  //     toggleView('list', '#product-container-desk');
-  //   });
-  // });
-
-  // document.querySelectorAll('.desktop .view-options .grid').forEach(function (element) {
-  //   element.addEventListener('click', function (e) {
-  //     toggleView('grid', '#product-container-desk');
-  //   });
-  // });
-
 
   // Opciones SubMenu ----------------------- 
 
