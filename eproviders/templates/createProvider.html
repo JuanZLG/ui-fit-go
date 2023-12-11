@@ -35,7 +35,7 @@
                     <div class="col-md-7 mb-3">
                         <label for="nombre_proveedor">Nombre del Proveedor *</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
-                            placeholder="Nombre">
+                            placeholder="Nombre" maxlength="50">
                         <span class="error-message" id="nombre_proveedor-error"></span>
                     </div>
                     <div class="col-md-5 mb-3">
@@ -103,7 +103,7 @@
                 mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
                 camposLlenos = false;
             }
-            if (!nombreValue) {
+            if (!direccionValue) {
                 mostrarError('#direccion', 'Este campo es obligatorio.');
                 camposLlenos = false;
             }
@@ -246,8 +246,6 @@
                 }
             });
         }
-
-
     });
 </script>
 

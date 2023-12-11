@@ -60,6 +60,18 @@
 </section>
 
 <section class="product-table-section mt-4" id="product-table-section">
+    <div class="loading">
+        <div class="dot-spinner">
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+        </div>
+    </div>
     <label class="producto-label">Lista de Productos *</label></br>
     <span id="tipo-pedido-frase">Aquí se listarán los productos seleccionados para la venta</span>
     <table class="table" id="tabla-ventas">
@@ -126,7 +138,7 @@
             });
             return pedidos.map((pedido, index) => {
                 const isDisabled = pedidosSelect[pedido.id_pedido] === 'disable';
-                const tieneProductoSinStock = pedido.detalles.some(detalle => detalle.cantidad_stock === 0);
+                const tieneProductoSinStock = pedido.detalles.some(detalle => detalle.cantidad_stock <= 0);
                 const esPedidoEnProceso = pedido.estado === "en proceso";
                 const estado_producto = pedido.detalles.some(detalle => detalle.estado_producto === 0);
                 return `
@@ -134,7 +146,6 @@
             <td>
                 <input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}"
                     ${pedido.estado === "cancelado" || pedido.estado === "confirmado" || isDisabled ? "disabled" : ""}
-                    ${isDisabled ? 'style="background: green !important;"' : ''} 
                     ${isDisabled ? 'checked' : ''}
                     ${pedido.estado === "cancelado" || pedido.estado === "confirmado" || tieneProductoSinStock || estado_producto ? "disabled" : ""}>
                 </td>
@@ -536,10 +547,15 @@
             $("#cont-docu").empty()
             $("#cont-icon-pedido").empty()
             $("#nombreCliente").removeClass("is-valid")
+            let tipoPedido = $('.cliente-container').data('tipo-pedido');
 
             if (nombreCliente.length >= 3) {
                 $.ajax({
-                    url: "{% url 'buscar_cliente' %}?q=" + nombreCliente,
+                    url: "{% url 'buscar_cliente' %}",
+                    data: {
+                        nombreCliente:nombreCliente,
+                        tipoPedido:tipoPedido
+                    },
                     type: "GET",
                     success: function (data) {
                         listadoClientes.empty();
@@ -600,6 +616,7 @@
                 $("#cont-icon-pedido").html(iconoCarrito)
 
                 if (tipoPedido === "con pedido" && pedidos && pedidos.length > 0) {
+                    $('#nombreCliente').prop('disabled', true);
                     ClientesConPedidos(documento, pedidos);
                 }
             }
@@ -820,7 +837,9 @@
                                 productoExistente = true;
                                 let cantidadExistente = parseInt($(this).find(".cantidad-fila").val(), 10);
                                 cantidad += cantidadExistente;
-                                $(this).find(".cantidad-fila").val(cantidad);
+                                let inputCantidad = $(this).find(".cantidad-fila");
+                                inputCantidad.val(cantidad);
+                                inputCantidad.trigger('input');
                             }
                         });
 
@@ -842,7 +861,6 @@
                 });
             }
         });
-
 
         $(document).on("click", ".eliminar-fila", function () {
             $(this).closest("tr.producto-row").remove();
@@ -1088,7 +1106,15 @@
             documentoCliente: documentoCliente,
             productos: productos
         };
+        
+        $(document).ajaxStart(function () {
+            $(".loading").addClass("show");
+        });
 
+        $(document).ajaxStop(function () {
+            $(".loading").removeClass("show");
+        });
+        
         $.ajax({
             type: "POST",
             url: "{% url 'crear_venta' %}",

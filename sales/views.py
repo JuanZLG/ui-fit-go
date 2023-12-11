@@ -246,20 +246,32 @@ def buscar_pedidos(cliente):
         })
     return pedidos_con_detalles
     
-    
+
 def buscar_cliente(request):
-    nombre_cliente = request.GET.get("q", "")
+    nombre_cliente = request.GET.get("nombreCliente")
+    tipoPedido = request.GET.get("tipoPedido")
     palabras_clave = nombre_cliente.split()
     clientes_encontrados = Clientes.objects.all()
-
+    
     for palabra_clave in palabras_clave:
         clientes_encontrados = clientes_encontrados.filter(
             Q(nombres__icontains=palabra_clave) | Q(apellidos__icontains=palabra_clave)
         )
+    
+    if tipoPedido == "con pedido":
+        clientes_con_pedido = clientes_encontrados.filter(
+            pedidos__estado="en proceso"
+        ).distinct()
+        clientes_encontrados = clientes_con_pedido
+    elif tipoPedido == "sin pedido":
+        clientes_sin_pedido = clientes_encontrados.filter(
+            pedidos__isnull=True
+        ).distinct()
+        clientes_encontrados = clientes_sin_pedido
 
     resultados = []
     for cliente in clientes_encontrados:
-        pedidos_cliente = buscar_pedidos(cliente)
+        pedidos_cliente = buscar_pedidos(cliente) if tipoPedido == "con pedido" else []
         resultados.append({
             "documento": cliente.documento,
             "nombre_cliente": f"{cliente.nombres} {cliente.apellidos}",
@@ -268,7 +280,6 @@ def buscar_cliente(request):
         })
 
     return JsonResponse({"resultados": resultados})
-
 
 
 def cambiarEstado(request):

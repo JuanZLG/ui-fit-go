@@ -16,10 +16,27 @@
             <form id="proveedor-form" method="post">
                 {% csrf_token %}
                 <div class="form-row">
+                    <div class="col-md-4 mb-3" style="display: flex; flex-direction: column;">
+                        <label>Tipo de Documento</label>
+                        <select id="tipoIdentificacion" class="select-tipo" name="tipoIdentificacion">
+                            <option value="">Seleccionar tipo</option>
+                            <option value="DOC" {% if proveedor.tipo_documento == "DOC" %}selected{% endif %}>Documento</option>
+                            <option value="NIT" {% if proveedor.tipo_documento == "NIT" %}selected{% endif %}>NIT</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label>Número de identificación</label>
+                        <input type="text" class="form-control" id="identificacion" name="identificacion"
+                            placeholder="Documento o NIT" value="{{proveedor.numero_documento_nit}}">
+                        <span class="error-message" id="identificacion-error"></span>
+                    </div>
+                </div>
+                <div class="form-row">
                     <div class="col-md-6 mb-3">
                         <label for="#">Nombre del Proveedor *</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor"
-                            placeholder="Nombre" data-id-prov="{{ proveedor.id_proveedor}}"  value="{{proveedor.nombre_proveedor}}">
+                        placeholder="Nombre" data-id-prov="{{ proveedor.id_proveedor}}"
+                        value="{{proveedor.nombre_proveedor}}" maxlength="50">
                         <span class="error-message" id="nombre_proveedor-error"></span>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -37,26 +54,10 @@
                         <span class="error-message" id="correo-error"></span>
                     </div>
                     <div class="col-md-5 mb-3">
-                        <label for="#">Dirección</label>
+                        <label for="#">Dirección *</label>
                         <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección"
                             value="{{proveedor.direccion}}">
                         <span class="error-message" id="direccion-error"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3" style="display: flex; flex-direction: column;">
-                        <label>Tipo de Documento</label>
-                        <select id="tipoIdentificacion" class="select-tipo" name="tipoIdentificacion">
-                            <option value="">Seleccionar tipo</option>
-                            <option value="DOC" {% if proveedor.tipo_documento == "DOC" %}selected{% endif %}>Documento</option>
-                            <option value="NIT" {% if proveedor.tipo_documento == "NIT" %}selected{% endif %}>NIT</option>
-                        </select>
-                    </div>
-                    <div class="col-md-8 mb-3">
-                        <label>Número de identificación</label>
-                        <input type="text" class="form-control" id="identificacion" name="identificacion"
-                            placeholder="Documento o NIT" value="{{proveedor.numero_documento_nit}}">
-                        <span class="error-message" id="identificacion-error"></span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -97,9 +98,14 @@
             const correoValue = $('#correo').val();
             const tipoIdentificacionValue = $('#tipoIdentificacion').val(); // Obtener valor del select
             const identificacionValue = $('#identificacion').val(); // Obtener valor del input identificacion
+            const direccionValue = $('#direccion').val();
 
             if (!nombreValue) {
                 mostrarError('#nombre_proveedor', 'Este campo es obligatorio.');
+                camposLlenos = false;
+            }
+            if (!direccionValue) {
+                mostrarError('#direccion', 'Este campo es obligatorio.');
                 camposLlenos = false;
             }
             if (!telefonoValue) {
@@ -117,20 +123,30 @@
                 camposLlenos = false;
             }
 
-            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
-                mostrarError('#identificacion', 'Debe ingresar una identificación.');
+
+            if (tipoIdentificacionValue !== '' && identificacionValue === '' || tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
+                mostrarError('#identificacion', 'Debe ingresar una identificación válida.');
                 camposLlenos = false;
             } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
-                mostrarError('#identificacion', 'Debe seleeccionar el tipo de identificación.');
+                mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
                 camposLlenos = false;
             } else {
-                $("#identificacion").removeClass("is-invalid")
-                $("#identificacion-error").text("")
+                if (tipoIdentificacionValue === 'NIT' && !/^\d{3}\.\d{3}\.\d{3}-\d$/.test(identificacionValue)) {
+                    mostrarError('#identificacion', 'El NIT debe tener el formato 123.456.789-0');
+                    camposLlenos = false;
+                } else if (tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
+                    mostrarError('#identificacion', 'El Documento debe tener entre 8 y 10 dígitos.');
+                    camposLlenos = false;
+                } else {
+                    $("#identificacion").removeClass("is-invalid")
+                    $("#identificacion-error").text("")
+                }
             }
-
             return camposLlenos;
+
         }
-        $('#nombre_proveedor, #telefono, #correo, #identificacion').on('input', function () {
+
+        $('#nombre_proveedor, #telefono, #correo, #direccion').on('input', function () {
             const campo = $(this);
             const campoValue = campo.val();
 
@@ -138,8 +154,35 @@
                 campo.removeClass('is-invalid');
                 $(`#${campo.attr('id')}-error`).text('');
             }
+
+        });
+        $('#tipoIdentificacion').change(function () {
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val();
+            const identificacionValue = $('#identificacion').val();
+
+            if (tipoIdentificacionValue !== '' && identificacionValue === '') {
+                mostrarError('#identificacion', 'Debe ingresar una identificación válida.');
+            } else if (tipoIdentificacionValue === '' && identificacionValue !== '') {
+                mostrarError('#identificacion', 'Debe seleccionar el tipo de identificación.');
+            } else {
+                $("#identificacion").removeClass("is-invalid")
+                $("#identificacion-error").text("")
+            }
         });
 
+        $('#identificacion').on('input', function () {
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val();
+            const identificacionValue = $('#identificacion').val();
+
+            if (tipoIdentificacionValue === 'NIT' && !/^\d{3}\.\d{3}\.\d{3}-\d$/.test(identificacionValue)) {
+                mostrarError('#identificacion', 'El NIT debe tener el formato 123.456.789-0');
+            } else if (tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
+                mostrarError('#identificacion', 'El Documento debe tener entre 8 y 10 dígitos.');
+            } else {
+                $("#identificacion").removeClass("is-invalid")
+                $("#identificacion-error").text("")
+            }
+        });
 
 
         function validarFormatoCorreo(correo) {
@@ -171,6 +214,7 @@
                 });
             });
         }
+
         $('#nombre_proveedor').on('input', async function () {
             const nombre = $(this).val();
             const id = $(this).data("id-prov");
@@ -178,19 +222,21 @@
         });
 
 
-        $('#proveedor-form').submit(function (event) {
+        $('#proveedor-form').submit(async function (event) {
             event.preventDefault();
-            let errors = false;
 
-            $('.is-invalid').each(function () {
-                errors = true;
-            });
+            if (!(await validarCamposObligatorios())) {
+                return;
+            } else {
+                enviarDatosProveedor();
+            }
+        });
 
-            if (!errors) {
+        function enviarDatosProveedor() {
                 $.ajax({
                     type: 'POST',
                     url: "{% url 'editarProveedor' proveedor.id_proveedor %}",
-                    data: $(this).serialize(),
+                    data: $('#proveedor-form').serialize(),
                     success: function (response) {
                         if (response.success) {
                             Swal.fire({
@@ -203,11 +249,10 @@
                             setTimeout(function () {
                                 window.location.href = "{% url 'proveedores' %}";
                             }, 2000); 
-                        }
                     }
-                });
-            }
-        });
+                }
+            });
+        }
     });
 </script>
 

@@ -70,14 +70,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="row info-client">
-            <div class="cont-form-pedido card shadow col-lg-7 col-md-7 me-3">
+        <div class="row info-client" >
+            <div class="cont-form-pedido card shadow col-lg-7 col-md-7 me-3" style="position: relative;">
+                <div class="loading">
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>
+                </div>
                 <form class="form" id="cliente-form" method="post">
                     <div id="show-avis"></div>
                     {% csrf_token %}
-                    <!-- <svg viewBox="25 25 50 50" id="loading">
-                        <circle r="20" cy="50" cx="50"></circle>
-                    </svg> -->
                     <div class="form-row row">
                         <div class="form-group col-md-12">
                             <label for="documento">Documento <span class="text-danger">*</span></label>
@@ -171,50 +180,6 @@
 </div>
 
 <style>
-    #loading svg {
-        z-index: 999;
-        position: absolute;
-        top: 40%;
-        left: 40%;
-        margin: auto;
-        width: 3.25em;
-        transform-origin: center;
-        animation: rotate4 2s linear infinite;
-    }
-
-    #loading circle {
-        fill: none;
-        stroke: rgb(128, 128, 255);
-        stroke-width: 3;
-        stroke-dasharray: 1, 200;
-        stroke-dashoffset: 0;
-        stroke-linecap: round;
-        animation: dash4 1.5s ease-in-out infinite;
-    }
-
-    @keyframes rotate4 {
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    @keyframes dash4 {
-        0% {
-            stroke-dasharray: 1, 200;
-            stroke-dashoffset: 0;
-        }
-
-        50% {
-            stroke-dasharray: 90, 200;
-            stroke-dashoffset: -35px;
-        }
-
-        100% {
-            stroke-dashoffset: -125px;
-        }
-    }
-</style>
-<style>
     .form-row {
         margin-top: 10px !important;
     }
@@ -229,7 +194,6 @@
 <script>
 
     $(document).ready(function () {
-
         cargarProductos()
 
         function cargarProductos() {
@@ -361,8 +325,6 @@
     });
 
     $(document).ready(function () {
-        $("#loading").hide();
-
         $('.info-client').hide();
         actualizarBoton();
     });
@@ -397,6 +359,14 @@
             formData.append('carrito', carrito);
         }
 
+        $(document).ajaxStart(function () {
+            $(".loading").addClass("show");
+        });
+
+        $(document).ajaxStop(function () {
+            $(".loading").removeClass("show");
+        });
+        
         $.ajax({
             url: "{% url 'pageOrder' %}",
             type: 'POST',
@@ -525,14 +495,6 @@
     }
 
     function obtenerCliente(documento) {
-        $(document).ajaxStart(function () {
-            $("#loading").show();
-        });
-
-        $(document).ajaxStop(function () {
-            $("#loading").hide();
-        });
-
         $.ajax({
             url: "{% url 'obtener_cliente' %}",
             type: 'GET',
