@@ -18,6 +18,11 @@ def Home(request):
     ventas = Ventas.objects.all()
     return render(request, "salesHome.html", {"ventas": ventas})
 
+def formatear_precios_email(valor):
+    valor = round(valor, 2)
+    precio_formateado = '${:,.2f}'.format(valor)
+    return precio_formateado
+
 @csrf_exempt
 @jwt_cookie_required
 def crear_venta(request):
@@ -32,10 +37,18 @@ def crear_venta(request):
             productos = data.get('productos', [])
             
             cliente = Clientes.objects.filter(documento=documento).first()
-            venta = Ventas.objects.create(id_cliente=cliente, totalVenta=totalVenta, descuentoVenta=descuentoVenta, totalVentaDescuento=totalVentaDescuento, margenGanancia= margenGananciaVenta)
             if cliente is None:
                 return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=400)
-            pedido = None
+            
+            venta = Ventas.objects.create(
+                id_cliente=cliente,
+                totalVenta=totalVenta,
+                descuentoVenta=descuentoVenta,
+                totalVentaDescuento=totalVentaDescuento,
+                margenGanancia=margenGananciaVenta
+            )
+
+            detalles_venta = []
             for idProducto, producto_datos in productos.items():
                 idPedido = producto_datos["idPedido"]
                 cantidad_vendida = producto_datos['cantidad']
@@ -45,24 +58,8 @@ def crear_venta(request):
                 totalProductoDescuento = producto_datos['totalProductoDescuento']
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
-                if isinstance(idPedido, int):
-                    pedido = Pedidos.objects.get(id_pedido=idPedido)
-                    pedido.id_venta = venta
-                    pedido.estado = "confirmado"
-                    pedido.total_pedido = totalVenta
-                    pedido.save()
-
-                if pedido:
-                    detalles_pedido = DetallePedido.objects.filter(id_pedido=pedido)
-
-                    for detalle in detalles_pedido:
-                        if detalle.id_producto.id_producto == int(idProducto):
-                            detalle.precio_uni = precioVenta
-                            detalle.precio_tot = totalProducto
-                            detalle.save()
-
+                
                 producto = Productos.objects.get(id_producto=idProducto)
-
                 if producto:
                     producto.cantidad -= cantidad_vendida
                     producto.save()
@@ -79,7 +76,24 @@ def crear_venta(request):
                     precio_tot=totalProducto,
                 )
 
-            pedido_email_confirmacion(venta, cliente.correo)
+                precio_venta_formateado = formatear_precios_email(precioVenta)
+                total_producto_formateado = formatear_precios_email(totalProducto)
+
+                detalles_venta.append({
+                    'nombre_producto': producto.nombre_producto,
+                    'url': producto.iProductImg.decode('utf8'),
+                    'cantidad': producto.cantidad,
+                    'precio_venta': precio_venta_formateado,
+                    'precio_tot': total_producto_formateado,
+                    'descuentoProducto':descuento,
+                })
+
+            # Formatear el precio total de la venta
+            total_venta_formateado = formatear_precios_email(totalVenta)
+
+            # Llamar a la función de confirmación de pedido por email
+            pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
+
             response_data = {'success': True}
             return JsonResponse(response_data)
         except json.JSONDecodeError as e:
@@ -92,11 +106,11 @@ def crear_venta(request):
 
 from django.template.loader import get_template
 
-def pedido_email_confirmacion(venta, email):
+def pedido_email_confirmacion(venta, email, detalles_venta, total_venta_formateado):
     load_dotenv()
     remitente = os.getenv("USER")
     destinatario = email
-    asunto = "Recibo"
+    asunto = "Remanente de compra"
 
     msg = MIMEMultipart()
     msg["Subject"] = asunto
@@ -104,7 +118,11 @@ def pedido_email_confirmacion(venta, email):
     msg["To"] = destinatario
 
     template = get_template("emailConfirmacion.html")
-    context = {'venta': venta}
+    context = {
+        'venta': venta,
+        'detalles_venta': detalles_venta,
+        'total_venta_formateado': total_venta_formateado
+    }
     
     html = template.render(context)
 

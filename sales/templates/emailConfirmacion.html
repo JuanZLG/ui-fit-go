@@ -17,9 +17,18 @@
             margin: 0;
             padding: 0;
             background-color: #000;
+            color: #fff !important;
             -webkit-text-size-adjust: none;
             text-size-adjust: none;
             font-family: 'Roboto Slab', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+        }
+       
+        .content {
+            background-color: #000;
+            text-align: center;
+            width: 650px;
+            margin: 0 auto;
+            padding-bottom: 20px;
         }
 
         .logo {
@@ -45,69 +54,38 @@
             line-height: 120%;
         }
 
-        .content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
         .header {
-            background-color: #f4f4f4;
+            background-color: #000 !important;
             padding: 20px;
             text-align: center;
         }
+
+        span, strong, p {
+            color: #f3f6fe !important;
+        }
+
 
         .details {
             padding: 20px;
         }
 
         .product {
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .total {
-            border-top: 1px solid #ddd;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* 
-        
-
-        
-        .content {
-            background-color: #000;
-            text-align: center;
-            width: 650px;
+            width: 60%;
             margin: 0 auto;
-            padding-bottom: 20px;
+            padding: 10px;
+            display: grid;
+            justify-content: 20% 80%;
         }
-        
-        .info {
-            padding: 20px;
-        }
-        
-        .info p {
-            color: #f3f6fe;
-            font-size: 20px;
-            line-height: 120%;
-        }
-        
-        .content p {
-            color: #fff;
-            font-size: 14px;
-            line-height: 120%;
-            text-align: center;
-        }
-        .content p:first-child {
-            font-size: 22px;
-        } */
+
     </style>
 
-
+<script>
+        function formatearPrecios(valor) {
+            valor = Math.round(valor * 100) / 100;
+            let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return '$' + precioFormateado;
+        }
+</script>
 
 <body>
     <div class="content">
@@ -126,21 +104,36 @@
                 ¡Esperamos que disfrutes tus artículos tanto como nosotros disfrutamos preparándolos para ti!
             </p>
         </div>
-        <div class="products">
-            {% for detalle in venta.detalleventa_set.all %}
-            <div class="product">
-                <div class="product-info">
-                    <p>{{ detalle.id_producto.nombre_producto }} x {{ detalle.cantidad }} - Precio Unitario: ${{ detalle.precio_venta }} - Total: ${{ detalle.precio_tot }}</p>
-                </div>
-                <div class="discount-info">
-                    <p>Descuento: {% if detalle.descuentoProducto != 'No aplica' %}${{ detalle.descuentoProducto }}{% else %}No aplica{% endif %}</p>
-                </div>
-            </div>
-            {% endfor %}
+        <div class="p-3">
+            <table class="table product">
+                <tbody>
+                    {% for detalle in detalles_venta %}
+                    <tr>
+                        <td style="width: 20%;">
+                            <img src="/media/{{ detalle.url }}" alt="img" class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                        </td>
+                        <td style="width: 80%;">
+                            <div class="d-flex flex-column gap-1">
+                                <span class="m-2"><strong>{{ detalle.nombre_producto }}</strong><span class="text-danger">x</span> {{ detalle.cantidad }}</span>
+                                <span class="m-2"><strong>Precio Unitario:</strong> <span class="precio_uni">{{ detalle.precio_venta }}</span></span>
+                                <span class="m-2"><strong>Descuento:</strong> <span>{% if detalle.descuentoProducto != '0' %}%{{ detalle.descuentoProducto }}{% else %}No aplica{% endif %}</span></span>
+                                <span class="m-2"><strong>Total:</strong> <span class="text-danger precio_tot">{{ detalle.precio_tot }}</span></span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <div class="total">
-            <p>Total de la Compra: ${{ venta.totalVenta }}</p>
-            <p>Descuento de Compra: {% if venta.descuentoVenta != 'No aplica' %}${{ venta.descuentoVenta }}{% else %}No aplica{% endif %}</p>
+        <div class="d-flex gap-1 flex-column">
+            <div class="d-flex justify-content-between">
+                <strong>Descuento de Compra:</strong>
+                <span>{% if venta.descuentoVenta != '0' %}%{{ venta.descuentoVenta }}{% else %}No aplica{% endif %}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <strong>Total de la Compra:</strong>
+                <span class="total_compra">${{ total_venta_formateado }}</span>
+            </div>
         </div>
         <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.</p>
     </div>

@@ -20,6 +20,7 @@
             <table class="table table-bordered  mx-auto text-center" id="dataTable" width="100%" cellspacing="3">
                 <thead class="theads">
                     <tr>
+                        <th>ID</th>
                         <th>Fecha de Registro</th>
                         <th>Identificación</th>
                         <th>Cliente</th>
@@ -30,6 +31,7 @@
                 <tbody>
                     {% for pedido in pedidos %}
                     <tr>
+                        <td>{{ pedido.id_pedido }}</td>
                         <td>{{ pedido.fecha_pedido|date:"d/m/y" }}</td>
                         <td>{{ pedido.id_cliente.documento }}</td>
                         <td class="d-flex">{{ pedido.id_cliente.nombres }} {{ pedido.id_cliente.apellidos }}</td>
