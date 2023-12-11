@@ -309,12 +309,18 @@
         $("#btnAgregar").click(function () {
             if (productoSeleccionado) {
                 if (productoExiste(productoSeleccionado.id_producto)) {
-                    alert('El producto ya existe en la lista de productos');
-                    $("#buscarProducto").val("")
-                    $("#cantidad-ingresada").val("1")
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'El producto ya existe en la lista de productos',
+                        confirmButtonColor: '#0975B7'
+                    });
+                    $("#buscarProducto").val("");
+                    $("#cantidad-ingresada").val("1");
                     $("#buscarProducto").val("").removeClass("is-valid");
                     return;
                 }
+
                 $("#buscarProducto").val("").removeClass("is-valid");
                 $(".search-icon").show()
                 productoSeleccionado.cantidadSeleccionada = parseInt($(
