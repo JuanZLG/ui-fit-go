@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css"><!--<![endif]-->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+            font-family: 'Roboto Slab', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+        }
+
+        .logo {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            line-height: 120%;
+        }
+
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .details {
+            padding: 20px;
+        }
+
+        .product {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .total {
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 
+        
+
+        
+        .content {
+            background-color: #000;
+            text-align: center;
+            width: 650px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+        
+        .info {
+            padding: 20px;
+        }
+        
+        .info p {
+            color: #f3f6fe;
+            font-size: 20px;
+            line-height: 120%;
+        }
+        
+        .content p {
+            color: #fff;
+            font-size: 14px;
+            line-height: 120%;
+            text-align: center;
+        }
+        .content p:first-child {
+            font-size: 22px;
+        } */
+    </style>
+
+
+
+<body>
+    <div class="content">
+        <div class="container">
+            <div class="logo-container">
+                <img src="https://8839072152.imgdist.com/public/users/Integrators/BeeProAgency/1078667_1063969/gorille.png"
+                    alt="BRUTALITY" class="logo">
+            </div>
+            <div class="header">
+                <h1>¡Hola, {{ venta.id_cliente.nombres }} {{ venta.id_cliente.apellidos }}!</h1>
+            </div>
+        </div>
+        <div class="info">
+            <p>
+                Te informamos que tu compra ya está en camino. Chequea el recibo adjunto para ver los detalles.
+                ¡Esperamos que disfrutes tus artículos tanto como nosotros disfrutamos preparándolos para ti!
+            </p>
+        </div>
+        <div class="products">
+            {% for detalle in venta.detalleventa_set.all %}
+            <div class="product">
+                <div class="product-info">
+                    <p>{{ detalle.id_producto.nombre_producto }} x {{ detalle.cantidad }} - Precio Unitario: ${{ detalle.precio_venta }} - Total: ${{ detalle.precio_tot }}</p>
+                </div>
+                <div class="discount-info">
+                    <p>Descuento: {% if detalle.descuentoProducto != 'No aplica' %}${{ detalle.descuentoProducto }}{% else %}No aplica{% endif %}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="total">
+            <p>Total de la Compra: ${{ venta.totalVenta }}</p>
+            <p>Descuento de Compra: {% if venta.descuentoVenta != 'No aplica' %}${{ venta.descuentoVenta }}{% else %}No aplica{% endif %}</p>
+        </div>
+        <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.</p>
+    </div>
+    
+
+</body>
+
+</html>

@@ -22,7 +22,7 @@
         <p id="title-search"><strong>MEJORES VENTAS</strong></p>
         <ul class="list-group d-flex gap-4" id="toggle-main-search-desk"></ul>
     </div>
-    <section class="col-xl-10 col-md-9" >
+    <section class="col-xl-10 col-md-9">
         <div class="cont-pasos-detalle d-flex justify-content-between my-2 shadow">
             <div class="paso-detalle-pedido">
                 <span>1</span>
@@ -37,30 +37,40 @@
                 <strong>Confirmación de tu pedido</strong>
             </div>
         </div>
-        <div id="contenedor-informacion" class="mt-4"></div>
-        <div class="cont-table-order" id="table-order"
-            style="width: 100% !important; height: auto;max-height: 500px; overflow-y: auto;">
-            <table class="table table-hover table-detalle-pedido desktop" style="width: 100% !important; margin: auto; ">
-                <thead class="text-center">
-                    <tr style="background-color: #ccc;">
-                        <th>Producto</th>
-                        <th>Precio (Unidad)</th>
-                        <th>Cantidad</th>
-                        <th>Total del Producto</th>
-                    </tr>
-                </thead>
-                <tbody id="producto-tbody-desk">
-                </tbody>
-            </table>
+        <div style="width: 90%; margin: auto; padding: 10px;">
+            <div class="text-end mobile">
+                <a href="/Brutality/"
+                    style="background-color: #c00808; text-decoration: none; width: 100px; border-radius: 5px; color: #fff; padding: 8px 10px;"><i
+                        class="fa fa-arrow-left me-2" aria-hidden="true"></i>Volver al inicio</a>
+            </div>
+            <div id="contenedor-informacion" class="mt-4"></div>
+            <div class="cont-table-order table-order"
+                style="height: auto;max-height: 500px; overflow-y: auto; display: flex; align-items: center; justify-content: center;">
+                <div>
+                    <table class="table table-hover table-detalle-pedido desktop" style="width: 100% !important;">
+                        <thead class="text-center">
+                            <tr style="background-color: #ccc;">
+                                <th>Producto</th>
+                                <th>Precio (Unidad)</th>
+                                <th>Cantidad</th>
+                                <th>Total del Producto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="producto-tbody-desk">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="table-container mobile" style="display: flex; height: auto;max-height: 500px; overflow-y: auto;">
+        <div class="table-container mobile table-order"
+            style="display: flex; height: auto;max-height: 500px; overflow-y: auto;">
             <table class="table table-hover table-detalle-pedido mobile" style="font-size: 15px !important;">
                 <tbody id="producto-tbody-mobile" class="d-flex gap-2 flex-column align-items-center">
-                    
+
                 </tbody>
             </table>
         </div>
-        <div id="info-client" class="row">
+        <div class="row info-client">
             <div class="cont-form-pedido card shadow col-lg-7 col-md-7 me-3">
                 <form class="form" id="cliente-form" method="post">
                     <div id="show-avis"></div>
@@ -141,11 +151,11 @@
             </div>
             <div class="col-lg-4 col-md-4 card shadow col-md-3 cont-recibo"
                 style="height: 500px; overflow-y: auto; display: flex; flex-direction: column;">
-                <div style="flex: 1; overflow-y: auto;">
+                <div style="flex: 1; overflow-y: auto;" class="cont-recibo-1">
                     <h4 class="text-center my-3"><strong>Resumen pedido</strong></h4>
                     <div id="recibo-pedido"></div>
                 </div>
-                <div style="position: sticky; bottom: 0; background: white; padding-top: 10px;">
+                <div style="position: sticky; bottom: 0; background: #fff; padding-top: 10px;" class="cont-recibo-2">
                     <div class="d-flex justify-content-between gap-1">
                         <strong>TOTAL: </strong>
                         <strong id="total-recibo"></strong>
@@ -321,19 +331,19 @@
         pasoFormularioDatos.css('background-color', '');
         pasoConfirmacionPedido.css('background-color', '');
 
-        if ($('#info-client').is(':visible')) {
+        if ($('.info-client').is(':visible')) {
             botonContinuar.text('Volver');
             $("#text-info-order").hide();
-            contenedorInformacion.html('<h3>Información de envío</h3><p>Completa los campos con tus datos personales para el envío de tu pedido.</p>');
+            contenedorInformacion.html('<h3><strong>Información de envío</strong></h3><p>Completa los campos con tus datos personales para el envío de tu pedido.</p>');
             pasoFormularioDatos.css('background-color', '#ccc');
-        } else if ($('#table-order').is(':visible')) {
+        } else if ($('.table-order').is(':visible')) {
             botonContinuar.text('Continuar');
             $("#text-info-order").show();
-            contenedorInformacion.html('<h3>Detalle de tu pedido</h3><p>Revisa con atención el detalle de tu pedido a continuación antes de proceder con el segundo paso.</p>');
+            contenedorInformacion.html('<h3><strong>Detalle de tu pedido</strong></h3><p>Revisa con atención el detalle de tu pedido a continuación antes de proceder con el segundo paso.</p>');
             pasoDetallePedido.css('background-color', '#ccc');
         }
 
-        if (Object.keys(carrito).length === 0 && $('#table-order').is(':visible')) {
+        if (Object.keys(carrito).length === 0 && $('.table-order').is(':visible')) {
             botonContinuar.addClass("btn-inhabilitar-pasos");
         } else {
             botonContinuar.removeClass("btn-inhabilitar-pasos");
@@ -345,15 +355,15 @@
 
     // Evento click para el botón continuar
     $('#continuar').on('click', function () {
-        $('#table-order').toggle();
-        $('#info-client').toggle();
+        $('.table-order').toggle();
+        $('.info-client').toggle();
         actualizarBoton();
     });
 
     $(document).ready(function () {
         $("#loading").hide();
 
-        $('#info-client').hide();
+        $('.info-client').hide();
         actualizarBoton();
     });
 
@@ -396,19 +406,20 @@
             success: function (response) {
                 Swal.fire({
                     html: `
-                        <div>
-                            <h5><strong>¡Pedido exitoso!</strong></h5>
-                            <p>Tu pedido ha sido recibido y está siendo procesado.</p>
-                            <p>Por favor, espera la confirmación por mensaje de correo electrónico.</p>
-                            <div class="col-auto text-center">
-                                <a href="/Brutality/" class="btn btn-success" style="text-decoration:none; padding:6px 15px;">Entendido</a>
-                            </div>
-                        </div>
-                    `,
+        <div class="swal2-center" style="text-align: center;">
+            <h5><strong>¡Pedido exitoso!</strong></h5>
+            <p>Tu pedido ha sido recibido y está siendo procesado.</p>
+            <p>Por favor, espera la confirmación por mensaje de correo electrónico.</p>
+            <a href="/Brutality/" class="btn btn-success" style="text-decoration:none; padding:6px 15px;">Entendido</a>
+        </div>
+    `,
                     showCloseButton: false,
                     showConfirmButton: false,
-                    width: '300px',
                     allowOutsideClick: false,
+                    heightAuto: false, 
+                    customClass: {
+                        popup: 'swal2-custom-popup'
+                    }
                 });
             },
         });
@@ -466,8 +477,6 @@
             spanRequerido.style.color = '#000';
         });
     });
-
-
 
 
     async function documentoExist(documento) {
@@ -596,6 +605,17 @@
 <style>
     .table thead tr th {
         border: none;
+    }
+
+    .swal2-custom-popup {
+        width: 50% !important;
+        height: auto !important;
+    }
+
+    @media (min-width: 800px) {
+        .swal2-custom-popup {
+            width: 30% !important;
+        }
     }
 </style>
 

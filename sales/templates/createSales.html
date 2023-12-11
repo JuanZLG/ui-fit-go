@@ -126,22 +126,40 @@
             });
             return pedidos.map((pedido, index) => {
                 const isDisabled = pedidosSelect[pedido.id_pedido] === 'disable';
+                const tieneProductoSinStock = pedido.detalles.some(detalle => detalle.cantidad_stock === 0);
+                const esPedidoEnProceso = pedido.estado === "en proceso";
+                const estado_producto = pedido.detalles.some(detalle => detalle.estado_producto === 0);
                 return `
         <tr class="pedido" style="text-align: center; vertical-align: middle; position: relative;">
             <td>
-                    <input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}"
-                        ${pedido.estado === "cancelado" || pedido.estado === "confirmado" || isDisabled ? "disabled" : ""}
-                        ${isDisabled ? 'style="color: green !important;"' : ''} 
-                        ${isDisabled ? 'checked' : ''}>
+                <input type="checkbox" class="pedido-checkbox" value="${pedido.id_pedido}"
+                    ${pedido.estado === "cancelado" || pedido.estado === "confirmado" || isDisabled ? "disabled" : ""}
+                    ${isDisabled ? 'style="background: green !important;"' : ''} 
+                    ${isDisabled ? 'checked' : ''}
+                    ${pedido.estado === "cancelado" || pedido.estado === "confirmado" || tieneProductoSinStock || estado_producto ? "disabled" : ""}>
                 </td>
-            <td>${pedido.fecha_pedido}</td>
+            <td class="position-relative">
+                ${pedido.fecha_pedido}
+                ${
+                    esPedidoEnProceso
+                        ? (estado_producto && tieneProductoSinStock
+                            ? '<span class="sin-stock">Tiene al menos un producto inhabilitado o sin stock</span>'
+                            : (estado_producto
+                                ? '<span class="sin-stock">Tiene al menos un producto inhabilitado</span>'
+                                : '') +
+                            (tieneProductoSinStock
+                                ? '<span class="sin-stock">Tiene al menos un producto sin stock</span>'
+                                : ''))
+                        : ''
+                }
+            </td>
             <td>${formatearPrecios(pedido.total_pedido)}</td>
             <td>
-                <button class="btn btn-secondary btn-detalle" data-index="${index}">
+                <button class="btn btn-secondary btn-detalle mb-2" data-index="${index}">
                     Detalle <i class="fas fa-chevron-down icono-detalle" data-index="${index}"></i>
                 </button>
             </td>
-            <td><span style="border-radius: 50%; width: 15px; height: 15px; display: block; position: absolute; top: 10px; right: 10px;" class="${pedido.estado === "cancelado" ? "inactive-status" : pedido.estado === "en proceso" ? "en_proceso_pedido" : "active-status"}" data-pedido-id="${pedido.id_pedido}"></span></td>
+            <td data-toggle="tooltip" data-placement="rigth" title="${pedido.estado === "cancelado" ? "Cancelado" : pedido.estado === "en proceso" ? "En proceso" : "Confirmado"}"><span style="border-radius: 50%; width: 15px; height: 15px; display: block; position: absolute; top: 10px; right: 10px;" class="${pedido.estado === "cancelado" ? "inactive-status" : pedido.estado === "en proceso" ? "en_proceso_pedido" : "active-status"}" data-pedido-id="${pedido.id_pedido}"></span></td>
         </tr>
 
         <tr class="fila-detalle detalle-${index}" style="display: none;">
@@ -167,7 +185,7 @@
                                     <td>${formatearPrecios(detalle.precio_uni)}</td>
                                     <td>${formatearPrecios(detalle.precio_tot)}</td>
                                     <td>
-                                        <a href="/admin/orders/Editar_pedido/${pedido.id_pedido}" class="btn btn-sm mr-2" style="${pedido.estado === "cancelado" || pedido.estado == 'confirmado' ? 'pointer-events:none;opacity:0.8;' : ""}"
+                                        <a href="/admin/orders/edit_order_home/${pedido.id_pedido}" class="btn btn-sm mr-2" style="${pedido.estado === "cancelado" || pedido.estado == 'confirmado' ? 'pointer-events:none;opacity:0.8;' : ""}"
                                             id="editbutton">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
@@ -228,6 +246,12 @@
             width: 'auto',
             maxWidth: '85%',
             didOpen: () => {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: 'hover',
+                    placement: 'top',
+                    delay: { "show": 0, "hide": 0 }
+                });
+
                 const seleccionarTodosCheckbox = document.getElementById('seleccionarTodos');
                 const checkboxes = document.querySelectorAll('.pedido-checkbox');
 
@@ -411,6 +435,7 @@
         }
     }
 
+
     $("#cont-icon-pedido").on("click", function () {
         if ($(this).find(".fa-truck").css("color") === "rgb(0, 128, 0)") {
             let documento = $("#documento").text();
@@ -439,6 +464,16 @@
             iconoActual.removeClass('fa-chevron-down').addClass('fa-chevron-up');
         }
     });
+
+    
+    function infoPedido() {
+            Swal.fire({
+                icon: "question",
+                text: "En esta área se listarán los pedidos elegidos para concretar la venta. Recuerde que cualquier modificación en referencias o cantidades debe efectuarse desde el módulo de pedidos. Además, tenga en cuenta que los ajustes de precios resultantes de descuentos aplicados se actualizarán en el pedido tras finalizar la venta, garantizando así la coherencia con los artículos vendidos.",
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#dc3545'
+            });
+        }
 
     $(document).ready(function () {
         localStorage.removeItem('pedidos-select');
@@ -469,22 +504,25 @@
             `,
             showCloseButton: false,
             showConfirmButton: false,
-            width: 'auto',
-            maxWidth: '85%',
+            width: '60%',
             allowOutsideClick: false,
+            
             didOpen: () => {
-                document.getElementById('cargarPedidosBtn').addEventListener('click', function () {
-                    document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'con pedido');
-                    Swal.close();
-                    $(".product-section").hide()
-                    $("#tipo-pedido-frase").text("Los productos listados a continuación corresponden al pedido actual.")
-                });
+                    document.getElementById('cargarPedidosBtn').addEventListener('click', function () {
+                        document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'con pedido');
+                        Swal.close();
+                        $(".product-section").hide();
+                        $("#tipo-pedido-frase").html(`
+                            <span>Aquí se listarán los pedidos seleccionados para la venta</span>
+                            <i class="fas fa-question-circle" onclick="infoPedido()"></i>
+                        `);
+                    });
 
-                document.getElementById('ventaSinPedidoBtn').addEventListener('click', function () {
-                    document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'sin pedido');
-                    Swal.close();
-                });
-            }
+                    document.getElementById('ventaSinPedidoBtn').addEventListener('click', function () {
+                        document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'sin pedido');
+                        Swal.close();
+                    });
+                }
         });
 
         let listadoClientes = $("#resultado-cliente");
@@ -514,14 +552,17 @@
                                 let estadoCliente = data.resultados[i].estado;
                                 let pedidos = data.resultados[i].pedidos;
                                 let tienePedidos = data.resultados[i].pedidos.length > 0;
-
+                                let tienePedidosEnProceso = false;
+                                if (tienePedidos) {
+                                    tienePedidosEnProceso = data.resultados[i].pedidos.some(pedido => pedido.estado === "en proceso");
+                                }
                                 let itemLista = `
                                 <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}" data-pedidos='${JSON.stringify(pedidos)}' >
                                     <div class="d-flex justify-content-between" style="width:100%;">
                                         <span id="nombreDato">${nomClienteDato}</span>
                                         <div>
                                             <span id="documentoDato">${documento}</span>
-                                            <i class="fas fa-truck mx-2" style="${tienePedidos ? "color:green;" : "color:#0000006e"}" data-toggle="tooltip" data-placement="right" title="Pedidos pendientes"></i>
+                                            <i class="fas fa-truck mx-2" style="${tienePedidosEnProceso ? "color:green;" : "color:#0000006e"}" data-toggle="tooltip" data-placement="right" title="Pedidos pendientes"></i>
                                         </div>
                                     </div>
                                     ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
@@ -546,6 +587,7 @@
                 let documento = $(this).find("#documentoDato").text();
                 let pedidos = JSON.parse($(this).attr('data-pedidos'));
                 let tienePedidos = pedidos.length > 0;
+                let tienePedidosEnProceso = pedidos.some(pedido => pedido.estado === "en proceso");
                 let tipoPedido = $('.cliente-container').data('tipo-pedido');
 
                 $("#error-docu").text("");
@@ -554,7 +596,7 @@
                 $("#nombreCliente").val(nombreApellido).addClass("is-valid");
                 listadoClientes.hide();
 
-                let iconoCarrito = `<i class="fas fa-truck" style="color:${tienePedidos ? "green" : "#0000006e"}"></i>`;
+                let iconoCarrito = `<i class="fas fa-truck" style="color:${tienePedidosEnProceso ? "green" : "#0000006e"}"></i>`;
                 $("#cont-icon-pedido").html(iconoCarrito)
 
                 if (tipoPedido === "con pedido" && pedidos && pedidos.length > 0) {
@@ -607,6 +649,7 @@
 
 
 <script>
+
     $(document).ready(function () {
         let listadoProductos = $("#resultado-producto");
         var productoSeleccionado
@@ -666,8 +709,9 @@
                 if ($(this).hasClass("inactivo-stock")) {
                     Swal.fire({
                         icon: "error",
-                        title: "Oops...",
-                        text: "Producto sin stock!"
+                        text: "Producto sin stock",
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#dc3545' 
                     });
                 } else {
                     listadoProductos.hide();
@@ -682,9 +726,9 @@
             } else {
                 Swal.fire({
                     icon: "error",
-                    title: "Oops...",
-                    confirmButtonColor: '#0975B7',
-                    text: "Producto inhabilitado!"
+                    confirmButtonColor: '#dc3545' ,
+                    confirmButtonText: 'Entendido',
+                    text: "Producto inhabilitado"
                 });
             }
         });
@@ -740,7 +784,19 @@
                 dataType: 'json',
                 success: function (data) {
                     if (data.supera_stock) {
-                        alert("La cantidad ingresada supera el stock disponible.");
+                        let difrencia_cant = cantidad - data.cantidad_disponible
+                        Swal.fire({
+                            icon: 'warning',
+                            html: `
+                            <div class="swal2-center" style="text-align: center;">
+                                <h5>La cantidad ingresada supera el stock disponible por ${difrencia_cant} productos</h5>
+                            </div>
+                            `,
+                            showCloseButton: false,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#dc3545',
+                            confirmButtonText: 'Entendido', 
+                        });
                         callback(false);
                     } else {
                         callback(true);

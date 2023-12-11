@@ -53,7 +53,6 @@ $(document).ready(function () {
             let total = Number(producto.precio.replace('$', '').replace(/,/g, '')) * producto.cantidad;
             let precioUni = Number(producto.precio.replace('$', '').replace(/,/g, ''));
 
-            // Estructura para versión de escritorio
             htmlDesk += `
             <tr class="producto-row" data-id-producto="${idProducto}">
                 <td class="p-2 ">
@@ -91,7 +90,6 @@ $(document).ready(function () {
             </tr>
             `;
 
-            // Estructura para versión móvil
             htmlMobile += `
             <tr class="producto-row" data-id-producto="${idProducto}" style="vertical-align: middle !important;text-align:center;">
                 <th>
@@ -111,7 +109,7 @@ $(document).ready(function () {
                             <li class="list-group-item mt-2">
                                 <span><strong class="mr-2">Sabor:</strong><span class="mx-2">${producto.sabor}</span></span>
                             </li>
-                            <li class="list-group-item mt-2 precio" style="vertical-align: middle !important;text-align:center;"><strong>Precio Unitario<strong>$${precioUni.toLocaleString()}</li>
+                            <li class="list-group-item mt-2 precio" style="vertical-align: middle !important;text-align:center;"><strong>Precio Unitario: <strong>$${precioUni.toLocaleString()}</li>
                         </ul>
                     </div>
                 </th>

@@ -41,12 +41,13 @@
                             </button>
                         </td>
                         <td class="cell-actions">
-                            <a href="{% url 'editarPedido' pedido.id_pedido %}"
+                            <a href="{% url 'editarPedidoHome' pedido.id_pedido %}"
                                 class="btn btn-sm mr-2 {% if pedido.estado == 'cancelado' or pedido.estado == 'confirmado' %}disabled-link{% endif %}"
-                                id="editbutton"><i class="fa-solid fa-pen-to-square"></i></a>
+                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                                title="Editar Pedido"></i></a>
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
                                 class="btn btn-sm btn-primary ml-2 detalle-pedido-button"
-                                data-pedido-id="{{ pedido.id_pedido }}">
+                                data-pedido-id="{{ pedido.id_pedido }}" >
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
@@ -78,7 +79,7 @@
                         html: `
                     <div class="modal-container">
                             <div class="modal-state ${pedido.estado === "cancelado" ? "canceladoSt" : pedido.estado === "en proceso" ? "enProcesoSt" : "confirmadoSt"}" data-pedido-id="${pedido.id_pedido}"></div>
-                                <h2>Información deL Pedido</h2>
+                                <h2>Información del Pedido</h2>
                                 <div class="flex">
                                     <span><strong class="me-2">Documento:</strong>${pedido.documento} </span>
                                     <span><strong class="me-2">Fecha de pedido:</strong>${pedido.fecha_pedido}</span>

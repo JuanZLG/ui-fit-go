@@ -265,6 +265,20 @@ input[type="number"] {
     max-height: 900px;
 }
 
+.precio-total {
+    display: block;
+}
+
+.sin-stock {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 13px;
+    color: #dc3545;
+    width: 300px;
+}
+
+
 .producto-cont-descuento {
     width: 100%;
     display: flex;

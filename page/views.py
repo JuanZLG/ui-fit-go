@@ -1,20 +1,35 @@
 from datetime import timezone
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import json
+import os
 import re
+import smtplib
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from dotenv import load_dotenv
 from .models import Productos, Marcas, Categorias, Pedidos, DetallePedido, Clientes, Departamentos, Municipios
 from django.db.models import Sum
 from django.db.models import Count
 
 def build_context(request, extra_context=None):
     context = {}
-    context["productos"] = Productos.objects.filter(estado=1, cantidad__gt=1).all()
-    context["marcas"] = Marcas.objects.annotate(num_productos=Count('productos')).filter(num_productos__gt=0)
-    context["categorias"] = Categorias.objects.annotate(num_productos=Count('productos')).filter(num_productos__gt=0)
+    context["productos"] = Productos.objects.filter(estado=1, cantidad__gt=0).all()
+    
+    context["marcas"] = Marcas.objects.filter(
+        productos__estado=1,
+        productos__cantidad__gt=0
+    ).distinct()
+    
+    context["categorias"] = Categorias.objects.filter(
+        productos__estado=1,
+        productos__cantidad__gt=0
+    ).distinct()
+    
     if extra_context:
         context.update(extra_context)
     return context
+
 
 def Home(request):
     contexto = build_context(request)
@@ -245,13 +260,41 @@ def ver_pedido(request):
             pedido.total_pedido = total_pedido
             pedido.save()
 
+            nombreCompletoCliente = cliente.nombres + " " + cliente.apellidos
+            correo = cliente.correo
+            pedido_email_proceso(nombreCompletoCliente, correo)
             return JsonResponse({'message': 'Datos guardados correctamente'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
     return render(request, 'pageOrder.html')
 
+from django.template.loader import get_template
 
+def pedido_email_proceso(user, email):
+    load_dotenv()
+    remitente = os.getenv("USER")
+    destinatario = email
+    asunto = "Confirmación de Pedido y Próximos Pasos"
+
+    msg = MIMEMultipart()
+    msg["Subject"] = asunto
+    msg["From"] = remitente
+    msg["To"] = destinatario
+
+    template = get_template("emailProceso.html")
+    context = {'user': user}
+    
+    html = template.render(context)
+
+    msg.attach(MIMEText(html, "html"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(remitente, os.getenv("PASS"))
+    
+    server.sendmail(remitente, destinatario, msg.as_string())
+    server.quit()
+    
 
 
 def document_exist(request):
