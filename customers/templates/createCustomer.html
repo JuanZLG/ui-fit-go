@@ -74,7 +74,7 @@
                 </div>
 
             <div class="text-center" style="margin-top: 10px;">
-                <button class="btn btn-primary" type="submit" id="submit-button" disabled>Guardar</button>
+                <button class="btn btn-primary" type="submit" id="submit-button" >Guardar</button>
             </div>
         </form>
     </div>
@@ -214,39 +214,49 @@
     }
 
     function validarDocumento() {
-        const documento = $('#iDocumento').val().replace(/\D/g, '');
+    const documentoInput = $('#iDocumento');
+    const documento = documentoInput.val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
 
-        if (documento.trim() === '') {
-            mostrarError($('#iDocumento'), 'Este campo es obligatorio.');
-            return;
-        }
-
-        const documentoError = /^\d{6,10}$/.test(documento) ? '' : 'Número de documento inválido.';
-
-        if (documentoError) {
-            mostrarError($('#iDocumento'), documentoError);
-        } else {
-            ocultarError($('#iDocumento'));
-            verificarExistenciaDocumento(documento);
-        }
+    if (documento.trim() === '') {
+        mostrarError(documentoInput, 'Este campo es obligatorio.');
+        return;
     }
 
-    function verificarExistenciaDocumento(documento) {
-        $.ajax({
-            type: 'GET',
-            url: "{% url 'validarDocumento' %}",
-            data: {
-                documento: documento
-            },
-            success: function (response) {
-                if (response.existe) {
-                    mostrarError($('#iDocumento'), 'Este cliente ya está registrado.');
-                } else {
-                    ocultarError($('#iDocumento'));
-                }
+    const documentoError = /^\d{6,10}$/.test(documento) ? '' : 'Número de documento inválido.';
+
+    if (documentoError) {
+        mostrarError(documentoInput, documentoError);
+    } else {
+        ocultarError(documentoInput);
+        verificarExistenciaDocumento(documento);
+    }
+}
+
+function verificarExistenciaDocumento(documento) {
+    $.ajax({
+        type: 'GET',
+        url: "{% url 'validarDocumento' %}",
+        data: {
+            documento: documento
+        },
+        success: function (response) {
+            const documentoInput = $('#iDocumento');
+
+            if (response.existe) {
+                mostrarError(documentoInput, 'Este cliente ya está registrado.');
+            } else {
+                ocultarError(documentoInput);
             }
-        });
-    }
+        }
+    });
+}
+
+// Bloquear la entrada de letras y otros caracteres no numéricos
+$('#iDocumento').on('input', function () {
+    const valor = $(this).val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
+    $(this).val(valor);
+});
+
 
 
 

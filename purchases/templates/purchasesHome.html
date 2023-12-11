@@ -111,6 +111,7 @@
             <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="3">
                 <thead class="theads">
                     <tr>
+                        <th>ID</th>
                         <th>Proveedor</th>
                         <th>Fecha de Registro</th>
                         <th>Estado</th>
@@ -120,7 +121,7 @@
                 <tbody>
                     {% for compra in compras %}
                     <tr class="{% if compra.estado == 0 %}inactivo{% endif %}">
-
+                        <td>{{ compra.id_compra}}</td>
                         <td>{{ compra.id_proveedor.nombre_proveedor }}</td>
                         <td>{{ compra.fechareg }}</td>
                         <td>
