@@ -574,16 +574,21 @@
                                 }
                                 let itemLista = `
                                 <li class="cliente-item ${estadoCliente === 1 ? "activo" : "inactivo"}" data-pedidos='${JSON.stringify(pedidos)}' >
-                                    <div class="d-flex justify-content-between" style="width:100%;">
+                                    <div class="d-flex justify-content-between" style="width:100%;" ${estadoCliente === 0 ? 'data-toggle="tooltip" data-placement="rigth" title="Cliente inactivo"' : ''}>
                                         <span id="nombreDato">${nomClienteDato}</span>
                                         <div>
                                             <span id="documentoDato">${documento}</span>
                                             <i class="fas fa-truck mx-2" style="${tienePedidosEnProceso ? "color:green;" : "color:#0000006e"}" data-toggle="tooltip" data-placement="right" title="Pedidos pendientes"></i>
                                         </div>
                                     </div>
-                                    ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
                                 </li>
-                                `;
+                            `;
+
+                            $('[data-toggle="tooltip"]').tooltip({
+                                trigger: 'hover',
+                                placement: 'right',
+                                delay: { "show": 0, "hide": 0 }
+                            });
 
                                 listadoClientes.append(itemLista);
                             }
@@ -678,7 +683,13 @@
             $("#cantidad-ingresada").val("1")
             $("#buscarProducto").data('id-producto', "");
             listadoProductos.show();
+            $(document).ajaxStart(function () {
+                $(".loading").addClass("show");
+            });
 
+            $(document).ajaxStop(function () {
+                $(".loading").removeClass("show");
+            });
             if (buscarProducto.length >= 3) {
                 $.ajax({
                     url: "{% url 'buscar_productos' %}?q=" + buscarProducto,

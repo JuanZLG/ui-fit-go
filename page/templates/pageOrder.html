@@ -317,7 +317,6 @@
 
 
 
-    // Evento click para el botón continuar
     $('#continuar').on('click', function () {
         $('.table-order').toggle();
         $('.info-client').toggle();
@@ -403,29 +402,10 @@
 
     function vaciarCamposFormulario() {
         document.querySelectorAll('#cliente-form input, #cliente-form select').forEach(function (element) {
-            if (element.type === 'checkbox' || element.type === 'radio') {
-                element.checked = false;
-            } else {
-                element.value = '';
-            }
+            element.value = '';
+            
         });
     }
-
-    var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'data-estado') {
-                var nuevoEstado = aviso.getAttribute('data-estado');
-                if (nuevoEstado === null) {
-                    vaciarCamposFormulario();
-                }
-            }
-        });
-    });
-
-    var config = { attributes: true };
-    observer.observe(aviso, config);
-
-
 
     document.querySelectorAll('#cliente-form input').forEach(function (input) {
         input.addEventListener('input', function () {

@@ -35,11 +35,21 @@ def crear_venta(request):
             totalVentaDescuento = data.get('totalVentaDescuento', 'No aplica')
             margenGananciaVenta = data.get('margenGananciaVenta')
             productos = data.get('productos', [])
-            
+            if productos:
+                primer_idProducto = list(productos.keys())[0]
+                primer_producto = productos[primer_idProducto]
+                idPedido = primer_producto.get('idPedido', None)
+
+
             cliente = Clientes.objects.filter(documento=documento).first()
             if cliente is None:
                 return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=400)
             
+            pedido = Pedidos.objects.get(id_pedido=idPedido)
+            pedido.total_pedido = totalVenta
+            pedido.estado = "confirmado"
+            pedido.save()
+
             venta = Ventas.objects.create(
                 id_cliente=cliente,
                 totalVenta=totalVenta,
@@ -50,7 +60,6 @@ def crear_venta(request):
 
             detalles_venta = []
             for idProducto, producto_datos in productos.items():
-                idPedido = producto_datos["idPedido"]
                 cantidad_vendida = producto_datos['cantidad']
                 precioCompra = producto_datos['precioCompra']
                 precioVenta = producto_datos['precioVenta']
@@ -63,6 +72,12 @@ def crear_venta(request):
                 if producto:
                     producto.cantidad -= cantidad_vendida
                     producto.save()
+
+                detalle_pedido = DetallePedido.objects.get(id_pedido=idPedido, id_producto=producto)
+
+                detalle_pedido.precio_uni = precioVenta
+                detalle_pedido.precio_tot = totalProducto
+                detalle_pedido.save()
 
                 Detalleventa.objects.create(
                     id_producto=producto,
@@ -88,10 +103,7 @@ def crear_venta(request):
                     'descuentoProducto':descuento,
                 })
 
-            # Formatear el precio total de la venta
             total_venta_formateado = formatear_precios_email(totalVenta)
-
-            # Llamar a la función de confirmación de pedido por email
             pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
 
             response_data = {'success': True}
