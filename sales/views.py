@@ -329,8 +329,14 @@ def cambiarEstado(request):
                 producto.cantidad += detalle.cantidad 
                 producto.save()  
             detalle.save() 
+
+        pedidos = Pedidos.objects.filter(id_venta=venta_id)
+        for pedido in pedidos:
+            pedido.estado = "Cancelado"
+            pedido.save()
         
         return JsonResponse({'status': 'success'})
+
 
 
 def detalles_venta(request):

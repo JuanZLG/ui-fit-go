@@ -45,11 +45,11 @@
                         <td class="cell-actions">
                             <a href="{% url 'editarPedidoHome' pedido.id_pedido %}"
                                 class="btn btn-sm mr-2 {% if pedido.estado == 'cancelado' or pedido.estado == 'confirmado' %}disabled-link{% endif %}"
-                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
-                                title="Editar Pedido"></i></a>
+                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip"
+                                    data-placement="top" title="Editar Pedido"></i></a>
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
                                 class="btn btn-sm btn-primary ml-2 detalle-pedido-button"
-                                data-pedido-id="{{ pedido.id_pedido }}" >
+                                data-pedido-id="{{ pedido.id_pedido }}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
@@ -62,7 +62,15 @@
     </div>
 </div>
 <script>
-    // Agrega un evento de escucha a los botones de detalle del pedido
+
+    function infoPedido() {
+        Swal.fire({
+            icon: "question",
+            text: "Por favor, ten en cuenta que los detalles de este pedido pueden cambiar. Inicialmente, el pedido se realiza con ciertos precios. Sin embargo, cuando el pedido se confirma y se asocia a una venta, los precios pueden variar. Esto se debe a que la venta puede incluir descuentos por producto o por venta. Por lo tanto, para mantener la coherencia con la venta, los totales del pedido también pueden cambiar.",
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#dc3545'
+        });
+    }
     document.querySelectorAll('.detalle-pedido-button').forEach(function (element) {
         element.addEventListener('click', function () {
             let pedidoId = element.getAttribute('data-pedido-id');
@@ -76,7 +84,7 @@
                 method: 'GET',
                 success: function (response) {
                     var pedido = response.success;
-                    
+
                     Swal.fire({
                         html: `
                     <div class="modal-container">
@@ -88,7 +96,10 @@
                                     <span><strong class="me-2">Cliente:</strong>${pedido.cliente}</span>
                                 </div>
                                 <table class="table modal-table">
-                                    <h3 class="modal-subtitle text-start mt-3">Detalles</h3>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h3 class="modal-subtitle text-start mt-3">Detalles</h3>
+                                        <i class="fas fa-question-circle" onclick="infoPedido()"></i>    
+                                    </div>
                                     <thead class="text-center">
                                         <tr>
                                             <th>Producto</th>
@@ -255,7 +266,6 @@
         position: relative;
         cursor: pointer;
     }
-
 </style>
 <script>
     function formatearPrecios(valor) {

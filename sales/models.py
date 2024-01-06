@@ -86,6 +86,7 @@ class Ventas(models.Model):
 
 
 
+        
 class Pedidos(models.Model):
     ESTADO_CHOICES = [
         ('cancelado', 'Cancelado'),
@@ -101,6 +102,7 @@ class Pedidos(models.Model):
     class Meta:
         managed = False
         db_table = 'pedidos'
+
 
 class DetallePedido(models.Model):
     id_detallepedido = models.AutoField(primary_key=True)
