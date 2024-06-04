@@ -314,26 +314,71 @@
       }
 
       inputElement.value = formattedValue;
-
-      
   }
 
   document.addEventListener('DOMContentLoaded', function() {
       let priceInputs = document.querySelectorAll('.form-control[name="iPrice"]');
-
       priceInputs.forEach(function(input) {
           formatPriceInput(input);
       });
+
+      let pricepInputs = document.querySelectorAll('.form-control[name="iPubPrice"]');
+      pricepInputs.forEach(function(input) {
+          formatPriceInput(input);
+      });
+
+      let fechaInput = document.querySelector('#iFechaven');
+      if (fechaInput) {
+          fechaInput.addEventListener('input', function (event) {
+              let campo = this;
+              let fechaValue = campo.value.replace(/[^\d]/g, '');
+
+              const isDeleting = event.inputType === 'deleteContentBackward';
+
+              if (isDeleting) {
+                  const lastChar = campo.value.slice(-1);
+                  if (lastChar === '-') {
+                      fechaValue = fechaValue.slice(0, -1);
+                  }
+              }
+
+              if (fechaValue.length >= 4) {
+                  fechaValue = fechaValue.slice(0, 4) + '-' + fechaValue.slice(4);
+              }
+              if (fechaValue.length >= 7) {
+                  fechaValue = fechaValue.slice(0, 7) + '-' + fechaValue.slice(7);
+              }
+
+              campo.value = fechaValue;
+
+              if (fechaValue && /^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
+                  const [anno, mes, dia] = fechaValue.split('-').map(Number);
+
+                  if (mes < 1 || mes > 12) {
+                      mostrarError(campo, 'El mes (MM) debe estar entre 01 y 12.');
+                      return;
+                  }
+
+                  if (dia < 1 || dia > 31) {
+                      mostrarError(campo, 'El día (DD) debe estar entre 01 y 31.');
+                      return;
+                  }
+
+                  ocultarError(campo);
+              }
+          });
+      }
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    let pricepInputs = document.querySelectorAll('.form-control[name="iPubPrice"]');
+  function mostrarError(campo, mensaje) {
+      // Implementa la función para mostrar errores
+  }
 
-    pricepInputs.forEach(function(input) {
-        formatPriceInput(input);
-    });
-});
+  function ocultarError(campo) {
+      // Implementa la función para ocultar errores
+  }
 </script>
+
 
 
 {% endblock %}

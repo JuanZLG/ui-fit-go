@@ -141,34 +141,35 @@
       </div>
 
       <div class="form-row">
-      <div class="col-md-4 mb-3 mx-auto">
-        <div class="form-group">
-          <label for="iPrice">Precio de Compra *</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+        <div class="col-md-4 mb-3 mx-auto">
+          <div class="form-group">
+            <label for="iPrice">Precio de Compra *</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+              </div>
+              <input type="text" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"
+                oninput="formatPriceInput(this);" value="{{ Product.precio }}" />
             </div>
-            <input type="text" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"
-              oninput="formatPriceInput(this);" value="{{ Product.precio }}" />
+            <div class="error-message" id="iPrice-error" style="color:red;"></div>
           </div>
-          <div class="error-message" id="iPrice-error" style="color:red;"></div>
         </div>
-      </div>
 
-      <div class="col-md-4 mb-3 mx-auto">
-        <div class="form-group">
-          <label for="iPubPrice">Precio al Público *</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:red">$</span>
+        <div class="col-md-4 mb-3 mx-auto">
+          <div class="form-group">
+            <label for="iPubPrice">Precio al Público *</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:red">$</span>
+              </div>
+              <input type="text" class="form-control" id="iPubPrice" name="iPubPrice"
+                placeholder="Ingrese un precio de venta" oninput="formatPriceInput(this);"
+                value="{{ Product.precio_pub }}" />
             </div>
-            <input type="text" class="form-control" id="iPubPrice" name="iPubPrice" placeholder="Ingrese un precio de venta"
-              oninput="formatPriceInput(this);" value="{{ Product.precio_pub }}" />
+            <div class="error-message" id="iPubPrice-error" style="color:red;"></div>
           </div>
-          <div class="error-message" id="iPubPrice-error" style="color:red;"></div>
         </div>
       </div>
-    </div>
 
       <div class="text-center p-2">
         <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
@@ -267,16 +268,29 @@
       }
     });
 
-    $('#iFechaven').on('input', function () {
+    $('#iFechaven').on('input', function (event) {
       const campo = $(this);
-      const fechaValue = campo.val();
+      let fechaValue = campo.val().replace(/[^\d]/g, '');
 
-      if (fechaValue) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
-          mostrarError(campo, 'El formato de la fecha no es correcto (AAAA-MM-DD).');
-          return;
+      const isDeleting = event.originalEvent.inputType === 'deleteContentBackward';
+
+      if (isDeleting) {
+        const lastChar = campo.val().slice(-1);
+        if (lastChar === '-') {
+          fechaValue = fechaValue.slice(0, -1);
         }
+      }
 
+      if (fechaValue.length >= 4) {
+        fechaValue = fechaValue.slice(0, 4) + '-' + fechaValue.slice(4);
+      }
+      if (fechaValue.length >= 7) {
+        fechaValue = fechaValue.slice(0, 7) + '-' + fechaValue.slice(7);
+      }
+
+      campo.val(fechaValue);
+
+      if (fechaValue && /^\d{4}-\d{2}-\d{2}$/.test(fechaValue)) {
         const [anno, mes, dia] = fechaValue.split('-').map(Number);
 
         if (mes < 1 || mes > 12) {
@@ -292,23 +306,24 @@
         ocultarError(campo);
       }
     });
+
   });
 </script>
 
 
 <script>
-    function formatPriceInput(inputElement) {
+  function formatPriceInput(inputElement) {
 
-      let unformattedValue = inputElement.value.replace(/[,.]/g, '');
+    let unformattedValue = inputElement.value.replace(/[,.]/g, '');
 
-      let formattedValue = '';
+    let formattedValue = '';
 
-      if (!isNaN(unformattedValue)) {
-        formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      }
-
-      inputElement.value = formattedValue;
+    if (!isNaN(unformattedValue)) {
+      formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
+
+    inputElement.value = formattedValue;
+  }
 </script>
 
 {% endblock %}
