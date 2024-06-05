@@ -114,10 +114,10 @@
                         return;
                     } else {
                         const regex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-                            if (!regex.test(newPassword)) {
-                                $("#recover-error").text("La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.");
-                                return;
-                            }
+                        if (!regex.test(newPassword)) {
+                            $("#recover-error").text("La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.");
+                            return;
+                        }
                     }
                     $("#loading").show();
                     setTimeout(function () {
@@ -137,10 +137,10 @@
                                     icon: 'success',
                                     title: '¡Cuenta recuperada!',
                                     text: 'Ahora puedes ingresar con tu nueva contraseña.',
-                                    confirmButtonColor: '#808080', 
+                                    confirmButtonColor: '#808080',
                                     confirmButtonText: 'Aceptar',
                                     customClass: {
-                                        confirmButton: 'white-text' ,
+                                        confirmButton: 'white-text',
                                         title: "white-text",
                                         text: "white-text",
                                     }
@@ -232,26 +232,26 @@
                     $("#loading").show();
                     setTimeout(function () {
                         $("#loading").hide();
-                    $.ajax({
-                        url: "{% url 'verificar_codigo' %}",
-                        type: 'GET',
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        data: {
-                            codigo: codigo
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                $("#loading").hide();
-                                cambiarContraseña();
+                        $.ajax({
+                            url: "{% url 'verificar_codigo' %}",
+                            type: 'GET',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            data: {
+                                codigo: codigo
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#loading").hide();
+                                    cambiarContraseña();
+                                }
+                                else {
+                                    $("#codig-error").text("Código incorrecto.");
+                                }
                             }
-                            else {
-                                $("#codig-error").text("Código incorrecto.");
-                            }
-                        }
-                    })
-                }, 2000);
+                        })
+                    }, 2000);
 
                 });
             }
@@ -431,6 +431,68 @@
             e.preventDefault();
         };
     </script>
+
+    <script>
+        document.getElementById('login-form').addEventListener('keypress', function (event) {
+            if (event.keyCode === 13) {
+                submitLoginForm();
+            }
+        });
+
+        function submitLoginForm() {
+            document.getElementById('user-error').textContent = '';
+            document.getElementById('correo-error').textContent = '';
+            document.getElementById('contra-error').textContent = '';
+            document.getElementById('status-error').textContent = '';
+            document.getElementById('cvalid-error').textContent = '';
+
+            var correo = document.querySelector('[name="correo"]').value;
+            var contra = document.querySelector('[name="contra"]').value;
+            var formData = {
+                correo: correo,
+                contra: contra
+            };
+
+            if (!correo && !contra) {
+                displayError('correo', 'El correo es obligatorio');
+                displayError('contra', 'La contraseña es obligatoria');
+            } else if (!correo) {
+                displayError('correo', 'El correo es obligatorio');
+            } else if (!contra) {
+                displayError('contra', 'La contraseña es obligatoria');
+            } else {
+
+                fetch("{% url 'login_view' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.token) {
+                            console.log("Token Cargado");
+                            setCookie('jwt_token', data.token, 30);
+                            window.location.href = 'admin/home/';
+                        } else if (data.error === 'Usuario no Registrado') {
+                            displayError('user', 'No existe un usuario registrado con este correo');
+                        } else if (data.error === 'Usuario inactivo') {
+                            displayError('status', 'El usuario asociado a este correo esta inactivo')
+                        } else if (data.error === 'contrasena incorrecta') {
+                            displayError('cvalid', 'La contraseña es incorrecta')
+                        } else {
+                            displayError('correo', 'Error: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        displayError('correo', 'Error: ' + error);
+                    });
+            }
+        }
+    </script>
+
 
     <script>
         var video = document.getElementById("video-fondo");
