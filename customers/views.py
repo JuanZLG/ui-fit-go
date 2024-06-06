@@ -6,6 +6,9 @@ from django.shortcuts import render
 from django.db import IntegrityError
 from django.conf import settings
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
+import logging
+
+logger = logging.getLogger(__name__)
 
 @jwt_cookie_required
 @module_access_required('clientes')
@@ -43,8 +46,6 @@ def agregarClientePost(request):
         barrio = request.POST.get('iBarrio')
         direccion = request.POST.get('iDireccion')
         correo = request.POST.get('iCorreo')
-
-
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
@@ -52,20 +53,15 @@ def agregarClientePost(request):
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
         try:
-            departamento = Departamentos.objects.get(nombre_departamento=departamento_nombre)
-        except Departamentos.DoesNotExist:
-            departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
-
-        try:
-            municipio = Municipios.objects.get(
-                nombre_municipio=municipio_nombre,
-                id_departamento=departamento
-            )
-        except Municipios.DoesNotExist:
-            municipio = Municipios.objects.create(
-                nombre_municipio=municipio_nombre,
-                id_departamento=departamento
-            )
+            departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
+            if not departamento:
+                departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
+            municipio = Municipios.objects.filter(nombre_municipio=municipio_nombre, id_departamento=departamento).first()
+            if not municipio:
+                municipio = Municipios.objects.create(nombre_municipio=municipio_nombre, id_departamento=departamento)
+        except Exception as e:
+            logger.error(f'Error al obtener o crear departamento/municipio: {str(e)}')
+            return JsonResponse({'success': False, 'message': f'Error al obtener o crear departamento/municipio: {str(e)}'})
 
         cliente = Clientes(
             id_municipio=municipio,
@@ -76,17 +72,22 @@ def agregarClientePost(request):
             barrio=barrio,
             direccion=direccion,
             correo=correo,
-            estado=1,
+            estado=True,
         )
 
         try:
             cliente.save()
             return JsonResponse({'success': True, 'message': 'Cliente creado con éxito'})
-        except IntegrityError as e:
+        except IntegrityError:
+            logger.error('Error: El documento ya está registrado en la base de datos.')
             return JsonResponse({'success': False, 'message': 'Error: El documento ya está registrado en la base de datos.'})
+        except Exception as e:
+            logger.error(f'Error al guardar el cliente: {str(e)}')
+            return JsonResponse({'success': False, 'message': f'Error al guardar el cliente: {str(e)}'})
 
     municipios = Municipios.objects.all()
     return render(request, 'createCustomer.html', {'municipios': municipios})
+
 
 @jwt_cookie_required
 @module_access_required('clientes')
@@ -116,11 +117,15 @@ def editarCliente(request, cliente_id):
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
         try:
-            departamento, created = Departamentos.objects.get_or_create(nombre_departamento=departamento_nombre)
-
-            municipio, created = Municipios.objects.get_or_create(nombre_municipio=municipio_nombre, id_departamento=departamento)
-        except:
-            return JsonResponse({'success': False, 'message': 'Error al crear departamento o municipio'})
+            departamento = Departamentos.objects.filter(nombre_departamento=departamento_nombre).first()
+            if not departamento:
+                departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
+            municipio = Municipios.objects.filter(nombre_municipio=municipio_nombre, id_departamento=departamento).first()
+            if not municipio:
+                municipio = Municipios.objects.create(nombre_municipio=municipio_nombre, id_departamento=departamento)
+        except Exception as e:
+            logger.error(f'Error al obtener o crear departamento/municipio: {str(e)}')
+            return JsonResponse({'success': False, 'message': f'Error al obtener o crear departamento/municipio: {str(e)}'})
 
         cliente.id_municipio = municipio
         cliente.documento = documento
@@ -131,9 +136,12 @@ def editarCliente(request, cliente_id):
         cliente.direccion = direccion
         cliente.correo = correo
         cliente.id_estado = estado
-        cliente.save()
-
-        return JsonResponse({'success': True, 'message': 'Cliente actualizado con éxito'})
+        try:
+            cliente.save()
+            return JsonResponse({'success': True, 'message': 'Cliente actualizado con éxito'})
+        except Exception as e:
+            logger.error(f'Error al guardar el cliente: {str(e)}')
+            return JsonResponse({'success': False, 'message': f'Error al guardar el cliente: {str(e)}'})
 
     return render(request, 'editCustomer.html', {'cliente': cliente, 'departamento_registrado': cliente.id_municipio.id_departamento.nombre_departamento, 'municipio_registrado': cliente.id_municipio.nombre_municipio})
 
