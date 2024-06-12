@@ -161,7 +161,7 @@ def createUser(request):
         contrasena = create_password()
         rl = Roles.objects.get(id_rol=id_rol)
         Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
-        send_email_create(nombre_usuario, contrasena, correo)
+        # send_email_create(nombre_usuario, contrasena, correo)
 
         return JsonResponse({'success': True})
 

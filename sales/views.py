@@ -92,7 +92,7 @@ def crear_venta(request):
             total_venta_formateado = formatear_precios_email(totalVenta)
 
             # Llamar a la función de confirmación de pedido por email
-            pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
+            # pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
 
             response_data = {'success': True}
             return JsonResponse(response_data)
