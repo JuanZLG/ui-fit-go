@@ -401,6 +401,8 @@
         function agregarFilaPedido(resultado) {
             let tbody = $("#producto-tbody");
             let precios = calcularPreciosPedido(resultado.precio_venta_pagina, resultado.precio_ganancia, resultado.cantidad_pagina);
+
+            
             let itemFila = `
                 <tr class="producto-row" data-id-pedido="${resultado.id_pedido}" data-id-producto="${resultado.id_producto}" data-precio-venta="${precios.precio_venta}">
                     <td class="p-2 celda-producto">
@@ -1086,7 +1088,7 @@
         let documentoCliente = $("#documento").text();
         $(".producto-row").each(function () {
             let idPedido = $(this).data("id-pedido");
-            idPedido = idPedido ? parseInt(idPedido) : "no pedido";
+            idPedido = idPedido ? parseInt(idPedido) : 1;
             let idProducto = parseInt($(this).data("id-producto"));
             let cantidad = parseInt($(this).find(".cantidad-fila").val());
             let precioCompra = parseFloat($(this).find(".precio_compra").text().replace(/[$,.]/g, ''));
@@ -1105,8 +1107,9 @@
                 totalProducto: totalProducto,
                 totalProductoDescuento: totalProductoDescuento
             };
+            
         });
-
+       
         let totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
 
         let venta = {
@@ -1117,6 +1120,8 @@
             documentoCliente: documentoCliente,
             productos: productos
         };
+
+    
         
         $(document).ajaxStart(function () {
             $(".loading").addClass("show");

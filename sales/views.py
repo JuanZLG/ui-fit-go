@@ -29,6 +29,7 @@ def crear_venta(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+           
             documento = data.get('documentoCliente', '')
             totalVenta = data.get('totalVenta', '')
             descuentoVenta = data.get('descuentoVenta', 'No aplica')
@@ -104,12 +105,15 @@ def crear_venta(request):
                 })
 
             total_venta_formateado = formatear_precios_email(totalVenta)
-            pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
+            # pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
 
             response_data = {'success': True}
             return JsonResponse(response_data)
+        
         except json.JSONDecodeError as e:
+            
             response_data = {'success': False, 'error': str(e)}
+            
             return JsonResponse(response_data, status=400)
 
     clientes = Clientes.objects.all()
