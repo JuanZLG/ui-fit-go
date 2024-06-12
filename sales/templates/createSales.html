@@ -1132,6 +1132,7 @@
             data: JSON.stringify(venta),
             contentType: "application/json",
             success: function (response) {
+                console.log(response);
                 if (response.success) {
                     Swal.fire({
                         title: 'Éxito',

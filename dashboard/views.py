@@ -6,6 +6,8 @@ from django.db.models import Sum
 from django.db.models.functions import ExtractMonth
 import locale
 from datetime import datetime, timedelta
+from django.utils import timezone
+from .models import Pedidos
 
 @jwt_cookie_required
 def Entrance(request):
@@ -23,51 +25,28 @@ def contar_clientes_activos(request):
     clientes_activos = Clientes.objects.filter(estado=1).count()
     return JsonResponse({'clientes_activos': clientes_activos}) 
 
-from django.db.models import Sum
-from django.http import JsonResponse
-from django.db.models.functions import ExtractMonth
-from django.utils import timezone
-
-from django.db.models import Sum
-from django.db.models.functions import ExtractMonth
-from django.http import JsonResponse
-from django.utils import timezone
-from .models import Compras, Ventas
-from .models import Pedidos
-
-
-
-
-
 def contar_pedidos_en_proceso(request):
-    # Obtén el número de pedidos en proceso
     pedidos_en_proceso = Pedidos.objects.filter(estado='en proceso').count()
-
-    # Devuelve la respuesta en formato JSON
     data = {'pedidos_en_proceso': pedidos_en_proceso}
     return JsonResponse(data)
 
 def calcular_total_compras_y_ventas(request):
     try:
-        # Obtén el año actual
         current_year = timezone.now().year
-        # Obtén el mes actual
         current_month = timezone.now().month
 
-        # Filtra las compras activas del año actual y mes actual
         total_compras_por_mes = Compras.objects.filter(
             fechareg__year=current_year,
             fechareg__month=current_month,
-            estado=1  # Filtra solo compras activas
+            estado=1 
         ).annotate(month=ExtractMonth('fechareg')) \
             .values('month') \
             .annotate(total_compras=Sum('totalCompra'))
 
-        # Filtra las ventas activas del año actual y mes actual
         total_ventas_por_mes = Ventas.objects.filter(
             fechareg__year=current_year,
             fechareg__month=current_month,
-            estado=1  # Filtra solo ventas activas
+            estado=1 
         ).annotate(month=ExtractMonth('fechareg')) \
             .values('month') \
             .annotate(total_ventas=Sum('totalVenta'))
@@ -79,20 +58,12 @@ def calcular_total_compras_y_ventas(request):
     except Exception as e:
         return JsonResponse({'error': str(e)})
 
-
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
-
-from django.db.models import Sum
-from django.http import JsonResponse
-from datetime import datetime, timedelta
-from .models import Compras, Ventas
-
 def obtener_datos_ventas_y_compras(request):
     periodo = request.GET.get('periodo', 'semana')
     hoy = datetime.now().date()
 
     if periodo == 'semana':
-        # Calcular el inicio de la última semana
         ultimo_dia_semana_pasada = hoy - timedelta(days=(hoy.weekday() + 1) % 7)
         fecha_inicio = ultimo_dia_semana_pasada - timedelta(days=6)
         fecha_fin = ultimo_dia_semana_pasada
@@ -108,18 +79,15 @@ def obtener_datos_ventas_y_compras(request):
         fecha_fin = hoy
         etiqueta_semana = fecha_inicio.strftime('%Y')
 
-    # Filtra las ventas y compras con estado igual a 1
     ventas = Ventas.objects.filter(fechareg__range=[fecha_inicio, fecha_fin], estado=1)
     compras = Compras.objects.filter(fechareg__range=[fecha_inicio, fecha_fin], estado=1)
 
     total_ventas = ventas.aggregate(Sum('totalVenta'))['totalVenta__sum'] or 0
     total_compras = compras.aggregate(Sum('totalCompra'))['totalCompra__sum'] or 0
 
-    # Formatea los totales de ventas y compras
     total_ventas_formatted = "{:,.0f}".format(total_ventas)
     total_compras_formatted = "{:,.0f}".format(total_compras)
 
-    # Convierte los valores en números enteros en lugar de números de punto flotante
     total_ventas = int(total_ventas)
     total_compras = int(total_compras)
 
@@ -138,10 +106,8 @@ from .models import Productos
 
 def obtener_todos_los_productos(request):
     try:
-        # Consulta para obtener todos los productos activos y sus cantidades.
         productos = Productos.objects.filter(estado=1)
 
-        # Extrae los nombres de los productos y las cantidades en listas separadas.
         nombres_productos = [producto.nombre_producto for producto in productos]
         cantidades = [producto.cantidad for producto in productos]
 
@@ -156,21 +122,37 @@ def obtener_todos_los_productos(request):
     
 def obtener_margen_ganancia(request):
     try:
-        # Obtén el año y mes actuales
         current_year = timezone.now().year
         current_month = timezone.now().month
 
-        # Filtra las ventas activas del año y mes actuales y calcula el margen de ganancia total
         margen_ganancia = Ventas.objects.filter(
             fechareg__year=current_year,
             fechareg__month=current_month,
-            estado=1  # Filtra solo ventas activas
+            estado=1  
         ).aggregate(margen_ganancia_total=Sum('margenGanancia'))
 
         return JsonResponse({'margen_ganancia_total': margen_ganancia['margen_ganancia_total']})
     except Exception as e:
         return JsonResponse({'error': str(e)})
-
     
 
+from django.http import JsonResponse
+from django.db.models import Sum
+
+def obtener_datos_categorias_productos(request):
+    try:
+        datos_categorias = Productos.objects.values('categoria').annotate(
+            total_cantidad=Sum('cantidad')
+        )
+
+        categorias = [dato['categoria'] for dato in datos_categorias]
+        cantidades = [dato['total_cantidad'] for dato in datos_categorias]
+
+        data = {
+            'categorias': categorias,
+            'cantidades': cantidades
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
 

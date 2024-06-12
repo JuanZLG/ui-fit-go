@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Clientes(models.Model):
     id_cliente = models.AutoField(primary_key=True)
@@ -6,29 +7,16 @@ class Clientes(models.Model):
     nombres = models.CharField(max_length=60)
     apellidos = models.CharField(max_length=60)
     estado = models.IntegerField(default=1)
-
     class Meta:
         managed = False
         db_table = 'clientes'
 
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
-from django.db import models
-from django.utils import timezone
-
 class Categorias(models.Model):
     id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=50)
-
     class Meta:
         managed = False
         db_table = 'categorias'
-
 
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
@@ -36,12 +24,9 @@ class Compras(models.Model):
     fechareg = models.DateField(default=timezone.now)
     estado = models.IntegerField(default=1) 
     totalCompra = models.FloatField()
-
-
     class Meta:
         managed = False
         db_table = 'compras'
-
 
 class Detallecompra(models.Model):
     id_detallecompra = models.AutoField(primary_key=True)
@@ -51,27 +36,16 @@ class Detallecompra(models.Model):
     precio_uni = models.FloatField()
     precio_tot = models.FloatField()
     estado = models.IntegerField(default=1)
-
-
     class Meta:
         managed = False
         db_table = 'detallecompra'
 
-
 class Marcas(models.Model):
     id_marca = models.AutoField(primary_key=True)
     nombre_marca = models.CharField(max_length=50)
-
     class Meta:
         managed = False
         db_table = 'marcas'
-
-
-
-
-
-
-
 
 class Productos(models.Model):
     id_producto = models.AutoField(primary_key=True)
@@ -85,12 +59,9 @@ class Productos(models.Model):
     presentacion = models.CharField(max_length=45)
     estado = models.IntegerField()
     precio = models.FloatField()
-
-
     class Meta:
         managed = False
         db_table = 'productos'
-
 
 class Proveedores(models.Model):
     id_proveedor = models.AutoField(primary_key=True)
@@ -102,13 +73,9 @@ class Proveedores(models.Model):
     tipo_documento = models.CharField(max_length=50)
     numero_documento_nit = models.CharField(max_length=50)
     estado = models.IntegerField(default=1)
-
     class Meta:
         managed = False
         db_table = 'proveedores'
-
-
-
 
 class Detalleventa(models.Model):
     id_detalleventa = models.AutoField(primary_key=True)
@@ -122,7 +89,6 @@ class Detalleventa(models.Model):
     margenGanancia = models.FloatField()    
     precio_tot = models.FloatField()    
     estado = models.IntegerField(default=1)
-
     class Meta:
         managed = False
         db_table = 'detalleventa'
@@ -136,11 +102,9 @@ class Ventas(models.Model):
     totalVenta = models.FloatField()
     margenGanancia = models.FloatField()    
     estado = models.IntegerField(default=1)
-
     class Meta:
         managed = False
         db_table = 'ventas'
-
 
 class Pedidos(models.Model):
     ESTADO_CHOICES = [
@@ -168,9 +132,4 @@ class DetallePedido(models.Model):
     precio_tot = models.FloatField()
     class Meta:
         managed = False
-        db_table = 'detallepedido'
-       
-
-
-
-                
+        db_table = 'detallepedido' 

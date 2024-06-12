@@ -1,8 +1,7 @@
-from django.urls import path, include  # Funciones de manejo de rutas y urls
+from django.urls import path
 from . import views 
 
-
-urlpatterns=[
+urlpatterns = [
     path('', views.Entrance, name="entrada"),
     path('dashboard/', views.Home, name='mydashboard'),
     path('guide/', views.UserGuide, name="guideser"),
@@ -12,12 +11,5 @@ urlpatterns=[
     path('obtener_todos_los_productos/', views.obtener_todos_los_productos, name='obtener_todos_los_productos'),
     path('obtener_margen_ganancia/', views.obtener_margen_ganancia, name='obtener_margen_ganancia'),
     path('contar_pedidos_en_proceso/', views.contar_pedidos_en_proceso, name='contar_pedidos_en_proceso'),
-
-
-
-
-
-
-
-
+    path('obtener_datos_categorias_productos/', views.obtener_datos_categorias_productos, name='obtener_datos_categorias_productos'),
 ]
