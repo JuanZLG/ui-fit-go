@@ -66,35 +66,21 @@
             border-radius: 10px;
         }
     </style>
-    <!-- Page Wrapper -->
-    <div id="wrapper" style="">
-
-        <!-- Sidebar -->
-
+    <div id="wrapper">
         <ul class="navbar-nav sidebar sidebar-dark accordion" style="background-color: black; position:fixed"
             id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'pageHome' %}">
                 <div class="sidebar-brand-icon">
                     <img src="{% static 'img/gorille.png' %}" width="48%">
                 </div>
             </a>
-
-            <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'mydashboard' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-
-            <!-- Divider -->
             <hr class="sidebar-divider">
-
-            <!-- Heading -->
             <div class="sidebar-heading">
                 Módulos
             </div>
@@ -195,15 +181,10 @@
                     </div>
                 </div>
             </li>
-            <!-- Divider -->
             <hr class="sidebar-divider">
-
-            <!-- Heading -->
             <div class="sidebar-heading">
                 Soporte
             </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
@@ -216,45 +197,20 @@
                     </div>
                 </div>
             </li>
-
-            <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
             {% comment %} <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div> {% endcomment %}
-
-            <!-- Sidebar Message -->
-            <!-- <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>TuiranFit</strong> es un proyecto en fase muy temprana</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Avanzar</a>
-            </div> -->
-
         </ul>
-
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-
         <div id="content-wrapper" style="margin-left:224px;">
-
-            <!-- Main Content -->
             <div id="content">
-
-                <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-black topbar mb-4 static-top shadow"
                     style="background-color: black;">
-
-                    <!-- Sidebar Toggle (Topbar) -->
                     <form class="form-inline">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                             <i class="fa fa-bars"></i>
                         </button>
                     </form>
-
-                    <!-- Topbar Search -->
                     {% comment %} <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
@@ -267,53 +223,19 @@
                             </div>
                         </div>
                     </form> {% endcomment %}
-
-                    <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <!-- <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                           
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li> -->
-
-                        <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw" style="color: white;"></i>
-                                <!-- Counter - Alerts -->
                                 <span id="notificacionesCounter" style="background-color: red;"
                                     class="badge badge-danger badge-counter">0</span>
                             </a>
-                            <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown" id="notificacionesDropdown">
                                 <h5 class="dropdown-header"
                                     style="background-color: red ;text-align: center; border-color: red;">Centro de
                                     Alertas</h5>
-                                <!-- <a class="dropdown-item text-center small text-gray-500" href="javascript:void(0)"
-                                    id="verNotificacionesAnteriores">
-                                    Ver notificaciones anteriores
-                                </a> -->
                                 <div id="notificacionesHistorial"></div>
                             </div>
                         </li>
@@ -323,29 +245,22 @@
                                 height: auto;
                                 max-height: 200px;
                                 overflow-y: auto;
-
                             }
-
                             .noti-item {
                                 color: #222222;
                                 font-weight: bold;
                             }
                         </style>
-
-
                         <script>
                             $(document).ready(function () {
                                 cargarNotificaciones();
-
                                 if (sessionStorage.getItem('notificacionesVistas') !== 'true') {
                                     sessionStorage.setItem('cantidadMensajes', $('#notificacionesHistorial .noti-item').length);
                                 }
-
                                 $('#alertsDropdown').click(function () {
                                     $('#notificacionesCounter').text(0);
                                     sessionStorage.setItem('notificacionesVistas', 'true');
                                 });
-
                                 function cargarNotificaciones() {
                                     $.ajax({
                                         url: '/verificar-notificaciones/',
@@ -355,11 +270,9 @@
                                                 if (data.mensajes.length === 1 && data.mensajes[0].tipo === "info") {
                                                     $('#notificacionesHistorial').append('<span class="mensaje">' + data.mensajes[0].mensaje + '</span><hr>');
                                                 } else {
-                                                    // Mostrar mensajes para el administrador
                                                     $.each(data.mensajes, function (index, notificacion) {
                                                         var icono = '';
                                                         var texto = notificacion.mensaje;
-
                                                         if (notificacion.tipo === 'advertencia') {
                                                             icono = '<i class="fas fa-exclamation-triangle" data-tooltip="Alerta de stock mínimo"></i>';
                                                         } else if (notificacion.tipo === 'exceso') {
@@ -367,10 +280,7 @@
                                                         }
                                                         $('#notificacionesHistorial').append('<span class="mr-2">' + icono + '</span><span class="noti-item">' + texto + '</span><hr>');
                                                     });
-
-                                                    // Calcular la diferencia entre la cantidad de mensajes y la cantidad almacenada en la sesión
                                                     var diferencia = data.cantidad - sessionStorage.getItem('cantidadMensajes');
-
                                                     $('#notificacionesCounter').text(diferencia);
                                                     sessionStorage.setItem('cantidadMensajes', data.cantidad);
                                                 }
@@ -381,7 +291,6 @@
                                         }
                                     });
                                 }
-
                                 const verNotificacionesAnterioresBtn = document.getElementById('verNotificacionesAnteriores');
                                 if (verNotificacionesAnterioresBtn) {
                                     verNotificacionesAnterioresBtn.addEventListener('click', function () {
@@ -389,31 +298,22 @@
                                     });
                                 }
                             });
-
                         </script>
-
-
-
                         <div class="topbar-divider d-none d-sm-block" style="color:white"></div>
-
-                        <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow" style="margin-right:3px">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span id="nombre-usuario" class="mr-2 d-none d-lg-inline text-black-600 bold"
                                     style="color: white; font-weight: bolder">Bienvenido(a),
                                     {{ user.nombre_usuario }}</span>
-
                                 <img class="img-profile rounded-circle" src="{% static 'img/usir.png' %}">
                             </a>
-                            <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="{% url 'myProfile' %}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Mi Perfil
                                 </a>
-
                                 {% comment %} <a class="dropdown-item" href="#">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Configuración de Perfil
@@ -429,52 +329,28 @@
                                 </a>
                             </div>
                         </li>
-
                     </ul>
-
                 </nav>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
                 <div class="container-fluid content-area">
                     {% block body %}
-
                     {% endblock %}
                 </div>
-                <!-- /.container-fluid -->
-
-                <!-- Separador de Contenidos -->
                 <div style="margin-top:20vh"></div>
-
-                <!-- Footer -->
                 {% block footer %}
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                         <div class="copyright text-center my-auto">
-                            <span> &copy; TuiranFit - 2023</span>
+                            <span> &copy; TuiranFit - 2024</span>
                         </div>
                     </div>
                 </footer>
                 {% endblock %}
-
-
             </div>
-            <!-- Fin del Contenido Principal... -->
-
         </div>
     </div>
-    <!-- End of Page Wrapper -->
-
-
-
-
-    <!-- Botón para volver hacia arriba de la página -->
-
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <!-- Modal de Cerrar Sesión -->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -490,34 +366,23 @@
                     <div class="mx-auto" style="justify-content: space-between; flex-direction: row; ">
                         <a class="btn btn-danger mr-2" href="{% url 'logout' %}">Cerrar Sesión</a>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Núcleo de Bootstrap para JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-    <!-- Plugin Núcleo de JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-    <!-- Scripts Personalizados para todas las Páginas -->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
         $(document).ready(function () {
-
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip({
                     placement: 'auto'
                 })
             })
-
         });
     </script>
     <style>
@@ -531,7 +396,6 @@
     </style>
     <script>
         $(document).ready(function () {
-
             $('#dataTable').DataTable({
                 "language": {
                     "search": "Buscar:",
@@ -553,32 +417,13 @@
                     $(settings.nTable).find('.paginate_button.current').addClass('selected-page');
                 }
             });
-
         });
     </script>
-
-    <!-- <script>
-        function updateUsername() {
-            var token = getCookie('jwt_token');
-            if (token) {
-                var payload = JSON.parse(atob(token.split('.')[1]));
-                var nombreUsuarioElement = document.getElementById('nombre-usuario');
-                nombreUsuarioElement.textContent = 'Bienvenido(a), ' + payload.nombre_usuario;
-            }
-        }
-
-        updateUsername();
-    </script> -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
         integrity="sha384-twsK70fCD4IfoT8s4lU5w5ra7cRk8K0r4E5Qlo/R8HPf8w5R5F5R5F5F5F5F5F5F5" crossorigin="anonymous">
         </script>
-
-    <!-- Scripts de Nivel de Página -->
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-
-    <!-- Scripts Personalizados de Nivel de Página -->
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
@@ -586,24 +431,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
         </script>
-
-    <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
     {% comment %}
-    <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script> {% endcomment %}
-
-    <!-- Page level plugins -->
     <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-    <!-- Page level custom scripts -->
     <script src="{% static 'vendor/chart.js/chart-bar-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
     <script src="{% static 'js/dashboard.js' %}"></script>
-
-
 </body>
-
 </html>

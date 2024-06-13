@@ -1,10 +1,3 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.utils import timezone
 
@@ -15,7 +8,6 @@ class Categorias(models.Model):
     class Meta:
         managed = False
         db_table = 'categorias'
-
 
 class Compras(models.Model):
     id_compra = models.AutoField(primary_key=True)
@@ -29,7 +21,6 @@ class Compras(models.Model):
         managed = False
         db_table = 'compras'
 
-
 class Detallecompra(models.Model):
     id_detallecompra = models.AutoField(primary_key=True)
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
@@ -38,7 +29,6 @@ class Detallecompra(models.Model):
     precio_uni = models.FloatField()
     precio_tot = models.FloatField()
     estado = models.IntegerField(default=1)
-
 
     class Meta:
         managed = False
@@ -53,13 +43,6 @@ class Marcas(models.Model):
         managed = False
         db_table = 'marcas'
 
-
-
-
-
-
-
-
 class Productos(models.Model):
     id_producto = models.AutoField(primary_key=True)
     id_categoria = models.ForeignKey(Categorias, models.DO_NOTHING, db_column='id_categoria')
@@ -73,7 +56,6 @@ class Productos(models.Model):
     estado = models.IntegerField(default=1)
     precio = models.FloatField()
     precio_pub = models.FloatField()
-    
     iProductImg = models.BinaryField(null=True, blank=True)
 
     class Meta:
@@ -94,7 +76,3 @@ class Proveedores(models.Model):
     class Meta:
         managed = False
         db_table = 'proveedores'
-
-
-
-        
