@@ -15,5 +15,7 @@ urlpatterns=[
     path('obtener_cantidad_productos/', views.obtener_cantidad_productos, name='obtener_cantidad_productos'),  
     path('obtener_ventas_hechas/', views.obtener_ventas_hechas, name='obtener_ventas_hechas'),
     path('obtener_ventas_productos/', views.obtener_ventas_productos, name='obtener_ventas_productos'),
+     path('obtener-ventas-por-producto/', views.obtener_ventas_por_producto, name='obtener_ventas_por_producto'),
 ]
+
 

@@ -10,6 +10,25 @@ from django.utils import timezone
 from .models import Pedidos
 from users.models import Usuarios
 from .models import Productos, Ventas
+from .models import Detalleventa
+
+def obtener_ventas_por_producto(request):
+    ventas_por_producto = Detalleventa.objects.values('id_producto__nombre_producto').annotate(total_ventas=Sum('cantidad')).order_by('id_producto__nombre_producto')
+
+    productos = []
+    ventas = []
+
+    for venta in ventas_por_producto:
+        productos.append(venta['id_producto__nombre_producto'])
+        ventas.append(venta['total_ventas'])
+
+    data = {
+        'productos': productos,
+        'ventas': ventas
+    }
+
+    return JsonResponse(data)
+
 
 def obtener_ventas_productos(request):
     productos = Productos.objects.all()

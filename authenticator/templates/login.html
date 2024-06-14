@@ -114,10 +114,10 @@
                         return;
                     } else {
                         const regex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-                            if (!regex.test(newPassword)) {
-                                $("#recover-error").text("La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.");
-                                return;
-                            }
+                        if (!regex.test(newPassword)) {
+                            $("#recover-error").text("La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.");
+                            return;
+                        }
                     }
                     $("#loading").show();
                     setTimeout(function () {
@@ -137,10 +137,10 @@
                                     icon: 'success',
                                     title: '¡Cuenta recuperada!',
                                     text: 'Ahora puedes ingresar con tu nueva contraseña.',
-                                    confirmButtonColor: '#808080', 
+                                    confirmButtonColor: '#808080',
                                     confirmButtonText: 'Aceptar',
                                     customClass: {
-                                        confirmButton: 'white-text' ,
+                                        confirmButton: 'white-text',
                                         title: "white-text",
                                         text: "white-text",
                                     }
@@ -232,26 +232,26 @@
                     $("#loading").show();
                     setTimeout(function () {
                         $("#loading").hide();
-                    $.ajax({
-                        url: "{% url 'verificar_codigo' %}",
-                        type: 'GET',
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        data: {
-                            codigo: codigo
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                $("#loading").hide();
-                                cambiarContraseña();
+                        $.ajax({
+                            url: "{% url 'verificar_codigo' %}",
+                            type: 'GET',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            data: {
+                                codigo: codigo
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#loading").hide();
+                                    cambiarContraseña();
+                                }
+                                else {
+                                    $("#codig-error").text("Código incorrecto.");
+                                }
                             }
-                            else {
-                                $("#codig-error").text("Código incorrecto.");
-                            }
-                        }
-                    })
-                }, 2000);
+                        })
+                    }, 2000);
 
                 });
             }
@@ -435,6 +435,20 @@
     <script>
         var video = document.getElementById("video-fondo");
         video.playbackRate = 0.75;
+    </script>
+    <script>
+        $(document).on('keydown', function (e) {
+            if (e.key === ' ') {
+                e.preventDefault();
+                $('#login-button').click();
+            }
+        });
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $('#login-button').click();
+            }
+        });
     </script>
 </body>
 
