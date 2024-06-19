@@ -85,15 +85,10 @@ def crear_compra(request):
 
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
-
     palabras_clave = nombre_proveedor.split()
-
-    # Utiliza Q() para realizar la búsqueda de manera más eficiente
     q_objects = Q()
     for palabra_clave in palabras_clave:
         q_objects |= Q(nombre_proveedor__icontains=palabra_clave) 
-
-    # Utiliza filter() solo una vez para mejorar el rendimiento
     proveedores_encontrados = Proveedores.objects.filter(q_objects)
 
     resultados = [
@@ -106,7 +101,6 @@ def buscar_proveedor(request):
     ]
 
     return JsonResponse({"resultados": resultados})
-
 
 def buscar_productos(request):
     q = request.GET.get("q", "")
@@ -135,8 +129,6 @@ def buscar_productos(request):
 
     return JsonResponse({"resultados": resultados})
 
-
-
 @jwt_cookie_required
 def detalles_compra(request, compra_id):
     detalles = Detallecompra.objects.filter(id_compra=compra_id)
@@ -155,7 +147,6 @@ def detalles_compra(request, compra_id):
 
     return JsonResponse({'detallecompra': detalles_data})
 
-
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         compra_id = request.GET.get('compra_id')
@@ -164,22 +155,18 @@ def cambiarEstado(request):
         try:
             with transaction.atomic():
                 compra = Compras.objects.select_for_update().get(id_compra=compra_id)
-                
                 if nuevo_estado == "1" and compra.estado == 0:
-                    # Sumar productos solo si la compra está pasando de Inactivo a Activo
                     detalles = Detallecompra.objects.filter(id_compra=compra_id)
                     for detalle in detalles:
                         producto = detalle.id_producto
                         producto.cantidad += detalle.cantidad
                         producto.save()
                 elif nuevo_estado == "0" and compra.estado == 1:
-                    # Restar productos solo si la compra está pasando de Activo a Inactivo
                     detalles = Detallecompra.objects.filter(id_compra=compra_id)
                     for detalle in detalles:
                         producto = detalle.id_producto
                         producto.cantidad -= detalle.cantidad
                         if producto.cantidad < 0:
-                            # Revertir cambios y retornar mensaje de error
                             transaction.set_rollback(True)
                             return JsonResponse({'status': 'error', 'message': 'No es posible desactivar la compra, pues su stock quedaría negativo.'})
 
@@ -197,8 +184,6 @@ def cambiarEstado(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return JsonResponse({'status': 'error', 'message': 'Solicitud no válida.'}, status=400)
-
-
 
 @jwt_cookie_required
 def obtener_detalles_compra(request, compra_id):
@@ -219,8 +204,6 @@ def obtener_detalles_compra(request, compra_id):
     datos_generales = {
         'proveedor': compra.id_proveedor.nombre_proveedor,
         'documento': compra.id_proveedor.numero_documento_nit,
-
-        
         'fechaRegistro': compra.fechareg,
         'estado': 'Activo' if compra.estado == 1 else 'Inactivo',
     }
@@ -315,6 +298,7 @@ def formatear_precios(valor):
     valor = round(valor, 2)
     precio_formateado = '${:,.2f}'.format(valor)
     return precio_formateado
+
 def generar_qr_code(content):
     qr = qrcode.QRCode(
         version=1,
@@ -326,7 +310,6 @@ def generar_qr_code(content):
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     return img
-
 
 def generar_factura_pdf(request, compra_id):
     compra = get_object_or_404(Compras, id_compra=compra_id)
@@ -354,9 +337,7 @@ def generar_factura_pdf(request, compra_id):
 
     styles = getSampleStyleSheet()
 
-   
     elements = []
-
    
     logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
     logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
@@ -483,23 +464,3 @@ def generar_informe_pdf(request):
         return response
 
     return HttpResponse("No se ha enviado una solicitud POST")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

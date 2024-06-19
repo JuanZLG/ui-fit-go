@@ -141,18 +141,13 @@
     </div>
 
 </section>
-
-
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos Requeridos (*)</p>
     <input type="button" value="Guardar compra" id="crear-compra" class="btn-acciones btn-crear mx-2">
 </div>
 
-
-
 {% block footer %}
 {% endblock %}
-
 
 <style>
     .details-title {
@@ -188,7 +183,6 @@
         padding: 10px;
     }
 </style>
-
 
 <script>
     $(document).ready(function () {
@@ -256,17 +250,12 @@
             } else {
                 Swal.fire({
                     icon: "error",
-                    confirmButtonColor: '#dc3545' ,
+                    confirmButtonColor: '#dc3545',
                     confirmButtonText: 'Entendido',
                     text: "Producto inhabilitado"
                 });
             }
         });
-
-
-
-
-
 
         function productoExiste(id_producto) {
             let existe = false;
@@ -278,8 +267,6 @@
             });
             return existe;
         }
-
-
 
         function totalCompra() {
             let totalCompra = 0;
@@ -304,8 +291,6 @@
             $("#total-compra").text(formatearPrecios(totalCompra));
         }
 
-
-
         $("#btnAgregar").click(function () {
             if (productoSeleccionado) {
                 if (productoExiste(productoSeleccionado.id_producto)) {
@@ -324,7 +309,7 @@
                 $("#buscarProducto").val("").removeClass("is-valid");
                 $(".search-icon").show()
                 productoSeleccionado.cantidadSeleccionada = parseInt($(
-                        "#cantidad-ingresada").val(),
+                    "#cantidad-ingresada").val(),
                     10);
                 $("#cantidad-ingresada").val("1")
                 agregarFila(productoSeleccionado)
@@ -337,10 +322,6 @@
             }
         });
 
-
-        
-
-
         $(document).on("click", ".eliminar-fila", function () {
             $(this).closest("tr.producto-row").remove();
             if ($("#tabla-compras tr.producto-row").length < 1) {
@@ -350,10 +331,6 @@
             }
             totalCompra()
         });
-
-
-
-
 
         function formatearPrecios(valor) {
             valor = Math.round(valor * 100) / 100;
@@ -375,21 +352,14 @@
             fila.find(".total_producto").text(total_producto);
             totalCompra();
         }
-
-
-
-
-
         function calcularPrecios(precio_compra, cantidad_seleccionada) {
             let total_compra = precio_compra * cantidad_seleccionada;
-            precio_compra = parseFloat(precio_compra); // Convertir a número
+            precio_compra = parseFloat(precio_compra);
             return {
                 total_compra,
                 precio_compra
             };
         }
-
-
 
         function agregarFila(producto) {
             let tbody = $("#producto-tbody");
@@ -405,8 +375,6 @@
             let precio_compra = parseFloat(producto.precio_compra)
             let cantidad_seleccionada = producto.cantidadSeleccionada
             let precios = calcularPrecios(precio_compra, cantidad_seleccionada);
-            // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-            // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
             let itemFila = `
                 <tr class="producto-row" data-id-producto="${id_producto}" data-precio-compra="${precios.precio_compra}">
                     <td class="p-2 celda-producto">

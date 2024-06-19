@@ -11,9 +11,6 @@ urlpatterns = [
     path('detalles_venta/', views.detalles_venta, name='verDetallesVenta'),
     path('cargar_pedidos/', views.cargar_pedidos, name='cargar_pedidos'),
     path('agregarDetalleATabla/', views.agregarDetalleATabla, name='agregarDetalleATabla'),
-
-
     path('generar_factura/<int:venta_id>/', views.generar_factura_pdf_venta, name='generar_factura_pdf_venta'),
     path('generar_informe_pdf_ventas/', views.generar_informe_pdf_ventas, name='generar_informe_pdf_ventas'),
-
 ]

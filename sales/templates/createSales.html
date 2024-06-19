@@ -115,14 +115,11 @@
         </div>
     </div>
 </section>
-
 <div style="text-align: end; width: 100%; margin-top: 30px; padding-bottom: 50px;">
     <p id="campos-requeridos">Campos Requeridos (*)</p>
     <input type="button" value="Guardar Venta" id="crear-venta" class="btn-acciones btn-crear mx-2">
 </div>
-
 <style>
-
 </style>
 <script>
     function ClientesConPedidos(documento, pedidos) {
@@ -151,8 +148,7 @@
                 </td>
             <td class="position-relative">
                 ${pedido.fecha_pedido}
-                ${
-                    esPedidoEnProceso
+                ${esPedidoEnProceso
                         ? (estado_producto && tieneProductoSinStock
                             ? '<span class="sin-stock">Tiene al menos un producto inhabilitado o sin stock</span>'
                             : (estado_producto
@@ -162,7 +158,7 @@
                                 ? '<span class="sin-stock">Tiene al menos un producto sin stock</span>'
                                 : ''))
                         : ''
-                }
+                    }
             </td>
             <td>${formatearPrecios(pedido.total_pedido)}</td>
             <td>
@@ -369,7 +365,6 @@
             return { ganancia_total, total_venta, precio_venta };
         }
 
-
         function totalVenta() {
             let descuentoInput = $("#descuento-venta").val();
             let descuento = descuentoInput ? parseFloat(descuentoInput.replace(/[%]/g, '')) / 100 : 0;
@@ -476,20 +471,17 @@
         }
     });
 
-    
     function infoPedido() {
-            Swal.fire({
-                icon: "question",
-                text: "En esta área se listarán los pedidos elegidos para concretar la venta. Recuerde que cualquier modificación en referencias o cantidades debe efectuarse desde el módulo de pedidos. Además, tenga en cuenta que los ajustes de precios resultantes de descuentos aplicados se actualizarán en el pedido tras finalizar la venta, garantizando así la coherencia con los artículos vendidos.",
-                confirmButtonText: 'Entendido',
-                confirmButtonColor: '#dc3545'
-            });
-        }
+        Swal.fire({
+            icon: "question",
+            text: "En esta área se listarán los pedidos elegidos para concretar la venta. Recuerde que cualquier modificación en referencias o cantidades debe efectuarse desde el módulo de pedidos. Además, tenga en cuenta que los ajustes de precios resultantes de descuentos aplicados se actualizarán en el pedido tras finalizar la venta, garantizando así la coherencia con los artículos vendidos.",
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#dc3545'
+        });
+    }
 
     $(document).ready(function () {
         localStorage.removeItem('pedidos-select');
-
-
         Swal.fire({
             html: `
         <div class="container mt-4">
@@ -517,23 +509,23 @@
             showConfirmButton: false,
             width: '60%',
             allowOutsideClick: false,
-            
+
             didOpen: () => {
-                    document.getElementById('cargarPedidosBtn').addEventListener('click', function () {
-                        document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'con pedido');
-                        Swal.close();
-                        $(".product-section").hide();
-                        $("#tipo-pedido-frase").html(`
+                document.getElementById('cargarPedidosBtn').addEventListener('click', function () {
+                    document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'con pedido');
+                    Swal.close();
+                    $(".product-section").hide();
+                    $("#tipo-pedido-frase").html(`
                             <span>Aquí se listarán los pedidos seleccionados para la venta</span>
                             <i class="fas fa-question-circle" onclick="infoPedido()"></i>
                         `);
-                    });
+                });
 
-                    document.getElementById('ventaSinPedidoBtn').addEventListener('click', function () {
-                        document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'sin pedido');
-                        Swal.close();
-                    });
-                }
+                document.getElementById('ventaSinPedidoBtn').addEventListener('click', function () {
+                    document.querySelector('.cliente-container').setAttribute('data-tipo-pedido', 'sin pedido');
+                    Swal.close();
+                });
+            }
         });
 
         let listadoClientes = $("#resultado-cliente");
@@ -553,8 +545,8 @@
                 $.ajax({
                     url: "{% url 'buscar_cliente' %}",
                     data: {
-                        nombreCliente:nombreCliente,
-                        tipoPedido:tipoPedido
+                        nombreCliente: nombreCliente,
+                        tipoPedido: tipoPedido
                     },
                     type: "GET",
                     success: function (data) {
@@ -584,7 +576,6 @@
                                     ${estadoCliente === 0 ? '<span style="margin-right:20px; color: red; opacity: 0.5">Inhabilitado</span>' : ''}
                                 </li>
                                 `;
-
                                 listadoClientes.append(itemLista);
                             }
                         }
@@ -595,7 +586,6 @@
                 listadoClientes.empty();
             }
         });
-
 
         listadoClientes.on("click", ".cliente-item", function () {
             if (!$(this).hasClass("inactivo")) {
@@ -622,7 +612,6 @@
             }
         });
     });
-
 </script>
 
 {% block footer %}
@@ -663,10 +652,7 @@
         padding: 10px;
     }
 </style>
-
-
 <script>
-
     $(document).ready(function () {
         let listadoProductos = $("#resultado-producto");
         var productoSeleccionado
@@ -695,8 +681,6 @@
                                 let producto = data.resultados[i].nombre_producto;
                                 let img = data.resultados[i].presentacion;
                                 let cantidad = data.resultados[i].cantidad;
-                                // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-                                // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
                                 let itemLista = `
                                 <li class="producto-item ${estadoProducto === 1 ? "activo" : "inactivo"} ${cantidad <= 0 ? "inactivo-stock" : ""}">
                                     <div class="product-details-container">
@@ -720,7 +704,6 @@
             }
         });
 
-
         listadoProductos.on("click", ".producto-item", function () {
             if (!$(this).hasClass("inactivo")) {
                 if ($(this).hasClass("inactivo-stock")) {
@@ -728,7 +711,7 @@
                         icon: "error",
                         text: "Producto sin stock",
                         confirmButtonText: 'Entendido',
-                        confirmButtonColor: '#dc3545' 
+                        confirmButtonColor: '#dc3545'
                     });
                 } else {
                     listadoProductos.hide();
@@ -743,13 +726,12 @@
             } else {
                 Swal.fire({
                     icon: "error",
-                    confirmButtonColor: '#dc3545' ,
+                    confirmButtonColor: '#dc3545',
                     confirmButtonText: 'Entendido',
                     text: "Producto inhabilitado"
                 });
             }
         });
-
 
         function totalVenta() {
             let descuentoInput = $("#descuento-venta").val();
@@ -778,7 +760,6 @@
                 $("#total_ganancia_venta").text(formatearPrecios(0));
             }
         }
-
 
         function verificarStock(producto, callback) {
             let id_producto = producto.id_producto;
@@ -812,7 +793,7 @@
                             showCloseButton: false,
                             showConfirmButton: true,
                             confirmButtonColor: '#dc3545',
-                            confirmButtonText: 'Entendido', 
+                            confirmButtonText: 'Entendido',
                         });
                         callback(false);
                     } else {
@@ -876,7 +857,6 @@
             totalVenta()
         });
 
-
         function formatearPrecios(valor) {
             valor = Math.round(valor * 100) / 100;
             let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -910,13 +890,11 @@
             if (descuento > 0) {
                 descuento_html = "<span style='color: rgb(48, 48, 163);'> - (<span id='total_producto_descuento'>" + formatearPrecios(precio_descuento) + "</span>)</span>";
             }
-
             fila.find(".precio_venta").html(precio_venta_con_descuento + descuento_html);
             fila.find(".total_ganancia_producto").text(precio_ganancia);
             fila.find(".total_producto").text(total_producto);
             totalVenta()
         });
-
 
         function calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada) {
             let ganancia_total = formatearPrecios(precio_ganancia * cantidad_seleccionada);
@@ -928,7 +906,6 @@
         function agregarFila(producto) {
             let tbody = $("#producto-tbody");
             $("#campos-requeridos").css("color", "");
-
             let id_producto = producto.id_producto;
             let estadoProducto = producto.estado;
             let marca = producto.marca;
@@ -941,8 +918,6 @@
             let precio_ganancia = producto.precio_ganancia
             let cantidad_seleccionada = producto.cantidadSeleccionada
             let precios = calcularPrecios(precio_venta, precio_ganancia, cantidad_seleccionada);
-            // <img src="/media/${img}" alt="Imagen" class="img-fluid">
-            // <img src="/media/landingproducts/products/${img}" alt="Imagen" class="img-fluid">
             let itemFila = `
                 <tr class="producto-row" data-id-producto="${id_producto}" data-precio-venta="${precios.precio_venta}">
                     <td class="p-2 celda-producto">
@@ -1106,7 +1081,7 @@
             documentoCliente: documentoCliente,
             productos: productos
         };
-        
+
         $(document).ajaxStart(function () {
             $(".loading").addClass("show");
         });
@@ -1114,7 +1089,7 @@
         $(document).ajaxStop(function () {
             $(".loading").removeClass("show");
         });
-        
+
         $.ajax({
             type: "POST",
             url: "{% url 'crear_venta' %}",

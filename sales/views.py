@@ -1,6 +1,5 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import locale
 import smtplib
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -9,8 +8,22 @@ from dotenv import load_dotenv
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias, Pedidos, DetallePedido
-
 from django.db.models import Q
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, SimpleDocTemplate, Image, Paragraph, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib.enums import TA_CENTER
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from .models import Detalleventa, Ventas
+from django.template.loader import get_template
+import os
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from django.db.models import Sum
+
 
 @jwt_cookie_required
 @module_access_required('ventas')
@@ -87,13 +100,7 @@ def crear_venta(request):
                     'precio_tot': total_producto_formateado,
                     'descuentoProducto':descuento,
                 })
-
-            # Formatear el precio total de la venta
             total_venta_formateado = formatear_precios_email(totalVenta)
-
-            # Llamar a la función de confirmación de pedido por email
-            # pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
-
             response_data = {'success': True}
             return JsonResponse(response_data)
         except json.JSONDecodeError as e:
@@ -102,9 +109,6 @@ def crear_venta(request):
 
     clientes = Clientes.objects.all()
     return render(request, 'createSales.html', {'clientes': clientes})
-
-
-from django.template.loader import get_template
 
 def pedido_email_confirmacion(venta, email, detalles_venta, total_venta_formateado):
     load_dotenv()
@@ -134,14 +138,11 @@ def pedido_email_confirmacion(venta, email, detalles_venta, total_venta_formatea
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
-
 def buscar_productos(request):
     q = request.GET.get("q", "")
-
     productos = Productos.objects.filter(
         Q(nombre_producto__icontains=q )
     )
-
     resultados = []
     for producto in productos:
         precio_ganancia = producto.precio_pub - producto.precio 
@@ -169,9 +170,7 @@ def buscar_productos(request):
             'categoria': categoria,
             'presentacion': producto.iProductImg.decode('utf8')
         })
-
     return JsonResponse({"resultados": resultados})
-
 
 def agregarDetalleATabla(request):
     id_pedido = request.GET.get("id_pedido")
@@ -210,10 +209,7 @@ def agregarDetalleATabla(request):
         'categoria': categoria,
         'presentacion': producto.iProductImg.decode('utf8')
     }
-
     return JsonResponse({"resultado": resultado})
-
-
 
 def verificar_stock(request):
     producto = request.GET.get('id_producto')
@@ -229,9 +225,6 @@ def verificar_stock(request):
         supera_stock = False
 
     return JsonResponse({'supera_stock': supera_stock, 'cantidad_disponible': producto_obj.cantidad})
-
-from django.http import JsonResponse
-from django.db.models import Q
 
 def buscar_detalles_pedidos(id_pedido):
     detalles = DetallePedido.objects.filter(id_pedido=id_pedido).select_related('id_producto')
@@ -264,7 +257,6 @@ def buscar_pedidos(cliente):
         })
     return pedidos_con_detalles
     
-
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("nombreCliente")
     tipoPedido = request.GET.get("tipoPedido")
@@ -299,7 +291,6 @@ def buscar_cliente(request):
 
     return JsonResponse({"resultados": resultados})
 
-
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         venta_id = request.GET.get('venta_id')
@@ -319,7 +310,6 @@ def cambiarEstado(request):
             detalle.save() 
         
         return JsonResponse({'status': 'success'})
-
 
 def detalles_venta(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -364,23 +354,10 @@ def detalles_venta(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-
 def cargar_pedidos(request):
     ids_pedidos = request.GET.getlist('ids_pedidos[]')
     detalles_pedidos = list(DetallePedido.objects.filter(id_pedido__in=ids_pedidos).values())
     return JsonResponse({'detalles': detalles_pedidos})
-
-
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
-from reportlab.lib.enums import TA_CENTER
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from .models import Detalleventa, Ventas
-import os
 
 def formatear_precios(valor):
     valor = round(valor, 2)
@@ -396,7 +373,7 @@ def generar_factura_pdf_venta(request, venta_id):
 
     for detalle in detalles_venta:
         producto = detalle.id_producto.nombre_producto
-        precioUnitario = formatear_precios(detalle.precio_compra)  # Usar precio_compra o precio_venta según corresponda
+        precioUnitario = formatear_precios(detalle.precio_compra) 
         cantidad = detalle.cantidad
         totalProducto = formatear_precios(detalle.precio_tot)
         totalVenta += detalle.precio_tot
@@ -454,16 +431,6 @@ def generar_factura_pdf_venta(request, venta_id):
 
     return response
 
-from io import BytesIO
-from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
-from reportlab.lib.units import inch
-from django.http import HttpResponse
-from django.db.models import Sum
-
 def generar_informe_pdf_ventas(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')
@@ -494,7 +461,6 @@ def generar_informe_pdf_ventas(request):
         elements.append(Paragraph('Informe de Ventas', styles['Title']))
         elements.append(Spacer(1, 6))
         
-        # Estilo personalizado para el período de tiempo
         periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
         periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
         
@@ -530,7 +496,6 @@ def generar_informe_pdf_ventas(request):
 
             elements.append(t)
         else:
-            # Cambiamos el color del mensaje a rojo y lo centramos
             mensaje_style = ParagraphStyle(name='MensajeStyle', alignment=TA_CENTER, textColor=colors.red)
             mensaje = Paragraph("No se encontraron ventas en el período de tiempo.", mensaje_style)
             elements.append(mensaje)
@@ -544,6 +509,4 @@ def generar_informe_pdf_ventas(request):
             return HttpResponse("No se pudo generar el PDF")
 
         return response
-
     return HttpResponse("No se ha enviado una solicitud POST")
-

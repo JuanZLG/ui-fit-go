@@ -26,7 +26,8 @@
             </span>
         </div>
 
-        <a href="#" id="abrir-modal" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#miModal" style="border:solid 1px black">
+        <a href="#" id="abrir-modal" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#miModal"
+            style="border:solid 1px black">
             <i class="fa-solid fa-download mr-2"></i><span class="text"
                 style="font-weight: 600; font-size: 16px;">Generar Informe</span>
         </a>
@@ -51,12 +52,14 @@
                                 <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de Fin"
                                     class="date-input">
 
-                                    <p id="error-message" style="color: red; display: none;">Por favor, complete ambos campos de fecha.</p>
-                                    <br>
-                                </div>
-                                <div class="modal-footer" style="margin-top:5%">
-                                    <div style="margin-top:2%"><button class="btn btn-primary" type="submit" id="generar-informe-button">Generar</button></div>
-                                </div>
+                                <p id="error-message" style="color: red; display: none;">Por favor, complete ambos
+                                    campos de fecha.</p>
+                                <br>
+                            </div>
+                            <div class="modal-footer" style="margin-top:5%">
+                                <div style="margin-top:2%"><button class="btn btn-primary" type="submit"
+                                        id="generar-informe-button">Generar</button></div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -83,7 +86,7 @@
                 });
                 e.preventDefault();
             } else {
-                
+
                 setTimeout(function () {
                     $("#miModal").modal("hide");
                 }, 2000);
@@ -111,18 +114,18 @@
         color: #fff;
         border: 2px solid #22AD0F;
         border-radius: 5px;
-        padding: 6px 12px; 
+        padding: 6px 12px;
         font-weight: bold;
         font-size: 14px;
         transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
         cursor: pointer;
         position: absolute;
         bottom: 10px;
-        right: 10px; 
+        right: 10px;
     }
 
     #generar-informe-button:hover {
-        background-color: #1DA422 ;
+        background-color: #1DA422;
         border-color: #22AD0F;
     }
 
@@ -193,13 +196,13 @@
                                 id="editbutton"><i class="fa-solid fa-download" data-toggle="tooltip"
                                     data-placement="top" title="Descargar Compra"></i></a>
                             {% else %}
-                            <button class="btn btn-sm inactive-button" disabled id="editbutton" >
+                            <button class="btn btn-sm inactive-button" disabled id="editbutton">
                                 <i class="fa-solid fa-download" data-toggle="tooltip" data-placement="top"
                                     title="Descargar Compra"></i>
                             </button>
                             {% endif %}
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
-                                class="btn btn-sm btn-primary  ml-2" data-venta-id="{{ venta.id_venta }}"
+                                class="btn btn-sm btn-primary" data-venta-id="{{ venta.id_venta }}"
                                 data-url-details="{% url 'verDetallesVenta' %}">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
@@ -211,7 +214,6 @@
             </table>
         </div>
     </div>
-</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
