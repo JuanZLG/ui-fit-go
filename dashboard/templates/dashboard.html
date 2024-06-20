@@ -109,15 +109,15 @@
                 </div>
             </div>
         </div>
+        
         <script>
             $(document).ready(function () {
                 $.ajax({
                     url: "{% url 'obtener_margen_ganancia' %}",
                     type: 'GET',
                     success: function (data) {
-                        console.log(data);
                         const margenGanancia = parseFloat(data.margen_ganancia_total);
-
+        
                         if (!isNaN(margenGanancia)) {
                             const formatter = new Intl.NumberFormat('es-CO', {
                                 style: 'currency',
@@ -137,6 +137,7 @@
                 });
             });
         </script>
+        
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100">
                 <div class="card-body">
@@ -188,7 +189,6 @@
                     url: "{% url 'calcular_total_compras_y_ventas' %}",
                     method: "GET",
                     success: function (data) {
-                        console.log(data);
                         var totalComprasPorMes = data.total_compras_por_mes;
                         var totalVentasPorMes = data.total_ventas_por_mes;
                         var totalCompras = 0;
@@ -209,6 +209,7 @@
                 });
             });
         </script>
+
     </div>
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
@@ -222,6 +223,7 @@
                 </div>
             </div>
         </div>
+
         <script>
             $(document).ready(function () {
                 function actualizarUsuariosRegistrados() {
@@ -229,7 +231,6 @@
                         url: "{% url 'obtener_usuarios_registrados' %}",
                         method: "GET",
                         success: function (data) {
-                            console.log(data);
                             if (data.error) {
                                 console.error('Error:', data.error);
                             } else {
@@ -264,7 +265,6 @@
                         url: "{% url 'obtener_numero_proveedores' %}",
                         method: "GET",
                         success: function (data) {
-                            console.log(data);
                             if (data.error) {
                                 console.error('Error:', data.error);
                             } else {
@@ -299,7 +299,6 @@
                         url: "{% url 'obtener_cantidad_productos' %}",
                         method: "GET",
                         success: function (data) {
-                            console.log(data);
                             if (data.error) {
                                 console.error('Error:', data.error);
                             } else {
@@ -334,7 +333,6 @@
                         url: "{% url 'obtener_ventas_hechas' %}",
                         method: "GET",
                         success: function (data) {
-                            console.log(data);
                             if (data.error) {
                                 console.error('Error:', data.error);
                             } else {
@@ -425,7 +423,6 @@
                             periodo: periodo
                         },
                         success: function (data) {
-                            console.log(data);
                             window.comprasVentasChart.data.labels = data.labels;
                             window.comprasVentasChart.data.datasets[0].data = data.ventas;
                             window.comprasVentasChart.data.datasets[1].data = data.compras;
@@ -510,7 +507,6 @@
             }
 
             $(document).ready(function () {
-                console.log('Document ready');
                 actualizarGraficoProductos();
             });
         </script>
@@ -536,22 +532,22 @@
         $(document).ready(function () {
             function obtenerDatosVentasPorProducto() {
                 $.ajax({
-                    url: "{% url 'obtener_ventas_por_producto' %}",  // URL para obtener datos reales de ventas por producto
+                    url: "{% url 'obtener_ventas_por_producto' %}",
                     method: "GET",
                     success: function (data) {
                         var ctx = document.getElementById("ventasPorProducto").getContext("2d");
                         window.ventasProductoChart = new Chart(ctx, {
-                            type: 'line',  // Cambiado a línea
+                            type: 'line',
                             data: {
-                                labels: data.productos,  // Array de nombres de productos desde tu backend
+                                labels: data.productos,  
                                 datasets: [
                                     {
                                         label: 'Ventas de Productos',
                                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                         borderColor: 'rgba(75, 192, 192, 1)',
                                         borderWidth: 1,
-                                        data: data.ventas,  // Array de ventas por producto desde tu backend
-                                        fill: false  // Para evitar el relleno bajo la línea
+                                        data: data.ventas, 
+                                        fill: false  
                                     }
                                 ]
                             },

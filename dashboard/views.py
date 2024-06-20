@@ -192,8 +192,8 @@ def obtener_margen_ganancia(request):
             fechareg__year=current_year,
             fechareg__month=current_month,
             estado=1
-        ).aggregate(margen_ganancia_total=Sum('margenGanancia'))
+        ).aggregate(margen_ganancia_total=Sum('margenGanancia'))['margen_ganancia_total'] or 0
 
-        return JsonResponse({'margen_ganancia_total': margen_ganancia['margen_ganancia_total']})
+        return JsonResponse({'margen_ganancia_total': margen_ganancia})
     except Exception as e:
         return JsonResponse({'error': str(e)})
