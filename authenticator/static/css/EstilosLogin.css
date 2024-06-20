@@ -3,6 +3,10 @@
 * {
     margin: 0;
     padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
@@ -14,7 +18,6 @@ body {
     min-height: 100vh;
     background-size: cover;
     background-position: center;
-    max-zoom: 100%;
 }
 
 #video-fondo {
@@ -27,7 +30,7 @@ body {
     height: auto;
     z-index: -1;
     object-fit: cover;
-  }
+}
 
 .wrapper {
     width: 520px;
@@ -38,7 +41,7 @@ body {
     color: #fff;
     border-radius: 10px;
     padding: 40px 40px;
-    display:flex;
+    display: flex;
     justify-content: center;
     flex-direction: column;
 }
@@ -63,7 +66,7 @@ body {
     outline: none;
     border: 2px solid white;
     border-radius: 40px;
-    font-size:medium;
+    font-size: medium;
     color: #fff;
     padding: 20px 45px 20px 20px;
 }
@@ -74,7 +77,6 @@ body {
     font-weight: bold;
 }
 
-/* Para los campos de texto autocompletados */
 .input-box:-webkit-autofill,
 .input-box:-webkit-autofill:hover,
 .input-box:-webkit-autofill:focus {
@@ -82,9 +84,6 @@ body {
     background-clip: content-box, border-box;
 }
 
-
-
-/* Para los campos de contraseñas autocompletados */
 .input-box:-webkit-autofill-password,
 .input-box:-webkit-autofill-password:hover,
 .input-box:-webkit-autofill-password:focus {
@@ -92,18 +91,9 @@ body {
     background-clip: content-box, border-box;
 }
 
-
 .input-box input::placeholder {
     color: #fff;
 }
-
-/* .input-box i {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform:  translateY(-50%);
-    font-size: 20px;
-} */
 
 .wrapper .remember-forgot {
     display: flex;
@@ -111,7 +101,10 @@ body {
     font-size: 14.5px;
     margin: -15px 0 15px;
 }
-.wrapper .remember-forgot a {cursor: pointer;}
+
+.wrapper .remember-forgot a {
+    cursor: pointer;
+}
 
 .remember-forgot label input {
     accent-color: #fff;
@@ -141,51 +134,35 @@ body {
     font-weight: 600;
 }
 
-.btn:hover{
+.btn:hover {
     background-color: transparent;
     border: solid 2px white;
-    color:white;
+    color: white;
 }
 
 .wrapperLogus {
     width: 520px;
     padding: 40px 40px;
-    margin-right:13%;
+    margin-right: 13%;
 }
 
 .glitch-image {
-    width:120%;
+    width: 120%;
     height: 100%;
     object-fit: cover;
     animation: glitch 3s infinite;
 }
 
-#cong{
+#cong {
     border: solid 2px white;
-    border-radius:50%
+    border-radius: 50%
 }
 
-#cong:hover{
-    border:solid 4px rgb(255, 51, 0);
-    border-radius:50%;
+#cong:hover {
+    border: solid 4px rgb(255, 51, 0);
+    border-radius: 50%;
 }
 
-@keyframes glitch {
-    0%, 100% {
-        transform: translate(0, 0);
-    }
-    5%, 10%, 15%, 20%, 25%, 30% {
-        transform: translate(-5px, 5px);
-    }
-    35%, 40%, 45%, 50%, 55%, 60%, 65% {
-        transform: translate(5px, -5px);
-    }
-    70%, 75%, 80%, 85%, 90%, 95% {
-        transform: translate(-5px, 5px);
-    }
-}
-
-/*---------------------- OLVIDAR CONTRA ------------------------------*/
 .swal2-popup {
     width: 400px;
     background-color: #222222;
@@ -267,10 +244,6 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
 svg {
     position: absolute;
     top: 40%;
@@ -289,6 +262,64 @@ circle {
     stroke-dashoffset: 0;
     stroke-linecap: round;
     animation: dash4 1.5s ease-in-out infinite;
+}
+
+.recover-container-inputs {
+    width: 100%;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.recover-container-inputs label {
+    font-size: 14px;
+    color: #fff;
+}
+
+.white-text {
+    color: #fff !important;
+}
+
+#submit-btn.inhabilitado,
+#forget-correo.inhabilitado {
+    pointer-events: none;
+}
+
+@keyframes glitch {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    5%,
+    10%,
+    15%,
+    20%,
+    25%,
+    30% {
+        transform: translate(-5px, 5px);
+    }
+
+    35%,
+    40%,
+    45%,
+    50%,
+    55%,
+    60%,
+    65% {
+        transform: translate(5px, -5px);
+    }
+
+    70%,
+    75%,
+    80%,
+    85%,
+    90%,
+    95% {
+        transform: translate(-5px, 5px);
+    }
 }
 
 @keyframes rotate4 {
@@ -311,25 +342,4 @@ circle {
     100% {
         stroke-dashoffset: -125px;
     }
-}
-
-.recover-container-inputs {
-    width: 100%;
-    padding: 5px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.recover-container-inputs label {
-    font-size: 14px;
-    color: #fff;
-}
-
-.white-text {
-    color: #fff !important;
-}
-#submit-btn.inhabilitado,
-#forget-correo.inhabilitado {
-    pointer-events: none;
 }

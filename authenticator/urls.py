@@ -1,8 +1,6 @@
-from django.urls import path, include 
+from django.urls import path
 from . import views 
 from .views import loginmio
-from django.contrib.auth import views as auth_views
-
 
 urlpatterns = [
     path('', loginmio.as_view(), name='login_view'),

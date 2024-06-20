@@ -1,12 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
-from urllib.parse import parse_qs
-from django.views.decorators.http import require_POST
 from .models import Proveedores
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
-
 
 @jwt_cookie_required
 @module_access_required('proveedores')
@@ -38,12 +34,10 @@ def crearProveedor(request):
         return JsonResponse({'success': True})
     return render(request, 'createProvider.html')
 
-
 def proveedor_unico(request):
     proveedor = request.GET.get("proveedor", "")
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
-
 
 def proveedor_unico_edit(request):
     nombre = request.GET.get("nombre", "")
@@ -51,7 +45,6 @@ def proveedor_unico_edit(request):
     id_prov = int(id_prov)
     prov_existe = Proveedores.objects.exclude(id_proveedor=id_prov).filter(nombre_proveedor=nombre).exists()
     return JsonResponse({"existe": prov_existe})
-
 
 @csrf_exempt
 @jwt_cookie_required
@@ -79,8 +72,6 @@ def editarProveedor(request, id_proveedor):
     proveedor = Proveedores.objects.get(id_proveedor=id_proveedor)
     return render(request, 'editProvider.html', {"proveedor":proveedor}) 
 
-
-# @module_access_required('proveedores')
 def cambiarEstadoProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')
@@ -95,8 +86,6 @@ def cambiarEstadoProveedor(request):
         
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-
-# @module_access_required('proveedores')
 def verDetallesProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')
@@ -122,4 +111,3 @@ def verDetallesProveedor(request):
             return JsonResponse({'status': 'error', 'message': 'ID de proveedor no proporcionado'})
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-

@@ -9,7 +9,6 @@ class Marcas(models.Model):
         managed = False
         db_table = 'marcas'
 
-
 class Categorias(models.Model):
     id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=50)
@@ -17,7 +16,6 @@ class Categorias(models.Model):
     class Meta:
         managed = False
         db_table = 'categorias'
-
 
 class Productos(models.Model):
     id_producto = models.AutoField(primary_key=True)
@@ -40,8 +38,6 @@ class Productos(models.Model):
         managed = False
         db_table = 'productos'
         
-
-
 class Detalleventa(models.Model):
     id_detalleventa = models.AutoField(primary_key=True)
     id_producto = models.ForeignKey('Productos', models.DO_NOTHING, db_column='id_producto')
@@ -64,7 +60,6 @@ class Ventas(models.Model):
         managed = False
         db_table = 'ventas'
 
-
 class Clientes(models.Model):
     id_cliente = models.AutoField(primary_key=True)
     id_municipio = models.ForeignKey('Municipios', models.DO_NOTHING, db_column='id_municipio')
@@ -81,7 +76,6 @@ class Clientes(models.Model):
         managed = False
         db_table = 'clientes'
 
-        
 class Departamentos(models.Model):
     id_departamento = models.AutoField(primary_key=True)
     nombre_departamento = models.CharField(max_length=50)
@@ -99,7 +93,6 @@ class Municipios(models.Model):
         managed = False
         db_table = 'municipios'
 
-        
 class Pedidos(models.Model):
     ESTADO_CHOICES = [
         ('cancelado', 'Cancelado'),
@@ -127,6 +120,3 @@ class DetallePedido(models.Model):
     class Meta:
         managed = False
         db_table = 'detallepedido'
-
-
-

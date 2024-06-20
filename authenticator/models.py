@@ -10,7 +10,6 @@ class Usuarios(models.Model):
     contrasena = models.CharField(max_length=250)
     estado = models.IntegerField(default=1)
     
- 
     class Meta:
         managed = False
         db_table = 'usuarios'
@@ -27,7 +26,6 @@ class Permisos(models.Model):
     class Meta:
         managed = False
         db_table = 'permisos'
-
         
 class Rolespermisos(models.Model):
     id_rolespermisos = models.AutoField(primary_key=True)

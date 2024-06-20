@@ -4,10 +4,9 @@
 
 {% block body %}
 <br>
-<center>
+<div style="display: flex; justify-content: center;">
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Editar Pedido</h1>
-</center>
-
+</div>
 
 <section class="product-section-pedido" id="product-table-section" data-id-pedido="{{ pedido.id_pedido }}">
     <span style="font-size: 1.1rem;"><strong>Listado de Productos</strong></span>
@@ -53,17 +52,19 @@
                 </td>
                 <td>
                     <div class="number-input">
-                        <button type="button" class="decrement" 
-                            {% if item.detalle.id_producto.estado == 0 or item.detalle.cantidad > item.stock %}disabled{% endif %}><strong>-</strong></button>
+                        <button type="button" class="decrement" {% if item.detalle.id_producto.estado==0 or
+                            item.detalle.cantidad> item.stock %}disabled{% endif %}><strong>-</strong></button>
                         <input class="quantity cantidad-fila" min="1" max="{{ item.stock }}" name="quantity"
                             type="number" readonly value="{{ item.detalle.cantidad }}" autocomplete="off" step="1"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = '';" 
-                            {% if item.detalle.cantidad > item.stock %}disabled{% endif %}>
-                        <button type="button" class="increment" 
-                            {% if item.detalle.id_producto.estado == 0 or item.detalle.cantidad > item.stock %}disabled{% endif %}><strong>+</strong></button>
+                            oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value === '0') this.value = '';"
+                            {% if item.detalle.cantidad> item.stock %}disabled{% endif %}>
+                        <button type="button" class="increment" {% if item.detalle.id_producto.estado==0 or
+                            item.detalle.cantidad> item.stock %}disabled{% endif %}><strong>+</strong></button>
                     </div>
-                    <span class="text-danger text-center" {% if item.detalle.id_producto.estado == 1 %}style="display: none;" {% endif %}>Producto inhabilitado</span>
-                    <span class="text-danger text-center" {% if item.detalle.cantidad <= item.stock %}style="display: none;" {% endif %}>Sin stock</span>
+                    <span class="text-danger text-center" {% if item.detalle.id_producto.estado == 1
+                        %}style="display: none;" {% endif %}>Producto inhabilitado</span>
+                    <span class="text-danger text-center" {% if item.detalle.cantidad <= item.stock
+                        %}style="display: none;" {% endif %}>Sin stock</span>
                 </td>
                 <td class="precio-uni precio-format">{{ item.detalle.precio_uni }}</td>
                 <td class="precio-tot precio-format">{{ item.detalle.precio_tot }}</td>
@@ -87,79 +88,77 @@
 <script>
 
     $(document).ready(function () {
-            
-    $('#crear-pedido').click(function () {
-        let detallesProducto = $('.detalle-producto');
-        let totalPedido = parseFloat($('#total-pedido').text().replace(/[$,.]/g, ''));
-        var dataIdPedido = $('#product-table-section').data('id-pedido');
 
-        if (detallesProducto.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                html: `
+        $('#crear-pedido').click(function () {
+            let detallesProducto = $('.detalle-producto');
+            let totalPedido = parseFloat($('#total-pedido').text().replace(/[$,.]/g, ''));
+            var dataIdPedido = $('#product-table-section').data('id-pedido');
+
+            if (detallesProducto.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    html: `
                 <div class="swal2-center" style="text-align: center;">
                     <h5>Debes tener al menos un producto en el pedido</h5>
                     <a href="#" onclick="window.location.reload()" class="btn btn-danger" style="text-decoration:none; padding:6px 15px; margin-top:10px;">Entendido</a>
                 </div>
                 `,
-                showCloseButton: false,
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                heightAuto: false,
-                customClass: {
-                    popup: 'swal2-custom-popup'
-                }
-            });
-        } else {
-            let pedido = {
-                detalles: [],
-                dataIdPedido: dataIdPedido,
-                total_pedido: totalPedido
-            };
-
-            detallesProducto.each(function () {
-                let idDetalle = $(this).data('id-detalle');
-                let sabor = $(this).find('select').val();
-                let cantidad = parseFloat($(this).find('.cantidad-fila').val().replace(/[$,.]/g, ''));
-                let totalProducto = parseFloat($(this).find('.precio-tot').text().replace(/[$,.]/g, ''));
-
-                pedido.detalles.push({
-                    id_detalle: idDetalle,
-                    sabor: sabor,
-                    cantidad: cantidad,
-                    total_producto: totalProducto
+                    showCloseButton: false,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    heightAuto: false,
+                    customClass: {
+                        popup: 'swal2-custom-popup'
+                    }
                 });
-            });
+            } else {
+                let pedido = {
+                    detalles: [],
+                    dataIdPedido: dataIdPedido,
+                    total_pedido: totalPedido
+                };
 
-            $.ajax({
-                type: "POST",
-                url: "{% url 'editarPedido' %}",
-                contentType: "application/json; charset=utf-8",
-                headers: {'X-CSRFToken': '{{ csrf_token }}'},
-                data: JSON.stringify(pedido),
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Éxito',
-                            text: 'Pedido modificado con éxito',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 3000,
-                        });
-                        setTimeout(function () {
-                            window.location.href = "{% url 'pedidos' %}";
-                        }, 2000);
-                    } 
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    console.error('Error en la solicitud AJAX:', xhr.status, textStatus, errorThrown);
-                    console.error('Detalles del error:', xhr.responseText);
-                }
-            });
-        }
-});
+                detallesProducto.each(function () {
+                    let idDetalle = $(this).data('id-detalle');
+                    let sabor = $(this).find('select').val();
+                    let cantidad = parseFloat($(this).find('.cantidad-fila').val().replace(/[$,.]/g, ''));
+                    let totalProducto = parseFloat($(this).find('.precio-tot').text().replace(/[$,.]/g, ''));
 
+                    pedido.detalles.push({
+                        id_detalle: idDetalle,
+                        sabor: sabor,
+                        cantidad: cantidad,
+                        total_producto: totalProducto
+                    });
+                });
 
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'editarPedido' %}",
+                    contentType: "application/json; charset=utf-8",
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    data: JSON.stringify(pedido),
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito',
+                                text: 'Pedido modificado con éxito',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 3000,
+                            });
+                            setTimeout(function () {
+                                window.location.href = "{% url 'pedidos' %}";
+                            }, 2000);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error('Error en la solicitud AJAX:', xhr.status, textStatus, errorThrown);
+                        console.error('Detalles del error:', xhr.responseText);
+                    }
+                });
+            }
+        });
 
         function formatearPrecios(valor) {
             valor = Math.round(valor * 100) / 100;
@@ -167,7 +166,6 @@
             return '$' + precioFormateado;
         }
 
-        
         function calcularTotales() {
             let totalVenta = 0;
             document.querySelectorAll('.detalle-producto').forEach(function (row) {
@@ -186,7 +184,6 @@
             $(this).closest("tr.detalle-producto").remove();
             calcularTotales()
         });
-
 
         function increment(input) {
             let maxVal = parseInt(input.getAttribute('max'));
@@ -227,7 +224,6 @@
             decrement(input);
         });
 
-
         function checkDefaultValue(selectElement, defaultValue) {
             if (selectElement.value === defaultValue) {
                 selectElement.classList.add('default-selected');
@@ -246,8 +242,6 @@
             });
         });
     });
-
-
 </script>
 <style>
     .product-section-pedido {
@@ -273,18 +267,11 @@
         background-color: #e9ecef;
         color: #000;
     }
-
-
-
-
+    
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
-    }
-
-    input[type="number"] {
-        -moz-appearance: textfield;
     }
 
     .number-input {

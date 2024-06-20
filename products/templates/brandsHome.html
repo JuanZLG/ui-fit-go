@@ -33,32 +33,30 @@
     ::-webkit-scrollbar {
         -webkit-appearance: none;
     }
-     
+
     ::-webkit-scrollbar:vertical {
         width: 10px;
     }
-    
+
     ::-webkit-scrollbar-button:increment,
     .contenedor::-webkit-scrollbar-button {
         display: none;
     }
-    
+
     ::-webkit-scrollbar:horizontal {
         height: 10px;
     }
-    
+
     ::-webkit-scrollbar-thumb {
         background-color: lightgray;
         border-radius: 20px;
         border: 2px solid #f1f2f3;
     }
-    
+
     ::-webkit-scrollbar-track {
         border-radius: 10px;
     }
-    
 
-    /* Toco repetir codigo para cambiar el blanco */
     .btn-add,
     .btn-dash {
         color: #000;
@@ -105,16 +103,15 @@
     #editbutton {
         background-color: #FFFF99;
         color: #000;
-        /* background-color: #3498db; */
         border: none;
         transition: transform 0.5s;
-
     }
 
     #editbutton:hover,
     #detailsbutton:hover {
         transform: scale(1.1);
     }
+
     .active-status {
         background-color: #95eea5;
         color: #09711c;
@@ -125,129 +122,128 @@
         color: #8a0404;
     }
 </style>
-        <br>
-        <center>
-            <h1 class="text-black-800 mb-4" style="font-weight:bold;">Marcas de Producto</h1>
-        </center>
-        <br>
-        <div class="card mb-4">
-            <div class="card-header py-3" style="display: flex; justify-content: center; align-items:center;">
-                <span>
-                    <a class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#crearMarcaModal" data-toggle="tooltip" data-placement="top"
-                    title="Crear una Marca" style="border:solid 1px black">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
-                        style="font-weight: 600; font-size: 16px;">Agregar Marca</span>
+<br>
+<div style="display: flex; justify-content: center;">
+    <h1 class="text-black-800 mb-4" style="font-weight:bold;">Marcas de Producto</h1>
+</div>
+<br>
+<div class="card mb-4">
+    <div class="card-header py-3" style="display: flex; justify-content: center; align-items:center;">
+        <span>
+            <a class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#crearMarcaModal"
+                data-toggle="tooltip" data-placement="top" title="Crear una Marca" style="border:solid 1px black">
+                <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Agregar Marca</span>
             </a>
-                </span>
-            </div>
-        </div>
-        <div class="card shadow mb-4">
-            <div class="card-header py-4 px-5">
-                <div class="table-responsive">
-                    <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="0">
-                        <thead class="theads">
-                            <tr>
-                                <th>Nombre de la Marca</th>
-                                <th>Accion(es)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for mc in pbrands %}
-                            <tr>
-                                <td>{{ mc.nombre_marca }}</td>
-                                <td class="cellactions">
-                                    <a class="btn btn-sm btn-danger delete-button" data-id-marca="{{ mc.id_marca }}"><i
-                                        class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip"
-                                        data-placement="top" title="Eliminar Marca"></i></a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    
-<div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Marca</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="card shadow mb-4 w-70">
-                <div class="card-header py-4">
-                    <form class="form" id="marca-form" method="post">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="col-md-12 mb-1">
-                                <label for="nombre_marca">Nombre de la Marca *</label>
-                                <input type="text" class="form-control" id="nombre_marca"
-                                    name="nombre_marca" placeholder="Ingrese un nombre">
-                                <div style="margin-top:10px"></div>
-                                <span class="error-message" id="nombre_marca-error"></span>
-                            </div>
-                        </div>
-                </div>
-            </div>
-            <div class="text-end">
-                <button type="button" class="btn btn-success mx-auto" id="guardarMarca">Guardar</button>
-            </div>
-            </form>
+        </span>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-4 px-5">
+        <div class="table-responsive">
+            <table class="table table-bordered mx-auto text-center" id="dataTable" width="100%" cellspacing="0">
+                <thead class="theads">
+                    <tr>
+                        <th>Nombre de la Marca</th>
+                        <th>Accion(es)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mc in pbrands %}
+                    <tr>
+                        <td>{{ mc.nombre_marca }}</td>
+                        <td class="cellactions">
+                            <a class="btn btn-sm btn-danger delete-button" data-id-marca="{{ mc.id_marca }}"><i
+                                    class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip"
+                                    data-placement="top" title="Eliminar Marca"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="crearMarcaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Marca</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow mb-4 w-70">
+                    <div class="card-header py-4">
+                        <form class="form" id="marca-form" method="post">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="col-md-12 mb-1">
+                                    <label for="nombre_marca">Nombre de la Marca *</label>
+                                    <input type="text" class="form-control" id="nombre_marca" name="nombre_marca"
+                                        placeholder="Ingrese un nombre">
+                                    <div style="margin-top:10px"></div>
+                                    <span class="error-message" id="nombre_marca-error"></span>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-success mx-auto" id="guardarMarca">Guardar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-    $(".delete-button").click(function () {
-        var idToDelete = parseInt($(this).data("id-marca"));
-        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        $(".delete-button").click(function () {
+            var idToDelete = parseInt($(this).data("id-marca"));
+            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-        Swal.fire({
-            title: 'Eliminar',
-            text: '¿Desea eliminar esta marca? Se inhabilitarán los productos asociados a ella.',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#0975B7',
-            cancelButtonColor: '#DF3131',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    headers: {
-                        "X-CSRFToken": csrfToken
-                    },
-                    url: "{% url 'borrarMarca' %}",
-                    data: {
-                        idToDelete: idToDelete
-                    },
-                    method: "POST",
-                    success: function (response) {
-                        $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
-                        location.reload();
-                    },
-                    error: function (error) {
-                        
-                    }
-                });
-            }
+            Swal.fire({
+                title: 'Eliminar',
+                text: '¿Desea eliminar esta marca? Se inhabilitarán los productos asociados a ella.',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#0975B7',
+                cancelButtonColor: '#DF3131',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        headers: {
+                            "X-CSRFToken": csrfToken
+                        },
+                        url: "{% url 'borrarMarca' %}",
+                        data: {
+                            idToDelete: idToDelete
+                        },
+                        method: "POST",
+                        success: function (response) {
+                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
+                            location.reload();
+                        },
+                        error: function (error) {
+
+                        }
+                    });
+                }
+            });
         });
     });
-});
-
 </script>
 
 <script>
     $(document).ready(function () {
-        
+
         $("#nombre_marca").on('input', function () {
             $("#nombre_marca-error").text("");
             $("#nombre_marca").removeClass("is-invalid")
@@ -271,7 +267,6 @@ aria-hidden="true">
             }
         });
 
-
         function enviarDatosMarca() {
             $.ajax({
                 type: "POST",
@@ -284,19 +279,16 @@ aria-hidden="true">
                             text: 'Se ha creado la marca con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 3000, 
+                            timer: 3000,
                         });
                         setTimeout(function () {
                             $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                             location.reload();
-                        }, 2000); 
+                        }, 2000);
                     }
                 }
             });
-            
         }
-
     });
 </script>
-
 {% endblock %}

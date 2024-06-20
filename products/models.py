@@ -1,6 +1,4 @@
-
 from django.db import models
-
 
 class Marcas(models.Model):
     id_marca = models.AutoField(primary_key=True)
@@ -40,4 +38,3 @@ class Productos(models.Model):
     class Meta:
         managed = False
         db_table = 'productos'
-        

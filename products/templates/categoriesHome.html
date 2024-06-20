@@ -34,32 +34,30 @@
     ::-webkit-scrollbar {
         -webkit-appearance: none;
     }
-     
+
     ::-webkit-scrollbar:vertical {
         width: 10px;
     }
-    
+
     ::-webkit-scrollbar-button:increment,
     .contenedor::-webkit-scrollbar-button {
         display: none;
     }
-    
+
     ::-webkit-scrollbar:horizontal {
         height: 10px;
     }
-    
+
     ::-webkit-scrollbar-thumb {
         background-color: lightgray;
         border-radius: 20px;
         border: 2px solid #f1f2f3;
     }
-    
+
     ::-webkit-scrollbar-track {
         border-radius: 10px;
     }
-    
 
-    /* Toco repetir codigo para cambiar el blanco */
     .btn-add,
     .btn-dash {
         color: #000;
@@ -106,7 +104,6 @@
     #editbutton {
         background-color: #FFFF99;
         color: #000;
-        /* background-color: #3498db; */
         border: none;
         transition: transform 0.5s;
 
@@ -116,6 +113,7 @@
     #detailsbutton:hover {
         transform: scale(1.1);
     }
+
     .active-status {
         background-color: #95eea5;
         color: #09711c;
@@ -125,21 +123,19 @@
         background-color: #ec8080;
         color: #8a0404;
     }
-
-    
 </style>
 <br>
-<center>
+<div style="display: flex; justify-content: center;">
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Categorías de Producto</h1>
-</center>
+</div>
 <br>
 <div class="card mb-4">
     <div class="card-header py-3" style="display: flex; justify-content: center; align-items:center;">
         <span>
-            <a class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#crearCategoriaModal" data-toggle="tooltip" data-placement="top"
-                    title="Crear una Categoría" style="border:solid 1px black">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
-                        style="font-weight: 600; font-size: 16px;">Agregar Categoría</span>
+            <a class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#crearCategoriaModal"
+                data-toggle="tooltip" data-placement="top" title="Crear una Categoría" style="border:solid 1px black">
+                <i class="fa-solid fa-plus mr-2"></i><span class="text"
+                    style="font-weight: 600; font-size: 16px;">Agregar Categoría</span>
             </a>
         </span>
     </div>
@@ -158,7 +154,7 @@
                     {% for ct in cats %}
                     <tr>
                         <td>{{ ct.nombre_categoria }}</td>
-                        
+
                         <td class="cellactions">
                             <a class="btn btn-sm btn-danger delete-button" data-id-categoria="{{ ct.id_categoria }}"><i
                                     class="fa-solid fa-trash-can fa-sm" style="color: #ffffff;" data-toggle="tooltip"
@@ -211,7 +207,7 @@
 
 <script>
     $(document).ready(function () {
-        
+
         $("#nombre_categoria").on('input', function () {
             $("#nombre_categoria-error").text("");
             $("#nombre_categoria").removeClass("is-invalid")
@@ -248,7 +244,7 @@
                             text: 'Se ha creado la categoria con éxito',
                             icon: 'success',
                             showConfirmButton: false,
-                            timer: 3000, 
+                            timer: 3000,
                         }).then(() => {
                             $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                             location.reload();
@@ -257,7 +253,6 @@
                 }
             });
         }
-
     });
 </script>
 
@@ -302,68 +297,63 @@
 
 <script>
     $(document).ready(function () {
-    $(".delete-button").click(function () {
-        var idToDelete = parseInt($(this).data("id-categoria"));
-        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        $(".delete-button").click(function () {
+            var idToDelete = parseInt($(this).data("id-categoria"));
+            var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
 
-        Swal.fire({
-            title: 'Eliminar',
-            text: '¿Desea eliminar esta categoría? Se inhabilitaran los productos asociados a ella.',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#0975B7',
-            cancelButtonColor: '#DF3131',
-            
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    headers: {
-                        "X-CSRFToken": csrfToken
-                    },
-                    url: "{% url 'borrarCategoria' %}",
-                    data: {
-                        idToDelete: idToDelete
-                    },
-                    method: "POST",
-                    success: function (response) {
-                        $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
-                        location.reload();
-                    },
-                    error: function (error) {
-                       
-                    },
-                });
-            }
+            Swal.fire({
+                title: 'Eliminar',
+                text: '¿Desea eliminar esta categoría? Se inhabilitaran los productos asociados a ella.',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#0975B7',
+                cancelButtonColor: '#DF3131',
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        headers: {
+                            "X-CSRFToken": csrfToken
+                        },
+                        url: "{% url 'borrarCategoria' %}",
+                        data: {
+                            idToDelete: idToDelete
+                        },
+                        method: "POST",
+                        success: function (response) {
+                            $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
+                            location.reload();
+                        },
+                        error: function (error) {
+
+                        },
+                    });
+                }
+            });
         });
     });
-});
 
 </script>
 
 <style>
     .my-custom-popup {
-        /* Estilos para el fondo del diálogo o cualquier otro elemento del popup */
         background-color: #f3f3f3;
     }
-    
+
     .my-confirm-button {
-        /* Estilos para el botón de confirmar */
-        background-color: #28a745; /* Verde */
-        color: #fff; /* Texto blanco */
+        background-color: #28a745;
+        color: #fff;
     }
-    
+
     .my-cancel-button {
-        /* Estilos para el botón de cancelar */
-        background-color: #dc3545; /* Rojo */
-        color: #fff; /* Texto blanco */
+        background-color: #dc3545;
+        color: #fff;
     }
-    
+
     .my-icon {
-        /* Estilos para el icono de advertencia (warning) */
-        color: #ffc107; /* Amarillo */
+        color: #ffc107;
     }
-    
 </style>
 
 

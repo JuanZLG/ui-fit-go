@@ -7,11 +7,8 @@
 <style>
   .tooltip-btn {
     width: 30px;
-    /* Ancho del botón */
     height: 30px;
-    /* Alto del botón */
     font-size: 18px;
-    /* Tamaño del texto */
     color: black;
     background-color: transparent;
     border: solid 1px black;
@@ -27,9 +24,9 @@
     text-align: center;
   }
 </style>
-<center>
+<div style="display: flex; justify-content: center;">
   <h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Producto</h1>
-</center>
+</div style="display: flex; justify-content: center;">
 
 <div class="card shadow" style="position:relative;">
   <div class="container p-4">
@@ -141,34 +138,35 @@
       </div>
 
       <div class="form-row">
-      <div class="col-md-4 mb-3 mx-auto">
-        <div class="form-group">
-          <label for="iPrice">Precio de Compra *</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+        <div class="col-md-4 mb-3 mx-auto">
+          <div class="form-group">
+            <label for="iPrice">Precio de Compra *</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:darkgreen">$</span>
+              </div>
+              <input type="text" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"
+                oninput="formatPriceInput(this);" value="{{ Product.precio }}" />
             </div>
-            <input type="text" class="form-control" id="iPrice" name="iPrice" placeholder="Ingrese un precio"
-              oninput="formatPriceInput(this);" value="{{ Product.precio }}" />
+            <div class="error-message" id="iPrice-error" style="color:red;"></div>
           </div>
-          <div class="error-message" id="iPrice-error" style="color:red;"></div>
         </div>
-      </div>
 
-      <div class="col-md-4 mb-3 mx-auto">
-        <div class="form-group">
-          <label for="iPubPrice">Precio al Público *</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:red">$</span>
+        <div class="col-md-4 mb-3 mx-auto">
+          <div class="form-group">
+            <label for="iPubPrice">Precio al Público *</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" style="font-weight:bold; font-family:verdana; color:red">$</span>
+              </div>
+              <input type="text" class="form-control" id="iPubPrice" name="iPubPrice"
+                placeholder="Ingrese un precio de venta" oninput="formatPriceInput(this);"
+                value="{{ Product.precio_pub }}" />
             </div>
-            <input type="text" class="form-control" id="iPubPrice" name="iPubPrice" placeholder="Ingrese un precio de venta"
-              oninput="formatPriceInput(this);" value="{{ Product.precio_pub }}" />
+            <div class="error-message" id="iPubPrice-error" style="color:red;"></div>
           </div>
-          <div class="error-message" id="iPubPrice-error" style="color:red;"></div>
         </div>
       </div>
-    </div>
 
       <div class="text-center p-2">
         <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
@@ -295,20 +293,19 @@
   });
 </script>
 
-
 <script>
-    function formatPriceInput(inputElement) {
+  function formatPriceInput(inputElement) {
 
-      let unformattedValue = inputElement.value.replace(/[,.]/g, '');
+    let unformattedValue = inputElement.value.replace(/[,.]/g, '');
 
-      let formattedValue = '';
+    let formattedValue = '';
 
-      if (!isNaN(unformattedValue)) {
-        formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      }
-
-      inputElement.value = formattedValue;
+    if (!isNaN(unformattedValue)) {
+      formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
+
+    inputElement.value = formattedValue;
+  }
 </script>
 
 {% endblock %}

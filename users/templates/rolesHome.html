@@ -26,8 +26,6 @@
         animation: animarGradiente 3s linear infinite;
         font-weight: bold;
     }
-
-    /* Toco repetir codigo para cambiar el blanco */
     .btn-add,
     .btn-dash {
         color: #000;
@@ -71,7 +69,6 @@
 
     tr.inactivo {
         background-color: #ccc;
-        /* Cambia el fondo a un tono más claro */
         color: #676666;
     }
 
@@ -88,7 +85,6 @@
     .verEditar {
         background-color: #FFFF99;
         color: #000;
-        /* background-color: #3498db; */
         border: none;
         transition: transform 0.5s;
 
@@ -125,13 +121,12 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/rolesHome.css' %}">
-    <!-- <link rel="stylesheet" href="{% static 'css/common.css' %}"> -->
 </head>
 
 <br>
-<center>
+<div style="display: flex; justify-content: center;">
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Roles</h1>
-</center>
+</div>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -142,7 +137,6 @@
                     <i class="fa-solid fa-plus mr-2"></i><span class="text"
                         style="font-weight: 600; font-size: 16px;">Agregar Rol</span>
                 </a>
-
             </span>
         </div>
 
@@ -155,8 +149,6 @@
         </div> {% endcomment %}
     </div>
 </div>
-
-
 <div class="card shadow mb-4">
     <div class="card-header py-4">
         <div class="table-responsive">
@@ -196,7 +188,6 @@
     </div>
 </div>
 
-
 <style>
     .admin {
         background-color: #ccc;
@@ -216,9 +207,6 @@
 
 
 <script>
-    // $(document).ready(function () {
-
-
     $(".delete-button").click(function () {
         let idrol = parseInt($(this).data("id-rol"));
         Swal.fire({
@@ -257,8 +245,6 @@
         });
     });
 </script>
-
-
 
 <style>
     .cont-permisos-detalles {
@@ -426,7 +412,6 @@
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // enviarDatosVentas("edit");
                         }
                     });
 
@@ -486,7 +471,6 @@
                 $(".error-rol-permisos").text("Debe seleccionar al menos un permiso").css("color", "red");
                 camposValidos = false;
             }
-
 
             if (!camposValidos) {
                 return;
@@ -694,8 +678,6 @@
             $(".error-rol-permisos").text("");
         });
 
-
-
         function validarRol(nombre_rol) {
             return new Promise(function (resolve, reject) {
                 $.ajax({
@@ -714,10 +696,7 @@
                 });
             });
         }
-
     });
-
 </script>
-
 
 {% endblock %}

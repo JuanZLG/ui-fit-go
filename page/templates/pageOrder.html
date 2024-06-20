@@ -1,16 +1,13 @@
 {% extends "pageBase.html" %}
 {% block title %}Ver pedido{% endblock %}
-
 {% block urls %}
 {% load static %}
 <script src="{% static 'js/pageOrder.js' %}"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 {% endblock %}
-
 {% block mobile-home %}{% endblock %}
 {% block mobile-title %}{% endblock %}
-
 {% block body %}
 
 <div class="container-order row">
@@ -70,7 +67,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="row info-client" >
+        <div class="row info-client">
             <div class="cont-form-pedido card shadow col-lg-7 col-md-7 me-3" style="position: relative;">
                 <div class="loading">
                     <div class="dot-spinner">
@@ -221,11 +218,9 @@
                                 cargarDetalle(id_producto);
                             }
                         });
-
                     }
                 },
             });
-
         }
 
         $(document).on("input", "#search-input-desk", function () {
@@ -314,10 +309,6 @@
         }
     }
 
-
-
-
-    // Evento click para el botón continuar
     $('#continuar').on('click', function () {
         $('.table-order').toggle();
         $('.info-client').toggle();
@@ -366,7 +357,7 @@
         $(document).ajaxStop(function () {
             $(".loading").removeClass("show");
         });
-        
+
         $.ajax({
             url: "{% url 'pageOrder' %}",
             type: 'POST',
@@ -386,7 +377,7 @@
                     showCloseButton: false,
                     showConfirmButton: false,
                     allowOutsideClick: false,
-                    heightAuto: false, 
+                    heightAuto: false,
                     customClass: {
                         popup: 'swal2-custom-popup'
                     }
@@ -425,8 +416,6 @@
     var config = { attributes: true };
     observer.observe(aviso, config);
 
-
-
     document.querySelectorAll('#cliente-form input').forEach(function (input) {
         input.addEventListener('input', function () {
             var spanRequerido = document.getElementById('requerido');
@@ -447,8 +436,6 @@
             spanRequerido.style.color = '#000';
         });
     });
-
-
     async function documentoExist(documento) {
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -516,10 +503,6 @@
             }
         });
     }
-
-
-
-
     function obtenerMunicipios() {
         const departamentoSeleccionado = $("#departamento").val();
         const municipioSelect = $("#municipio");
@@ -560,9 +543,6 @@
             obtenerCliente(documento);
         }
     });
-
-
-
 </script>
 <style>
     .table thead tr th {
@@ -580,5 +560,4 @@
         }
     }
 </style>
-
 {% endblock %}

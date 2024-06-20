@@ -15,13 +15,9 @@ import random
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from django.contrib.auth import get_user_model
-import re
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.hashers import make_password
-from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework import status
+from django.template.loader import get_template
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -59,33 +55,31 @@ class loginmio(APIView):
         except Usuarios.DoesNotExist:
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
         
-from django.template.loader import get_template
-def send_email_codigo(user, email, codigo):
-    load_dotenv()
-    remitente = os.getenv("USER")
-    destinatario = email
-    asunto = "Recuperación de cuenta"
 
-    msg = MIMEMultipart()
-    msg["Subject"] = asunto
-    msg["From"] = remitente
-    msg["To"] = destinatario
+# def send_email_codigo(user, email, codigo):
+#     load_dotenv()
+#     remitente = os.getenv("USER")
+#     destinatario = email
+#     asunto = "Recuperación de cuenta"
 
-    template = get_template("emailCodig.html")
-    context = {
-        'user': user,
-        'codigo': codigo,
-        'email': email
-    }
-    html = template.render(context)
+#     msg = MIMEMultipart()
+#     msg["Subject"] = asunto
+#     msg["From"] = remitente
+#     msg["To"] = destinatario
 
-    msg.attach(MIMEText(html, "html"))
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
-    server.login(remitente, os.getenv("PASS"))
-    
-    # server.sendmail(remitente, destinatario, msg.as_string())
-    server.quit()
+#     template = get_template("emailCodig.html")
+#     context = {
+#         'user': user,
+#         'codigo': codigo,
+#         'email': email
+#     }
+#     html = template.render(context)
+
+#     msg.attach(MIMEText(html, "html"))
+#     server = smtplib.SMTP("smtp.gmail.com", 587)
+#     server.starttls()
+#     server.login(remitente, os.getenv("PASS"))
+#     server.quit()
 
 def verificar_correo(request):
     correo = request.GET.get('correo')
@@ -97,8 +91,7 @@ def verificar_correo(request):
         print(codigo) 
         request.session['correo_almacenado'] = correo  
         request.session['codigo_almacenado'] = codigo 
-    
-        # send_email_codigo(user, correo, codigo)
+
     return JsonResponse({'existe': existe})
 
 def verificar_codigo(request):

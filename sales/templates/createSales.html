@@ -282,7 +282,6 @@
                     window.location.reload();
                 });
 
-
                 document.getElementById('cargarPedidos').addEventListener('click', async () => {
                     const checkboxes = document.querySelectorAll('.pedido-checkbox');
                     const idsSeleccionados = Array.from(checkboxes).filter(cb => cb.checked && !cb.disabled).map(cb => cb.value);
@@ -349,7 +348,6 @@
                         });
                     });
                 }
-
             }
         });
 
@@ -440,8 +438,6 @@
             Swal.close();
         }
     }
-
-
     $("#cont-icon-pedido").on("click", function () {
         if ($(this).find(".fa-truck").css("color") === "rgb(0, 128, 0)") {
             let documento = $("#documento").text();
@@ -760,7 +756,6 @@
                 $("#total_ganancia_venta").text(formatearPrecios(0));
             }
         }
-
         function verificarStock(producto, callback) {
             let id_producto = producto.id_producto;
             let cantidad = producto.cantidadSeleccionada;
@@ -972,7 +967,6 @@
 
 </script>
 
-
 <script>
     function validateInput(event) {
         let key = event.key;
@@ -1041,7 +1035,6 @@
         }
     });
 
-
     function enviarDatosVentas() {
         let productos = {};
         let descuentoVenta = $("#descuento-venta").val() || "No aplica";
@@ -1070,7 +1063,6 @@
                 totalProductoDescuento: totalProductoDescuento
             };
         });
-
         let totalVentaDescuento = parseFloat($("#total-venta-descuento").text().replace(/[$,.]/g, '')) || "No aplica";
 
         let venta = {
@@ -1111,8 +1103,6 @@
             },
         });
     }
-
 </script>
-
 
 {% endblock %}

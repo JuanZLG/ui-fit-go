@@ -3,18 +3,18 @@
     color: #fff;
     border: 2px solid #22AD0F;
     border-radius: 5px;
-    padding: 6px 12px; 
+    padding: 6px 12px;
     font-weight: bold;
     font-size: 14px;
     transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
     cursor: pointer;
     position: absolute;
     bottom: 10px;
-    right: 10px; 
+    right: 10px;
 }
 
 #generar-informe-button:hover {
-    background-color: #1DA422 ;
+    background-color: #1DA422;
     border-color: #22AD0F;
 }
 
@@ -27,8 +27,8 @@
 }
 
 #miModal .modal-dialog {
-    max-width: 90%; /* Ancho máximo para pantallas pequeñas y medianas */
-    width: 40%; /* Ajuste del ancho para pantallas grandes */
+    max-width: 90%;
+    width: 40%;
     min-height: 35vh;
     border: none;
     background-color: rgb(255, 255, 255);
@@ -43,23 +43,23 @@
 }
 
 @media (max-width: 768px) {
-    /* Estilos específicos para pantallas pequeñas y medianas */
+
     #miModal .modal-dialog {
         width: 80%;
     }
 }
 
 @media (max-width: 576px) {
-    /* Estilos específicos para pantallas pequeñas */
     #miModal .modal-dialog {
         width: 90%;
     }
 }
 
 #calendario-contenedor {
-    max-height: 100%; 
-    overflow-y: auto; 
+    max-height: 100%;
+    overflow-y: auto;
 }
+
 .inactive-button {
     pointer-events: none;
     opacity: 0.5;
@@ -90,7 +90,6 @@ table tbody.tbody {
     font-weight: bold;
 }
 
-/* Toco repetir codigo para cambiar el blanco */
 .btn-add,
 .btn-dash {
     color: #000;
@@ -125,7 +124,6 @@ table tbody.tbody {
 
 tr.inactivo {
     background-color: #ccc;
-    /* Cambia el fondo a un tono más claro */
     color: #676666;
 }
 
@@ -142,7 +140,6 @@ tr.inactivo {
 #editbutton {
     background-color: #FFFF99;
     color: #000;
-    /* background-color: #3498db; */
     border: none;
     transition: transform 0.5s;
 
@@ -151,7 +148,6 @@ tr.inactivo {
 #detailsbutton {
     background-color: #419edd;
     color: #000;
-    /* background-color: #1e3799; */
     border: none;
     transition: transform 0.5s;
 }
@@ -166,7 +162,6 @@ tr.inactivo {
     justify-content: space-evenly;
 }
 
-
 .active-status {
     background-color: rgb(45, 124, 242);
     color: white;
@@ -177,15 +172,15 @@ tr.inactivo {
     background-color: #e83030;
     color: #ffffff;
     opacity: 0.5;
-    pointer-events: none; 
+    pointer-events: none;
     cursor: default;
-    border:solid 1px black
+    border: solid 1px black
 }
 
-.inactive-status:hover{
+.inactive-status:hover {
     background-color: #ed5959;
-    border:solid 1px black;
-    color:white;
+    border: solid 1px black;
+    color: white;
 }
 
 ::-webkit-scrollbar {
@@ -214,6 +209,7 @@ tr.inactivo {
 ::-webkit-scrollbar-track {
     border-radius: 10px;
 }
+
 .table {
     width: 80%;
 }
@@ -240,7 +236,6 @@ tr.inactivo {
     overflow: hidden;
     box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.062);
     animation: fadeIn 0.3s ease-in-out;
-
     margin: auto;
     padding: 20px;
     overflow-y: auto;
@@ -274,12 +269,14 @@ tr.inactivo {
 }
 
 
-.compraDialog .modal-container-header, .linea-detalle {
+.compraDialog .modal-container-header,
+.linea-detalle {
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
-.modal-container-header h2, .compraDialog h3{
+.modal-container-header h2,
+.compraDialog h3 {
     font-size: 1.125rem;
     font-weight: 700;
     gap: 8px;
@@ -365,19 +362,23 @@ tr.inactivo {
 .cont-detalle-header {
     padding: 20px;
 }
+
 .cont-detalle-header p {
     font-size: 1rem;
     font-weight: bold;
     color: #222222;
 }
+
 .cont-detalle-header p span {
     color: rgb(99, 99, 99);
 }
+
 .tabla-detalles {
     width: 100%;
     background-color: #2222;
     text-align: center;
-} 
+}
+
 .tabla-detalles tbody tr:hover {
     background-color: #22202022;
 }
@@ -395,6 +396,6 @@ tr.inactivo {
     background-color: #ec8080;
     color: #8a0404;
     opacity: 0.5;
-    pointer-events: none; 
-    cursor: default; 
+    pointer-events: none;
+    cursor: default;
 }

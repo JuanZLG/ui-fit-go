@@ -1,22 +1,16 @@
 {% extends "pageBase.html" %}
 {% block title %}TuiranFit{% endblock %}
-
 {% block urls %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/cards.css' %}">
 {% endblock %}
-
-
 {% block extraHeaderMobile %}
 <div class="info-section">
   <h1>TUIRANFIT</h1>
-  <p class="site-description">Haz tus pedidos a través de nuestra página web o contáctanos por WhatsApp para una atención personalizada.</p>
+  <p class="site-description">Haz tus pedidos a través de nuestra página web o contáctanos por WhatsApp para una
+    atención personalizada.</p>
 </div>
 {% endblock %}
-<!-- {% block extraHeaderDesk %}
-
-{% endblock %} -->
-
 
 {% block body %}
 <section class="mobile">
@@ -24,7 +18,6 @@
     {% for producto in productos %}
     <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
       <div class="product-image">
-        <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
         <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"
           style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid">
       </div>
@@ -37,15 +30,13 @@
       </div>
       <a class="CartBtn bg-danger color-white" href="{% url 'añadir_pedido' producto.id_producto %}">
         <span class="IconContainer">
-            <i class="fas fa-star star-icon"></i>
+          <i class="fas fa-star star-icon"></i>
         </span>
         <p class="text">Elegir producto</p>
       </a>
     </div>
-
     {% endfor %}
   </div>
-
 </section>
 
 <section class="desktop mt-4">
@@ -91,7 +82,7 @@
           </div>
           <a class="CartBtn bg-danger color-white" href="{% url 'añadir_pedido' producto.id_producto %}">
             <span class="IconContainer">
-                <i class="fas fa-star star-icon"></i>
+              <i class="fas fa-star star-icon"></i>
             </span>
             <p class="text">Elegir producto</p>
           </a>
@@ -102,17 +93,14 @@
   </div>
   <div class="row">
     <div class="col-md-2 px-4">
-      <!-- <p><strong>OPCIONES</strong></p> -->
     </div>
   </div>
 </section>
 
 <style>
 </style>
-
-
 <script>
-  
+
   $(document).ready(function () {
 
     cargarProductos()
@@ -137,72 +125,64 @@
             });
             $('.productDetailsButton').click(function (event) {
               if (!$(event.target).closest('.CartBtn').length) {
-                  var id_producto = $(this).data("id");
-                  $("#search-input").val("");
-                  cargarDetalle(id_producto);
+                var id_producto = $(this).data("id");
+                $("#search-input").val("");
+                cargarDetalle(id_producto);
               }
-          });
+            });
 
           }
         },
       });
-
     }
     $(document).on("input", "#search-input-desk", function () {
-    let search = $(this).val();
-    $("#title-search").text("RESULTADOS...");
+      let search = $(this).val();
+      $("#title-search").text("RESULTADOS...");
 
-    if (search.length >= 2) {
+      if (search.length >= 2) {
         $.ajax({
-            url: "{% url 'search_products' %}",
-            method: 'GET',
-            data: { search: search },
-            success: function (data) {
-                if (data.success) {
-                    if (data.data.length > 0) {
-                        $("#toggle-main-search-desk").empty().addClass("is-active");
+          url: "{% url 'search_products' %}",
+          method: 'GET',
+          data: { search: search },
+          success: function (data) {
+            if (data.success) {
+              if (data.data.length > 0) {
+                $("#toggle-main-search-desk").empty().addClass("is-active");
 
-                        $.each(data.data, function (index, p) {
-                            var productList =
-                                '<li class="d-flex search-card-desk productDetailsButton" data-id="' + p.id_producto + '">' +
-                                '<div style="width:50px; height:50px; overflow: hidden;"><img src="/media/' + p.iProductImg_name + '" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid"></div>' +
-                                '<div class="px-2 d-flex gap-2 flex-column">' +
-                                '<span  style="width: 100px; height:20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">' + p.nombre_producto + '</span>' +
-                                '<h6><strong class=" text-danger">' + p.precio_pub + '</strong></h6></div></li>';
+                $.each(data.data, function (index, p) {
+                  var productList =
+                    '<li class="d-flex search-card-desk productDetailsButton" data-id="' + p.id_producto + '">' +
+                    '<div style="width:50px; height:50px; overflow: hidden;"><img src="/media/' + p.iProductImg_name + '" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid"></div>' +
+                    '<div class="px-2 d-flex gap-2 flex-column">' +
+                    '<span  style="width: 100px; height:20px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">' + p.nombre_producto + '</span>' +
+                    '<h6><strong class=" text-danger">' + p.precio_pub + '</strong></h6></div></li>';
 
-                            $("#toggle-main-search-desk").append(productList);
-                        });
-
-                        // Asignación del evento click utilizando delegación de eventos
-                        $("#toggle-main-search-desk").on("click", '.productDetailsButton', function () {
-                            var id_producto = $(this).data("id");
-                            $("#search-input-desk").val("");
-                            cargarDetalle(id_producto);
-                            cargarProductos()
-                        });
-                    } else {
-                        $("#toggle-main-search-desk").empty().removeClass("is-active");
-                        $("#title-search").text("NO SE HAN ENCONTRADO RESULTADOS");
-                    }
-                }
+                  $("#toggle-main-search-desk").append(productList);
+                });
+                $("#toggle-main-search-desk").on("click", '.productDetailsButton', function () {
+                  var id_producto = $(this).data("id");
+                  $("#search-input-desk").val("");
+                  cargarDetalle(id_producto);
+                  cargarProductos()
+                });
+              } else {
+                $("#toggle-main-search-desk").empty().removeClass("is-active");
+                $("#title-search").text("NO SE HAN ENCONTRADO RESULTADOS");
+              }
             }
+          }
         });
-    } else {
+      } else {
         $("#toggle-main-search-desk").empty().removeClass("is-active");
         cargarProductos();
-    }
-});
+      }
+    });
 
-$("#search-clear-desk").on("click", function () {
-    $("#search-input-desk").val("");
-    $("#toggle-main-search-desk").empty().removeClass("is-active");
-    cargarProductos();
-});
-
-
+    $("#search-clear-desk").on("click", function () {
+      $("#search-input-desk").val("");
+      $("#toggle-main-search-desk").empty().removeClass("is-active");
+      cargarProductos();
+    });
   });
-
 </script>
-
-
 {% endblock %}

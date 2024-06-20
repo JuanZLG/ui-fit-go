@@ -82,7 +82,6 @@ def crear_compra(request):
 
     return render(request, 'createPurchases.html')
 
-
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
     palabras_clave = nombre_proveedor.split()
@@ -90,7 +89,6 @@ def buscar_proveedor(request):
     for palabra_clave in palabras_clave:
         q_objects |= Q(nombre_proveedor__icontains=palabra_clave) 
     proveedores_encontrados = Proveedores.objects.filter(q_objects)
-
     resultados = [
         {
             "id_proveedor": proveedor.id_proveedor,
@@ -142,7 +140,6 @@ def detalles_compra(request, compra_id):
             'precio_uni': detalle.precio_uni,
             'precio_tot': detalle.precio_tot,
         }
-
         detalles_data.append(detalle_data)
 
     return JsonResponse({'detallecompra': detalles_data})
@@ -151,7 +148,6 @@ def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         compra_id = request.GET.get('compra_id')
         nuevo_estado = request.GET.get('nuevo_estado')
-
         try:
             with transaction.atomic():
                 compra = Compras.objects.select_for_update().get(id_compra=compra_id)
@@ -171,10 +167,8 @@ def cambiarEstado(request):
                             return JsonResponse({'status': 'error', 'message': 'No es posible desactivar la compra, pues su stock quedaría negativo.'})
 
                         producto.save()
-
                 compra.estado = int(nuevo_estado)
                 compra.save()
-
             return JsonResponse({'status': 'success'})
 
         except Compras.DoesNotExist:
@@ -217,82 +211,6 @@ def obtener_detalles_compra(request, compra_id):
     }
 
     return JsonResponse(respuesta)
-
-# @csrf_exempt
-# def editar_compra(request, id_compra):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             print("Datos recibidos en la solicitud POST:", data)  # Imprimir los datos recibidos en el servidor
-
-#             proveedor_nombre = data.get('proveedor', '')
-#             totalCompra = data.get('totalCompra', 0)
-#             productos = data.get('productos', [])
-
-#             compra = Compras.objects.get(id_compra=id_compra)
-
-#             if proveedor_nombre:
-#                 proveedor = Proveedores.objects.get(nombre_proveedor=proveedor_nombre)
-#                 compra.id_proveedor = proveedor
-#             compra.totalCompra = totalCompra
-#             compra.save()
-
-#             productos_nuevos = []
-#             productos_actualizar = []
-#             for producto in productos:
-#                 if producto["idDetalle"] is None or producto["idDetalle"] == "":
-#                     productos_nuevos.append(producto)
-#                 else:
-#                     productos_actualizar.append(producto)
-                    
-#             detalles = Detallecompra.objects.filter(id_compra=compra)
-            
-#             idDetalles_faltantes = [detalle.id_detallecompra for detalle in detalles if detalle.id_detallecompra not in [producto["idDetalle"] for producto in productos]]
-
-#             Detallecompra.objects.filter(id_detallecompra__in=idDetalles_faltantes).delete()
-
-#             for productoDatos in productos_actualizar:
-#                 nombre_producto = productoDatos["nombre"]
-#                 id_detalle = productoDatos["idDetalle"]
-#                 detalle = Detallecompra.objects.get(id_detallecompra=id_detalle)
-#                 producto = Productos.objects.get(nombre_producto=nombre_producto)
-#                 try:
-#                     detalle.id_producto = producto
-#                     detalle.cantidad = productoDatos["cantidad"]
-#                     detalle.precio_uni = productoDatos["precioUnidad"]
-#                     detalle.precio_tot = productoDatos["precioTotal"]
-#                     detalle.save()
-#                 except Exception as e:
-#                     print(f"Error al guardar detalle: {str(e)}")
-        
-
-#             for productoDatos in productos_nuevos:
-#                 nombre_producto = productoDatos["nombre"]
-#                 producto = Productos.objects.get(nombre_producto=nombre_producto)
-#                 try:
-#                     Detallecompra.objects.create(
-#                     id_producto=producto,
-#                     id_compra=compra,
-#                     cantidad=productoDatos["cantidad"],
-#                     precio_uni=productoDatos["precioUnidad"],
-#                     precio_tot=productoDatos["precioTotal"]
-#                 )
-#                 except Exception as e:
-#                     print(f"Error al guardar detalle: {str(e)}")
-
-
-
-#             response_data = {'success': True}
-#         except Exception as e:
-#             response_data = {'success': False, 'error_message': str(e)}
-#             print("Error en la vista editar_compra:", str(e))  # Imprimir cualquier error que ocurra
-
-#         return JsonResponse(response_data)
-
-#     compra = Compras.objects.get(id_compra=id_compra)
-#     detalles = Detallecompra.objects.filter(id_compra=id_compra)
-#     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
-
 
 def formatear_precios(valor):
     valor = round(valor, 2)

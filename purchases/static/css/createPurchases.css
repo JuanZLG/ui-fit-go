@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-
 ::-webkit-scrollbar {
     display: none;
 }
@@ -27,7 +26,6 @@
     width: 31.25rem;
     padding: 1rem;
     box-shadow: 4px 2px 14px #cccccc70;
-
 }
 
 .compra-header {
@@ -104,7 +102,7 @@
     padding-right: 30px;
 }
 
-.´roveedor-item.inactivo,
+.proveedor-item.inactivo,
 .producto-item.inactivo {
     opacity: 0.8 !important;
     color: #222222 !important;
@@ -127,8 +125,6 @@
     max-height: 40px;
 }
 
-
-/*-------------------------------------------------------------------------------*/
 .product-section {
     box-shadow: 4px 2px 14px #cccccc70;
     border-radius: 10px;
@@ -188,10 +184,6 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
 .number-input {
     display: flex;
     align-items: center;
@@ -231,34 +223,37 @@ input[type="number"] {
     cursor: pointer;
 }
 
-.btn-crear, .btn-verificar {
+.btn-crear,
+.btn-verificar {
     background-color: #72d072;
 }
 
 .btn-resumen {
     background-color: #419edd;
 }
+
 .btn-descuento {
     margin-right: 10px;
     background-color: rgb(48, 48, 163);
 }
+
 .product-button:active {
     transform: scale(0.97);
 }
 
 .product-table-section {
     height: auto;
-    max-height: 300px; 
+    max-height: 300px;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 4px 2px 14px #cccccc70;
     padding: 20px !important;
-    transition: max-height 300ms ease-in-out; 
-}
-.product-table-section.show {
-    max-height: 900px; 
+    transition: max-height 300ms ease-in-out;
 }
 
+.product-table-section.show {
+    max-height: 900px;
+}
 
 .producto-cont-descuento {
     width: 100%;
@@ -275,8 +270,8 @@ input[type="number"] {
 
 #tabla-compras {
     height: auto;
-    max-height: 600px; 
-    overflow-y:auto;
+    max-height: 600px;
+    overflow-y: auto;
     padding-right: 30px;
     display: none;
 }
@@ -284,9 +279,11 @@ input[type="number"] {
 #tabla-compras.show {
     display: block;
 }
+
 .producto-cont-descuento {
     display: none;
 }
+
 .producto-cont-descuento.show {
     display: flex;
 }
@@ -307,7 +304,7 @@ input[type="number"] {
     align-items: center;
     gap: 5px;
     width: 550px;
-    
+
 }
 
 .product-details-container img {
@@ -321,19 +318,16 @@ input[type="number"] {
     width: 100%;
 }
 
-
-
 .product-details {
     text-align: start;
     font-size: 14px;
-    
+
 }
 
 .product-details li:first-child {
     font-size: 1rem;
     margin-bottom: 5px;
 }
-
 
 .input-wrapper {
     position: relative;
@@ -351,6 +345,7 @@ input[type="number"] {
     border: 1px solid #ccc;
     text-align: center;
 }
+
 .input-wrapper .percent-sign {
     color: rgb(48, 48, 163);
     font-weight: bold;
@@ -360,10 +355,12 @@ input[type="number"] {
     transform: translateY(-50%);
     pointer-events: none;
 }
+
 .precio_diferencia_descuento {
     color: rgb(48, 48, 163);
     display: block;
 }
+
 .product-column {
     width: 30% !important;
     vertical-align: middle !important;
@@ -383,7 +380,6 @@ input[type="number"] {
     width: 2%;
 }
 
-
 .product-update-button {
     pointer-events: none;
     opacity: 0.5;
@@ -400,10 +396,12 @@ input[type="number"] {
     opacity: 1;
     pointer-events: all;
 }
+
 .product-update-button.update {
     background-color: #72d072 !important;
     color: #fff !important;
 }
+
 .product-update-button:active {
     transform: scale(0.97);
 }

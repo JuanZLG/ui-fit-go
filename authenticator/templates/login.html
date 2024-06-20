@@ -11,7 +11,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </head>
 
 <body>
@@ -20,45 +19,36 @@
     {% comment %} <div class="wrapperLogus">
         <img class="glitch-image" src="{% static 'img/bvb.png' %}" id="logus">
     </div> {% endcomment %}
-
     <div class="wrapper">
-
         <h1>Iniciar Sesión</h1>
         <br>
-        <center><img id="cong" src={% static 'img/GIcon.png' %} style="width:40%;"></center>
+        <div class="imagen-kong" style="display: flex; justify-content: center;">
+            <img id="cong" src="{% static 'img/GIcon.png' %}" style="width:40%;">
+        </div>
         <form method="post" action="{% url 'login_view' %}" id="login-form">
             {% csrf_token %}
             <div class="input-box">
                 <input type="email" name="correo" placeholder="Correo Electrónico" autocomplete="address-line1">
                 <box-icon type='solid' name='user'></box-icon>
-                <center>
-                    <div style="margin-top:5px;" id="correo-error" class="text-with-shadow"></div>
-                </center>
-                <center>
-                    <div style="margin-top:5px; " id="user-error" class="text-with-shadow"></div>
-                </center>
-                <center>
-                    <div style="margin-top:5px;" id="status-error" class="text-with-shadow"></div>
-                </center>
+                <div style="margin-top:5px;" id="correo-error" class="text-with-shadow"></div>
+                <div style="margin-top:5px; " id="user-error" class="text-with-shadow"></div>
+                <div style="margin-top:5px;" id="status-error" class="text-with-shadow"></div>
             </div>
             <div class="input-box">
                 <input type="password" name="contra" placeholder="Contraseña" autocomplete="current-password">
                 <box-icon name='lock-alt' type='solid'></box-icon>
-                <center>
-                    <div style="margin-top:5px;" id="contra-error" class="text-with-shadow"></div>
-                </center>
-                <center>
-                    <div style="margin-top:5px;" id="cvalid-error" class="text-with-shadow"></div>
-                </center>
+                <div style="margin-top:5px;" id="contra-error" class="text-with-shadow"></div>
+                <div style="margin-top:5px;" id="cvalid-error" class="text-with-shadow"></div>
             </div>
             <br>
             <div class="remember-forgot">
                 <a id="forget-pass">¿Olvidaste tu contraseña?</a>
             </div>
-            <center><button type="button" class="btn" id="login-button">Entrar</button></center>
+            <div class="button-container" style="display: flex; justify-content: center;">
+                <button type="button" class="btn" id="login-button">Entrar</button>
+            </div>
         </form>
     </div>
-
     <script>
         $(document).ready(function () {
             function cambiarContraseña() {
@@ -152,11 +142,7 @@
                         Swal.close();
                     });
                 });
-
-
             }
-
-
             function validarCodigo() {
                 Swal.close();
                 Swal.fire({
@@ -192,7 +178,6 @@
                 $("#close-codig").click(function () {
                     Swal.close();
                 });
-
                 document.querySelectorAll('#input-container input').forEach((input, index, inputArray) => {
                     input.addEventListener('input', () => {
                         $("#codig-error").text("");
@@ -209,7 +194,6 @@
                             document.querySelector('.btn-codig').classList.remove('is-active');
                         }
                     });
-
                     input.addEventListener('keydown', (event) => {
                         if (event.key === 'Backspace' && index > 0 && input.value.length === 0) {
                             inputArray[index - 1].focus();
@@ -222,13 +206,11 @@
                         }
                     });
                 });
-
                 $("#submit-codig").click(function () {
                     let codigo = "";
                     $("#input-container input").each(function () {
                         codigo += $(this).val();
                     });
-
                     $("#loading").show();
                     setTimeout(function () {
                         $("#loading").hide();
@@ -252,10 +234,8 @@
                             }
                         })
                     }, 2000);
-
                 });
             }
-
             $("#forget-pass").click(function () {
                 Swal.fire({
                     title: '<span style="font-family:Arial; font-size:25px; color: #fff">Recuperar contraseña</span>',
@@ -336,12 +316,7 @@
                 });
             });
         });
-
-
-
-
     </script>
-
     <script>
         document.getElementById('login-button').addEventListener('click', function () {
             document.getElementById('user-error').textContent = '';
@@ -356,7 +331,6 @@
                 correo: correo,
                 contra: contra
             };
-
             if (!correo && !contra) {
                 displayError('correo', 'El correo es obligatorio');
                 displayError('contra', 'La contraseña es obligatoria');
@@ -365,7 +339,6 @@
             } else if (!contra) {
                 displayError('contra', 'La contraseña es obligatoria');
             } else {
-
                 fetch("{% url 'login_view' %}", {
                     method: 'POST',
                     headers: {
@@ -395,12 +368,10 @@
                     });
             }
         });
-
         function displayError(field, message) {
             var errorElement = document.getElementById(field + '-error');
             errorElement.textContent = message;
         }
-
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -415,7 +386,6 @@
             }
             return cookieValue;
         }
-
         function setCookie(name, value, daysToExpire) {
             var date = new Date();
             date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000));
@@ -423,7 +393,6 @@
             document.cookie = name + "=" + value + "; " + expires;
         }
     </script>
-
     <script>
         var imgn = document.getElementById('logus');
 
@@ -431,7 +400,6 @@
             e.preventDefault();
         };
     </script>
-
     <script>
         var video = document.getElementById("video-fondo");
         video.playbackRate = 0.75;

@@ -3,7 +3,9 @@
 {% block title %}Modificar Producto{% endblock %} 
 
 {% block body %}
-<center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Modificar Producto</h1></center>
+<div style="display: flex; justify-content: center;">
+  <h1 class="text-black-800 mb-4" style="font-weight:bold;">Modificar Producto</h1>
+</div>
 
 <div class="card shadow mb-5" style="margin-bottom:7rem">
   <div class="container p-4">
@@ -312,10 +314,7 @@
       if (!isNaN(unformattedValue)) {
           formattedValue = unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
       }
-
       inputElement.value = formattedValue;
-
-      
   }
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -334,6 +333,4 @@
     });
 });
 </script>
-
-
 {% endblock %}

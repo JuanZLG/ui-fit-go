@@ -4,7 +4,9 @@
 
 {% block body %}
 <br>
-<center><h1 class="text-black-800 mb-4" style="font-weight:bold;">Modificar Usuario</h1></center>
+<div style="display: flex; justify-content: center;">
+  <h1 class="text-black-800 mb-4" style="font-weight:bold;">Modificar Usuario</h1>
+</div>
 <br>
 <div class="container">
     <div class="row justify-content-center">
@@ -50,8 +52,6 @@
           <a href="{% url 'usuarios' %}" class="btn btn-secondary mx-2">Cancelar</a>
         {% endif %}
       </div>
-      
-
     </form>
   </div>
 </div>
@@ -120,10 +120,6 @@
   </style>
 <script>
     $(document).ready(function () {
-
-        // $('#iRole, #iNombre, #iCorreo').on('change', function () {
-        //     ocultarError($(this));
-        // });
     $("#loading").hide();
 
         function mostrarError(selector, mensaje) {
@@ -162,7 +158,6 @@ function validarCamposLlenos() {
         mostrarError('#iRole', 'Debe seleccionar un rol.');
         camposLlenos = false;
     }
-
     return camposLlenos;
 }
 
@@ -196,8 +191,6 @@ $('#iCorreo').on('input', async function () {
     const id = $(this).data("id-user");
     await validarCorreoUnico(correo, id);
 });
-
-
         function validarCorreo(correo) {
             const correoRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
             return correoRegex.test(correo);
@@ -214,9 +207,6 @@ $('#iCorreo').on('input', async function () {
             const nombreUsuarioRegex = /^[A-Za-z]+$/;
             return nombreUsuarioRegex.test(nombreFormateado);
         }
-        
-
-    
 $('#usuario-form').submit(function (event) {
         event.preventDefault();
         let errors = false;
@@ -233,8 +223,6 @@ $('#usuario-form').submit(function (event) {
       $(document).ajaxStop(function () {
         $("#loading").hide();
       });
-
-
         if (!errors) {
             $.ajax({
                 type: 'POST',
@@ -258,7 +246,5 @@ $('#usuario-form').submit(function (event) {
         }     
     });        
 });
-    
 </script>
-
 {% endblock %}

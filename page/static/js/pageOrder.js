@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 
     function reciboPedido() {
@@ -31,14 +30,11 @@ $(document).ready(function () {
             `;
             }
         }
-
         document.getElementById('recibo-pedido').innerHTML = html;
         document.getElementById('total-recibo').textContent = "$" + total.toLocaleString();
     }
 
     reciboPedido();
-
-
     let carrito = JSON.parse(localStorage.getItem('carrito'));
 
     let htmlDesk = '';
@@ -135,14 +131,8 @@ $(document).ready(function () {
         }
     }
 
-    // Asignar el HTML generado a las tablas correspondientes
     $('#producto-tbody-desk').html(htmlDesk);
     $('#producto-tbody-mobile').html(htmlMobile);
-
-
-
-
-
     $('.producto-row').each(function () {
         let row = $(this);
         let removeButton = row.find('.remove-order');
@@ -220,7 +210,6 @@ $(document).ready(function () {
             upListOrder()
         });
     });
-
 
     function increment(button) {
         let input = $(button).parent().find('.quantity');

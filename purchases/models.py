@@ -16,7 +16,6 @@ class Compras(models.Model):
     estado = models.IntegerField(default=1) 
     totalCompra = models.FloatField()
 
-
     class Meta:
         managed = False
         db_table = 'compras'
@@ -34,11 +33,9 @@ class Detallecompra(models.Model):
         managed = False
         db_table = 'detallecompra'
 
-
 class Marcas(models.Model):
     id_marca = models.AutoField(primary_key=True)
     nombre_marca = models.CharField(max_length=50)
-
     class Meta:
         managed = False
         db_table = 'marcas'

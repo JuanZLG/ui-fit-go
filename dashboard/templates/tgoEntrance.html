@@ -1,5 +1,5 @@
-
 <html lang="es-co">
+
 <head>
     {% load static %}
     <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
@@ -7,45 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 </head>
+
 <body>
     <video autoplay muted loop id="video-fondo" style="width:100%">
         <source src="{% static 'img/grid.mp4' %}" type="video/mp4">
         EL navegador no admite la reproducción de videos.
     </video>
-    
+
     <style>
         body {
-            background-color:black;
+            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             animation: fadeIn 2s forwards;
-             .body{
+
+            .body {
                 animation: fadeOut 3s forwards;
             };
         }
-        
+
         #video-fondo {
             position: fixed;
             right: 0;
             bottom: 0;
-            top:2.5;
+            top: 2.5;
             min-width: 100%;
             min-height: 100%;
             width: auto;
             height: auto;
             z-index: -1;
             object-fit: cover;
-            
-          }
-        
+
+        }
 
         h1 {
-            font-size:160px;
+            font-size: 160px;
             font-weight: bold;
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
             color: rgb(255, 255, 255);
             text-shadow: 0 0 10px rgb(255, 255, 255);
             animation: titilar 3s infinite alternate;
@@ -53,20 +54,22 @@
             cursor: default;
             align-self: center;
         }
-        
+
         @keyframes fadeOut {
             from {
                 opacity: 1;
             }
+
             to {
                 opacity: 0;
             }
         }
-        
+
         @keyframes titilar {
             0% {
                 text-shadow: 0 0 10px rgb(255, 255, 255);
             }
+
             100% {
                 text-shadow: 0 0 30px rgb(255, 255, 255);
             }
@@ -76,21 +79,23 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
     </style>
 
-     <div class="vista1">
+    <div class="vista1">
         <h1>TuiranFit</h1>
     </div>
 
     <script>
-        setTimeout(function() {
+        setTimeout(function () {
             window.location.href = "dashboard/";
         }, 3000);
     </script>
 
 </body>
+
 </html>

@@ -1,9 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-
-        
-        
 class Pedidos(models.Model):
     ESTADO_CHOICES = [
         ('cancelado', 'Cancelado'),

@@ -13,9 +13,9 @@
 </head>
 
 <br>
-<center>
+<div style="display: flex; justify-content: center;">
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Compras</h1>
-</center>
+</div>
 
 <div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -28,11 +28,13 @@
                 </a>
             </span>
         </div>
-        <a href="#" id="abrir-modal" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#miModal" style="border:solid 1px black">
+        <a href="#" id="abrir-modal" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#miModal"
+            style="border:solid 1px black">
             <i class="fa-solid fa-download mr-2"></i><span class="text"
                 style="font-weight: 600; font-size: 16px;">Generar Informe</span>
         </a>
-        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true" style="width:60%">
+        <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel"
+            aria-hidden="true" style="width:60%">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -46,20 +48,23 @@
                             {% csrf_token %}
                             <div id="calendario-contenedor">
                                 <p>Selecciona un rango de fechas:</p>
-                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de inicio" class="date-input">
-                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de fin" class="date-input">
-                                <div id="error-message" style="color: red; display: none;">Por favor, complete ambos campos de fecha.</div>
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha de inicio"
+                                    class="date-input">
+                                <input type="date" id="fecha_fin" name="fecha_fin" placeholder="Fecha de fin"
+                                    class="date-input">
+                                <div id="error-message" style="color: red; display: none;">Por favor, complete ambos
+                                    campos de fecha.</div>
                                 <br>
                             </div>
                             <div class="modal-footer" style="margin-top:5%">
-                                <div style="margin-top:2%"><button class="btn btn-success" type="submit" id="generar-informe-button">Generar</button></div>
+                                <div style="margin-top:2%"><button class="btn btn-success" type="submit"
+                                        id="generar-informe-button">Generar</button></div>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        
     </div>
 </div>
 <script>
@@ -82,7 +87,7 @@
                 });
                 e.preventDefault();
             } else {
-                
+
                 setTimeout(function () {
                     $("#miModal").modal("hide");
                 }, 2000);
@@ -103,7 +108,6 @@
         });
     });
 </script>
-
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
@@ -139,7 +143,7 @@
                                     data-placement="top" title="Descargar Compra"></i></a>
                             {% else %}
                             <button class="btn btn-sm inactive-button" disabled>
-                                <i class="fa-solid fa-download"  data-toggle="tooltip" data-placement="top"
+                                <i class="fa-solid fa-download" data-toggle="tooltip" data-placement="top"
                                     title="Descargar Compra"></i>
                             </button>
                             {% endif %}
@@ -163,7 +167,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-       
+
         $(".cambiar-estado-compra.inactive-button").addClass("inactive-status");
 
         $(".cambiar-estado-compra").click(function () {
@@ -209,7 +213,6 @@
                             }
                         },
                         error: function (error) {
-                           
                         }
                     });
                 }
@@ -259,7 +262,6 @@
     </form>
 </dialog>
 
-
 <script>
     function mostrarDetallesCompra(compraId) {
         console.log("Mostrar detalles de compra llamado con compraId:", compraId);
@@ -290,9 +292,8 @@
                     $(".estadoCompraCircle").addClass("inactivo").removeClass("activo");
                 }
 
-       
                 let detallesCompraHTML = "";
-                let totalCompra = 0; 
+                let totalCompra = 0;
 
                 for (let detalle of compra.detalles) {
                     console.log('Detalle:', detalle);
@@ -310,38 +311,27 @@
                     `;
 
                     totalCompra += parseFloat(detalle
-                        .totalProducto); 
+                        .totalProducto);
                 }
 
                 document.getElementById("modalDetallesCompra").innerHTML = detallesCompraHTML;
-
-       
                 document.getElementById("totalCompraCompra").textContent = formatearPrecios(
                     totalCompra);
 
                 const modal = document.getElementById("verDetallesCompraDialog");
                 console.log("Modal obtenido:", modal);
-
-                // Esto abre el modal
                 modal.showModal();
                 const cerrarBoton = document.getElementById("cerrarDetallesCompra");
                 cerrarBoton.addEventListener("click", cerrarModal);
             },
             error: function (error) {
                 console.error('Error en la solicitud AJAX:', error);
-                
             }
         });
     }
-
     function cerrarModal() {
-        
         const modal = document.getElementById("verDetallesCompraDialog");
         modal.close();
     }
 </script>
-
-
-
-
 {% endblock %}

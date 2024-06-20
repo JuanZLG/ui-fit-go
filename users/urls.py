@@ -1,4 +1,4 @@
-from django.urls import path, include 
+from django.urls import path
 from . import views 
 
 urlpatterns=[
@@ -17,6 +17,4 @@ urlpatterns=[
     path('remove/', views.eliminar_rol, name='eliminarRol'),
     path('profile/', views.UserProfile, name="myProfile"),
     path('changepsw/', views.change_password, name='changepsw'),
-
 ]
-

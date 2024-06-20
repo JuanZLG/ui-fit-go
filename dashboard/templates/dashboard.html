@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
             $(document).ready(function () {
                 $.ajax({
@@ -117,7 +117,7 @@
                     type: 'GET',
                     success: function (data) {
                         const margenGanancia = parseFloat(data.margen_ganancia_total);
-        
+
                         if (!isNaN(margenGanancia)) {
                             const formatter = new Intl.NumberFormat('es-CO', {
                                 style: 'currency',
@@ -137,7 +137,7 @@
                 });
             });
         </script>
-        
+
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100">
                 <div class="card-body">
@@ -539,15 +539,15 @@
                         window.ventasProductoChart = new Chart(ctx, {
                             type: 'line',
                             data: {
-                                labels: data.productos,  
+                                labels: data.productos,
                                 datasets: [
                                     {
                                         label: 'Ventas de Productos',
                                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                         borderColor: 'rgba(75, 192, 192, 1)',
                                         borderWidth: 1,
-                                        data: data.ventas, 
-                                        fill: false  
+                                        data: data.ventas,
+                                        fill: false
                                     }
                                 ]
                             },
@@ -567,12 +567,8 @@
                     }
                 });
             }
-
             obtenerDatosVentasPorProducto();
         });
     </script>
-
-
 </div>
-
 {% endblock %}

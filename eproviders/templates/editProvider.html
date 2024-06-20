@@ -72,11 +72,7 @@
         </div>
     </div>
 </div>
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 <script>
     $(document).ready(function () {
 
@@ -90,14 +86,13 @@
             $campo.siblings('.error-message').text('');
         }
 
-
         function validarCamposObligatorios() {
             let camposLlenos = true;
             const nombreValue = $('#nombre_proveedor').val();
             const telefonoValue = $('#telefono').val();
             const correoValue = $('#correo').val();
-            const tipoIdentificacionValue = $('#tipoIdentificacion').val(); // Obtener valor del select
-            const identificacionValue = $('#identificacion').val(); // Obtener valor del input identificacion
+            const tipoIdentificacionValue = $('#tipoIdentificacion').val(); 
+            const identificacionValue = $('#identificacion').val();
             const direccionValue = $('#direccion').val();
 
             if (!nombreValue) {
@@ -122,8 +117,6 @@
                 mostrarError('#correo', 'El formato del correo electrónico no es válido.');
                 camposLlenos = false;
             }
-
-
             if (tipoIdentificacionValue !== '' && identificacionValue === '' || tipoIdentificacionValue === 'DOC' && !/^\d{8,10}$/.test(identificacionValue)) {
                 mostrarError('#identificacion', 'Debe ingresar una identificación válida.');
                 camposLlenos = false;
@@ -143,7 +136,6 @@
                 }
             }
             return camposLlenos;
-
         }
 
         $('#nombre_proveedor, #telefono, #correo, #direccion').on('input', function () {
@@ -154,7 +146,6 @@
                 campo.removeClass('is-invalid');
                 $(`#${campo.attr('id')}-error`).text('');
             }
-
         });
         $('#tipoIdentificacion').change(function () {
             const tipoIdentificacionValue = $('#tipoIdentificacion').val();
@@ -183,7 +174,6 @@
                 $("#identificacion-error").text("")
             }
         });
-
 
         function validarFormatoCorreo(correo) {
             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -214,7 +204,6 @@
                 });
             });
         }
-
         $('#nombre_proveedor').on('input', async function () {
             const nombre = $(this).val();
             const id = $(this).data("id-prov");

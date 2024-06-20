@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-
 class Clientes(models.Model):
     id_cliente = models.AutoField(primary_key=True)
     documento = models.CharField(max_length=25)
@@ -14,7 +13,6 @@ class Clientes(models.Model):
         managed = False
         db_table = 'clientes'
 
-
 class Marcas(models.Model):
     id_marca = models.AutoField(primary_key=True)
     nombre_marca = models.CharField(max_length=50)
@@ -23,7 +21,6 @@ class Marcas(models.Model):
         managed = False
         db_table = 'marcas'
 
-
 class Categorias(models.Model):
     id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=50)
@@ -31,7 +28,6 @@ class Categorias(models.Model):
     class Meta:
         managed = False
         db_table = 'categorias'
-
 
 class Productos(models.Model):
     id_producto = models.AutoField(primary_key=True)
@@ -84,8 +80,6 @@ class Ventas(models.Model):
         managed = False
         db_table = 'ventas'
 
-
-
 class Pedidos(models.Model):
     ESTADO_CHOICES = [
         ('cancelado', 'Cancelado'),
@@ -113,6 +107,3 @@ class DetallePedido(models.Model):
     class Meta:
         managed = False
         db_table = 'detallepedido'
-
-
-

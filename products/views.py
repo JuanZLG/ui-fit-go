@@ -1,24 +1,17 @@
 import json
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from .models import Productos
 from django.urls import reverse
 from urllib.parse import parse_qs
 from django.http import JsonResponse
-from django.http import HttpResponse
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 from products.models import Productos, Categorias, Marcas
-import base64
-from django.core.files.base import ContentFile
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
-
 
 @jwt_cookie_required
 @module_access_required('productos')
 def Home(request):
     product = Productos.objects.all()
     return render(request, 'productsHome.html', {"Products":product}) 
-
 
 @jwt_cookie_required
 @module_access_required('productos')
@@ -51,7 +44,6 @@ def createProduct(request):
         marca = request.POST['iMarca']
         iProductImg = request.FILES['iProductImg']
         iInfoImg = request.FILES['iInfoImg']
-        
         
         m = Marcas.objects.get(id_marca=marca)
         c = Categorias.objects.get(id_categoria=categoria)
@@ -106,15 +98,11 @@ def editProduct(request, id_producto):
         pPrice = int(pPrice)
 
         precioven = precioven.replace(',', '').replace('.', '')
-        # precioven = float(precioven)
 
         iProductImg = request.FILES.get('iProductImg', None)
         iInfoImg = request.FILES.get('iInfoImg', None)
 
         productos = Productos.objects.filter(id_producto=id_producto)
-
-        
-        # products.precio = '{:,.0f}'.format(products.precio)
 
         if iProductImg:
             productos.update(iProductImg=iProductImg)
@@ -156,7 +144,6 @@ def editProduct(request, id_producto):
 
     return render(request, 'editProducts.html', {"Product": products, "marcas": marcas, "categorias": categorias})
 
-
 def cambiarEstadoDeProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_producto = request.GET.get('producto_id')
@@ -164,15 +151,11 @@ def cambiarEstadoDeProducto(request):
         try:
             producto = Productos.objects.get(id_producto=id_producto)
             producto.estado = int(nuevo_estado)
-
-            # Guardar solo el campo 'estado'
             producto.save(update_fields=['estado'])
             return JsonResponse({'status': 'success'})
         except Productos.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Producto no Encontrado'})
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
-
-
 
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -224,7 +207,6 @@ def crear_marca(request):
     
     return render(request, 'productsHome.html', {'marcas': marcas})
 
-
 def eliminar_categoria(request):
     if request.method == 'POST':
         try:
@@ -246,7 +228,6 @@ def eliminar_categoria(request):
     else:
         return JsonResponse({'error': 'Método no permitido.'})
 
-
 def eliminar_marca(request):
     if request.method == 'POST':
         try:
@@ -265,6 +246,3 @@ def eliminar_marca(request):
             return JsonResponse({'error': 'Marca no encontrada'})
     else:
         return JsonResponse({'error': 'Método no permitido.'})
-
-
-

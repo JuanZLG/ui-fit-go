@@ -53,8 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
-
-
     showDetailsElements.forEach(function (element) {
         element.addEventListener("click", function () {
             let venta_id = element.getAttribute("data-venta-id");
@@ -155,13 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         style.appendChild(document.createTextNode(css));
                     }
-
-
                 }
             });
         });
-
     });
 });
-
-

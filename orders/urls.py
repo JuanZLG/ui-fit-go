@@ -1,4 +1,4 @@
-from django.urls import path, include 
+from django.urls import path
 from . import views 
 
 urlpatterns=[
@@ -7,6 +7,4 @@ urlpatterns=[
     path('edit_order_home/<int:id_pedido>', views.editarPedidoHome, name='editarPedidoHome'),
     path('edit_order/', views.editarPedido, name='editarPedido'),
     path('details_order/', views.detalles_pedido, name='detallesPedido'),
-
 ]
-

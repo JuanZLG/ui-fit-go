@@ -1,4 +1,4 @@
-from django.urls import path, include 
+from django.urls import path
 from . import views 
 
 urlpatterns=[
@@ -12,4 +12,3 @@ urlpatterns=[
     path('documento/', views.document_exist, name='document_exist'),
     path('obtener_cliente/', views.obtener_cliente, name='obtener_cliente'),
 ]
-

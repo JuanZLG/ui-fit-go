@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
-# from django.contrib.auth import authenticate, login
-# from django.shortcuts import render, redirect
-# from django.urls import reverse_lazy
-# from django.views import View
+
 
 class Rolespermisos(models.Model):
     id_rolespermisos = models.AutoField(primary_key=True)
@@ -47,5 +44,3 @@ class Permisos(models.Model):
     class Meta:
         managed = False
         db_table = 'permisos'
-
-        

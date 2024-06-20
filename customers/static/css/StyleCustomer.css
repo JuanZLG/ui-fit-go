@@ -23,7 +23,6 @@ table tbody.tbody {
     font-weight: bold;
 }
 
-/* Toco repetir codigo para cambiar el blanco */
 .btn-dash {
     color: #000;
     font-weight: 600;
@@ -111,9 +110,6 @@ tr.inactivo {
     color:white;
 }
 
-
-
-/* modal -------------------- */
 .modal-container h2 {
     font-size: 1.5rem;
     text-align: center;

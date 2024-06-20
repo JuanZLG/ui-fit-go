@@ -6,8 +6,7 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css"><!--<![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" type="text/css">
     <style>
         * {
             box-sizing: border-box;
@@ -22,7 +21,7 @@
             text-size-adjust: none;
             font-family: 'Roboto Slab', Arial, 'Helvetica Neue', Helvetica, sans-serif;
         }
-       
+
         .content {
             background-color: #000;
             text-align: center;
@@ -60,10 +59,11 @@
             text-align: center;
         }
 
-        span, strong, p {
+        span,
+        strong,
+        p {
             color: #f3f6fe !important;
         }
-
 
         .details {
             padding: 20px;
@@ -76,16 +76,15 @@
             display: grid;
             justify-content: 20% 80%;
         }
-
     </style>
 
-<script>
+    <script>
         function formatearPrecios(valor) {
             valor = Math.round(valor * 100) / 100;
             let precioFormateado = valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             return '$' + precioFormateado;
         }
-</script>
+    </script>
 
 <body>
     <div class="content">
@@ -110,14 +109,20 @@
                     {% for detalle in detalles_venta %}
                     <tr>
                         <td style="width: 20%;">
-                            <img src="/media/{{ detalle.url }}" alt="img" class="img-fluid" style="object-fit: cover; width: 100%; height: 100%;">
+                            <img src="/media/{{ detalle.url }}" alt="img" class="img-fluid"
+                                style="object-fit: cover; width: 100%; height: 100%;">
                         </td>
                         <td style="width: 80%;">
                             <div class="d-flex flex-column gap-1">
-                                <span class="m-2"><strong>{{ detalle.nombre_producto }}</strong><span class="text-danger">x</span> {{ detalle.cantidad }}</span>
-                                <span class="m-2"><strong>Precio Unitario:</strong> <span class="precio_uni">{{ detalle.precio_venta }}</span></span>
-                                <span class="m-2"><strong>Descuento:</strong> <span>{% if detalle.descuentoProducto != '0' %}%{{ detalle.descuentoProducto }}{% else %}No aplica{% endif %}</span></span>
-                                <span class="m-2"><strong>Total:</strong> <span class="text-danger precio_tot">{{ detalle.precio_tot }}</span></span>
+                                <span class="m-2"><strong>{{ detalle.nombre_producto }}</strong><span
+                                        class="text-danger">x</span> {{ detalle.cantidad }}</span>
+                                <span class="m-2"><strong>Precio Unitario:</strong> <span class="precio_uni">{{
+                                        detalle.precio_venta }}</span></span>
+                                <span class="m-2"><strong>Descuento:</strong> <span>{% if detalle.descuentoProducto !=
+                                        '0' %}%{{ detalle.descuentoProducto }}{% else %}No aplica{% endif
+                                        %}</span></span>
+                                <span class="m-2"><strong>Total:</strong> <span class="text-danger precio_tot">{{
+                                        detalle.precio_tot }}</span></span>
                             </div>
                         </td>
                     </tr>
@@ -128,17 +133,17 @@
         <div class="d-flex gap-1 flex-column">
             <div class="d-flex justify-content-between">
                 <strong>Descuento de Compra:</strong>
-                <span>{% if venta.descuentoVenta != '0' %}%{{ venta.descuentoVenta }}{% else %}No aplica{% endif %}</span>
+                <span>{% if venta.descuentoVenta != '0' %}%{{ venta.descuentoVenta }}{% else %}No aplica{% endif
+                    %}</span>
             </div>
             <div class="d-flex justify-content-between">
                 <strong>Total de la Compra:</strong>
                 <span class="total_compra">${{ total_venta_formateado }}</span>
             </div>
         </div>
-        <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo de atención al cliente.</p>
+        <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo
+            de atención al cliente.</p>
     </div>
-    
-
 </body>
 
 </html>

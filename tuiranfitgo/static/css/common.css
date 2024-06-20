@@ -89,7 +89,6 @@ tr.inactivo {
 #detailsbutton {
     background-color: #419edd;
     color: #000;
-    /* background-color: #1e3799; */
     border: none;
     transition: transform 0.5s;
 }
@@ -98,7 +97,6 @@ tr.inactivo {
 #detailsbutton:hover {
     transform: scale(1.1);
 }
-
 
 .active-status {
     background-color: #95eea5;

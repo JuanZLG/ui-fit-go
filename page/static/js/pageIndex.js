@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   toggleInfo.addEventListener('mouseout', function () {
     menuInfo.classList.remove('show');
   });
-  // Barra principal ----------------------- 
+
   let main = document.getElementById("main-menu");
   document.getElementById("hamburgerCheckbox").addEventListener("click", function () {
     main.classList.toggle("is-active");
@@ -30,11 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
   mediaQuery.addListener(handleWidthChange);
 
   handleWidthChange(mediaQuery);
-// Obtén el input por su id
-
-
-  // Despliegue de menu productos -----------------------
-
   const togglesSubmenuProducts = document.getElementById('toggle-submain-products');
   const closeSubMainOptions = document.getElementById('close-submain-options');
   const OptionsProductsMain = document.getElementById('options-submain-products');
@@ -47,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
     OptionsProductsMain.classList.toggle('is-active');
   });
 
-  // Opciones de menu productos ----------------------- 
   const radioInputs = document.querySelectorAll('.radio input');
   const contentSections = document.querySelectorAll('.menu-column');
 
@@ -73,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
     input.addEventListener('change', showSelectedContent);
   });
 
-  // Ordenar productos por Lista o Grillas ----------------------- 
   function toggleView(viewType, containerSelector) {
     const productContainer = document.querySelector(containerSelector);
 
@@ -86,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Evento de clic para la versión móvil
   document.querySelectorAll('.mobile .view-options .list').forEach(function (element) {
     element.addEventListener('click', function (e) {
       toggleView('list', '#product-container-mobile');
@@ -98,10 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
       toggleView('grid', '#product-container-mobile');
     });
   });
-
-
-  // Opciones SubMenu ----------------------- 
-
 
   var activeElement = null;
 
@@ -141,5 +129,4 @@ document.addEventListener('DOMContentLoaded', function () {
       activeElement = null;
     }
   });
-
 });  

@@ -49,32 +49,22 @@ def UserProfile(request):
         try:
             payload = json.loads(base64.b64decode(token.split('.')[1] + '==').decode('utf-8'))
             id_rol = payload.get('id_rol')
-
-            # Obtener el nombre del rol desde la base de datos
             try:
                 rol = Roles.objects.get(id_rol=id_rol)
                 nombre_rol = rol.nombre_rol
             except Roles.DoesNotExist:
-                nombre_rol = "Rol no encontrado"  # Puedes manejar esto de la manera que prefieras
-
-            # Pasar el nombre del rol a la plantilla
+                nombre_rol = "Rol no encontrado" 
             return render(request, 'profile.html', {'nombre_rol': nombre_rol})
         except Exception as e:
-            # Manejar cualquier error de decodificación del token
             print(f"Error decodificando el token: {e}")
-
-    # Manejar el caso en que no haya token o se produzca un error
     return render(request, 'profile.html', {'nombre_rol': "Rol no disponible"})
 
 @csrf_exempt 
 @jwt_cookie_required 
 def change_password(request):
     try:
-        # Obtén el ID del usuario desde el payload del token
         user_name = request.user.get('correo')
         print(f'user_name: {user_name}')
-
-        # Busca el usuario en la base de datos
         user = get_object_or_404(Usuarios, correo=user_name)
 
         new_password = request.POST.get('new_password')
@@ -85,8 +75,6 @@ def change_password(request):
 
         if new_password != confirm_password:
             return HttpResponseBadRequest('Las contraseñas no coinciden.')
-
-        # Cambia la contraseña y guarda el usuario
         user.contrasena = new_password
         user.save()
 
@@ -97,8 +85,8 @@ def change_password(request):
         return HttpResponseBadRequest('Error al cambiar la contraseña.')
 
 
-# @jwt_cookie_required
-# @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -113,8 +101,8 @@ def cambiarEstadoDeUsuario(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
-# @jwt_cookie_required
-# @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def verDetallesUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -167,8 +155,8 @@ def createUser(request):
 
     return render(request, 'createUser.html', {"rols": roles})
 
-# @jwt_cookie_required
-# @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def send_email_create(user, password, email):
     load_dotenv()
     remitente = os.getenv("USER")
@@ -196,15 +184,14 @@ def send_email_create(user, password, email):
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
 
-# @jwt_cookie_required
-# @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def create_password(length=8):
     characters = string.ascii_letters + string.digits
     password = ""
     for _ in range(length):
         password += secrets.choice(characters)
     return password
-
 
 @jwt_cookie_required
 def editUser(request, id_usuario):
@@ -233,9 +220,6 @@ def editUser(request, id_usuario):
         return JsonResponse(response_data)    
     users = Usuarios.objects.get(id_usuario=id_usuario)
     return render(request, 'editUser.html', {"people":users, "rols":roles}) 
-
-
-
 
 def send_email_edit(user, email, email_original):
     load_dotenv()
@@ -286,7 +270,6 @@ def HomeRoles(request):
             permisos_count[rol] = permisos
         
     return render(request, 'rolesHome.html', {"permisos_count": permisos_count})
-
 
 @jwt_cookie_required
 def edit_rol(request):
@@ -356,10 +339,8 @@ def email_unique_edit(request):
     email_existe = Usuarios.objects.exclude(id_usuario=id_usuario).filter(correo=email).exists()
     return JsonResponse({"existe": email_existe})
 
-
-
 @jwt_cookie_required
-# @module_access_required('usuarios')
+@module_access_required('usuarios')
 def obtener_datos(request):
         id_rol = request.GET.get('param')
         rolespermisos = Rolespermisos.objects.get(id_rol=id_rol)
@@ -376,11 +357,6 @@ def obtener_datos(request):
         }
         return JsonResponse({'success': True, 'datos': datos})
 
-
-
-
-
-
 @jwt_cookie_required
 @module_access_required('usuarios')
 def rol_unico(request):
@@ -391,7 +367,7 @@ def rol_unico(request):
 
 
 @jwt_cookie_required
-# @module_access_required('usuarios')
+@module_access_required('usuarios')
 def eliminar_rol(request):
     id_rol = request.GET.get('idrol')
     
@@ -417,4 +393,3 @@ def eliminar_rol(request):
     
     except Roles.DoesNotExist:
         return JsonResponse({'error': 'El rol no existe'})
-

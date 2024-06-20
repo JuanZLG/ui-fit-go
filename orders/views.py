@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from orders.models import Pedidos, DetallePedido, Clientes, Detalleventa, Ventas, Productos
+from orders.models import Pedidos, DetallePedido, Productos
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
 
 @jwt_cookie_required
@@ -11,8 +11,6 @@ def Home(request):
     pedidos = Pedidos.objects.all()
     return render(request, "ordersHome.html", {"pedidos": pedidos})
 
-
-
 def cambiarEstadoPedido(request):
     if request.method == "GET":
         id_pedido = request.GET.get('pedido_id')
@@ -20,8 +18,6 @@ def cambiarEstadoPedido(request):
         pedido.estado = "cancelado"
         pedido.save()
         return JsonResponse({'status': 'success'})
-
-
 
 @jwt_cookie_required
 @module_access_required('ventas')
@@ -46,7 +42,6 @@ def editarPedidoHome(request, id_pedido):
         "pedido": pedido,
         "detalles": detalles
     })
-
 
 @csrf_exempt
 def editarPedido(request):
@@ -77,9 +72,6 @@ def editarPedido(request):
         except Exception as e:
             response_data = {'success': False, 'error_message': str(e)}
             return JsonResponse(response_data, status=500)
-
-
-
 
 def detalles_pedido(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':

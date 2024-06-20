@@ -1,4 +1,4 @@
-from django.urls import path, include  # Funciones de manejo de rutas y urls
+from django.urls import path
 from . import views 
 
 urlpatterns = [

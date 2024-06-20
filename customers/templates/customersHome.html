@@ -3,37 +3,39 @@
 {% block title %}Clientes{% endblock %}
 
 {% block body %}
+
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/StyleCustomer.css' %}">
 </head>
-
-
 <br>
-<center>
+<div style="display: flex; justify-content: center;">
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestión de Clientes</h1>
-</center>
-
+</div>
 <div class="card mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <div class="d-flex flex-row">
             <span class="mx-2">
                 <a href="{% url 'agregarCliente' %}" class="btn btn-primary btn-lg" data-toggle="tooltip"
                     data-placement="top" title="Crear un Cliente" style="border: solid 1px black">
-                    <i class="fa-solid fa-plus mr-2"></i><span class="text"
-                        style="font-weight: 600; font-size: 16px;">Agregar Cliente</span>
+                    <i class="fa-solid fa-plus mr-2"></i>
+                    <span class="text" style="font-weight: 600; font-size: 16px;">
+                        Agregar Cliente
+                    </span>
                 </a>
-
             </span>
         </div>
-
-        {% comment %} <div class="d-flex align-items-center mx-2">
+        {% comment %}
+        <div class="d-flex align-items-center mx-2">
             <a href="#" class="btn btn-danger btn-dash btn-lg" data-toggle="tooltip" data-placement="top"
                 title="Descargar PDF con Registros">
-                <i class="fa-solid fa-download mr-2"></i><span class="text"
-                    style="font-weight: 600; font-size: 16px;">Generar Informe</span>
+                <i class="fa-solid fa-download mr-2"></i>
+                <span class="text" style="font-weight: 600; font-size: 16px;">
+                    Generar Informe
+                </span>
             </a>
-        </div> {% endcomment %}
+        </div>
+        {% endcomment %}
     </div>
 </div>
 <div class="card shadow mb-4">
@@ -117,10 +119,10 @@
                         success: function (response) {
                             $('.table-responsive').addClass(
                                 'animate__animated animate__fadeOut').css(
-                                'animation-duration', '100');
+                                    'animation-duration', '100');
                             location.reload();
                         },
-                        error: function (error) {}
+                        error: function (error) { }
                     });
                 }
             });
@@ -128,14 +130,9 @@
     });
 </script>
 
-
-
-
-
 <dialog id="verDetallesClienteDialog" class="clienteDialog dragHandle">
 
 </dialog>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -209,12 +206,9 @@
                         style.appendChild(document.createTextNode(css));
                     }
                 }
-
             });
         });
-
     });
 </script>
-
 
 {% endblock %}
