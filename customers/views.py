@@ -78,15 +78,14 @@ def agregarClientePost(request):
             correo=correo,
             estado=1,
         )
-        
-        return JsonResponse({'cliente': cliente})
 
         try:
             cliente.save()
             return JsonResponse({'success': True, 'message': 'Cliente creado con éxito'})
         except IntegrityError as e:
             return JsonResponse({'success': False, 'message': 'Error: El documento ya está registrado en la base de datos.'})
-
+    else:
+        return JsonResponse({'success': False, 'message': 'No post'})
     # municipios = Municipios.objects.all()
     # return render(request, 'createCustomer.html', {'municipios': municipios})
 
@@ -186,11 +185,10 @@ def verDetallesCliente(request):
     
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
-@module_access_required('clientes')
+# @module_access_required('clientes')
 def validar_documento(request):
     documento = request.GET.get('documento', '')
 
     cliente_existente = Clientes.objects.filter(documento=documento).exists()
 
     return JsonResponse({'existe': cliente_existente})
-

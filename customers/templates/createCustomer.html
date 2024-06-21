@@ -3,9 +3,9 @@
 {% block title %} Agregar Cliente {% endblock %}
 {% block body %}
 
-<div style="display: flex; justify-content: center;">
+<center>
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Agregar Cliente</h1>
-</div>
+</center>
 
 <div class="container d-flex justify-content-center">
     <div class="card shadow" style="width:60%">
@@ -20,6 +20,7 @@
                         <div class="error-message" id="iDocumento-error" style="color:red;"></div>
                         <div class="info-message" id="iDocumento-info"></div>
                     </div>
+
                     <div class="form-group col-md-8">
                         <label for="iNombres">Nombres *</label>
                         <input type="text" class="form-control" id="iNombres" name="iNombres" placeholder="Nombres">
@@ -36,11 +37,12 @@
                     <div class="form-group col-md-6">
                         <label for="iCelular">Celular *</label>
                         <input type="text" class="form-control" id="iCelular" name="iCelular" placeholder="Celular"
-                            maxlength="10">
+                            minlength="10" maxlength="10">
                         <div class="error-message" id="iCelular-error" style="color:red;"></div>
                         <div class="info-message" id="iCelular-info" style="color:red;"></div>
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="departamento">Departamento *</label>
@@ -56,6 +58,7 @@
                         <div class="error-message" id="municipio-error" style="color:red;"></div>
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="iBarrio">Barrio *</label>
@@ -69,6 +72,7 @@
                         <div class="error-message" id="iDireccion-error" style="color:red;"></div>
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="iCorreo">Correo *</label>
@@ -76,6 +80,7 @@
                         <div class="error-message" id="iCorreo-error" style="color:red;"></div>
                     </div>
                 </div>
+
                 <div class="text-center" style="margin-top: 10px;">
                     <button class="btn btn-primary" type="submit" id="submit-button">Guardar</button>
                 </div>
@@ -83,6 +88,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -129,7 +135,6 @@
             validarCampo($('#iDireccion'));
             validarCampo($('#departamento'));
             validarCampo($('#municipio'));
-            validarDocumento();
             validarCelular();
             if ($('.error-message').text() === '') {
                 $.ajax({
@@ -137,7 +142,6 @@
                     url: "{% url 'agregarClientes' %}",
                     data: $(this).serialize(),
                     success: function (response) {
-                        console.log(cliente)
                         if (response.success) {
                             Swal.fire({
                                 title: 'Éxito',
@@ -151,21 +155,25 @@
                             }, 1000);
                         }
                     },
+                    
                     error: function (xhr, ajaxOptions, thrownError) {
-                        console.log(xhr)
+                        
                         Swal.fire({
-                            title: 'Error',
-                            text: thrownError,
-                            icon: 'error',
-                            showConfirmButton: false,
-                            timer: 1000,
-                        });
+                                title: 'Error',
+                                text: thrownError,
+                                icon: 'error',
+                                showConfirmButton: false,
+                                timer: 1000,
+                            });
                         console.log(xhr.status);
                         console.log(thrownError);
                     }
+
                 });
             }
         });
+
+        // ... (código anterior)
     });
 
     function obtenerDepartamentos() {
@@ -234,7 +242,7 @@
 
     async function validarDocumento() {
         const documentoInput = $('#iDocumento');
-        const documento = documentoInput.val().replace(/\D/g, '');
+        const documento = documentoInput.val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
 
         if (documento.trim() === '') {
             mostrarError(documentoInput, 'Este campo es obligatorio.');
@@ -249,11 +257,14 @@
         }
 
         try {
+            // Llamamos a verificarExistenciaDocumento y esperamos la resolución de la promesa
             const clienteRegistrado = await verificarExistenciaDocumento(documento);
 
             if (clienteRegistrado) {
+                // Cliente registrado, mostrar mensaje de error
                 mostrarError(documentoInput, 'Este cliente ya está registrado.');
             } else {
+                // Cliente no registrado, proceder con el envío del formulario
                 ocultarError(documentoInput);
                 console.log('Cliente no registrado, proceder con el envío del formulario.');
             }
@@ -263,6 +274,7 @@
     }
 
     function verificarExistenciaDocumento(documento) {
+        // Retornamos una promesa
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: 'GET',
@@ -281,8 +293,15 @@
         });
     }
 
+    // Resto del código...
+
+    // Resto del código...
+
+
+
+    // Bloquear la entrada de letras y otros caracteres no numéricos
     $('#iDocumento').on('input', function () {
-        const valor = $(this).val().replace(/\D/g, '');
+        const valor = $(this).val().replace(/\D/g, ''); // Eliminar caracteres no numéricos
         $(this).val(valor);
     });
 
@@ -303,6 +322,9 @@
             ocultarError(correoInput);
         }
     }
+
+
+
 
     function validarCelular() {
         const celular = $('#iCelular').val();
@@ -331,4 +353,5 @@
         }
     }
 </script>
+
 {% endblock %}
