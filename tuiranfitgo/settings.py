@@ -174,6 +174,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'orders', 'static')
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Ruta en el sistema de archivos donde se guardarán los archivos subidos
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

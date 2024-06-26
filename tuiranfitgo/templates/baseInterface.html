@@ -92,10 +92,10 @@
                 </a>
                 <div id="collapseUsers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'usuarios' %}">Gestión de Usuarios</a>
+                        <a class="collapse-item" href="{% url 'HomeRoles' %}">Roles y Permisos</a>
                     </div>
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'HomeRoles' %}">Roles y Permisos</a>
+                        <a class="collapse-item" href="{% url 'usuarios' %}">Gestión de Usuarios</a>
                     </div>
                 </div>
             </li>
@@ -112,6 +112,25 @@
                 </div>
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fa-solid fa-shop"></i>
+                    <span>Productos</span>
+                </a>
+                <div id="collapseProducts" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'categorias' %}">Categorías</a>
+                    </div>
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'marcas' %}">Marcas</a>
+                    </div>
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'productos' %}">Gestión de Productos</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompras"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fa-solid fa-basket-shopping"></i>
@@ -121,26 +140,6 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'purchases' %}">Gestión de Compras</a>
-                    </div>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fa-solid fa-shop"></i>
-                    <span>Productos</span>
-                </a>
-                <div id="collapseProducts" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'productos' %}">Gestión de Productos</a>
-                    </div>
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'categorias' %}">Categorías</a>
-                    </div>
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'marcas' %}">Marcas</a>
                     </div>
                 </div>
             </li>
