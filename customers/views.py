@@ -44,28 +44,19 @@ def agregarClientePost(request):
         direccion = request.POST.get('iDireccion')
         correo = request.POST.get('iCorreo')
 
-
         departamento_nombre = request.POST.get('nombre_departamento')
         municipio_nombre = request.POST.get('nombre_municipio')
 
         if not documento or not nombres or not apellidos or not celular or not barrio or not direccion:
             return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios'})
 
-        try:
-            departamento = Departamentos.objects.get(nombre_departamento=departamento_nombre)
-        except Departamentos.DoesNotExist:
-            departamento = Departamentos.objects.create(nombre_departamento=departamento_nombre)
+        # Utilizamos get_or_create para evitar duplicaciones
+        departamento, created = Departamentos.objects.get_or_create(nombre_departamento=departamento_nombre)
 
-        try:
-            municipio = Municipios.objects.get(
-                nombre_municipio=municipio_nombre,
-                id_departamento=departamento
-            )
-        except Municipios.DoesNotExist:
-            municipio = Municipios.objects.create(
-                nombre_municipio=municipio_nombre,
-                id_departamento=departamento
-            )
+        municipio, created = Municipios.objects.get_or_create(
+            nombre_municipio=municipio_nombre,
+            id_departamento=departamento
+        )
 
         cliente = Clientes(
             id_municipio=municipio,
@@ -86,6 +77,7 @@ def agregarClientePost(request):
             return JsonResponse({'success': False, 'message': 'Error: El documento ya está registrado en la base de datos.'})
     else:
         return JsonResponse({'success': False, 'message': 'No post'})
+
     # municipios = Municipios.objects.all()
     # return render(request, 'createCustomer.html', {'municipios': municipios})
 

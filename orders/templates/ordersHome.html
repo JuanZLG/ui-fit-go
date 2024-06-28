@@ -4,11 +4,15 @@
 
 {% block body %}
 
+<!-- <head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/HomeVentas.css' %}">
+</head> -->
 
 <br>
-<div style="display: flex; justify-content: center;">
+<center>
     <h1 class="text-black-800 mb-4" style="font-weight:bold;">Gestion de Pedidos</h1>
-</div>
+</center>
 
 <div class="card shadow mb-4">
     <div class="card-header py-4">
@@ -41,22 +45,24 @@
                         <td class="cell-actions">
                             <a href="{% url 'editarPedidoHome' pedido.id_pedido %}"
                                 class="btn btn-sm mr-2 {% if pedido.estado == 'cancelado' or pedido.estado == 'confirmado' %}disabled-link{% endif %}"
-                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip"
-                                    data-placement="top" title="Editar Pedido"></i></a>
+                                id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip" data-placement="top"
+                                title="Editar Pedido"></i></a>
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
                                 class="btn btn-sm btn-primary ml-2 detalle-pedido-button"
-                                data-pedido-id="{{ pedido.id_pedido }}">
+                                data-pedido-id="{{ pedido.id_pedido }}" >
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
                     </tr>
                     {% endfor %}
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <script>
+    // Agrega un evento de escucha a los botones de detalle del pedido
     document.querySelectorAll('.detalle-pedido-button').forEach(function (element) {
         element.addEventListener('click', function () {
             let pedidoId = element.getAttribute('data-pedido-id');
@@ -70,7 +76,7 @@
                 method: 'GET',
                 success: function (response) {
                     var pedido = response.success;
-
+                    
                     Swal.fire({
                         html: `
                     <div class="modal-container">
@@ -145,7 +151,9 @@
             });
         });
     });
+
 </script>
+
 <style>
     .cambiar-estado-pedido {
         width: 100px;
@@ -171,6 +179,9 @@
         pointer-events: none;
         opacity: 0.8;
     }
+
+
+    /* modal -------------------- */
 
     .modal-title h2 {
         font-size: 1.5rem;
@@ -244,6 +255,7 @@
         position: relative;
         cursor: pointer;
     }
+
 </style>
 <script>
     function formatearPrecios(valor) {
@@ -292,5 +304,9 @@
         });
     }
 
+
+
+
 </script>
+
 {% endblock %}

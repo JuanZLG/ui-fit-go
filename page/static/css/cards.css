@@ -1,3 +1,5 @@
+/* BODY block ------------------ */
+
 .product-featured {
     display: flex;
     justify-content: space-between;
@@ -26,7 +28,9 @@
     gap: 15px;
     padding: 20px 10px;
     grid-auto-rows: none;
+
 }
+
 
 .product-card-container.grid-view {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -60,11 +64,9 @@
     cursor: pointer;
     transition: all .1s ease-in-out;
 }
-
 .product-card:hover {
     transform: scale(1.005);
 }
-
 .product-card a {
     color: #000;
     text-decoration: none;
@@ -105,10 +107,14 @@
     white-space: nowrap;
 }
 
+
 .product-description {
     display: none;
     padding: 10px 0;
 }
+
+
+
 
 @media screen and (min-width: 768px) {
     .product-card-container {
@@ -118,11 +124,13 @@
         grid-auto-rows: min-content;
         row-gap: 40px;
     }
+    
     .product-card {
         height: auto;
         max-height: 250px;
 
     }
+
     .product-image {
         height: 200px;
     }

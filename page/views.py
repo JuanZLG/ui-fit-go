@@ -10,7 +10,7 @@ from django.shortcuts import render
 from dotenv import load_dotenv
 from .models import Productos, Marcas, Categorias, Pedidos, DetallePedido, Clientes, Departamentos, Municipios
 from django.db.models import Sum
-from django.template.loader import get_template
+from django.db.models import Count
 
 def build_context(request, extra_context=None):
     context = {}
@@ -52,6 +52,7 @@ def pageDetails(request):
     productoDetalle.iInfoImg_name = get_image_name(productoDetalle.iInfoImg)
     productoDetalle.iProductImg_name = get_image_name(productoDetalle.iProductImg)
     
+    # Construye un diccionario con los datos del producto
     response_data = {
         'nombre_producto': productoDetalle.nombre_producto.capitalize(),
         'precio_pub': productoDetalle.precio_pub,
@@ -61,7 +62,9 @@ def pageDetails(request):
         'iInfoImg_name': productoDetalle.iInfoImg_name,
         'iProductImg_name': productoDetalle.iProductImg_name
     }
+    
     return JsonResponse(response_data)
+
 
 def get_image_name(image_field):
     if image_field:
@@ -122,6 +125,7 @@ def filter_products(request):
 
     return JsonResponse({'success': True, 'data': data})
 
+
 from django.db.models import Q
 def search_products(request):
     buscar = request.GET.get('search')
@@ -142,7 +146,10 @@ def search_products(request):
             'iProductImg_name': get_image_name(producto.iProductImg),
             'iInfoImg_name': get_image_name(producto.iInfoImg),
         })
+
     return JsonResponse({'success': True, 'data': data})
+
+
 
 def mas_vendidos(request):
     productos = Productos.objects.annotate(
@@ -158,6 +165,7 @@ def mas_vendidos(request):
             'precio_pub': precio_formateado,
             'presentacion': producto.iProductImg.decode('utf8')
         })
+
     return JsonResponse({'success': True, 'data': data})
 
 
@@ -174,6 +182,8 @@ def añadir_pedido(request, id_producto):
     presentaciones = producto.presentacion.split(',')
 
     return render(request, 'pageAdd.html', {'producto': producto, 'sabores': sabores, 'presentaciones': presentaciones})
+
+
 
 from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
@@ -252,12 +262,14 @@ def ver_pedido(request):
 
             nombreCompletoCliente = cliente.nombres + " " + cliente.apellidos
             correo = cliente.correo
-            pedido_email_proceso(nombreCompletoCliente, correo)
+            # pedido_email_proceso(nombreCompletoCliente, correo)
             return JsonResponse({'message': 'Datos guardados correctamente'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
     return render(request, 'pageOrder.html')
+
+from django.template.loader import get_template
 
 def pedido_email_proceso(user, email):
     load_dotenv()
@@ -283,10 +295,13 @@ def pedido_email_proceso(user, email):
     server.sendmail(remitente, destinatario, msg.as_string())
     server.quit()
     
+
+
 def document_exist(request):
     documento = request.GET.get("documento", "")
     cliente = Clientes.objects.filter(documento=documento).exists()
     return JsonResponse({"existe": cliente})
+
 
 def obtener_cliente(request):
     documento = request.GET.get('documento')

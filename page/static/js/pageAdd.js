@@ -20,6 +20,8 @@ $(document).ready(function () {
         decrement(this);
     });
 
+    /* LOCAL STORAGE --------------------------------------------  */
+
     let carrito = localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : {};
 
     $('.item-order').parent().mouseenter(function () {
@@ -107,6 +109,8 @@ $(document).ready(function () {
 
     actualizarCarrito();
 
+
+
     $('.list-item').on('click', '.remove-order', function () {
         let idUnico = $(this).parent().attr('data-id');
 
@@ -179,7 +183,9 @@ $(document).ready(function () {
             let sabor = form.querySelector('select[name="sabor"]').value;
             let cantidad = parseInt(form.querySelector('input[name="cantidad"]').value);
             let idProducto = form.dataset.id;
+
             let carrito = JSON.parse(localStorage.getItem('carrito')) || {};
+
             let idPedido = generarIdUnico(nombreProducto, sabor);
 
             if (carrito[idPedido] && carrito[idPedido].nombreProducto === nombreProducto && carrito[idPedido].sabor === sabor) {
@@ -260,4 +266,5 @@ $(document).ready(function () {
             });
         });
     }
+
 });
