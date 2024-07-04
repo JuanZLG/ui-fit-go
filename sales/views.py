@@ -63,7 +63,7 @@ def crear_venta(request):
 
             detalles_venta = []
             for idProducto, producto_datos in productos.items():
-                idPedido = producto_datos["idPedido"]
+                id_pedido = producto_datos["idPedido"]
                 cantidad_vendida = producto_datos['cantidad']
                 precioCompra = producto_datos['precioCompra']
                 precioVenta = producto_datos['precioVenta']
@@ -71,6 +71,12 @@ def crear_venta(request):
                 totalProductoDescuento = producto_datos['totalProductoDescuento']
                 margenGananciaProducto = producto_datos['margenGananciaProducto']  
                 totalProducto = producto_datos['totalProducto']
+                
+                pedido = Pedidos.objects.filter(id_pedido=id_pedido).first()
+                if pedido is None:
+                    return JsonResponse({'success': False, 'error': 'Pedido no encontrado'}, status=400)
+                pedido.estado = 'Confirmado'
+                pedido.save()
                 
                 producto = Productos.objects.get(id_producto=idProducto)
                 if producto:
@@ -101,6 +107,8 @@ def crear_venta(request):
                     'descuentoProducto':descuento,
                 })
             total_venta_formateado = formatear_precios_email(totalVenta)
+            
+            
             response_data = {'success': True}
             return JsonResponse(response_data)
         except json.JSONDecodeError as e:
