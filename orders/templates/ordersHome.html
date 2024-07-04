@@ -168,8 +168,8 @@
     }
 
     .inactive-status {
-        background-color: #ec8080;
-        color: #8a0404;
+        background-color: #f86161;
+        color: #000000;
         opacity: 0.5;
         pointer-events: none;
         cursor: default;
@@ -180,6 +180,15 @@
         opacity: 0.8;
     }
 
+    .en_proceso_pedido {
+        background-color: #FFF38899; 
+        color: #000000;
+    }
+
+    .pedido-confirmado {
+        background-color: #99FF9999; 
+        color: #000000;
+    }
 
     /* modal -------------------- */
 
@@ -239,24 +248,28 @@
     }
 
     .modal-state.confirmadoSt {
-        background-color: #72d072;
+        background-color: #72d072; 
+        color: #000000;
         position: relative;
         cursor: pointer;
     }
 
     .modal-state.canceladoSt {
         background-color: #ba4d4d;
+        color: #000000;
         position: relative;
         cursor: pointer;
     }
 
     .modal-state.enProcesoSt {
-        background-color: #f9d56e;
+        background-color: #f9d56e; 
+        color: #000000;
         position: relative;
         cursor: pointer;
     }
-
 </style>
+
+
 <script>
     function formatearPrecios(valor) {
         valor = Math.round(valor * 100) / 100;
@@ -275,10 +288,10 @@
                     text: '¿Está seguro de que desea cancelar este pedido?',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, cancelar',
-                    cancelButtonText: 'No, mantener'
+                    confirmButtonColor: '#84FAEC',
+                    cancelButtonColor: '#FA8484',
+                    confirmButtonText: 'Sí',
+                    cancelButtonText: 'No'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         cambiarEstadoPedido(pedidoId, url);
