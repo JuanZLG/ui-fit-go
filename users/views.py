@@ -143,17 +143,30 @@ def createUser(request):
     roles = Roles.objects.all()
     
     if request.method == 'POST':
-        id_rol = request.POST['iRole']
+        role_id = request.POST['iRole']
         nombre_usuario = request.POST['iNombre']
         correo = request.POST['iCorreo']
-        contrasena = create_password()
-        rl = Roles.objects.get(id_rol=id_rol)
-        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
-        # send_email_create(nombre_usuario, contrasena, correo)
+        # contrasena = create_password()
+        contrasena =  'password'
+        
+        # return JsonResponse({'success': False, 'nombre': nombre_usuario, 'role': role_id, 'correo': correo, 'contraseña': contrasena})  
+        
+        if not all([role_id, nombre_usuario, correo]):
+            return JsonResponse({'success': False, 'message': 'All fields are required'})
+        
+        try:
+            role = Roles.objects.get(id_rol=role_id)
+            Usuarios.objects.create(id_rol=role, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
+            # send_email_create(nombre_usuario, contrasena, correo)
+            return JsonResponse({'success': True, 'password': contrasena})
+        except Roles.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Role does not exist'})
+        except Roles.MultipleObjectsReturned:
+            return JsonResponse({'success': False, 'message': 'Multiple roles found'})
+    else:
+        return render(request, 'createUser.html', {"rols": roles})
+    
 
-        return JsonResponse({'success': True})
-
-    return render(request, 'createUser.html', {"rols": roles})
 
 @jwt_cookie_required
 @module_access_required('usuarios')
@@ -188,10 +201,7 @@ def send_email_create(user, password, email):
 @module_access_required('usuarios')
 def create_password(length=8):
     characters = string.ascii_letters + string.digits
-    password = ""
-    for _ in range(length):
-        password += secrets.choice(characters)
-    return password
+    return ''.join(secrets.choice(characters) for _ in range(length))
 
 @jwt_cookie_required
 def editUser(request, id_usuario):

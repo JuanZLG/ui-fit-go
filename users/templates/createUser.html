@@ -215,6 +215,7 @@
           url: "{% url 'createAUser' %}",
           data: $(this).serialize(),
           success: function (response) {
+            console.log(response);
             if (response.success) {
               Swal.fire({
                 title: 'Éxito',
@@ -228,7 +229,9 @@
               }, 2000);
             }
           },
-          
+          error: function (request, status, error) {
+           console.log(request.responseText);
+    }
         });
       }
     });
