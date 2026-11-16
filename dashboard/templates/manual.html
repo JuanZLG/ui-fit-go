@@ -1118,16 +1118,12 @@
 </div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-
-<script src="https://unpkg.com/scroll-into-view-if-needed"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         function scrollToSection(sectionId) {
             var section = document.getElementById(sectionId);
             if (section) {
-                section.scrollIntoViewIfNeeded({
+                section.scrollIntoView({
                     behavior: "smooth",
                     block: "start"
                 });

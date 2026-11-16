@@ -3,440 +3,287 @@
 {% block title %} Dashboard {% endblock %}
 
 {% block body %}
+{% load static %}
 
-</html>
-<style>
-    .card {
-        border: none;
-        background-color: #fff;
-        padding: 0px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s;
-    }
-
-    .card-body {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .card-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #333;
-    }
-
-    .card-value {
-        font-size: 28px;
-        font-weight: bold;
-        color: #555;
-    }
-
-    .card-icon {
-        font-size: 36px;
-        margin-right: 15px;
-        color: #888;
-    }
-
-    .chart-area,
-    .chart-pie-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: auto;
-        border-radius: 10px;
-        padding: 0;
-        margin: 0;
-        position: relative;
-        max-width: 100%;
-    }
-
-    #graficolindo,
-    #myPieChart {
-        width: 100%;
-        max-width: 100%;
-        height: 100%;
-    }
-
-    .custom-card-width {
-        width: 1280px;
-        margin: 0;
-    }
-</style>
-
-<div class="container">
-    <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100">
-                <div class="card-body" data-toggle="modal" data-target="#pedidosEnProcesoModal">
-                    <div>
-                        <div class="card-title text-warning">Pedidos Pendientes</div>
-                        <div id="pedidos-en-proceso" class="card-value text-gray-800">Actualizando...</div>
-                    </div>
-                    <i class="fas fa-exclamation-circle card-icon text-warning"></i>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function actualizarContadorPedidosEnProceso() {
-                $.ajax({
-                    url: "{% url 'contar_pedidos_en_proceso' %}",
-                    method: "GET",
-                    success: function (data) {
-                        $("#pedidos-en-proceso").text(data.pedidos_en_proceso);
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener el número de pedidos en proceso:', error);
-                    }
-                });
-            }
-
-            setInterval(actualizarContadorPedidosEnProceso, 5000);
-            actualizarContadorPedidosEnProceso();
-        </script>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-danger shadow h-100">
-                <div class="card-body" data-toggle="modal" data-target="#totalMargenGanancia">
-                    <div>
-                        <div class="card-title text-danger">Margen de Ganancia</div>
-                        <div id="margen-ganancia" class="card-value text-gray-800">Actualizando...</div>
-                    </div>
-                    <i class="fas fa-chart-line card-icon text-danger"></i>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            $(document).ready(function () {
-                $.ajax({
-                    url: "{% url 'obtener_margen_ganancia' %}",
-                    type: 'GET',
-                    success: function (data) {
-                        const margenGanancia = parseFloat(data.margen_ganancia_total);
-                        if (!isNaN(margenGanancia)) {
-                            const formatter = new Intl.NumberFormat('es-CO', {
-                                style: 'currency',
-                                currency: 'COP',
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0,
-                            });
-                            $('#margen-ganancia').text(formatter.format(margenGanancia));
-                        } else {
-                            console.error('Error: El valor recibido no es un número válido.');
-                        }
-                    },
-                    error: function () {
-                        console.error('Error al obtener el margen de ganancia');
-                    }
-                });
-            });
-        </script>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title text-primary">Total de Compras</div>
-                        <div id="total-compras" class="card-value text-gray-800">Actualizando...</div>
-                    </div>
-                    <i class="fas fa-shopping-bag card-icon text-primary"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title text-success">Total de Ventas</div>
-                        <div id="total-ventas" class="card-value text-gray-800">Cargando...</div>
-                    </div>
-                    <i class="fas fa-dollar-sign card-icon text-success"></i>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function actualizarValorEnCartaCompras(totalCompras) {
-                $('#total-compras').text(totalCompras.toLocaleString('es-CO', {
-                    style: 'currency',
-                    currency: 'COP',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                }));
-            }
-
-            function actualizarValorEnCartaVentas(totalVentas) {
-                $('#total-ventas').text(totalVentas.toLocaleString('es-CO', {
-                    style: 'currency',
-                    currency: 'COP',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                }));
-            }
-
-            $(document).ready(function () {
-                $.ajax({
-                    url: "{% url 'calcular_total_compras_y_ventas' %}",
-                    method: "GET",
-                    success: function (data) {
-                        var totalCompras = data.total_compras_por_mes.reduce((acc, curr) => acc + curr.total_compras, 0);
-                        var totalVentas = data.total_ventas_por_mes.reduce((acc, curr) => acc + curr.total_ventas, 0);
-                        actualizarValorEnCartaCompras(totalCompras);
-                        actualizarValorEnCartaVentas(totalVentas);
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener los totales de compras y ventas por mes:', error);
-                    }
-                });
-            });
-        </script>
+<section class="tf-hero">
+    <div>
+        <div class="tf-hero__kicker">Centro de mando</div>
+        <h1 class="tf-hero__title">Hola, <em>{{ user.nombre_usuario|default:"campeón" }}</em>.</h1>
+        <p class="tf-hero__sub" id="heroFecha">&nbsp;</p>
     </div>
-    <div class="row">
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4 h-100">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                    style="background-color:black;">
-                    <h6 class="m-0 font-weight-bold text-white">Compras y Ventas</h6>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" data-value="semana">Última semana</a>
-                            <a class="dropdown-item" href="#" data-value="mes">Último mes</a>
-                            <a class="dropdown-item" href="#" data-value="ano">Último año</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="graficolindo"></canvas>
-                    </div>
-                </div>
-            </div>
+    <img class="tf-hero__mark" src="{% static 'img/gorille.png' %}" alt="">
+</section>
+
+<!-- Banda de marca -->
+<div class="tf-marquee-wrap" aria-hidden="true">
+    <div class="tf-marquee">
+        <div class="tf-marquee__track">
+            <span>TuiranFit</span><i></i><span>Forjado en hierro</span><i></i><span>Sin excusas</span><i></i><span>Brutality</span><i></i>
+            <span>TuiranFit</span><i></i><span>Forjado en hierro</span><i></i><span>Sin excusas</span><i></i><span>Brutality</span><i></i>
+            <span>TuiranFit</span><i></i><span>Forjado en hierro</span><i></i><span>Sin excusas</span><i></i><span>Brutality</span><i></i>
+            <span>TuiranFit</span><i></i><span>Forjado en hierro</span><i></i><span>Sin excusas</span><i></i><span>Brutality</span><i></i>
         </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var ctx = document.getElementById("graficolindo").getContext("2d");
-                var nuevoGrafico;
-
-                function initializeChart() {
-                    if (nuevoGrafico) nuevoGrafico.destroy();
-                    nuevoGrafico = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Ventas',
-                                backgroundColor: '#58FFED',
-                                borderColor: '#000000',
-                                borderWidth: 1,
-                                data: [],
-                            }, {
-                                label: 'Compras',
-                                backgroundColor: '#71E565', 
-                                borderColor: '#000000',
-                                borderWidth: 1,
-                                data: [],
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: { beginAtZero: true }
-                            }
-                        }
-                    });
-                }
-
-                function actualizarGrafico(periodo) {
-                    $.ajax({
-                        url: "{% url 'obtener_datos_ventas_y_compras' %}",
-                        method: "GET",
-                        data: { periodo: periodo },
-                        success: function (data) {
-                            nuevoGrafico.data.labels = data.labels;
-                            nuevoGrafico.data.datasets[0].data = data.ventas;
-                            nuevoGrafico.data.datasets[1].data = data.compras;
-                            nuevoGrafico.update();
-                        },
-                        error: function (error) {
-                            console.error('Error al obtener los datos de ventas y compras:', error);
-                        }
-                    });
-                }
-
-                initializeChart();
-                actualizarGrafico('ano');
-            });
-        </script>
-            
-
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4 h-100">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
-                    style="background-color: black; height: 65px;">
-                    <h6 class="m-0 font-weight-bold text-white">Productos y Cantidades</h6>
-                </div>
-                <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                    <div class="chart-pie-container">
-                        <canvas id="myPieChart" style="width: 500px; height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            $(document).ready(function () {
-                function actualizarGraficoProductos() {
-                    if (window.myPieChart) window.myPieChart.destroy();
-                    $.ajax({
-                        url: "{% url 'obtener_todos_los_productos' %}",
-                        method: "GET",
-                        success: function (data) {
-                            let ctx = document.getElementById("myPieChart").getContext('2d');
-                            let productos = data.productos;
-                            let cantidades = data.cantidades;
-
-                            function generarColoresAleatorios(cantidad) {
-                                return Array.from({ length: cantidad }, () => '#' + Math.floor(Math.random() * 16777215).toString(16));
-                            }
-
-                            let colores = generarColoresAleatorios(productos.length);
-
-                            window.myPieChart = new Chart(ctx, {
-                                type: 'pie',
-                                data: {
-                                    datasets: [{
-                                        data: cantidades,
-                                        backgroundColor: colores,
-                                    }],
-                                    labels: productos
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    legend: {
-                                        display: true,
-                                        position: 'top',
-                                        labels: {
-                                            boxWidth: 20,
-                                            padding: 15
-                                        }
-                                    },
-                                    tooltips: {
-                                        callbacks: {
-                                            label: function (tooltipItem, data) {
-                                                let dataset = data.datasets[0];
-                                                let total = dataset.data.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-                                                let currentValue = dataset.data[tooltipItem.index];
-                                                let percentage = parseFloat(((currentValue / total) * 100).toFixed(2));
-                                                return `${data.labels[tooltipItem.index]}: ${currentValue} unidades (${percentage}%)`;
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                        },
-                        error: function (error) {
-                            console.error('Error al obtener los datos de productos y cantidades:', error);
-                        }
-                    });
-                }
-
-                actualizarGraficoProductos();
-            });
-        </script>
     </div>
+</div>
 
-    <div class="row mt-4">
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4 h-100">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background-color: black; height: 65px;">
-                    <h6 class="m-0 font-weight-bold text-white">Categorías de Productos</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar-container">
-                        <canvas id="stackedBarChart" style="width: 800px; height: 300px;"></canvas>
-                    </div>
+<!-- Marcador -->
+<div class="tf-kpis">
+    <div class="tf-kpi tf-kpi--warning">
+        <span class="tf-kpi__label">Pedidos pendientes</span>
+        <strong id="pedidos-en-proceso" class="tf-kpi__value is-loading">0000</strong>
+    </div>
+    <div class="tf-kpi">
+        <span class="tf-kpi__label">Margen del mes</span>
+        <strong id="margen-ganancia" class="tf-kpi__value is-loading">0000</strong>
+    </div>
+    <div class="tf-kpi">
+        <span class="tf-kpi__label">Compras del mes</span>
+        <strong id="total-compras" class="tf-kpi__value is-loading">0000</strong>
+    </div>
+    <div class="tf-kpi">
+        <span class="tf-kpi__label">Ventas del mes</span>
+        <strong id="total-ventas" class="tf-kpi__value is-loading">0000</strong>
+    </div>
+</div>
+
+<!-- Compras y ventas + productos -->
+<div class="row">
+    <div class="col-xl-8 mb-4">
+        <div class="tf-panel">
+            <div class="tf-panel__head">
+                <h2 class="tf-panel__title"><span class="tf-idx">01</span>Compras y ventas
+                    <span class="tf-panel__sub">Comparativo por periodo</span>
+                </h2>
+                <div class="tf-seg" id="periodoSelector" role="group" aria-label="Periodo">
+                    <button type="button" data-periodo="semana">Semana</button>
+                    <button type="button" data-periodo="mes">Mes</button>
+                    <button type="button" data-periodo="ano" class="is-active">Año</button>
                 </div>
             </div>
+            <div class="tf-panel__body">
+                <div class="tf-chart"><canvas id="graficolindo"></canvas></div>
+            </div>
         </div>
-        <script>
-            $(document).ready(function () {
-                function actualizarGraficoCategoriasProductos() {
-                    if (window.stackedBarChart instanceof Chart) {
-                        window.stackedBarChart.destroy();
-                    }
-    
-                    $.ajax({
-                        url: "{% url 'obtener_datos_categorias_productos' %}",
-                        method: "GET",
-                        success: function (data) {
-                            let ctx = document.getElementById("stackedBarChart").getContext('2d');
-                            let categorias = data.categorias;
-                            let cantidades = data.cantidades;
-    
-                            let colores = ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)'];
-    
-                            window.stackedBarChart = new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: categorias,
-                                    datasets: [{
-                                        label: 'Cantidad',
-                                        data: cantidades,
-                                        backgroundColor: colores,
-                                        borderColor: colores,
-                                        borderWidth: 1
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    scales: {
-                                        x: {
-                                            stacked: true
-                                        },
-                                        y: {
-                                            stacked: true
-                                        }
-                                    }
-                                }
-                            });
-                        },
-                        error: function (error) {
-                            console.error('Error al obtener los datos de categorías y cantidades:', error);
-                        }
-                    });
-                }
-    
-                actualizarGraficoCategoriasProductos();
-            });
-        </script>
-    
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4 h-100">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background-color: black; height: 65px;">
-                    <h6 class="m-0 font-weight-bold text-white">Otra Card</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <!-- Contenido de la segunda card -->
-                        <canvas id="anotherChart" style="width: 500px; height: 300px;"></canvas>
-                    </div>
-                </div>
+    </div>
+    <div class="col-xl-4 mb-4">
+        <div class="tf-panel">
+            <div class="tf-panel__head">
+                <h2 class="tf-panel__title"><span class="tf-idx">02</span>Productos
+                    <span class="tf-panel__sub">Unidades en inventario</span>
+                </h2>
+            </div>
+            <div class="tf-panel__body">
+                <div class="tf-chart"><canvas id="myPieChart"></canvas></div>
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Categorías + alertas -->
+<div class="row">
+    <div class="col-xl-8 mb-4">
+        <div class="tf-panel">
+            <div class="tf-panel__head">
+                <h2 class="tf-panel__title"><span class="tf-idx">03</span>Categorías
+                    <span class="tf-panel__sub">Unidades por categoría</span>
+                </h2>
+            </div>
+            <div class="tf-panel__body">
+                <div class="tf-chart"><canvas id="stackedBarChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 mb-4">
+        <div class="tf-panel">
+            <div class="tf-panel__head">
+                <h2 class="tf-panel__title"><span class="tf-idx">04</span>Alertas
+                    <span class="tf-panel__sub">Stock mínimo y máximo</span>
+                </h2>
+            </div>
+            <div class="tf-panel__body">
+                <ul class="tf-alerts" id="alertasInventario">
+                    <li class="tf-empty"><i class="fas fa-circle-notch fa-spin"></i>Cargando…</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+    $(function () {
+        // ---------- Tema de las gráficas ----------
+        var css = getComputedStyle(document.documentElement);
+        var v = function (n) { return css.getPropertyValue(n).trim(); };
+        Chart.defaults.font.family = v('--tf-mono');
+        Chart.defaults.font.size = 11;
+        Chart.defaults.color = v('--tf-text-muted');
+        Chart.defaults.borderColor = v('--tf-border');
+        Chart.defaults.plugins.legend.labels.boxWidth = 10;
+        Chart.defaults.plugins.legend.labels.boxHeight = 10;
+        Chart.defaults.plugins.tooltip.backgroundColor = '#000';
+        Chart.defaults.plugins.tooltip.borderColor = '#e5242b';
+        Chart.defaults.plugins.tooltip.borderWidth = 1;
+        Chart.defaults.plugins.tooltip.padding = 10;
+        Chart.defaults.plugins.tooltip.titleColor = '#fff';
+        Chart.defaults.plugins.tooltip.bodyColor = '#c8c8d0';
+
+        var PALETA = ['#e5242b', '#f4f4f5', '#9b1c22', '#a1a1a6', '#ff3b30', '#6c6c72', '#ff8f87', '#d4d4d8', '#3a3a3d', '#c1272d'];
+        var cop = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+        var copCorto = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', notation: 'compact', maximumFractionDigits: 1 });
+
+        function mostrar(id, texto) {
+            $('#' + id).removeClass('is-loading').text(texto);
+        }
+        // Cuenta hacia arriba hasta el valor (moneda o entero)
+        function contar(id, valor, moneda) {
+            TF.countUp(id, valor, moneda ? function (n) { return cop.format(n); } : null);
+        }
+
+        $('#heroFecha').text(new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+
+        // ---------- KPIs ----------
+        function actualizarPedidos() {
+            $.get("{% url 'contar_pedidos_en_proceso' %}").done(function (d) {
+                contar('pedidos-en-proceso', d.pedidos_en_proceso, false);
+            }).fail(function () { mostrar('pedidos-en-proceso', '—'); });
+        }
+        actualizarPedidos();
+        setInterval(actualizarPedidos, 30000);
+
+        $.get("{% url 'obtener_margen_ganancia' %}").done(function (d) {
+            var n = parseFloat(d.margen_ganancia_total || 0);
+            isNaN(n) ? mostrar('margen-ganancia', '—') : contar('margen-ganancia', n, true);
+        }).fail(function () { mostrar('margen-ganancia', '—'); });
+
+        $.get("{% url 'calcular_total_compras_y_ventas' %}").done(function (d) {
+            var compras = d.total_compras_por_mes.reduce(function (a, c) { return a + c.total_compras; }, 0);
+            var ventas = d.total_ventas_por_mes.reduce(function (a, c) { return a + c.total_ventas; }, 0);
+            contar('total-compras', compras, true);
+            contar('total-ventas', ventas, true);
+        }).fail(function () { mostrar('total-compras', '—'); mostrar('total-ventas', '—'); });
+
+        // ---------- Compras y ventas ----------
+        // Degradado vertical para las barras
+        function degradado(c1, c2) {
+            return function (ctx) {
+                var a = ctx.chart.chartArea;
+                if (!a) return c1;
+                var g = ctx.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom);
+                g.addColorStop(0, c1); g.addColorStop(1, c2);
+                return g;
+            };
+        }
+        // Brillo rojo detrás de las barras
+        var brillo = {
+            id: 'brillo',
+            beforeDatasetDraw: function (chart, args) {
+                if (args.index === 0) { chart.ctx.save(); chart.ctx.shadowColor = 'rgba(229,36,43,.6)'; chart.ctx.shadowBlur = 22; }
+            },
+            afterDatasetDraw: function (chart, args) { if (args.index === 0) chart.ctx.restore(); }
+        };
+        Chart.defaults.animation.duration = 1100;
+        Chart.defaults.animation.easing = 'easeOutQuart';
+
+        var graficoVC = new Chart(document.getElementById('graficolindo'), {
+            type: 'bar',
+            plugins: [brillo],
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Ventas', backgroundColor: degradado('#ff3b30', '#7a141a'), borderRadius: 0, maxBarThickness: 38, data: [] },
+                    { label: 'Compras', backgroundColor: degradado('#ffffff', '#55555b'), borderRadius: 0, maxBarThickness: 38, data: [] }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { tooltip: { callbacks: { label: function (c) { return ' ' + c.dataset.label + ': ' + cop.format(c.parsed.y); } } } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { callback: function (val) { return copCorto.format(val); } } }
+                }
+            }
+        });
+
+        function cargarVentasCompras(periodo) {
+            $.get("{% url 'obtener_datos_ventas_y_compras' %}", { periodo: periodo }).done(function (d) {
+                graficoVC.data.labels = d.labels;
+                graficoVC.data.datasets[0].data = d.ventas;
+                graficoVC.data.datasets[1].data = d.compras;
+                graficoVC.update();
+            });
+        }
+        cargarVentasCompras('ano');
+        $('#periodoSelector').on('click', 'button', function () {
+            $('#periodoSelector button').removeClass('is-active');
+            $(this).addClass('is-active');
+            cargarVentasCompras($(this).data('periodo'));
+        });
+
+        // ---------- Productos y cantidades ----------
+        $.get("{% url 'obtener_todos_los_productos' %}").done(function (d) {
+            new Chart(document.getElementById('myPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: d.productos,
+                    datasets: [{ data: d.cantidades, backgroundColor: d.productos.map(function (_, i) { return PALETA[i % PALETA.length]; }), borderColor: v('--tf-surface'), borderWidth: 2 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '66%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (c) {
+                                    var total = c.dataset.data.reduce(function (a, b) { return a + b; }, 0);
+                                    return ' ' + c.label + ': ' + c.parsed + ' und. (' + (c.parsed / total * 100).toFixed(1) + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // ---------- Categorías ----------
+        $.get("{% url 'obtener_datos_categorias_productos' %}").done(function (d) {
+            new Chart(document.getElementById('stackedBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: d.categorias,
+                    datasets: [{ label: 'Unidades', data: d.cantidades, borderRadius: 0, maxBarThickness: 56, backgroundColor: d.categorias.map(function (_, i) { return PALETA[i % PALETA.length]; }) }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 } } }
+                }
+            });
+        });
+
+        // ---------- Alertas de inventario ----------
+        $.get("{% url 'verificar_notificaciones' %}").done(function (d) {
+            var $ul = $('#alertasInventario').empty();
+            var items = (d.mensajes || []).filter(function (m) { return m.tipo === 'advertencia' || m.tipo === 'exceso'; });
+            if (!items.length) {
+                $ul.append('<li class="tf-empty"><i class="fas fa-circle-check"></i>Todo el inventario está en niveles normales.</li>');
+                return;
+            }
+            items.forEach(function (m) {
+                var bajo = m.tipo === 'advertencia';
+                var partes = m.mensaje.split(': ');
+                var $li = $('<li>');
+                $li.append($('<span>').addClass('tf-dot ' + (bajo ? 'tf-dot--low' : 'tf-dot--high'))
+                    .append($('<i>').addClass(bajo ? 'fas fa-arrow-down' : 'fas fa-arrow-up')));
+                $li.append($('<div>')
+                    .append($('<span>').addClass('tf-alert-name').text(partes[0]))
+                    .append($('<span>').addClass('tf-alert-meta').text((bajo ? 'Stock bajo · ' : 'Exceso de stock · ') + (partes[1] || '').replace(/[()\.]/g, ''))));
+                $ul.append($li);
+            });
+        }).fail(function () {
+            $('#alertasInventario').html('<li class="tf-empty"><i class="fas fa-triangle-exclamation"></i>No se pudieron cargar las alertas.</li>');
+        });
+    });
+</script>
 {% endblock %}

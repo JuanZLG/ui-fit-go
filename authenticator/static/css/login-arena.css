@@ -1,0 +1,158 @@
+/* =========================================================================
+   TUIRANFIT · Login "ARENA"
+   Se carga después de EstilosLogin.css y lo sobrescribe.
+   ========================================================================= */
+:root {
+    --red: #e5242b; --red-bright: #ff3b30; --red-deep: #9b1c22;
+    --bg: #070707; --surface: #0e0e0f; --line: #262628; --line-strong: #3a3a3d;
+    --text: #f4f4f5; --muted: #a1a1a6; --faint: #6c6c72;
+    --display: 'Anton', Impact, 'Arial Narrow', sans-serif;
+    --font: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+* { font-family: var(--font); }
+html { background: var(--bg); color-scheme: dark; }
+
+.arena-body {
+    display: block; min-height: 100vh; background: var(--bg); color: var(--text);
+    overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+
+/* Fondo: pinceladas rojas de la marca, desplazadas y oscurecidas */
+#video-fondo {
+    position: fixed; inset: 0; width: 100%; height: 100%; min-width: 0; min-height: 0; z-index: 0;
+    object-fit: cover; object-position: 70% 50%; opacity: .85;
+    -webkit-mask-image: linear-gradient(95deg, transparent 8%, #000 55%);
+    mask-image: linear-gradient(95deg, transparent 8%, #000 55%);
+}
+.arena-grain {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- Composición ---------- */
+.arena {
+    position: relative; min-height: 100vh;   /* sin z-index: permite mezclar el logo con el fondo */
+    display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(380px, 480px);
+    align-items: center; gap: clamp(32px, 6vw, 110px);
+    padding: clamp(28px, 5vw, 72px) clamp(24px, 6vw, 96px);
+}
+
+/* ---------- Lado de marca ---------- */
+.arena__brand { display: flex; flex-direction: column; justify-content: space-between; gap: 48px; min-height: min(78vh, 720px); }
+.arena__wordmark { width: clamp(170px, 18vw, 250px); height: auto; mix-blend-mode: screen; align-self: flex-start; }
+.arena__kicker {
+    display: flex; align-items: center; gap: 14px; margin: 0 0 18px;
+    font: 600 .72rem var(--mono); letter-spacing: .28em; text-transform: uppercase; color: var(--red-bright);
+}
+.arena__kicker::before { content: ""; width: 46px; height: 4px; background: var(--red); transform: skewX(-32deg); }
+.arena__headline {
+    margin: 0; font: 400 clamp(4rem, 10.5vw, 9.4rem)/.86 var(--display); text-transform: uppercase; letter-spacing: .005em; color: #fff;
+}
+.arena__headline em { font-family: inherit; font-style: normal; color: var(--red); display: inline-block; text-shadow: 0 0 60px rgba(229, 36, 43, .35); }
+.arena__sub { max-width: 440px; margin: 26px 0 0; color: var(--muted); font-size: .98rem; line-height: 1.6; }
+.arena__ticker {
+    list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 26px;
+    font: 500 .66rem var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--faint);
+}
+.arena__ticker li { display: flex; align-items: center; gap: 26px; }
+.arena__ticker li:not(:last-child)::after { content: "/"; color: var(--red); }
+
+/* ---------- Tarjeta de acceso ---------- */
+.wrapper.login-card {
+    position: relative; width: 100%; max-width: 480px; justify-self: end; display: block;
+    padding: 44px 42px 40px; color: var(--text);
+    background: rgba(8, 8, 9, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border: 1px solid var(--line-strong); border-top: 4px solid var(--red); border-radius: 0;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, .65);
+}
+/* Esquina cortada */
+.login-card::after {
+    content: ""; position: absolute; top: -4px; right: -1px; width: 34px; height: 34px; pointer-events: none;
+    background: linear-gradient(to bottom left, var(--bg) calc(50% - .5px), var(--red) calc(50% - .5px), var(--red) calc(50% + .5px), transparent calc(50% + .5px));
+}
+.login-card__mark {
+    display: block; width: 64px; height: auto; margin: 0 0 22px; border: 0 !important; border-radius: 0 !important; mix-blend-mode: screen;
+}
+#cong:hover { border: 0; }
+.wrapper.login-card h1 {
+    margin: 0; text-align: left; font: 400 3.4rem/.95 var(--display); text-transform: uppercase; letter-spacing: .01em; color: #fff;
+}
+.login-card__hint { margin: 10px 0 30px; color: var(--muted); font: 500 .72rem var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+
+.wrapper.login-card .input-box { width: 100%; height: auto; margin: 0 0 22px; align-self: auto; position: relative; }
+.input-box label {
+    display: block; margin: 0 0 9px; font: 600 .66rem var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+}
+.wrapper.login-card .input-box input {
+    width: 100%; height: 54px; padding: 0 16px; background: #000; color: #fff;
+    border: 1px solid var(--line-strong); border-radius: 0; font: 500 1rem var(--font);
+    transition: border-color .15s, box-shadow .15s;
+}
+.wrapper.login-card .input-box input::placeholder { color: var(--faint); }
+.wrapper.login-card .input-box input:focus { border-color: var(--red); box-shadow: inset 4px 0 0 var(--red); outline: none; }
+.wrapper.login-card .input-box input:-webkit-autofill {
+    -webkit-text-fill-color: #fff; -webkit-box-shadow: 0 0 0 1000px #000 inset; caret-color: #fff;
+}
+
+/* Mensajes de error */
+.wrapper.login-card .text-with-shadow {
+    margin: 8px 0 0; min-height: 0; text-align: left; text-shadow: none;
+    font: 600 .72rem var(--mono); letter-spacing: .04em; color: var(--red-bright);
+}
+.wrapper.login-card .text-with-shadow:empty { display: none; }
+.wrapper.login-card .text-with-shadow::before { content: "! "; font-weight: 700; }
+
+.wrapper.login-card .remember-forgot { display: block; margin: -4px 0 26px; font-size: .82rem; }
+.remember-forgot a { color: var(--muted); border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; transition: color .15s, border-color .15s; }
+.remember-forgot a:hover { color: #fff; border-color: var(--red); text-decoration: none; }
+
+/* Botón en paralelogramo */
+#login-button.btn {
+    position: relative; display: block; width: 100%; height: 56px; border: 0; border-radius: 0; cursor: pointer;
+    background: var(--red); color: #fff; box-shadow: none;
+    font: 700 .86rem var(--font); letter-spacing: .22em; text-transform: uppercase;
+    clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+    transition: background .15s, letter-spacing .2s;
+}
+#login-button.btn:hover { background: var(--red-bright); color: #fff; border: 0; letter-spacing: .3em; }
+#login-button.btn:active { transform: translateY(1px); }
+#login-button.btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* ---------- Diálogos de recuperación (SweetAlert2) ---------- */
+.swal2-popup, .swal2-popup.sweet-forget {
+    width: 440px; max-width: 94vw; padding: 28px 28px 24px; background: #0b0b0c; color: var(--text);
+    border: 1px solid var(--line-strong); border-top: 4px solid var(--red); border-radius: 0; box-shadow: 0 40px 90px rgba(0, 0, 0, .7);
+}
+.swal2-title { color: #fff; }
+.swal2-title span { font: 400 1.9rem var(--display) !important; text-transform: uppercase; letter-spacing: .03em; color: #fff !important; }
+.swal2-html-container { color: var(--muted); }
+.forget-container input, .recover-container-inputs input {
+    width: 100%; height: 48px; margin: 8px 0 4px; padding: 0 14px; background: #000; color: #fff;
+    border: 1px solid var(--line-strong); border-radius: 0; font: 500 .95rem var(--font); outline: none;
+}
+.forget-container input:focus { border-color: var(--red); box-shadow: inset 3px 0 0 var(--red); }
+.recover-container-inputs label { font: 600 .66rem var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.codig-container-inputs input { height: 54px; font: 400 1.5rem var(--display); letter-spacing: 0; }
+.forget-butons { gap: 12px; }
+.forget-butons button {
+    width: auto; min-width: 110px; height: 44px; padding: 0 22px; border: 1px solid var(--line-strong); border-radius: 0;
+    background: #151516; color: #fff; font: 700 .72rem var(--font); letter-spacing: .16em; text-transform: uppercase;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.forget-butons button:first-child { background: var(--red); border-color: var(--red); }
+.forget-butons button:hover { transform: none; color: #fff; filter: brightness(1.15); }
+.swal2-styled.swal2-confirm { background: var(--red) !important; border-radius: 0 !important; box-shadow: none !important; font: 700 .76rem var(--font); letter-spacing: .14em; text-transform: uppercase; }
+.swal2-styled.swal2-cancel { border-radius: 0 !important; }
+circle { stroke: var(--red); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+    .arena { grid-template-columns: 1fr; padding: 28px 20px 40px; gap: 34px; align-content: start; }
+    .arena__brand { min-height: 0; gap: 26px; }
+    .arena__copy .arena__sub, .arena__ticker { display: none; }
+    .arena__headline { font-size: clamp(3.4rem, 17vw, 6rem); }
+    .wrapper.login-card { justify-self: stretch; max-width: none; padding: 34px 24px 30px; }
+    #video-fondo { object-position: 60% 20%; -webkit-mask-image: linear-gradient(180deg, #000, transparent 70%); mask-image: linear-gradient(180deg, #000, transparent 70%); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

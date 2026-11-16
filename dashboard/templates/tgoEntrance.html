@@ -1,96 +1,87 @@
-
+{% load static %}<!DOCTYPE html>
 <html lang="es-co">
 <head>
-    {% load static %}
-    <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <meta name="theme-color" content="#000000">
+    <title>Entrando · TuiranFit</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --red: #e5242b; --red-bright: #ff3b30; --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace; --display: 'Anton', Impact, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; background: #000; overflow: hidden; color: #fff; }
+        body { display: grid; place-items: center; cursor: pointer; -webkit-font-smoothing: antialiased; }
+
+        /* Pinceladas de la marca que "entran" */
+        .strokes { position: fixed; inset: 0; background: url("{% static 'img/reds.jpg' %}") center / cover; mix-blend-mode: screen; opacity: 0;
+            animation: strokes 2.6s cubic-bezier(.2, .7, .2, 1) forwards; }
+        @keyframes strokes { 0% { opacity: 0; transform: scale(1.18) translateX(6%); } 35% { opacity: .95; } 100% { opacity: .55; transform: scale(1) translateX(0); } }
+
+        /* Destello rojo detrás del gorila */
+        .flash { position: fixed; left: 50%; top: 46%; width: 70vmin; height: 70vmin; translate: -50% -50%; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(229, 36, 43, .55), transparent 62%); opacity: 0; animation: flash 1.6s ease-out .25s forwards; }
+        @keyframes flash { 0% { opacity: 0; scale: .4; } 30% { opacity: 1; } 100% { opacity: .35; scale: 1.15; } }
+
+        .stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 24px; text-align: center; }
+        .gorilla { width: clamp(96px, 16vmin, 150px); mix-blend-mode: screen; opacity: 0; animation: pop .8s cubic-bezier(.2, 1.6, .4, 1) .2s forwards; }
+        @keyframes pop { 0% { opacity: 0; transform: scale(.4) rotate(-8deg); filter: blur(10px); } 100% { opacity: 1; transform: none; filter: none; } }
+
+        /* Wordmark: se revela con un corte diagonal */
+        .word { width: clamp(260px, 46vmin, 560px); mix-blend-mode: screen; clip-path: polygon(0 0, 0 0, -12% 100%, 0 100%); animation: wipe 1s cubic-bezier(.7, 0, .2, 1) .75s forwards; }
+        @keyframes wipe { to { clip-path: polygon(0 0, 112% 0, 100% 100%, 0 100%); } }
+
+        .status { display: flex; align-items: center; gap: 14px; font: 700 clamp(.68rem, 1.6vmin, .8rem) var(--mono); letter-spacing: .3em; text-transform: uppercase; color: #cfcfd4; opacity: 0; animation: fade .5s ease 1.3s forwards; }
+        .status::before { content: ""; width: 9px; height: 9px; background: var(--red); animation: blink .8s steps(1) infinite; }
+        @keyframes blink { 50% { opacity: .15; } }
+        @keyframes fade { to { opacity: 1; } }
+
+        /* Barra de carga en paralelogramo */
+        .load { width: clamp(220px, 40vmin, 420px); height: 8px; background: #1a1a1c; transform: skewX(-28deg); overflow: hidden; opacity: 0; animation: fade .4s ease 1.3s forwards; }
+        .load i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #9b1c22, var(--red-bright)); box-shadow: 0 0 18px var(--red); animation: fill 1.9s cubic-bezier(.5, 0, .2, 1) 1.3s forwards; }
+        @keyframes fill { to { width: 100%; } }
+
+        .skip { position: fixed; bottom: 22px; right: 26px; font: 500 .66rem var(--mono); letter-spacing: .22em; text-transform: uppercase; color: #6c6c72; }
+
+        /* Corte final hacia el panel */
+        .curtain { position: fixed; inset: 0; background: var(--red); clip-path: polygon(0 0, 0 0, -30% 100%, 0 100%); pointer-events: none; }
+        body.leaving .curtain { animation: curtain .55s cubic-bezier(.7, 0, .2, 1) forwards; }
+        @keyframes curtain { to { clip-path: polygon(0 0, 130% 0, 100% 100%, 0 100%); } }
+
+        @media (prefers-reduced-motion: reduce) { * { animation-duration: .01s !important; animation-delay: 0s !important; } }
+    </style>
 </head>
 <body>
-    <video autoplay muted loop id="video-fondo" style="width:100%">
-        <source src="{% static 'img/grid.mp4' %}" type="video/mp4">
-        EL navegador no admite la reproducción de videos.
-    </video>
-    
-    <style>
-        body {
-            background-color:black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            animation: fadeIn 2s forwards;
-             .body{
-                animation: fadeOut 3s forwards;
-            };
-        }
-        
-        #video-fondo {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            top:2.5;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -1;
-            object-fit: cover;
-            
-          }
-        
+    <div class="strokes"></div>
+    <div class="flash"></div>
 
-        h1 {
-            font-size:160px;
-            font-weight: bold;
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
-            color: rgb(255, 255, 255);
-            text-shadow: 0 0 10px rgb(255, 255, 255);
-            animation: titilar 3s infinite alternate;
-            user-select: none;
-            cursor: default;
-            align-self: center;
-        }
-        
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-        
-        @keyframes titilar {
-            0% {
-                text-shadow: 0 0 10px rgb(255, 255, 255);
-            }
-            100% {
-                text-shadow: 0 0 30px rgb(255, 255, 255);
-            }
-        }
+    <main class="stage">
+        <img class="gorilla" src="{% static 'img/gorille.png' %}" alt="">
+        <img class="word" src="{% static 'img/TextLogo.png' %}" alt="TuiranFit">
+        <div class="status" id="status">Acceso concedido</div>
+        <div class="load" aria-hidden="true"><i></i></div>
+    </main>
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
-
-     <div class="vista1">
-        <h1>TuiranFit</h1>
-    </div>
+    <div class="skip">Clic para continuar</div>
+    <div class="curtain"></div>
 
     <script>
-        setTimeout(function() {
-            window.location.href = "dashboard/";
-        }, 3000);
+        (function () {
+            var go = false;
+            function leave() {
+                if (go) return; go = true;
+                document.body.classList.add('leaving');
+                setTimeout(function () { window.location.href = "dashboard/"; }, 520);
+            }
+            var msgs = ['Acceso concedido', 'Cargando inventario', 'Sincronizando ventas', 'Listo'];
+            var i = 0, st = document.getElementById('status');
+            setTimeout(function tick() { i++; if (i < msgs.length) { st.textContent = msgs[i]; setTimeout(tick, 560); } }, 1900);
+            setTimeout(leave, 3500);
+            document.addEventListener('click', leave);
+            document.addEventListener('keydown', leave);
+        })();
     </script>
-
 </body>
 </html>
