@@ -163,7 +163,7 @@ def mas_vendidos(request):
             'id_producto': producto.id_producto,
             'nombre_producto': producto.nombre_producto.capitalize(),
             'precio_pub': precio_formateado,
-            'presentacion': producto.iProductImg.decode('utf8')
+            'presentacion': get_image_name(producto.iProductImg)
         })
 
     return JsonResponse({'success': True, 'data': data})
@@ -174,8 +174,6 @@ def añadir_pedido(request, id_producto):
         return JsonResponse({'success': True})
 
     producto = Productos.objects.get(id_producto=id_producto)
-    producto.iProductImg = producto.iProductImg.decode('utf8')
-    producto.iInfoImg = producto.iInfoImg.decode('utf8')
     precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
     producto.precio_pub = precio_formateado
     sabores = producto.sabor.split(',')

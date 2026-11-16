@@ -1,0 +1,151 @@
+"""Carga datos de ejemplo para desarrollo (usuario admin, catalogo, ventas...).
+
+Uso:
+    python manage.py migrate
+    python manage.py create_dev_tables
+    python manage.py seed_dev_data
+
+Usuario de prueba:  admin@tuiranfit.test  /  admin123
+Es idempotente: si ya hay usuarios no vuelve a cargar nada.
+NO usar contra la base de produccion.
+"""
+import random
+from datetime import timedelta
+
+from django.core.management.base import BaseCommand
+from django.db import transaction
+from django.utils import timezone
+
+from customers.models import Clientes, Departamentos, Municipios
+from eproviders.models import Proveedores
+from products.models import Categorias, Marcas, Productos
+from purchases.models import Compras, Detallecompra
+from sales.models import Detalleventa, Pedidos, Ventas
+from users.models import Permisos, Roles, Rolespermisos, Usuarios
+
+
+class Command(BaseCommand):
+    help = "Carga datos de ejemplo para desarrollo local."
+
+    @transaction.atomic
+    def handle(self, *args, **options):
+        if Usuarios.objects.exists():
+            self.stdout.write("Ya hay datos, no se carga nada.")
+            return
+
+        rnd = random.Random(7)
+        ahora = timezone.now()
+
+        # --- Roles, permisos y usuarios ---
+        admin = Roles.objects.create(nombre_rol="Administrador")
+        Roles.objects.create(nombre_rol="Vendedor")
+        permisos = Permisos.objects.create(
+            clientes=1, usuarios=1, proveedores=1, productos=1, compras=1, ventas=1
+        )
+        Rolespermisos.objects.create(id_rol=admin, id_permiso=permisos)
+        Usuarios.objects.create(
+            id_rol=admin, correo="admin@tuiranfit.test",
+            nombre_usuario="Admin", contrasena="admin123", estado=1,
+        )
+
+        # --- Catalogo ---
+        categorias = [Categorias.objects.create(nombre_categoria=n) for n in
+                      ("Proteinas", "Creatinas", "Pre-entrenos", "Aminoacidos", "Accesorios")]
+        marcas = [Marcas.objects.create(nombre_marca=n) for n in
+                  ("Optimum Nutrition", "MuscleTech", "Dymatize", "BSN", "Universal")]
+        catalogo = [
+            ("Whey Gold Standard 5lb", 0, 0, "Chocolate", "5 lb", 18, 185000, 239000),
+            ("ISO100 Hydrolyzed 3lb", 0, 2, "Vainilla", "3 lb", 9, 160000, 210000),
+            ("Creatina Monohidratada 300g", 1, 1, "Sin sabor", "300 g", 24, 62000, 89000),
+            ("NO-Xplode Pre-Workout", 2, 3, "Fruit Punch", "30 serv", 4, 98000, 135000),
+            ("BCAA 2:1:1 Powder", 3, 4, "Sandia", "400 g", 12, 54000, 79000),
+            ("Mass Tech Extreme 2000", 0, 1, "Fresa", "6 lb", 3, 175000, 229000),
+            ("Glutamina Micronizada", 3, 0, "Sin sabor", "300 g", 15, 58000, 82000),
+            ("Shaker Pro 700ml", 4, 4, "N/A", "1 und", 40, 12000, 24000),
+            ("Cinturon Lumbar Cuero", 4, 4, "N/A", "1 und", 7, 55000, 89000),
+            ("C4 Original Pre-Workout", 2, 4, "Blue Raspberry", "30 serv", 2, 88000, 125000),
+        ]
+        productos = []
+        for i, (nom, c, m, sab, pres, cant, costo, pub) in enumerate(catalogo):
+            productos.append(Productos.objects.create(
+                id_categoria=categorias[c], id_marca=marcas[m], nombre_producto=nom,
+                descripcion=f"{nom}. Suplemento de alta calidad para tu entrenamiento.",
+                cantidad=cant, fechaven=ahora + timedelta(days=180 + i * 20), sabor=sab,
+                presentacion=pres, estado=1, precio=costo, precio_pub=pub,
+            ))
+
+        # --- Geografia, clientes y proveedores ---
+        depto = Departamentos.objects.create(nombre_departamento="Cundinamarca")
+        municipios = [Municipios.objects.create(id_departamento=depto, nombre_municipio=n)
+                      for n in ("Bogota", "Soacha", "Chia")]
+        nombres = [("Laura", "Gomez"), ("Carlos", "Rojas"), ("Valentina", "Pardo"),
+                   ("Andres", "Mejia"), ("Camila", "Torres"), ("Santiago", "Ruiz")]
+        clientes = []
+        for i, (n, a) in enumerate(nombres):
+            clientes.append(Clientes.objects.create(
+                id_municipio=municipios[i % 3], documento=str(1000200300 + i), nombres=n,
+                apellidos=a, celular=f"31{rnd.randint(10000000, 99999999)}",
+                barrio="Centro", direccion=f"Calle {10 + i} # {i + 3}-20", estado=True,
+                correo=f"{n.lower()}@correo.test",
+            ))
+        proveedores = [Proveedores.objects.create(
+            nombre_proveedor=n, telefono=f"60{rnd.randint(10000000, 99999999)}"[:10],
+            correo=f"ventas@{n.split()[0].lower()}.test", direccion="Zona Industrial",
+            informacion_adicional="Proveedor de ejemplo", tipo_documento="NIT",
+            numero_documento_nit=f"900{rnd.randint(100000, 999999)}-1", estado=1,
+        ) for n in ("NutriImport SAS", "FitDistribuciones", "Sport Supply Colombia", "ProLife Ltda")]
+
+        # --- Compras ---
+        for i, prov in enumerate(proveedores):
+            compra = Compras.objects.create(
+                id_proveedor_id=prov.pk, fechareg=(ahora - timedelta(days=3 + i * 28)).date(),
+                estado=1, totalCompra=0,
+            )
+            total = 0
+            for prod in rnd.sample(productos, 3):
+                cant = rnd.randint(5, 20)
+                sub = cant * prod.precio
+                total += sub
+                Detallecompra.objects.create(
+                    id_producto_id=prod.pk, id_compra=compra, cantidad=cant,
+                    precio_uni=prod.precio, precio_tot=sub, estado=1,
+                )
+            compra.totalCompra = total
+            compra.save()
+
+        # --- Ventas de los ultimos 6 meses ---
+        ventas = []
+        for i in range(16):
+            dias = rnd.randint(0, 14) if i < 6 else rnd.randint(15, 170)  # algunas ventas del mes actual
+            total = costo_total = 0
+            venta = Ventas.objects.create(
+                id_cliente_id=rnd.choice(clientes).pk, fechareg=(ahora - timedelta(days=dias)).date(),
+                descuentoVenta="0", totalVentaDescuento="0", totalVenta=0,
+                margenGanancia=0, estado=1,
+            )
+            for prod in rnd.sample(productos, rnd.randint(1, 3)):
+                cant = rnd.randint(1, 3)
+                sub = cant * prod.precio_pub
+                total += sub
+                costo_total += cant * prod.precio
+                Detalleventa.objects.create(
+                    id_producto_id=prod.pk, id_venta=venta, cantidad=cant,
+                    precio_compra=prod.precio, precio_venta=prod.precio_pub,
+                    descuentoProducto="0", totalProductoDescuento=str(sub),
+                    margenGanancia=sub - cant * prod.precio, precio_tot=sub, estado=1,
+                )
+            venta.totalVenta = total
+            venta.totalVentaDescuento = str(total)
+            venta.margenGanancia = total - costo_total
+            venta.save()
+            ventas.append(venta)
+
+        for venta, estado in zip(ventas[:3], ("en proceso", "confirmado", "cancelado")):
+            Pedidos.objects.create(
+                id_venta=venta, id_cliente_id=venta.id_cliente_id, total_pedido=venta.totalVenta,
+                estado=estado,
+            )
+
+        self.stdout.write(self.style.SUCCESS(
+            "Datos de ejemplo cargados. Usuario: admin@tuiranfit.test / admin123"
+        ))

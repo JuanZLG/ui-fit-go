@@ -141,11 +141,14 @@ from django.db.models import Sum
 
 def obtener_datos_categorias_productos(request):
     try:
-        datos_categorias = Productos.objects.values('categoria').annotate(
-            total_cantidad=Sum('cantidad')
+        datos_categorias = (
+            Productos.objects.filter(estado=1)
+            .values('id_categoria__nombre_categoria')
+            .annotate(total_cantidad=Sum('cantidad'))
+            .order_by('id_categoria__nombre_categoria')
         )
 
-        categorias = [dato['categoria'] for dato in datos_categorias]
+        categorias = [dato['id_categoria__nombre_categoria'] or 'Sin categoría' for dato in datos_categorias]
         cantidades = [dato['total_cantidad'] for dato in datos_categorias]
 
         data = {
