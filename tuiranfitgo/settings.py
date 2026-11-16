@@ -1,18 +1,26 @@
 from pathlib import Path
 import os
-from django.urls import reverse_lazy
 from datetime import timedelta
-from django.conf import settings    
+
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Las variables sensibles viven en el archivo .env (ver .env.example).
+load_dotenv(BASE_DIR / '.env')
+
+
+def env_bool(name, default=False):
+    return os.getenv(name, str(default)).strip().lower() in ('1', 'true', 'yes', 'on')
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p-q-5)!3*c#&12)htxwxd_5kbk89m52#n14a=sniyklxz4!qw7'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-only-insecure-key-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',') if h.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,9 +70,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-SECRET_KEY = 'ClaveSuperSecretaJamasLaVeraNadie'
-
-
 JWT_PAYLOAD_HANDLER = 'authenticator.utils.custom_jwt_payload_handler'
 
 
@@ -97,21 +102,32 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tuiranfitgo.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE':'django.db.backends.mysql',
-        'NAME':'ranfit',
-        'USER': 'root',
-        'PASSWORD': '',
-        'PORT': '3306'
+if os.getenv('DB_ENGINE', 'mysql').lower() == 'sqlite':
+    # Útil para desarrollo local sin tener MySQL instalado.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('DB_NAME', 'ranfit'),
+            'USER': os.getenv('DB_USER', 'root'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '3306'),
+        }
+    }
 
 # Configura el motor de sesión en 'file'
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
 # Especifica la ubicación donde se almacenarán los archivos de sesión
 SESSION_FILE_PATH = os.path.join(BASE_DIR, 'session_data')
+os.makedirs(SESSION_FILE_PATH, exist_ok=True)
 
 
 # Password validation
@@ -171,7 +187,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'page', 'static'),
     os.path.join(BASE_DIR, 'products', 'static'),
     os.path.join(BASE_DIR, 'authenticator', 'static'),
-    os.path.join(BASE_DIR, 'orders', 'static')
 ]
 
 # Ruta en el sistema de archivos donde se guardarán los archivos subidos
@@ -195,9 +210,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '79d480e6ae3575'
-EMAIL_HOST_PASSWORD = 'a051633973020f'
-EMAIL_PORT = '2525'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'sandbox.smtp.mailtrap.io')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_PORT = os.getenv('EMAIL_PORT', '2525')
 
 
