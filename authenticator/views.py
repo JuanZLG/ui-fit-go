@@ -1,3 +1,4 @@
+from control import auditoria as aud
 import os
 from django.shortcuts import render, redirect
 from dotenv import load_dotenv
@@ -52,6 +53,7 @@ class loginmio(APIView):
             usuario_data = serializers.serialize('python', [usuario])[0]['fields']
 
             if usuario.estado == 0:
+                aud.registrar('login_fallido', 'seguridad', f'Intento de acceso de un usuario inactivo: {correo}', actor={'nombre': usuario.nombre_usuario, 'correo': correo})
                 return JsonResponse({'error': 'Usuario inactivo'}, status=401)
 
             if verificar(contrasena, usuario.contrasena):
@@ -62,6 +64,8 @@ class loginmio(APIView):
                 payload = custom_jwt_payload_handler(usuario_data)
                 payload['id_rol'] = usuario_data['id_rol']
                 token = jwt_encode_handler(payload)
+                aud.registrar('login', 'seguridad', f'Inició sesión ({usuario.correo})',
+                              actor={'nombre': usuario.nombre_usuario, 'correo': usuario.correo, 'rol_id': usuario_data['id_rol']})
                 response_data = {
                     'token': token,
                     'nombre_usuario': usuario_data['nombre_usuario'],
@@ -70,8 +74,10 @@ class loginmio(APIView):
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
+                aud.registrar('login_fallido', 'seguridad', f'Contraseña incorrecta para {correo}', actor={'nombre': usuario.nombre_usuario, 'correo': correo})
                 return Response({'error': 'contrasena incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuarios.DoesNotExist:
+            aud.registrar('login_fallido', 'seguridad', f'Intento de acceso con un correo no registrado: {correo}', actor={'nombre': 'Desconocido', 'correo': str(correo or '')})
             return Response({'error': 'Usuario no Registrado'}, status=status.HTTP_401_UNAUTHORIZED)
         
 #-----------------------------------------------------------------------------------------------------
@@ -155,6 +161,8 @@ def restablecer_contrasena(request):
 
     user.contrasena = hashear(nueva_contrasena)
     user.save(update_fields=['contrasena'])
+    aud.registrar('cambiar_clave', 'seguridad', f'Restableció la contraseña de {user.correo} con el código enviado a su correo',
+                  actor={'nombre': user.nombre_usuario, 'correo': user.correo, 'rol_id': user.id_rol_id})
 
     # El código es de un solo uso
     for clave in ('correo_almacenado', 'codigo_almacenado', 'codigo_emitido', 'codigo_intentos', 'codigo_verificado'):

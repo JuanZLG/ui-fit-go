@@ -1,0 +1,86 @@
+{% extends "baseInterface.html" %}
+
+{% block title %} Auditoría {% endblock %}
+
+{% block body %}
+
+<div class="tf-page-head">
+    <h1>Auditoría</h1>
+    <p>Quién hizo qué y cuándo. Los registros no se pueden editar ni borrar desde la aplicación.</p>
+</div>
+
+<div class="tf-kpis tf-kpis--3">
+    <div class="tf-kpi"><span class="tf-kpi__label">Movimientos hoy</span><strong class="tf-kpi__value">{{ resumen.hoy }}</strong></div>
+    <div class="tf-kpi"><span class="tf-kpi__label">Últimos 7 días</span><strong class="tf-kpi__value">{{ resumen.semana }}</strong></div>
+    <div class="tf-kpi"><span class="tf-kpi__label">Usuarios activos (7 días)</span><strong class="tf-kpi__value">{{ resumen.usuarios }}</strong></div>
+    <div class="tf-kpi"><span class="tf-kpi__label">Módulo más activo</span><strong class="tf-kpi__value tf-kpi__value--texto">{{ resumen.modulo_top }}</strong></div>
+</div>
+
+<form method="get" class="tf-aud__filtros">
+    <div class="tf-aud__campo tf-aud__campo--ancho">
+        <label for="fq">Buscar</label>
+        <input id="fq" type="search" name="q" value="{{ filtros.q }}" placeholder="Usuario, descripción, número…">
+    </div>
+    <div class="tf-aud__campo">
+        <label for="fmodulo">Módulo</label>
+        <select id="fmodulo" name="modulo"><option value="">Todos</option>
+            {% for m in modulos %}<option value="{{ m }}" {% if filtros.modulo == m %}selected{% endif %}>{{ m|capfirst }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="tf-aud__campo">
+        <label for="faccion">Acción</label>
+        <select id="faccion" name="accion"><option value="">Todas</option>
+            {% for a in acciones %}<option value="{{ a }}" {% if filtros.accion == a %}selected{% endif %}>{{ a|capfirst }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="tf-aud__campo"><label for="fdesde">Desde</label><input id="fdesde" type="date" name="desde" value="{{ filtros.desde }}"></div>
+    <div class="tf-aud__campo"><label for="fhasta">Hasta</label><input id="fhasta" type="date" name="hasta" value="{{ filtros.hasta }}"></div>
+    <div class="tf-aud__botones">
+        <button class="btn btn-primary" type="submit">Filtrar</button>
+        <a class="tf-export" href="?{{ consulta }}&formato=csv" title="Descargar en CSV"><i class="fas fa-file-csv"></i><span>CSV</span></a>
+    </div>
+</form>
+
+<div class="tf-panel">
+    <div class="tf-panel__head">
+        <h2 class="tf-panel__title"><span class="tf-idx">LOG</span>Actividad
+            <span class="tf-panel__sub">{{ total }} registro{{ total|pluralize }}</span></h2>
+    </div>
+    <ul class="tf-aud__lista">
+        {% for r in pagina %}
+        <li class="tf-aud__fila">
+            <div class="tf-aud__cuando"><b>{{ r.fecha|date:"d/m/Y" }}</b><span>{{ r.fecha|date:"H:i:s" }}</span></div>
+            <div class="tf-aud__quien">
+                <b>{{ r.usuario_nombre|default:"Sistema" }}</b>
+                <span>{{ r.usuario_correo|default:"—" }}{% if r.rol_nombre %} · {{ r.rol_nombre }}{% endif %}{% if r.ip %} · {{ r.ip }}{% endif %}</span>
+            </div>
+            <div class="tf-aud__que">
+                <span class="tf-acc tf-acc--{{ r.accion }}">{{ r.accion|cut:"_"|capfirst }}</span>
+                <span class="tf-aud__modulo">{{ r.modulo }}</span>
+            </div>
+            <div class="tf-aud__detalle">
+                <p>{{ r.descripcion }}</p>
+                {% if r.cambios_lista %}
+                <details>
+                    <summary>{{ r.cambios_lista|length }} cambio{{ r.cambios_lista|length|pluralize }}</summary>
+                    <table class="tf-aud__cambios">
+                        <tr><th>Campo</th><th>Antes</th><th>Después</th></tr>
+                        {% for c in r.cambios_lista %}<tr><td>{{ c.campo }}</td><td class="antes">{{ c.antes }}</td><td class="despues">{{ c.despues }}</td></tr>{% endfor %}
+                    </table>
+                </details>
+                {% endif %}
+            </div>
+        </li>
+        {% empty %}
+        <li class="tf-empty"><i class="fas fa-clipboard-list"></i>No hay movimientos con esos filtros.</li>
+        {% endfor %}
+    </ul>
+    {% if pagina.paginator.num_pages > 1 %}
+    <div class="tf-aud__paginas">
+        {% if pagina.has_previous %}<a href="?{{ consulta }}&pagina={{ pagina.previous_page_number }}">← Anterior</a>{% endif %}
+        <span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+        {% if pagina.has_next %}<a href="?{{ consulta }}&pagina={{ pagina.next_page_number }}">Siguiente →</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

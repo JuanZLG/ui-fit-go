@@ -1,3 +1,4 @@
+from control import auditoria as aud
 from datetime import timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -330,6 +331,8 @@ def ver_pedido(request):
     except Exception:
         logger.exception('No se pudo enviar el correo del pedido %s', pedido.id_pedido)
 
+    aud.registrar('crear', 'ventas', f'Nuevo pedido #{pedido.id_pedido} desde la tienda de {cliente.nombres} {cliente.apellidos} por ${round(pedido.total_pedido):,}'.replace(',', '.'),
+                  'Pedido', pedido.id_pedido, actor={'nombre': 'Tienda web', 'correo': cliente.correo})
     return JsonResponse({'message': 'Datos guardados correctamente'})
 
 from django.template.loader import get_template

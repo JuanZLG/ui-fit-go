@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'dashboard',
     'page',
     'authenticator',
+    'control',
     'rest_framework',
     'tuiranfitgo'
 ]
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware', 
+    'control.contexto.ContextoMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

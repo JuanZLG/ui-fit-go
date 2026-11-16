@@ -23,6 +23,17 @@ La tienda pública está en `/Brutality/`. Si el puerto 8090 estuviera ocupado u
 > Los modelos son `managed = False`: el esquema real vive en la base MySQL `ranfit`.
 > `create_dev_tables` solo crea esas tablas para desarrollo y pruebas. **No usar contra producción.**
 
+## Tablas nuevas (auditoría y metas)
+
+A diferencia del resto del proyecto, la app `control` sí tiene migraciones. En tu base MySQL ejecuta **una vez**:
+
+```powershell
+.\.venv\Scripts\python.exe manage.py migrate control
+```
+
+Solo crea `control_registroauditoria` y `control_metaventas`; no toca ninguna tabla existente.
+Alternativa manual: `control/sql/control_mysql.sql`.
+
 ## Pruebas
 
 ```powershell
@@ -52,6 +63,12 @@ Usan SQLite en memoria (`tuiranfitgo/settings_test.py`) y no envían correos rea
 - **Paleta de comandos** (`Ctrl+K`): navega por módulos y busca productos, clientes, proveedores, ventas y pedidos.
 - **Exportar a CSV** cualquier listado (respeta el filtro de búsqueda; abre bien en Excel).
 - **Informes PDF** con la marca: informes por rango de fechas, comprobantes de venta y compra (con QR) y orden de compra.
+- **Auditoría** (`Usuarios > Auditoría`): quién hizo qué y cuándo, con el antes y el después de cada cambio
+  (productos, clientes, proveedores, usuarios, ventas, compras, pedidos, inicios de sesión, informes). Filtros y exportación a CSV.
+  Nunca guarda contraseñas. Auditar no puede romper la operación principal.
+- **Meta mensual de ventas** (dashboard): barra de progreso con el ritmo esperado de hoy, proyección a fin de mes y
+  cuánto vender por día para llegar. Sugiere una meta según los últimos 3 meses.
+- **Contactar por WhatsApp** desde cada pedido, con el mensaje ya redactado según su estado.
 - **Tienda:** insignias reales de "Más vendido" y "Últimas unidades".
 
 ## Estructura útil

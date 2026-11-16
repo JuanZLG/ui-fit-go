@@ -84,6 +84,9 @@ def jwt_cookie_required(view_func):
 
 
 def logout_view(request):
+    from control import auditoria as aud
+    if request.COOKIES.get('jwt_token'):
+        aud.registrar('logout', 'seguridad', 'Cerró sesión')
     response = redirect('login_view')
     response.delete_cookie('jwt_token')
     return response

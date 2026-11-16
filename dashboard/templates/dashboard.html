@@ -49,6 +49,30 @@
     </div>
 </div>
 
+<!-- Meta mensual de ventas -->
+{% csrf_token %}
+<div class="tf-meta" id="metaCaja">
+    <div class="tf-meta__top">
+        <div class="tf-meta__titulo">
+            <span class="tf-meta__etq" id="metaEtq">Meta de ventas</span>
+            <strong class="tf-meta__valor" id="metaValor">—</strong>
+        </div>
+        <span class="tf-meta__estado" id="metaEstado"></span>
+        <button type="button" class="tf-meta__editar" id="metaEditar"><i class="fas fa-bullseye"></i><span>Definir meta</span></button>
+    </div>
+    <div class="tf-meta__barra" id="metaBarra" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <div class="tf-meta__fill" id="metaFill"></div>
+        <i class="tf-meta__ritmo" id="metaRitmo" title="Dónde deberías ir hoy para cumplir"></i>
+        <span class="tf-meta__marca" style="left:25%">25</span><span class="tf-meta__marca" style="left:50%">50</span><span class="tf-meta__marca" style="left:75%">75</span>
+    </div>
+    <div class="tf-meta__datos">
+        <div><span>Vendido en el mes</span><strong id="metaVendido">—</strong><small id="metaPct"></small></div>
+        <div><span>Deberías ir en</span><strong id="metaEsperado">—</strong><small id="metaEsperadoPct"></small></div>
+        <div><span>Proyección a fin de mes</span><strong id="metaProyeccion">—</strong><small id="metaRitmoDiario"></small></div>
+        <div><span>Vender por día desde hoy</span><strong id="metaNecesario" class="is-red">—</strong><small id="metaFalta"></small></div>
+    </div>
+</div>
+
 <!-- Compras y ventas + productos -->
 <div class="row">
     <div class="col-xl-8 mb-4">
@@ -139,6 +163,20 @@
                     <li class="tf-empty"><i class="fas fa-circle-notch fa-spin"></i>Cargando…</li>
                 </ul>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actividad reciente (solo si el usuario puede ver la auditoría) -->
+<div class="row" id="actividadFila" hidden>
+    <div class="col-12 mb-4">
+        <div class="tf-panel">
+            <div class="tf-panel__head">
+                <h2 class="tf-panel__title"><span class="tf-idx">06</span>Actividad reciente
+                    <span class="tf-panel__sub">Quién hizo qué en el sistema</span></h2>
+                <a class="btn btn-secondary btn-sm" href="{% url 'auditoria' %}">Ver auditoría completa</a>
+            </div>
+            <div class="tf-panel__body"><ul class="tf-feed" id="actividadLista"></ul></div>
         </div>
     </div>
 </div>
@@ -359,6 +397,60 @@
         $('#aiTabs').on('click', 'button', function () {
             $('#aiTabs button').removeClass('is-active'); $(this).addClass('is-active');
             pestana = $(this).data('tab'); if (ia) pintarIA();
+        });
+
+        // ---------- Meta mensual ----------
+        var ESTADOS = { cumplida: '¡Meta cumplida!', adelantada: 'Adelantado al ritmo', al_ritmo: 'Al ritmo', atrasada: 'Por debajo del ritmo', sin_meta: 'Sin meta' };
+        var ultimaMeta = null;
+        function pintarMeta(m) {
+            ultimaMeta = m;
+            var tieneMeta = !!m.meta;
+            $('#metaEtq').text('Meta de ventas de ' + m.mes_nombre);
+            $('#metaEditar span').text(tieneMeta ? 'Cambiar meta' : 'Definir meta');
+            $('#metaCaja').attr('data-estado', m.estado);
+            $('#metaEstado').text(ESTADOS[m.estado]).attr('data-estado', m.estado);
+            if (tieneMeta) TF.countUp('metaValor', m.meta, function (n) { return cop.format(n); }); else $('#metaValor').text(m.sugerida ? 'Sugerida ' + cop.format(m.sugerida) : 'Sin definir');
+            var pct = Math.min(m.pct, 100);
+            $('#metaFill').css('width', pct + '%');
+            $('#metaRitmo').css('left', Math.min(m.esperado_pct, 100) + '%').toggle(tieneMeta);
+            $('#metaBarra').attr('aria-valuenow', Math.round(m.pct));
+            $('#metaVendido').text(cop.format(m.ventas)); $('#metaPct').text(tieneMeta ? m.pct.toLocaleString('es-CO') + ' % de la meta' : 'Día ' + m.dia + ' de ' + m.dias_mes);
+            $('#metaEsperado').text(tieneMeta ? cop.format(m.esperado) : '—'); $('#metaEsperadoPct').text(tieneMeta ? 'al día ' + m.dia + ' (' + m.esperado_pct.toLocaleString('es-CO') + ' % del mes)' : '');
+            $('#metaProyeccion').text(cop.format(m.proyeccion)); $('#metaRitmoDiario').text('a tu ritmo de ' + cop.format(m.ritmo_diario) + ' por día');
+            $('#metaNecesario').text(tieneMeta ? (m.estado === 'cumplida' ? '—' : cop.format(m.diario_necesario)) : '—');
+            $('#metaFalta').text(tieneMeta ? (m.estado === 'cumplida' ? 'Ya la superaste' : 'faltan ' + cop.format(m.faltante)) : '');
+        }
+        function cargarMeta() { $.get("{% url 'meta_ventas' %}").done(pintarMeta); }
+        cargarMeta();
+        $('#metaEditar').on('click', function () {
+            var m = ultimaMeta || {}, sugerida = m.meta || m.sugerida || '';
+            Swal.fire({
+                title: 'Meta de ' + (m.mes_nombre || 'este mes'),
+                html: '<p style="margin:0 0 14px;color:#a1a1a6">¿Cuánto quieres vender este mes?' + (m.sugerida ? '<br>Sugerida según tus últimos 3 meses: <b style="color:#fff">' + cop.format(m.sugerida) + '</b>' : '') + '</p>',
+                input: 'number', inputValue: sugerida, inputAttributes: { min: 1, step: 10000, inputmode: 'numeric' },
+                showCancelButton: true, confirmButtonText: 'Guardar meta', cancelButtonText: 'Cancelar',
+                inputValidator: function (v) { if (!v || Number(v) <= 0) return 'Escribe un valor mayor que cero'; }
+            }).then(function (r) {
+                if (!r.isConfirmed) return;
+                $.ajax({ url: "{% url 'guardar_meta' %}", method: 'POST', contentType: 'application/json', data: JSON.stringify({ valor: Number(r.value) }),
+                    headers: { 'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val() } })
+                    .done(function (d) { if (d.ok) { pintarMeta(d.meta); Swal.fire({ toast: true, position: 'bottom-end', icon: 'success', title: 'Meta guardada', showConfirmButton: false, timer: 2000 }); } })
+                    .fail(function (xhr) { Swal.fire({ icon: 'error', title: 'No se guardó la meta', text: (xhr.responseJSON && xhr.responseJSON.error) || 'No tienes permiso para cambiar la meta.' }); });
+            });
+        });
+
+        // ---------- Actividad reciente ----------
+        $.ajax({ url: "{% url 'auditoria_reciente' %}", dataType: 'json' }).done(function (d) {
+            if (!d.registros) return;
+            var iconos = { crear: 'fa-plus', editar: 'fa-pen', anular: 'fa-ban', cancelar: 'fa-ban', eliminar: 'fa-trash', activar: 'fa-toggle-on', desactivar: 'fa-toggle-off', reactivar: 'fa-rotate-left', login: 'fa-right-to-bracket', logout: 'fa-right-from-bracket', login_fallido: 'fa-triangle-exclamation', exportar: 'fa-file-arrow-down', cambiar_clave: 'fa-key' };
+            var $ul = $('#actividadLista').empty();
+            d.registros.forEach(function (r) {
+                $ul.append($('<li>').append(
+                    $('<span>').addClass('tf-feed__ico tf-acc--' + r.accion).append($('<i>').addClass('fas ' + (iconos[r.accion] || 'fa-circle'))),
+                    $('<div>').append($('<b>').text(r.usuario), $('<span>').text(' ' + r.descripcion.charAt(0).toLowerCase() + r.descripcion.slice(1))),
+                    $('<time>').text(r.fecha)));
+            });
+            if (d.registros.length) $('#actividadFila').prop('hidden', false);
         });
 
         // ---------- Alertas de inventario ----------

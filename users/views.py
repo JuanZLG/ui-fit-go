@@ -1,3 +1,4 @@
+from control import auditoria as aud
 
 from authenticator.security import hashear, es_valida, generar_temporal, REGLA_CONTRASENA
 from django.shortcuts import get_object_or_404, render, redirect
@@ -89,6 +90,7 @@ def change_password(request):
         user.contrasena = hashear(new_password)
         user.save(update_fields=['contrasena'])
 
+        aud.registrar('cambiar_clave', 'seguridad', 'Cambió su contraseña desde su perfil')
         return JsonResponse({'detail': 'Contraseña actualizada correctamente.'})
 
     except Exception as e:

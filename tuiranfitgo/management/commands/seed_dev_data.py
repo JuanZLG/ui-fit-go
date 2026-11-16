@@ -22,7 +22,7 @@ from customers.models import Clientes, Departamentos, Municipios
 from eproviders.models import Proveedores
 from products.models import Categorias, Marcas, Productos
 from purchases.models import Compras, Detallecompra
-from sales.models import Detalleventa, Pedidos, Ventas
+from sales.models import DetallePedido, Detalleventa, Pedidos, Ventas
 from ._seed_images import (RED, RED_BRIGHT, RED_DEEP, guardar_imagen_producto,
                            guardar_tabla_nutricional)
 from users.models import Permisos, Roles, Rolespermisos, Usuarios
@@ -38,6 +38,8 @@ class Command(BaseCommand):
             return
 
         rnd = random.Random(7)
+        from control import contexto
+        contexto.fijar(silencio=True)         # la carga masiva no se audita
         ahora = timezone.now()
 
         # --- Roles, permisos y usuarios ---
@@ -154,10 +156,36 @@ class Command(BaseCommand):
             ventas.append(venta)
 
         for venta, estado in zip(ventas[:3], ("en proceso", "confirmado", "cancelado")):
-            Pedidos.objects.create(
+            pedido = Pedidos.objects.create(
                 id_venta=venta, id_cliente_id=venta.id_cliente_id, total_pedido=venta.totalVenta,
                 estado=estado,
             )
+            for d in Detalleventa.objects.filter(id_venta=venta)[:2]:
+                DetallePedido.objects.create(
+                    id_pedido=pedido, id_producto_id=d.id_producto_id, sabor='Original',
+                    cantidad=d.cantidad, precio_uni=d.precio_venta, precio_tot=d.precio_tot,
+                )
+
+        contexto.limpiar()
+
+        # --- Meta del mes e historial de ejemplo para la auditoria ---
+        from control.models import MetaVentas, RegistroAuditoria
+        hoy = timezone.localdate()
+        MetaVentas.objects.create(anio=hoy.year, mes=hoy.month, valor=5_000_000, definida_por='Admin')
+        ejemplos = [
+            (5, 'login', 'seguridad', 'Inició sesión (admin@tuiranfit.test)', '', ''),
+            (22, 'crear', 'productos', 'Creó producto «Proteina Vegana Plant 2lb»', 'Producto', ''),
+            (47, 'editar', 'productos', 'Editó producto «Whey Gold Standard 5lb»: Existencias, Precio al público', 'Producto',
+             '[{"campo": "Existencias", "antes": "12", "despues": "18"}, {"campo": "Precio al público", "antes": "$229.000", "despues": "$239.000"}]'),
+            (95, 'crear', 'ventas', 'Registró la venta #000012 de Valentina Pardo por $878.000', 'Venta', ''),
+            (180, 'anular', 'ventas', 'Anuló la venta #000009 (el inventario se ajustó)', 'Venta',
+             '[{"campo": "Estado", "antes": "Activa", "despues": "Anulada"}]'),
+            (300, 'exportar', 'ventas', 'Generó el informe de ventas del 01/10/2026 al 31/10/2026 (14 ventas)', '', ''),
+        ]
+        for minutos, accion, modulo, texto, objeto, cambios in ejemplos:
+            RegistroAuditoria.objects.create(
+                fecha=timezone.now() - timedelta(minutes=minutos), usuario_nombre='Admin', usuario_correo='admin@tuiranfit.test',
+                rol_id=admin.id_rol, ip='127.0.0.1', accion=accion, modulo=modulo, objeto=objeto, descripcion=texto, cambios=cambios)
 
         self.stdout.write(self.style.SUCCESS(
             "Datos de ejemplo cargados. Usuario: admin@tuiranfit.test / admin123"

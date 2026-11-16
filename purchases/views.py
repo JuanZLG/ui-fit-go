@@ -1,3 +1,4 @@
+from control import auditoria as aud
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
@@ -74,6 +75,8 @@ def crear_compra(request):
                         precio_tot=precio_total
                     )
 
+            aud.registrar('crear', 'compras', f'Registró la compra #{compra.id_compra:06d} a {proveedor.nombre_proveedor} por ${round(total_compra):,}'.replace(',', '.'),
+                          'Compra', compra.id_compra, [{'campo': 'Productos', 'antes': '—', 'despues': f'{len(productos)} producto(s)'}])
             return JsonResponse({'success': True})
 
         except DatosInvalidos as e:
@@ -186,9 +189,13 @@ def cambiarEstado(request):
                         # Lanza StockError (y revierte todo) si el stock quedaría negativo
                         quitar_stock_compra(Productos, detalle.id_producto_id, detalle.cantidad)
 
+                cambio = compra.estado != int(nuevo_estado)
                 compra.estado = int(nuevo_estado)
                 compra.save()
 
+            if cambio:
+                aud.registrar('anular' if nuevo_estado == "0" else 'reactivar', 'compras',
+                              f'{"Anuló" if nuevo_estado == "0" else "Reactivó"} la compra #{int(compra_id):06d} (el inventario se ajustó)', 'Compra', compra_id)
             return JsonResponse({'status': 'success'})
 
         except Compras.DoesNotExist:
@@ -363,6 +370,7 @@ def generar_factura_pdf(request, compra_id):
                                          ('BOTTOMPADDING', (0, 0), (-1, -1), 8)]))
     informe.espacio(22)
     informe.adjuntar(verificacion)
+    aud.registrar('exportar', 'compras', f'Generó el comprobante de la compra #{compra.id_compra:06d}', 'Compra', compra.id_compra)
     return informe.respuesta(f'comprobante_compra_{compra.id_compra:06d}.pdf')
 
 
@@ -407,4 +415,5 @@ def generar_informe_pdf(request):
               c.id_proveedor.numero_documento_nit, cop(c.totalCompra)] for c in compras]
     informe.tabla(['N°', 'Fecha', 'Proveedor', 'Documento / NIT', 'Total'], filas, [60, 70, 190, 100, 112], 'LLLLR',
                   total=['', '', '', 'TOTAL', cop(total)])
+    aud.registrar('exportar', 'compras', f'Generó el informe de compras del {fecha(inicio)} al {fecha(fin)} ({len(compras)} compras)')
     return informe.respuesta(nombre)

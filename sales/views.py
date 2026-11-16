@@ -1,3 +1,4 @@
+from control import auditoria as aud
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import locale
@@ -150,6 +151,10 @@ def crear_venta(request):
         except Exception:
             logger.exception('No se pudo enviar el correo de la venta %s', venta.id_venta)
 
+        aud.registrar('crear', 'ventas',
+                      f'Registró la venta #{venta.id_venta:06d} de {cliente.nombres} {cliente.apellidos} por ${round(venta.totalVenta):,}'.replace(',', '.'),
+                      'Venta', venta.id_venta,
+                      [{'campo': 'Productos', 'antes': '—', 'despues': ', '.join(f"{d['cantidad']}× {d['nombre_producto']}" for d in detalles_email)}])
         return JsonResponse({'success': True, 'id_venta': venta.id_venta})
 
     clientes = Clientes.objects.all()
@@ -366,12 +371,14 @@ def cambiarEstado(request):
     except (TypeError, ValueError):
         return JsonResponse({'status': 'error', 'message': 'Datos no válidos.'}, status=400)
 
+    cambio = False
     try:
         with transaction.atomic():
             venta = Ventas.objects.select_for_update().get(id_venta=venta_id)
 
             # Si la venta ya está en ese estado no se toca el inventario (evita duplicar ajustes)
             if venta.estado != nuevo_estado:
+                cambio = True
                 detalles = Detalleventa.objects.filter(id_venta=venta.id_venta)
                 if nuevo_estado == 0:
                     for detalle in detalles.filter(estado=1):
@@ -390,6 +397,10 @@ def cambiarEstado(request):
     except StockError as e:
         return JsonResponse({'status': 'error', 'message': f'No se puede reactivar la venta. {e}'})
 
+    if cambio:
+        aud.registrar('anular' if nuevo_estado == 0 else 'reactivar', 'ventas',
+                      f'{"Anuló" if nuevo_estado == 0 else "Reactivó"} la venta #{venta_id:06d} (el inventario se ajustó)', 'Venta', venta_id,
+                      [{'campo': 'Estado', 'antes': 'Activa' if nuevo_estado == 0 else 'Anulada', 'despues': 'Anulada' if nuevo_estado == 0 else 'Activa'}])
     return JsonResponse({'status': 'success'})
 
 
@@ -492,6 +503,7 @@ def generar_factura_pdf_venta(request, venta_id):
     informe.totales(lineas, ('Total', cop(venta.totalVenta)))
     informe.espacio(26)
     informe.parrafo('Gracias por tu compra. Conserva este comprobante como soporte de tu pedido.')
+    aud.registrar('exportar', 'ventas', f'Generó el comprobante de la venta #{venta.id_venta:06d}', 'Venta', venta.id_venta)
     return informe.respuesta(f'comprobante_venta_{venta.id_venta:06d}.pdf')
 
 
@@ -534,6 +546,7 @@ def generar_informe_pdf_ventas(request):
               v.id_cliente.documento, cop(v.totalVenta)] for v in ventas]
     informe.tabla(['N°', 'Fecha', 'Cliente', 'Documento', 'Total'], filas, [60, 70, 200, 90, 112], 'LLLLR',
                   total=['', '', '', 'TOTAL', cop(total)])
+    aud.registrar('exportar', 'ventas', f'Generó el informe de ventas del {fecha(inicio)} al {fecha(fin)} ({len(ventas)} ventas)')
     return informe.respuesta(nombre)
 
 

@@ -1,3 +1,4 @@
+from control import auditoria as aud
 import json
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -10,7 +11,18 @@ from tuiranfitgo.inventory import StockError, DatosInvalidos, entero_positivo, n
 @jwt_cookie_required
 @module_access_required('ventas')
 def Home(request):
-    pedidos = Pedidos.objects.all()
+    from customers.models import Clientes as ClientesApp
+    from .whatsapp import mensaje_pedido, url_whatsapp
+
+    pedidos = list(Pedidos.objects.all())
+    ids = [p.id_cliente_id for p in pedidos]
+    clientes = {c.id_cliente: c for c in ClientesApp.objects.filter(id_cliente__in=ids)}
+    detalles = {}
+    for d in DetallePedido.objects.filter(id_pedido__in=[p.id_pedido for p in pedidos]).select_related('id_producto'):
+        detalles.setdefault(d.id_pedido_id, []).append(d)
+    for p in pedidos:
+        c = clientes.get(p.id_cliente_id)
+        p.wa_url = url_whatsapp(getattr(c, 'celular', ''), mensaje_pedido(p, c, detalles.get(p.id_pedido, []))) if c else ''
     return render(request, "ordersHome.html", {"pedidos": pedidos})
 
 
@@ -28,6 +40,8 @@ def cambiarEstadoPedido(request):
                              'message': 'El pedido ya fue confirmado en una venta. Anula la venta para cancelarlo.'})
     pedido.estado = "cancelado"
     pedido.save(update_fields=['estado'])
+    aud.registrar('cancelar', 'ventas', f'Canceló el pedido #{pedido.id_pedido}', 'Pedido', pedido.id_pedido,
+                  [{'campo': 'Estado', 'antes': 'En proceso', 'despues': 'Cancelado'}])
     return JsonResponse({'status': 'success'})
 
 
@@ -100,6 +114,8 @@ def editarPedido(request):
             pedido.total_pedido = total
             pedido.save(update_fields=['total_pedido'])
 
+        aud.registrar('editar', 'ventas', f'Editó el pedido #{id_pedido} (total ${round(total):,})'.replace(',', '.'), 'Pedido', id_pedido,
+                      [{'campo': 'Total', 'antes': '—', 'despues': f'${round(total):,}'.replace(',', '.')}])
         return JsonResponse({'success': True})
     except (DatosInvalidos, StockError) as e:
         return JsonResponse({'success': False, 'error_message': str(e)}, status=400)

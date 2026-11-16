@@ -216,6 +216,8 @@ def orden_compra_sugerida_pdf(request):
     informe.parrafo(f'Calculado con el ritmo de ventas de los últimos {insights.DIAS_VENTANA} días. '
                     'Es una sugerencia: ajústala según tus promociones, temporadas y plazos de entrega del proveedor.',
                     E_PEQ)
+    from control import auditoria as aud
+    aud.registrar('exportar', 'compras', f'Generó la orden de compra sugerida ({len(pedido)} productos)')
     return informe.respuesta(nombre)
 
 

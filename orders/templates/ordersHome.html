@@ -47,6 +47,12 @@
                                 class="btn btn-sm mr-2 {% if pedido.estado == 'cancelado' or pedido.estado == 'confirmado' %}disabled-link{% endif %}"
                                 id="editbutton"><i class="fa-solid fa-pen-to-square" data-toggle="tooltip"
                                     data-placement="top" title="Editar Pedido"></i></a>
+                            {% if pedido.wa_url %}
+                            <a href="{{ pedido.wa_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-whatsapp mr-2"
+                                data-toggle="tooltip" data-placement="top" title="Contactar por WhatsApp (mensaje listo)"><i class="fab fa-whatsapp"></i></a>
+                            {% else %}
+                            <span class="btn btn-sm btn-whatsapp mr-2 is-off" data-toggle="tooltip" data-placement="top" title="El cliente no tiene un celular válido"><i class="fab fa-whatsapp"></i></span>
+                            {% endif %}
                             <button data-toggle="tooltip" data-placement="right" title="Ver Detalles" type="button"
                                 class="btn btn-sm btn-primary ml-2 detalle-pedido-button"
                                 data-pedido-id="{{ pedido.id_pedido }}">

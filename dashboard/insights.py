@@ -154,3 +154,50 @@ def resumen_marcador(hoy=None):
         'margen_pct': round(margen / ventas * 100, 1) if ventas else 0,
         'periodo': {'inicio': str(inicio), 'hoy': str(hoy), 'previo_inicio': str(inicio_prev), 'previo_fin': str(fin_prev_tramo)},
     }
+
+
+# ---------------------------------------------------------------- meta mensual de ventas
+MESES = ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+
+
+def progreso_meta(hoy=None):
+    """Avance de la meta de ventas del mes: ritmo esperado, proyección y venta diaria necesaria."""
+    import calendar
+    from control.models import MetaVentas
+
+    hoy = hoy or timezone.localdate()
+    dias_mes = calendar.monthrange(hoy.year, hoy.month)[1]
+    inicio = hoy.replace(day=1)
+    ventas = _suma(Ventas, 'fechareg', 'totalVenta', inicio, hoy, estado=1)
+
+    # Meta sugerida: promedio de los 3 meses anteriores + 10 %, redondeada a 10.000
+    totales, ref = [], inicio
+    for _ in range(3):
+        fin = ref - timedelta(days=1)
+        ini = fin.replace(day=1)
+        totales.append(_suma(Ventas, 'fechareg', 'totalVenta', ini, fin, estado=1))
+        ref = ini
+    promedio = sum(totales) / 3
+    sugerida = int(round(promedio * 1.10 / 10000) * 10000) if promedio > 0 else None
+
+    registro = MetaVentas.objects.filter(anio=hoy.year, mes=hoy.month).first()
+    meta = registro.valor if registro else None
+    proyeccion = ventas / hoy.day * dias_mes
+    datos = {
+        'anio': hoy.year, 'mes': hoy.month, 'mes_nombre': MESES[hoy.month], 'dia': hoy.day, 'dias_mes': dias_mes,
+        'meta': meta, 'definida_por': registro.definida_por if registro else '', 'sugerida': sugerida,
+        'ventas': round(ventas), 'proyeccion': round(proyeccion), 'ritmo_diario': round(ventas / hoy.day),
+        'estado': 'sin_meta', 'pct': 0, 'esperado': 0, 'esperado_pct': round(hoy.day / dias_mes * 100, 1),
+        'faltante': 0, 'diario_necesario': 0,
+    }
+    if meta:
+        esperado = meta * hoy.day / dias_mes
+        faltante = max(meta - ventas, 0)
+        dias_restantes = dias_mes - hoy.day + 1
+        razon = ventas / esperado if esperado else 0
+        datos.update({
+            'pct': round(ventas / meta * 100, 1), 'esperado': round(esperado), 'faltante': round(faltante),
+            'diario_necesario': round(faltante / dias_restantes) if dias_restantes else 0,
+            'estado': 'cumplida' if ventas >= meta else 'adelantada' if razon >= 1.05 else 'al_ritmo' if razon >= 0.95 else 'atrasada',
+        })
+    return datos
