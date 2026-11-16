@@ -97,10 +97,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        cargarDepartamentos();
-        $("#departamento").change(function () {
-            cargarMunicipios();
-        });
+        TFColombia.vincular('#departamento', '#municipio',
+            "{{ cliente.id_municipio.id_departamento.nombre_departamento|escapejs }}",
+            "{{ cliente.id_municipio.nombre_municipio|escapejs }}");
 
         let documentoAnterior = ""; // Inicializar documentoAnterior
 
@@ -163,55 +162,6 @@
                 });
             }
         });
-
-        function cargarDepartamentos() {
-            $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                },
-                success: function (data) {
-                    const departamentos = [...new Set(data.map(item => item.departamento))];
-                    const departamentoSelect = $("#departamento");
-                    departamentos.forEach(function (depto) {
-                        departamentoSelect.append($("<option>", {
-                            value: depto,
-                            text: depto
-                        }));
-                    });
-                    cargarMunicipios();
-
-                }
-            });
-        }
-
-        function obtenerMunicipios() {
-            const departamentoSeleccionado = $("#departamento").val();
-            const municipioSelect = $("#municipio");
-
-            $.ajax({
-                url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-                type: "GET",
-                data: {
-                    "$limit": 5000,
-                    "departamento": departamentoSeleccionado
-                },
-                success: function (data) {
-                    municipioSelect.empty();
-                    data.forEach(function (item) {
-                        municipioSelect.append($("<option>", {
-                            value: item.municipio,
-                            text: item.municipio
-                        }));
-                    });
-                }
-            });
-        }
-
-        function cargarMunicipios() {
-            obtenerMunicipios();
-        }
 
         async function validarDocumento() {
     const documentoInput = $('#iDocumento');

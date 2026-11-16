@@ -13,6 +13,8 @@
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{% static 'css/style-commons.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>window.TF_COLOMBIA_URL = "{% static 'data/colombia.json' %}";</script>
+    <script src="{% static 'js/colombia.js' %}"></script>
     <script src="{% static 'js/pageIndex.js' %}"></script>
     <script src="{% static 'js/pageAdd.js' %}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
     {% block urls %} {% endblock %}
     <link rel="stylesheet" href="{% static 'css/arena-store.css' %}">
+    <link rel="stylesheet" href="{% static 'css/colombia.css' %}">
     <script defer src="{% static 'js/arena-store.js' %}"></script>
 </head>
 
@@ -85,7 +88,7 @@
             {% for categoria in categorias %}
             <li>{{ categoria.nombre_categoria }}:
                 <ul>
-                    {% for producto in categoria.productos_set.all %}
+                    {% for producto in categoria.disponibles %}
                     <li class="menu-list-item"
                         onclick="closeMains(); setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 500)">
                         {{ producto.nombre_producto }}
@@ -277,7 +280,7 @@
                         {% for categoria in categorias %}
                         <li>{{ categoria.nombre_categoria }}:
                             <ul class="p-0">
-                                {% for producto in categoria.productos_set.all %}
+                                {% for producto in categoria.disponibles %}
                                 <li class="menu-list-item"
                                     onclick="setTimeout(function(){ cargarDetalle('{{producto.id_producto}}') }, 200)">
                                     {{ producto.nombre_producto }}

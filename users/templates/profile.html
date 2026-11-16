@@ -88,23 +88,6 @@
     }
 </script>
 
-<script>
-    function updateRoler() {
-        var token = getCookie('jwt_token');
-        if (token) {
-
-            try {
-                var payload = JSON.parse(atob(token.split('.')[1]));
-                var Element = document.getElementById('roled');
-                Element.textContent = payload.id_rol;
-            } catch (e) {
-                console.error('Error decodificando el token:', e);
-            }
-        }
-    }
-
-    updateRoler();
-</script>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 

@@ -39,7 +39,7 @@ $(document).ready(function () {
     reciboPedido();
 
 
-    let carrito = JSON.parse(localStorage.getItem('carrito'));
+    let carrito = JSON.parse(localStorage.getItem('carrito') || '{}') || {};   // carrito vacío o inexistente
 
     let htmlDesk = '';
     let htmlMobile = '';

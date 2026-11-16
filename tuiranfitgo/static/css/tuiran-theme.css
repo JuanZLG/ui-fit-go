@@ -740,3 +740,107 @@ html.tf-cmd-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
     .tf-marquee__track, .tf-hero__mark, .tf-hero__title { animation: none !important; }
 }
+
+/* =========================================================================
+   Modales y diálogos: cierre visible, chips de estado, contenido legible
+   ========================================================================= */
+
+/* --- Botón de cierre: la X se dibuja con CSS, así se ve sea cual sea el estilo heredado --- */
+.modal .close, .modal-header .close, button.close,
+.swal2-popup .swal2-close, .swal2-popup .swal2-close.custom-close-button, .swal2-container .custom-close-button {
+    position: absolute !important; top: 14px !important; right: 14px !important; left: auto !important;
+    width: 38px !important; height: 38px !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important;
+    font-size: 0 !important; line-height: 0 !important; color: transparent !important; text-shadow: none !important;
+    background: transparent !important; border: 1px solid var(--tf-line-strong) !important; border-radius: 0 !important;
+    box-shadow: none !important; opacity: 1 !important; cursor: pointer; z-index: 6; overflow: hidden;
+    transition: background .15s, border-color .15s;
+}
+.modal .close > *, button.close > * { display: none !important; }
+.modal .close::before, .modal .close::after, button.close::before, button.close::after,
+.swal2-popup .swal2-close::before, .swal2-popup .swal2-close::after {
+    content: "" !important; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px;
+    background: #fff; transform: rotate(45deg); font-size: 0; box-shadow: none;
+}
+.modal .close::after, button.close::after, .swal2-popup .swal2-close::after { transform: rotate(-45deg); }
+.modal .close:hover, button.close:hover, .swal2-popup .swal2-close:hover {
+    background: var(--tf-red) !important; border-color: var(--tf-red) !important; color: transparent !important;
+}
+.modal .close:focus, .swal2-popup .swal2-close:focus { outline: 2px solid var(--tf-red-ring); outline-offset: 2px; box-shadow: none !important; }
+.modal-header { position: relative; padding-right: 70px; }
+
+/* --- Los modales viven en <body> (ver tuiran-fx.js); los estilos antiguos fijos se neutralizan --- */
+.modal { width: 100% !important; }
+#miModal .modal-dialog {
+    position: relative !important; top: auto !important; left: auto !important; transform: none !important;
+    width: auto !important; max-width: 560px !important; min-height: 0 !important; margin: 14vh auto 0 !important;
+    padding: 0 !important; background: transparent !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important;
+}
+.date-input, input[type="date"] {
+    background: #000 !important; color: #fff !important; border: 1px solid var(--tf-line-strong) !important;
+    border-radius: 0 !important; padding: 11px 14px; font: 500 .9rem var(--tf-font); margin-right: 10px;
+}
+.date-input:focus, input[type="date"]:focus { border-color: var(--tf-red) !important; box-shadow: inset 3px 0 0 var(--tf-red); outline: none; }
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; opacity: .8; }
+#error-message { font: 600 .72rem var(--tf-mono); letter-spacing: .04em; color: var(--tf-red-bright) !important; margin-top: 10px; }
+#calendario-contenedor p { color: var(--tf-text-muted); font: 600 .66rem var(--tf-mono); letter-spacing: .16em; text-transform: uppercase; margin-bottom: 14px; }
+.modal-footer { justify-content: flex-end; gap: 10px; padding: 16px 24px; }
+
+/* --- Chip de estado (antes era un punto de color sin texto) --- */
+.modal-state, .swal2-popup .modal-state {
+    display: inline-flex !important; align-items: center; gap: 9px; width: auto !important; height: auto !important;
+    padding: 6px 12px !important; border-radius: 0 !important; background: var(--tf-surface-2) !important;
+    border: 1px solid var(--tf-line-strong); cursor: default !important;
+    font: 600 .62rem var(--tf-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--tf-text);
+}
+.modal-state::before { content: ""; width: 8px; height: 8px; background: var(--tf-text-faint); flex: none; }
+.modal-state.activo::before, .modal-state.confirmadoSt::before { background: var(--tf-ok); box-shadow: 0 0 8px var(--tf-ok); }
+.modal-state.inactivo::before, .modal-state.canceladoSt::before { background: var(--tf-red); box-shadow: 0 0 8px var(--tf-red); }
+.modal-state.enProcesoSt::before { background: var(--tf-warn); box-shadow: 0 0 8px var(--tf-warn); }
+.modal-state.activo::after { content: "Activo"; } .modal-state.inactivo::after { content: "Inactivo"; }
+.modal-state.confirmadoSt::after { content: "Confirmado"; } .modal-state.canceladoSt::after { content: "Cancelado"; }
+.modal-state.enProcesoSt::after { content: "En proceso"; }
+
+/* --- Diálogos de detalle (SweetAlert con clase custom-swal-popup) --- */
+.swal2-popup.custom-swal-popup { max-width: 780px !important; width: 94vw !important; padding: 34px 38px 30px !important; text-align: left; }
+.custom-swal-popup .swal2-html-container { margin: 0 !important; padding: 0 !important; text-align: left; overflow-x: hidden; }
+.custom-swal-popup h1, .custom-swal-popup h2, .custom-swal-popup h3, .custom-swal-popup h4, .custom-swal-popup .swal2-title {
+    font: 400 1.9rem/1.05 var(--tf-display) !important; letter-spacing: .03em; text-transform: uppercase; color: #fff !important;
+    text-align: left !important; margin: 0 0 22px !important; padding: 0 56px 18px 0 !important; border-bottom: 1px solid var(--tf-line);
+}
+.custom-swal-popup p, .custom-swal-popup li { color: var(--tf-text) !important; font: 500 .95rem var(--tf-font); margin: 0 0 13px; }
+.custom-swal-popup strong, .custom-swal-popup b {
+    display: inline-block; margin-right: 8px; color: var(--tf-text-muted) !important;
+    font: 600 .64rem var(--tf-mono); letter-spacing: .16em; text-transform: uppercase;
+}
+.custom-swal-popup hr { border-color: var(--tf-line); margin: 18px 0; }
+.custom-swal-popup img { border: 1px solid var(--tf-line); background: #0a0a0b; max-width: 100%; object-fit: contain; }
+.custom-swal-popup .table { margin-top: 8px; }
+.custom-swal-popup .table td, .custom-swal-popup .table th { padding: 11px 12px; }
+
+/* --- Manual de usuario: enlaces y títulos heredaban "color: black" --- */
+.content-area .card a:not(.btn) { color: var(--tf-text-muted); }
+.content-area .card a:not(.btn):hover { color: #fff; }
+.content-area .card h1 a, .content-area .card h2 a, .content-area .card h3 a { color: inherit !important; }
+.content-area .card h2 { margin-top: 34px; color: var(--tf-red-bright); }
+.content-area .card h2.text-black, .content-area .card h2 a { color: var(--tf-red-bright) !important; }
+.content-area .card h3 { font: 600 .8rem/1.6 var(--tf-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--tf-text); margin: 26px 0 14px; }
+.content-area .card h1 { font: 400 clamp(2rem, 3.4vw, 2.8rem)/1 var(--tf-display) !important; }
+.content-area .card img { border: 1px solid var(--tf-line); max-width: 100%; }
+.list-group-item a, .list-group-item { color: var(--tf-text-muted) !important; }
+.list-group-item:hover, .list-group-item:hover a { color: #fff !important; background: var(--tf-red-soft) !important; }
+
+/* Títulos con degradado oscuro (heredados de common.css): ahora siempre legibles */
+.modtitles, .swal2-popup .modtitles, .modal .modtitles {
+    background: none !important; -webkit-text-fill-color: #fff !important; color: #fff !important; animation: none !important;
+    font-family: var(--tf-display) !important; font-weight: 400 !important; text-transform: uppercase; letter-spacing: .03em;
+}
+
+/* Lista desplegable nativa de los <select>: fondo oscuro, texto claro y opción activa en rojo */
+select, select.form-control, select.form-select, .custom-select { color-scheme: dark; }
+select option, select optgroup, .form-control option, .form-select option {
+    background-color: #151516 !important; color: #f4f4f5 !important;
+}
+select option:disabled { color: var(--tf-text-faint) !important; }
+select option:checked, select option:hover, select option:focus {
+    background: #e5242b linear-gradient(0deg, #e5242b, #e5242b) !important; color: #fff !important;
+}

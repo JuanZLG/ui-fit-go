@@ -1146,6 +1146,10 @@
                     }, 2000);
                 }
             },
+            error: function (xhr) {
+                var mensaje = (xhr.responseJSON && xhr.responseJSON.error) || 'No se pudo registrar la venta. Inténtalo de nuevo.';
+                Swal.fire({ icon: 'error', title: 'No se registró la venta', text: mensaje, confirmButtonText: 'Entendido' });
+            },
         });
     }
 

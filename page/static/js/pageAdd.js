@@ -222,49 +222,8 @@ $(document).ready(function () {
     }
 
 
-    obtenerDepartamentos();
-
-    function obtenerDepartamentos() {
-        $.ajax({
-            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-            type: "GET",
-            data: {
-                "$limit": 5000,
-            }
-        }).done(function (data) {
-            const departamentos = [...new Set(data.map(item => item.departamento))];
-            const departamentoSelect = $("#departamento");
-            departamentos.forEach(function (depto) {
-                departamentoSelect.append($("<option>", {
-                    value: depto,
-                    text: depto
-                }));
-            });
-
-            departamentoSelect.change(obtenerMunicipios);
-        });
-    }
-
-    function obtenerMunicipios() {
-        const departamentoSeleccionado = $("#departamento").val();
-        const municipioSelect = $("#municipio");
-
-        $.ajax({
-            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-            type: "GET",
-            data: {
-                "$limit": 5000,
-                "departamento": departamentoSeleccionado
-            }
-        }).done(function (data) {
-            municipioSelect.empty();
-            data.forEach(function (item) {
-                municipioSelect.append($("<option>", {
-                    value: item.municipio,
-                    text: item.municipio
-                }));
-            });
-        });
+    if (document.getElementById('departamento') && document.getElementById('municipio')) {
+        TFColombia.vincular('#departamento', '#municipio', '', '');
     }
 
 });

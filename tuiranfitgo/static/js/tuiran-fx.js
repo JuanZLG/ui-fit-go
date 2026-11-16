@@ -32,6 +32,14 @@
         requestAnimationFrame(step);
     };
 
+    /* ---------- Los modales se mueven a <body> al abrirse ----------
+       Dentro de una tarjeta quedan atrapados en su contexto de apilamiento y la tabla los tapa. */
+    if (window.jQuery) {
+        window.jQuery(document).on('show.bs.modal', '.modal', function () {
+            if (this.parentNode !== document.body) document.body.appendChild(this);
+        });
+    }
+
     /* ---------- Barra de progreso de navegación ---------- */
     var bar = document.createElement('div');
     bar.id = 'tfProgress';

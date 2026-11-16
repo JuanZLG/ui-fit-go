@@ -231,3 +231,139 @@ footer .bg-light, footer [style*="background"] { background: #000 !important; }
     .store-hero__mark { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ---------- Cierre de diálogos: X dibujada con CSS, siempre visible ---------- */
+.swal2-popup .swal2-close, .swal2-popup .swal2-close.custom-close-button, .swal2-container .custom-close-button, .modal .close {
+    position: absolute !important; top: 14px !important; right: 14px !important;
+    width: 38px !important; height: 38px !important; padding: 0 !important; margin: 0 !important;
+    font-size: 0 !important; line-height: 0 !important; color: transparent !important; text-shadow: none !important;
+    background: #000 !important; border: 1px solid var(--line-strong) !important; border-radius: 0 !important;
+    opacity: 1 !important; box-shadow: none !important; z-index: 20; overflow: hidden; transition: background .15s, border-color .15s;
+}
+.swal2-popup .swal2-close::before, .swal2-popup .swal2-close::after, .modal .close::before, .modal .close::after {
+    content: "" !important; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px;
+    background: #fff; transform: rotate(45deg); font-size: 0;
+}
+.swal2-popup .swal2-close::after, .modal .close::after { transform: rotate(-45deg); }
+.swal2-popup .swal2-close:hover, .modal .close:hover { background: var(--red) !important; border-color: var(--red) !important; }
+
+/* ---------- Carrusel de imágenes (Swiper): rojo y blanco en vez del azul por defecto ---------- */
+swiper-container { --swiper-theme-color: #e5242b; --swiper-navigation-color: #fff; --swiper-pagination-color: #e5242b;
+    --swiper-pagination-bullet-inactive-color: #fff; --swiper-pagination-bullet-inactive-opacity: .35; }
+
+/* ---------- Detalle de producto en diálogo ---------- */
+.swal2-popup .product-title, .swal2-popup h2, .swal2-popup h3 { color: #fff; }
+.swal2-popup .swal2-html-container, .swal2-popup p { color: var(--muted); }
+.swal2-popup strong { color: #fff; }
+
+/* Lista desplegable nativa de los <select> */
+select, .catalog-select, .form-control { color-scheme: dark; }
+select option, select optgroup, .sort-option { background-color: #151516 !important; color: #f4f4f5 !important; }
+select option:checked, select option:hover { background: #e5242b linear-gradient(0deg, #e5242b, #e5242b) !important; color: #fff !important; }
+
+/* =========================================================================
+   Asistente de pedido (3 pasos): detalle · envío · confirmación
+   ========================================================================= */
+.container-order { color: var(--text); }
+.card, .cont-form-pedido, .cont-recibo {
+    position: relative; background: var(--surface) !important; border: 1px solid var(--line) !important; border-radius: 0 !important;
+    box-shadow: none !important; color: var(--text);
+}
+.cont-form-pedido::after, .cont-recibo::after {            /* esquina cortada */
+    content: ""; position: absolute; top: -1px; right: -1px; width: 24px; height: 24px; pointer-events: none;
+    background: linear-gradient(to bottom left, var(--bg) calc(50% - .5px), var(--red) calc(50% - .5px), var(--red) calc(50% + .5px), transparent calc(50% + .5px));
+}
+
+/* Pasos */
+.cont-pasos-detalle {
+    display: flex; gap: 0 !important; margin: 0 0 6px !important; background: var(--surface); border: 1px solid var(--line); box-shadow: none !important;
+}
+.cont-pasos-detalle > div {
+    flex: 1; padding: 0 !important; height: auto !important; border-right: 1px solid var(--line); position: relative; transition: background .2s;
+    color: var(--muted); font: 700 .74rem var(--font); letter-spacing: .14em; text-transform: uppercase; gap: 14px !important; padding: 16px 20px !important;
+}
+.cont-pasos-detalle > div:last-child { border-right: 0; }
+.cont-pasos-detalle > div strong { font-weight: 700; color: inherit; text-align: left; }
+.cont-pasos-detalle > div > span {
+    display: grid; place-items: center; min-width: 34px; height: 34px; padding: 0 !important; flex: none;
+    background: #000 !important; border: 1px solid var(--line-strong); color: var(--muted) !important; font: 400 1.15rem var(--display) !important;
+}
+.cont-pasos-detalle > div[style*="background"] {            /* paso activo (el script le pone un fondo en línea) */
+    background: linear-gradient(90deg, var(--red-soft), transparent 90%) !important; color: #fff;
+    box-shadow: inset 0 -3px 0 var(--red);
+}
+.cont-pasos-detalle > div[style*="background"] > span { background: var(--red) !important; border-color: var(--red); color: #fff !important; }
+
+/* Titulares del paso */
+#contenedor-informacion h3, #contenedor-informacion h3 strong {
+    font: 400 clamp(1.8rem, 3vw, 2.6rem)/1 var(--display) !important; letter-spacing: .02em; text-transform: uppercase; color: #fff;
+    position: relative; padding-top: 16px; margin: 0 0 10px;
+}
+#contenedor-informacion h3::before { content: ""; position: absolute; top: 0; left: 0; width: 54px; height: 5px; background: var(--red); transform: skewX(-32deg); transform-origin: left; }
+#contenedor-informacion p { color: var(--muted); max-width: 640px; }
+
+/* Tabla de detalle */
+.table-detalle-pedido { color: var(--text) !important; background: transparent !important; }
+.table-detalle-pedido thead, .table-detalle-pedido thead tr, .table-detalle-pedido thead th {
+    background: #000 !important; color: var(--muted) !important; border: 0 !important; border-top: 2px solid var(--red) !important;
+    font: 600 .66rem var(--mono) !important; letter-spacing: .18em; text-transform: uppercase; padding: 14px 16px;
+}
+.table-detalle-pedido td, .table-detalle-pedido td * { color: var(--text) !important; }
+.table-detalle-pedido td { border-color: var(--line) !important; background: transparent !important; vertical-align: middle; padding: 16px; }
+.table-detalle-pedido td span[style], .table-detalle-pedido .text-muted { color: var(--muted) !important; }
+.table-hover tbody tr:hover { background: linear-gradient(90deg, var(--red-soft), transparent 60%) !important; }
+.table-detalle-pedido img { border: 1px solid var(--line-strong); background: #0a0a0b; object-fit: contain; }
+.table-detalle-pedido .fa-trash, .table-detalle-pedido .fa-trash:hover { color: var(--muted) !important; }
+.table-detalle-pedido .fa-trash:hover { color: var(--red-bright) !important; }
+.table-detalle-pedido td:nth-child(2), .table-detalle-pedido td:nth-child(4) { font: 400 1.5rem var(--display); letter-spacing: .03em; }
+
+/* Cantidad  - [n] + */
+.table-detalle-pedido input[type="number"], .table-detalle-pedido input[type="text"] { background: #000 !important; color: #fff !important; border: 0 !important; text-align: center; }
+.table-detalle-pedido button, .table-detalle-pedido .btn { background: var(--surface-3) !important; color: #fff !important; border: 1px solid var(--line-strong) !important; border-radius: 0 !important; }
+.table-detalle-pedido button:hover { background: var(--red) !important; border-color: var(--red) !important; }
+
+/* Botón continuar / volver */
+#continuar, .btn-secondary {
+    background: var(--red) !important; border: 0 !important; color: #fff !important; border-radius: 0 !important; padding: 14px 34px !important;
+    font: 700 .8rem var(--font) !important; letter-spacing: .18em; text-transform: uppercase;
+    clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%); transition: background .15s;
+}
+#continuar:hover, .btn-secondary:hover { background: var(--red-bright) !important; }
+.btn-inhabilitar-pasos { opacity: .35; pointer-events: none; }
+
+/* Formulario de envío */
+.cont-form-pedido { padding: 26px 24px; }
+.cont-form-pedido label { color: var(--muted); font: 600 .64rem var(--mono); letter-spacing: .16em; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.cont-form-pedido .text-danger { color: var(--red-bright) !important; }
+.cont-form-pedido .form-group { margin-bottom: 18px; }
+.error-message { color: var(--red-bright) !important; font: 600 .7rem var(--mono); letter-spacing: .03em; margin-top: 6px; }
+#requerido { color: var(--faint) !important; font: 600 .66rem var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+#show-avis { font: 600 .78rem var(--font) !important; border-left: 4px solid var(--red); background: var(--surface-2) !important; color: #fff !important; padding: 12px 16px !important; margin-bottom: 18px; position: static !important; }
+.is-invalid { border-color: var(--red-bright) !important; }
+
+/* Resumen del pedido */
+.cont-recibo { padding: 18px 20px; }
+.cont-recibo h4, .cont-recibo h4 strong { font: 400 1.6rem var(--display) !important; text-transform: uppercase; letter-spacing: .04em; color: #fff; }
+.cont-recibo-2 { background: var(--surface) !important; border-top: 1px solid var(--line); }
+#recibo-pedido, #recibo-pedido * { color: var(--text); }
+#recibo-pedido .text-muted, #recibo-pedido small { color: var(--muted) !important; }
+#total-recibo { font: 400 1.9rem var(--display); letter-spacing: .03em; color: #fff; }
+.cont-recibo-2 .d-flex span, .cont-recibo-2 strong:first-child { font: 600 .66rem var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+#envio-pedido, .btn-success {
+    background: var(--red) !important; border: 0 !important; color: #fff !important; border-radius: 0 !important; padding: 15px 20px !important;
+    font: 700 .82rem var(--font) !important; letter-spacing: .2em; text-transform: uppercase;
+    clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+}
+#envio-pedido:hover, .btn-success:hover { background: var(--red-bright) !important; }
+
+/* Diálogo "Pedido exitoso" */
+.swal2-center h5 { font: 400 2rem var(--display); text-transform: uppercase; letter-spacing: .03em; color: #fff; }
+.swal2-center p { color: var(--muted); }
+.swal2-center .btn-success { display: inline-block; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+
+@media (max-width: 767.98px) {
+    .cont-pasos-detalle > div { padding: 12px 10px !important; font-size: .6rem; letter-spacing: .08em; gap: 8px !important; }
+    .cont-pasos-detalle > div strong { display: none; }
+    .cont-pasos-detalle > div[style*="background"] strong { display: block; }
+}
+#show-avis:empty { display: none !important; }

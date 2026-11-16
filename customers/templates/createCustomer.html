@@ -93,11 +93,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        obtenerDepartamentos();
-
-        $("#departamento").change(function () {
-            cargarMunicipios();
-        });
+        TFColombia.vincular('#departamento', '#municipio', '', '');
 
         $('#iDocumento').on('input', function () {
             validarDocumento();
@@ -168,52 +164,6 @@
 
         // ... (código anterior)
     });
-
-    function obtenerDepartamentos() {
-        $.ajax({
-            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-            type: "GET",
-            data: {
-                "$limit": 5000,
-            }
-        }).done(function (data) {
-            const departamentos = [...new Set(data.map(item => item.departamento))];
-            const departamentoSelect = $("#departamento");
-            departamentos.forEach(function (depto) {
-                departamentoSelect.append($("<option>", {
-                    value: depto,
-                    text: depto
-                }));
-            });
-            cargarMunicipios();
-        });
-    }
-
-    function obtenerMunicipios() {
-        const departamentoSeleccionado = $("#departamento").val();
-        const municipioSelect = $("#municipio");
-
-        $.ajax({
-            url: "https://www.datos.gov.co/resource/xdk5-pm3f.json",
-            type: "GET",
-            data: {
-                "$limit": 5000,
-                "departamento": departamentoSeleccionado
-            }
-        }).done(function (data) {
-            municipioSelect.empty();
-            data.forEach(function (item) {
-                municipioSelect.append($("<option>", {
-                    value: item.municipio,
-                    text: item.municipio
-                }));
-            });
-        });
-    }
-
-    function cargarMunicipios() {
-        obtenerMunicipios();
-    }
 
     function mostrarError($campo, mensaje) {
         $campo.addClass('is-invalid');

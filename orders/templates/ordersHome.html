@@ -306,6 +306,8 @@
             success: function (response) {
                 if (response.status === 'success') {
                     location.reload();
+                } else {
+                    Swal.fire('No se pudo cancelar', response.message || 'Inténtalo de nuevo.', 'warning');
                 }
             },
             error: function () {

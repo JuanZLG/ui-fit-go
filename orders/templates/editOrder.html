@@ -151,9 +151,9 @@
                         }, 2000);
                     } 
                 },
-                error: function (xhr, textStatus, errorThrown) {
-                    console.error('Error en la solicitud AJAX:', xhr.status, textStatus, errorThrown);
-                    console.error('Detalles del error:', xhr.responseText);
+                error: function (xhr) {
+                    var mensaje = (xhr.responseJSON && xhr.responseJSON.error_message) || 'No se pudo guardar el pedido.';
+                    Swal.fire({ icon: 'error', title: 'No se guardaron los cambios', text: mensaje, confirmButtonText: 'Entendido' });
                 }
             });
         }

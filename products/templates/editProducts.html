@@ -296,8 +296,9 @@
                   }, 2000);
               }
           },
-          error: function (jqXHR, textStatus, errorThrown) {
-              console.error(textStatus, errorThrown);
+          error: function (jqXHR) {
+            var mensaje = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'No se pudo guardar el producto.';
+            Swal.fire({ icon: 'error', title: 'No se guardó el producto', text: mensaje, confirmButtonText: 'Entendido' });
           }
       });
   });

@@ -135,7 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
       activeElement = null;
     }
   });
-  document.getElementById("product-container-desk").addEventListener('scroll', function () {
+  var contenedorDesk = document.getElementById("product-container-desk");   // no existe en todas las páginas
+  if (contenedorDesk) contenedorDesk.addEventListener('scroll', function () {
     if (activeElement) {
       activeElement.style.display = 'none';
       activeElement = null;

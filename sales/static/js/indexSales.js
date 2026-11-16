@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let mensaje;
             if (nuevoEstado === "0") {
-                mensaje = "¿Esta seguro de desactivar esta venta? Esto marcará la venta como inactiva y devolverá al stock los productos relacionados. No podrá reactivarla nuevamente.";
+                mensaje = "¿Esta seguro de desactivar esta venta? Esto marcará la venta como inactiva y devolverá al stock los productos relacionados. Podrás reactivarla más adelante mientras haya stock suficiente.";
             } else {
                 mensaje = "¿Esta seguro de activar esta venta? Esto marcará la venta como activa y restará las cantidades al stock de los productos relacionados.";
             }
@@ -43,10 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         },
                         method: "GET",
                         success: function (response) {
+                            if (response.status === 'error') {
+                                Swal.fire({ icon: 'error', title: 'No se pudo cambiar el estado', text: response.message });
+                                return;
+                            }
                             $('.table-responsive').addClass('animate__animated animate__fadeOut').css('animation-duration', '100');
                             location.reload();
                         },
-                        error: function (error) {
+                        error: function () {
+                            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo cambiar el estado de la venta.' });
                         }
                     });
                 }

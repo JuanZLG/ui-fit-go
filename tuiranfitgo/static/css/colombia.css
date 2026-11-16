@@ -1,0 +1,72 @@
+/* =========================================================================
+   Selector con buscador (departamento / municipio) · identidad "Arena"
+   Sirve para el panel y para la tienda: usa las variables de cada uno con respaldo.
+   ========================================================================= */
+.tf-combo, .tf-combo__panel {
+    --c-red: var(--tf-red, var(--red, #e5242b));
+    --c-red-bright: var(--tf-red-bright, var(--red-bright, #ff3b30));
+    --c-red-soft: var(--tf-red-soft, var(--red-soft, rgba(229, 36, 43, .13)));
+    --c-surface: var(--tf-surface-2, var(--surface-2, #151516));
+    --c-line: var(--tf-line-strong, var(--line-strong, #3a3a3d));
+    --c-line-soft: var(--tf-line, var(--line, #262628));
+    --c-muted: var(--tf-text-muted, var(--muted, #a1a1a6));
+    --c-faint: var(--tf-text-faint, var(--faint, #6c6c72));
+    font-family: var(--tf-font, var(--font, 'Inter', system-ui, sans-serif));
+}
+.tf-combo { position: relative; width: 100%; }
+
+/* El <select> original queda oculto pero presente (valor, validación, formularios) */
+select.tf-combo__native {
+    position: absolute !important; opacity: 0 !important; pointer-events: none !important;
+    width: 1px !important; height: 1px !important; padding: 0 !important; margin: 0 !important; border: 0 !important; overflow: hidden;
+}
+
+.tf-combo__btn {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 46px;
+    padding: 10px 14px; text-align: left; cursor: pointer; color: #fff; background: #000;
+    border: 1px solid var(--c-line); border-radius: 0; font: 500 .95rem var(--tf-font, var(--font, 'Inter', sans-serif));
+    transition: border-color .15s, box-shadow .15s;
+}
+.tf-combo__btn:hover { border-color: var(--c-faint); }
+.tf-combo__btn:focus-visible, .tf-combo.is-open .tf-combo__btn { outline: none; border-color: var(--c-red); box-shadow: inset 3px 0 0 var(--c-red); }
+.tf-combo.is-empty .tf-combo__text { color: var(--c-faint); }
+.tf-combo.is-invalid .tf-combo__btn { border-color: var(--c-red-bright); box-shadow: inset 3px 0 0 var(--c-red-bright); }
+.tf-combo.is-disabled .tf-combo__btn { opacity: .5; cursor: not-allowed; }
+.tf-combo__text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tf-combo__caret {
+    flex: none; width: 8px; height: 8px; margin-top: -3px; border-right: 2px solid var(--c-muted); border-bottom: 2px solid var(--c-muted);
+    transform: rotate(45deg); transition: transform .2s, border-color .2s;
+}
+.tf-combo.is-open .tf-combo__caret { transform: rotate(-135deg); margin-top: 3px; border-color: var(--c-red-bright); }
+
+.tf-combo__panel {
+    position: fixed; z-index: 3000;
+    background: #0b0b0c; border: 1px solid var(--c-line); border-top: 2px solid var(--c-red);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .65); animation: tf-combo-in .16s ease-out;
+}
+.tf-combo__panel[hidden] { display: none; }
+.tf-combo__panel.is-up { border-top: 1px solid var(--c-line); border-bottom: 2px solid var(--c-red); }
+@keyframes tf-combo-in { from { opacity: 0; transform: translateY(-6px); } }
+
+.tf-combo__bar { padding: 10px; border-bottom: 1px solid var(--c-line-soft); background: #000; }
+.tf-combo__search {
+    width: 100%; height: 40px; padding: 0 12px 0 36px; color: #fff !important; background-color: #0e0e0f !important;
+    border: 1px solid var(--c-line) !important; border-radius: 0 !important; font: 500 .9rem var(--tf-font, var(--font, 'Inter', sans-serif)) !important;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a6' stroke-width='2.4' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") !important;
+    background-repeat: no-repeat !important; background-position: 11px 50% !important; box-shadow: none !important;
+}
+.tf-combo__search:focus { border-color: var(--c-red) !important; box-shadow: inset 3px 0 0 var(--c-red) !important; outline: none; }
+.tf-combo__search::placeholder { color: var(--c-faint); }
+
+.tf-combo__list { list-style: none; margin: 0; padding: 4px; max-height: 260px; overflow-y: auto; }
+.tf-combo__item {
+    padding: 10px 12px; cursor: pointer; color: #e8e8ea; font-size: .92rem; border-left: 3px solid transparent;
+    user-select: none; transition: background .08s;
+}
+.tf-combo__item.is-active { background: linear-gradient(90deg, var(--c-red-soft), transparent); color: #fff; border-left-color: var(--c-red); }
+.tf-combo__item.is-selected { color: #fff; font-weight: 700; }
+.tf-combo__item.is-selected::after { content: "✓"; float: right; color: var(--c-red-bright); font-weight: 700; }
+.tf-combo__empty { padding: 22px 12px; text-align: center; color: var(--c-faint); font: 500 .72rem var(--tf-mono, var(--mono, monospace)); letter-spacing: .14em; text-transform: uppercase; }
+
+@media (max-width: 575.98px) { .tf-combo__list { max-height: 220px; } .tf-combo__btn { min-height: 48px; } }
+@media (prefers-reduced-motion: reduce) { .tf-combo__panel { animation: none; } }
