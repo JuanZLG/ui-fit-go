@@ -36,8 +36,20 @@ def build_context(request, extra_context=None):
 
 def Home(request):
     contexto = build_context(request)
-    productos = contexto.get("productos", [])  
+    productos = contexto.get("productos", [])
+    # Insignias reales: los 3 más vendidos y los productos con pocas unidades
+    mas_vendidos = set(
+        Productos.objects.filter(estado=1, cantidad__gt=0)
+        .annotate(vendidos=Sum('detalleventa__cantidad')).filter(vendidos__gt=0)
+        .order_by('-vendidos').values_list('id_producto', flat=True)[:3]
+    )
     for producto in productos:
+        producto.badge, producto.badge_tipo = '', ''
+        if producto.cantidad <= 5:
+            producto.badge = f'Última unidad' if producto.cantidad == 1 else f'Últimas {producto.cantidad} unidades'
+            producto.badge_tipo = 'ultimas'
+        elif producto.id_producto in mas_vendidos:
+            producto.badge, producto.badge_tipo = 'Más vendido', 'top'
         precio_formateado = "{:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
         producto.precio_pub = precio_formateado
         producto.iProductImg_name = get_image_name(producto.iProductImg)

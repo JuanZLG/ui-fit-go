@@ -1,0 +1,67 @@
+{% extends "baseInterface.html" %}
+{% load static %}
+
+{% block title %} Venta rápida {% endblock %}
+
+{% block body %}
+
+<div class="tf-page-head">
+    <h1>Venta rápida</h1>
+    <p>Toca un producto para agregarlo al carrito. Atajos: <kbd class="tf-kbd">F2</kbd> buscar · <kbd class="tf-kbd">F9</kbd> cobrar</p>
+</div>
+
+<div id="pos" class="pos"
+     data-url-productos="{% url 'buscar_productos' %}"
+     data-url-clientes="{% url 'buscar_cliente' %}"
+     data-url-venta="{% url 'crear_venta' %}"
+     data-url-factura="{% url 'generar_factura_pdf_venta' 0 %}"
+     data-media="/media/"
+     data-gorila="{% static 'img/gorille.png' %}">
+
+    <!-- Catálogo -->
+    <section class="pos__catalogo" aria-label="Catálogo">
+        <div class="pos__buscador">
+            <i class="fas fa-search"></i>
+            <input id="posBuscar" type="search" placeholder="Buscar producto…  (F2)" autocomplete="off" spellcheck="false">
+            <span class="pos__contador" id="posContador"></span>
+        </div>
+        <div class="pos__chips" id="posChips"></div>
+        <div class="pos__grid" id="posGrid">
+            <div class="tf-empty" style="grid-column:1/-1"><i class="fas fa-circle-notch fa-spin"></i>Cargando catálogo…</div>
+        </div>
+    </section>
+
+    <!-- Carrito -->
+    <aside class="pos__carrito" aria-label="Carrito">
+        <div class="pos__cabecera"><h2>Carrito</h2><button type="button" id="posVaciar" class="pos__link">Vaciar</button></div>
+
+        <div class="pos__cliente">
+            <label for="posCliente">Cliente</label>
+            <div class="pos__cliente-campo">
+                <input id="posCliente" type="search" placeholder="Nombre o documento…" autocomplete="off" spellcheck="false">
+                <button type="button" id="posQuitarCliente" class="pos__x" title="Quitar cliente" hidden aria-label="Quitar cliente"></button>
+            </div>
+            <ul id="posClientes" class="pos__lista" hidden></ul>
+            <div id="posClienteElegido" class="pos__cliente-ok" hidden></div>
+        </div>
+
+        <ul id="posLineas" class="pos__lineas">
+            <li class="tf-empty"><i class="fas fa-cart-shopping"></i>Aún no hay productos</li>
+        </ul>
+
+        <div class="pos__totales">
+            <label class="pos__descuento">Descuento a la venta
+                <span><input id="posDescuento" type="number" min="0" max="100" step="1" value="0" inputmode="numeric"> %</span>
+            </label>
+            <div class="pos__fila"><span>Subtotal</span><b id="posSubtotal">$0</b></div>
+            <div class="pos__fila" id="posFilaDescuento" hidden><span>Descuento</span><b id="posValorDescuento">$0</b></div>
+            <div class="pos__fila pos__fila--margen"><span>Margen de ganancia</span><b id="posMargen">$0</b></div>
+            <div class="pos__total"><span>Total</span><strong id="posTotal">$0</strong></div>
+            <button type="button" id="posCobrar" class="pos__cobrar" disabled>Cobrar <kbd class="tf-kbd">F9</kbd></button>
+            <p id="posAyuda" class="pos__ayuda">Agrega productos y elige un cliente para cobrar.</p>
+        </div>
+    </aside>
+</div>
+
+<script src="{% static 'js/pos.js' %}"></script>
+{% endblock %}

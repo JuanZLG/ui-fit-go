@@ -166,11 +166,16 @@ a:hover { color: #fff; text-decoration: none; }
     object-fit: contain !important; padding: 14px;
 }
 .product-card:hover .product-image img { transform: scale(1.08) rotate(-1.5deg); }
-.product-image::after {  /* franja inclinada decorativa */
-    content: "NUEVO"; position: absolute; left: -34px; top: 18px; z-index: 2; width: 130px; padding: 3px 0; text-align: center;
-    background: var(--red); color: #fff; font: 700 .58rem var(--mono); letter-spacing: .28em; transform: rotate(-38deg); display: none;
+/* Insignias reales (más vendido / últimas unidades) */
+.product-badge {
+    position: absolute; left: 0; top: 14px; z-index: 3; padding: 5px 12px 5px 10px; color: #fff;
+    font: 700 .58rem var(--mono); letter-spacing: .16em; text-transform: uppercase; white-space: nowrap;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
 }
-.product-card:nth-child(3n+1) .product-image::after { display: block; }
+.product-badge--top { background: #fff; color: #000; }
+.product-badge--top::before { content: "★ "; color: var(--red); }
+.product-badge--ultimas { background: var(--red); animation: st-latido 2s ease-in-out infinite; }
+@keyframes st-latido { 50% { filter: brightness(1.35); } }
 
 .product-details { padding: 16px 18px 18px !important; border-top: 1px solid var(--line); }
 .product-title {

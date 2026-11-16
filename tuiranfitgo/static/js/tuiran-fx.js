@@ -40,6 +40,48 @@
         });
     }
 
+    /* ---------- Exportar a CSV la tabla visible (respeta el filtro de búsqueda) ---------- */
+    function csvDeTabla(api, nombre) {
+        var cabeceras = [], omitir = [];
+        api.columns().header().toArray().forEach(function (th, i) {
+            var t = (th.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!t || /^acciones$/i.test(t)) { omitir.push(i); return; }
+            cabeceras.push(t);
+        });
+        var filas = api.rows({ search: 'applied', order: 'applied' }).nodes().toArray().map(function (tr) {
+            var celdas = [];
+            Array.prototype.forEach.call(tr.children, function (td, i) {
+                if (omitir.indexOf(i) === -1) celdas.push((td.textContent || '').replace(/\s+/g, ' ').trim());
+            });
+            return celdas;
+        });
+        var esc = function (v) { v = String(v); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+        // ";" y BOM UTF-8: Excel en español abre las columnas y las tildes correctamente
+        var csv = '\ufeff' + [cabeceras].concat(filas).map(function (f) { return f.map(esc).join(';'); }).join('\r\n');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        a.download = nombre + '_' + new Date().toISOString().slice(0, 10) + '.csv';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+        return filas.length;
+    }
+    if (window.jQuery) {
+        window.jQuery(function ($) {
+            $('table#dataTable').on('init.dt', function () {
+                var tabla = $(this), api = tabla.DataTable();
+                var cont = tabla.closest('.dataTables_wrapper').find('.dataTables_filter').first();
+                if (!cont.length) return;
+                var boton = $('<button type="button" class="tf-export" title="Descargar la tabla en CSV (Excel)"><i class="fas fa-file-csv"></i><span>Exportar</span></button>');
+                boton.on('click', function () {
+                    var nombre = ($('#tfCrumbPage').text() || 'tabla').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                    var n = csvDeTabla(api, nombre);
+                    if (window.Swal) Swal.fire({ toast: true, position: 'bottom-end', icon: 'success', title: n + ' filas exportadas', showConfirmButton: false, timer: 2200 });
+                });
+                cont.prepend(boton);
+            });
+        });
+    }
+
     /* ---------- Barra de progreso de navegación ---------- */
     var bar = document.createElement('div');
     bar.id = 'tfProgress';
@@ -95,7 +137,7 @@
         return items;
     }
 
-    var overlay, input, list, items = [], filtered = [], active = 0;
+    var overlay, input, list, items = [], filtered = [], active = 0, remoto = [], temporizador = null, ultimaConsulta = '';
 
     function render() {
         list.innerHTML = '';
@@ -108,9 +150,11 @@
             li.className = 'tf-cmd__item' + (i === active ? ' is-active' : '');
             li.setAttribute('role', 'option');
             li.innerHTML = '<span class="tf-cmd__idx">' + String(i + 1).padStart(2, '0') + '</span>' +
-                '<span class="tf-cmd__label"></span><span class="tf-cmd__group"></span>';
-            li.children[1].textContent = it.label;
+                '<span class="tf-cmd__label"><span></span><small></small></span><span class="tf-cmd__group"></span>';
+            li.children[1].children[0].textContent = it.label;
+            li.children[1].children[1].textContent = it.meta || '';
             li.children[2].textContent = it.group;
+            if (it.remoto) li.classList.add('is-remote');
             li.addEventListener('mousemove', function () { if (active !== i) { active = i; mark(); } });
             li.addEventListener('click', function () { go(it); });
             list.appendChild(li);
@@ -122,12 +166,36 @@
     }
     function filter() {
         var q = input.value.trim().toLowerCase();
-        filtered = !q ? items.slice() : items.filter(function (it) { return (it.label + ' ' + it.group).toLowerCase().indexOf(q) !== -1; });
+        var locales = !q ? items.slice() : items.filter(function (it) { return (it.label + ' ' + it.group).toLowerCase().indexOf(q) !== -1; });
+        filtered = locales.concat(q.length >= 2 ? remoto : []);
         active = 0; render();
+        buscarRemoto(q);
+    }
+
+    /* Búsqueda global: productos, clientes, proveedores, ventas y pedidos (con retardo para no saturar) */
+    function buscarRemoto(q) {
+        clearTimeout(temporizador);
+        if (!window.TF_SEARCH_URL || q.length < 2) { remoto = []; return; }
+        temporizador = setTimeout(function () {
+            if (q === ultimaConsulta && remoto.length) return;
+            ultimaConsulta = q;
+            fetch(window.TF_SEARCH_URL + '?q=' + encodeURIComponent(q), { credentials: 'same-origin' })
+                .then(function (r) { return r.ok ? r.json() : { grupos: [] }; })
+                .then(function (d) {
+                    if (input.value.trim().toLowerCase() !== q) return;          // ya escribió otra cosa
+                    remoto = [];
+                    (d.grupos || []).forEach(function (g) {
+                        g.items.forEach(function (x) { remoto.push({ label: x.label, meta: x.meta, group: g.grupo, href: x.url, nueva: x.nueva_pestana, remoto: true }); });
+                    });
+                    var locales = items.filter(function (it) { return (it.label + ' ' + it.group).toLowerCase().indexOf(q) !== -1; });
+                    filtered = locales.concat(remoto); active = 0; render();
+                }).catch(function () { remoto = []; });
+        }, 180);
     }
     function go(it) {
         close();
         if (it.run) { it.run(); return; }
+        if (it.nueva) { window.open(it.href, '_blank', 'noopener'); return; }
         progressStart(); location.href = it.href;
     }
     function open() {
@@ -137,7 +205,7 @@
             overlay.innerHTML =
                 '<div class="tf-cmd__box" role="dialog" aria-modal="true" aria-label="Paleta de comandos">' +
                 '<div class="tf-cmd__bar"><span class="tf-cmd__slash">//</span>' +
-                '<input class="tf-cmd__input" type="text" placeholder="Ir a… usuarios, ventas, productos" autocomplete="off" spellcheck="false">' +
+                '<input class="tf-cmd__input" type="text" placeholder="Busca módulos, productos, clientes, ventas…" autocomplete="off" spellcheck="false">' +
                 '<kbd>ESC</kbd></div><ul class="tf-cmd__list" role="listbox"></ul>' +
                 '<div class="tf-cmd__foot"><span><kbd>↑</kbd><kbd>↓</kbd> navegar</span><span><kbd>↵</kbd> abrir</span><span><kbd>esc</kbd> cerrar</span></div></div>';
             document.body.appendChild(overlay);
@@ -150,7 +218,7 @@
                 else if (e.key === 'Enter') { e.preventDefault(); if (filtered[active]) go(filtered[active]); }
             });
         }
-        items = buildIndex(); input.value = ''; filter();
+        items = buildIndex(); input.value = ''; remoto = []; ultimaConsulta = ''; filter();
         overlay.classList.add('is-open'); document.documentElement.classList.add('tf-cmd-open');
         setTimeout(function () { input.focus(); }, 30);
     }

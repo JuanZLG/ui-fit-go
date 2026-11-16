@@ -41,11 +41,26 @@ Usan SQLite en memoria (`tuiranfitgo/settings_test.py`) y no envían correos rea
 - **Seguridad:** contraseñas con bcrypt (las antiguas en texto plano se migran al iniciar sesión),
   recuperación de cuenta que exige verificar el código, endpoints protegidos por sesión y permiso de módulo.
 
+## Funciones destacadas
+
+- **Inteligencia de inventario** (dashboard): predice en cuántos días se agota cada producto según el ritmo real de ventas,
+  sugiere cuánto reponer, avisa de lo que vence pronto y de capital parado en productos sin rotación.
+  Genera una **orden de compra sugerida** en PDF.
+- **Marcador comparativo:** ventas, margen y compras del mes frente al mismo tramo del mes anterior, con mini gráfica.
+- **Venta rápida (POS):** `Ventas > Venta rápida`. Catálogo táctil, carrito, cliente y cobro en segundos (`F2` buscar, `F9` cobrar).
+  Usa las mismas validaciones de stock del servidor.
+- **Paleta de comandos** (`Ctrl+K`): navega por módulos y busca productos, clientes, proveedores, ventas y pedidos.
+- **Exportar a CSV** cualquier listado (respeta el filtro de búsqueda; abre bien en Excel).
+- **Informes PDF** con la marca: informes por rango de fechas, comprobantes de venta y compra (con QR) y orden de compra.
+- **Tienda:** insignias reales de "Más vendido" y "Últimas unidades".
+
 ## Estructura útil
 
 | Ruta | Qué es |
 |---|---|
 | `tuiranfitgo/inventory.py` | Reglas de stock y validación compartidas |
+| `dashboard/insights.py` | Predicción de agotamiento, reposición, vencimientos y comparativos |
+| `tuiranfitgo/reports.py` | Generador de PDF con la identidad de marca |
 | `authenticator/security.py` | Hash y verificación de contraseñas |
 | `tuiranfitgo/static/css/tuiran-theme.css` | Identidad visual "Arena" del panel |
 | `tuiranfitgo/static/js/tuiran-fx.js` | Paleta de comandos (Ctrl+K), foco de luz, progreso |

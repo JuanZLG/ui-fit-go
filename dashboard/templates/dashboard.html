@@ -35,14 +35,17 @@
     <div class="tf-kpi">
         <span class="tf-kpi__label">Margen del mes</span>
         <strong id="margen-ganancia" class="tf-kpi__value is-loading">0000</strong>
+        <div class="tf-kpi__foot"><span class="tf-kpi__delta" id="delta-margen"></span></div>
     </div>
     <div class="tf-kpi">
         <span class="tf-kpi__label">Compras del mes</span>
         <strong id="total-compras" class="tf-kpi__value is-loading">0000</strong>
+        <div class="tf-kpi__foot"><span class="tf-kpi__delta" id="delta-compras"></span></div>
     </div>
     <div class="tf-kpi">
         <span class="tf-kpi__label">Ventas del mes</span>
         <strong id="total-ventas" class="tf-kpi__value is-loading">0000</strong>
+        <div class="tf-kpi__foot"><span class="tf-kpi__delta" id="delta-ventas"></span><svg class="tf-kpi__spark" id="spark-ventas" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"></svg></div>
     </div>
 </div>
 
@@ -79,12 +82,43 @@
     </div>
 </div>
 
+<!-- Inteligencia de inventario -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="tf-panel tf-ai">
+            <div class="tf-panel__head">
+                <h2 class="tf-panel__title"><span class="tf-idx">03</span>Inteligencia de inventario
+                    <span class="tf-panel__sub" id="aiSub">Predicción según tu ritmo real de ventas</span>
+                </h2>
+                <div class="tf-ai__actions">
+                    <div class="tf-seg" id="aiTabs" role="tablist">
+                        <button type="button" data-tab="reposicion" class="is-active">Reposición <b id="aiN-reposicion">0</b></button>
+                        <button type="button" data-tab="vencer">Por vencer <b id="aiN-vencer">0</b></button>
+                        <button type="button" data-tab="parado">Sin rotación <b id="aiN-parado">0</b></button>
+                    </div>
+                    <a class="btn btn-primary btn-sm" href="{% url 'orden_compra_sugerida_pdf' %}" target="_blank" rel="noopener">
+                        <i class="fas fa-file-pdf mr-2"></i>Orden de compra sugerida</a>
+                </div>
+            </div>
+            <div class="tf-panel__body">
+                <div class="tf-ai__stats">
+                    <div><span>Capital en inventario (costo)</span><strong id="aiCosto">—</strong></div>
+                    <div><span>Valor al público</span><strong id="aiPublico">—</strong></div>
+                    <div><span>Margen potencial</span><strong id="aiMargen">—</strong></div>
+                    <div><span>Inversión sugerida hoy</span><strong id="aiInversion" class="is-red">—</strong></div>
+                </div>
+                <ul class="tf-ai__list" id="aiList"><li class="tf-empty"><i class="fas fa-circle-notch fa-spin"></i>Analizando tus ventas…</li></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Categorías + alertas -->
 <div class="row">
     <div class="col-xl-8 mb-4">
         <div class="tf-panel">
             <div class="tf-panel__head">
-                <h2 class="tf-panel__title"><span class="tf-idx">03</span>Categorías
+                <h2 class="tf-panel__title"><span class="tf-idx">04</span>Categorías
                     <span class="tf-panel__sub">Unidades por categoría</span>
                 </h2>
             </div>
@@ -96,7 +130,7 @@
     <div class="col-xl-4 mb-4">
         <div class="tf-panel">
             <div class="tf-panel__head">
-                <h2 class="tf-panel__title"><span class="tf-idx">04</span>Alertas
+                <h2 class="tf-panel__title"><span class="tf-idx">05</span>Alertas
                     <span class="tf-panel__sub">Stock mínimo y máximo</span>
                 </h2>
             </div>
@@ -151,17 +185,33 @@
         actualizarPedidos();
         setInterval(actualizarPedidos, 30000);
 
-        $.get("{% url 'obtener_margen_ganancia' %}").done(function (d) {
-            var n = parseFloat(d.margen_ganancia_total || 0);
-            isNaN(n) ? mostrar('margen-ganancia', '—') : contar('margen-ganancia', n, true);
-        }).fail(function () { mostrar('margen-ganancia', '—'); });
-
-        $.get("{% url 'calcular_total_compras_y_ventas' %}").done(function (d) {
-            var compras = d.total_compras_por_mes.reduce(function (a, c) { return a + c.total_compras; }, 0);
-            var ventas = d.total_ventas_por_mes.reduce(function (a, c) { return a + c.total_ventas; }, 0);
-            contar('total-compras', compras, true);
-            contar('total-ventas', ventas, true);
-        }).fail(function () { mostrar('total-compras', '—'); mostrar('total-ventas', '—'); });
+        // ---------- Marcador: valores, variación frente al mes anterior y mini gráfica ----------
+        function variacion(id, v, neutro) {
+            var el = document.getElementById('delta-' + id);
+            if (!el) return;
+            if (v === null || v === undefined) { el.className = 'tf-kpi__delta is-flat'; el.textContent = 'Sin dato previo'; return; }
+            var sube = v > 0, igual = v === 0;
+            el.className = 'tf-kpi__delta ' + (igual ? 'is-flat' : neutro ? 'is-neutral' : sube ? 'is-up' : 'is-down');
+            el.textContent = (igual ? '= ' : sube ? '▲ ' : '▼ ') + Math.abs(v).toLocaleString('es-CO', { maximumFractionDigits: 1 }) + ' %';
+            el.title = 'Frente al mismo tramo del mes anterior';
+        }
+        function minigrafica(id, serie) {
+            var svg = document.getElementById('spark-' + id);
+            if (!svg || !serie || !serie.length) return;
+            var max = Math.max.apply(null, serie) || 1, w = 120, h = 32, paso = w / (serie.length - 1);
+            var pts = serie.map(function (v, i) { return (i * paso).toFixed(1) + ',' + (h - 3 - (v / max) * (h - 8)).toFixed(1); });
+            svg.innerHTML = '<defs><linearGradient id="g-' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e5242b" stop-opacity=".45"/><stop offset="1" stop-color="#e5242b" stop-opacity="0"/></linearGradient></defs>' +
+                '<polygon points="0,' + h + ' ' + pts.join(' ') + ' ' + w + ',' + h + '" fill="url(#g-' + id + ')"/>' +
+                '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#ff3b30" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>';
+        }
+        $.get("{% url 'obtener_resumen' %}").done(function (r) {
+            contar('margen-ganancia', r.margen.valor, true);
+            contar('total-compras', r.compras.valor, true);
+            contar('total-ventas', r.ventas.valor, true);
+            variacion('margen', r.margen.variacion); variacion('compras', r.compras.variacion, true); variacion('ventas', r.ventas.variacion);
+            minigrafica('ventas', r.ventas.serie);
+            if (r.margen_pct) $('#delta-margen').attr('data-pct', r.margen_pct + ' % de las ventas');
+        }).fail(function () { ['margen-ganancia', 'total-compras', 'total-ventas'].forEach(function (id) { mostrar(id, '—'); }); });
 
         // ---------- Compras y ventas ----------
         // Degradado vertical para las barras
@@ -260,6 +310,55 @@
                     scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 } } }
                 }
             });
+        });
+
+        // ---------- Inteligencia de inventario ----------
+        var ia = null, pestana = 'reposicion';
+        function chip(nivel, texto) { return '<span class="tf-chip tf-chip--' + nivel + '">' + texto + '</span>'; }
+        function fila(izq, centro, der) {
+            return '<li class="tf-ai__row"><div class="tf-ai__main">' + izq + '</div><div class="tf-ai__mid">' + centro + '</div><div class="tf-ai__end">' + der + '</div></li>';
+        }
+        function nombre(t) { return $('<div>').text(t).html(); }
+        function pintarIA() {
+            var $ul = $('#aiList').empty(), html = '';
+            if (pestana === 'reposicion') {
+                ia.reposicion.forEach(function (r) {
+                    var dias = r.dias_restantes, pct = dias === null ? 100 : Math.max(4, Math.min(100, dias / 15 * 100));
+                    var cuando = r.stock === 0 ? 'Agotado' : dias === null ? 'Sin ventas recientes' : 'Se agota en ' + (dias < 1 ? 'menos de 1 día' : Math.round(dias) + (Math.round(dias) === 1 ? ' día' : ' días'));
+                    html += fila('<span class="tf-ai__name">' + nombre(r.producto) + '</span><span class="tf-ai__meta">' + r.stock + ' en stock · ' + r.ventas_por_dia.toLocaleString('es-CO') + ' und/día</span>',
+                        '<div class="tf-ai__bar tf-ai__bar--' + r.nivel + '"><i style="width:' + pct + '%"></i></div><span class="tf-ai__meta">' + cuando + '</span>',
+                        chip(r.nivel, r.nivel === 'critico' ? 'Crítico' : 'Atención') + (r.sugerido ? '<span class="tf-ai__buy">Comprar <b>' + r.sugerido + '</b> · ' + cop.format(r.costo_estimado) + '</span>' : ''));
+                });
+                if (!html) html = '<li class="tf-empty"><i class="fas fa-circle-check"></i>Todo tu inventario alcanza para las próximas semanas.</li>';
+            } else if (pestana === 'vencer') {
+                ia.por_vencer.forEach(function (r) {
+                    var txt = r.dias < 0 ? 'Venció hace ' + Math.abs(r.dias) + ' días' : r.dias === 0 ? 'Vence hoy' : 'Vence en ' + r.dias + ' días';
+                    html += fila('<span class="tf-ai__name">' + nombre(r.producto) + '</span><span class="tf-ai__meta">' + r.stock + ' unidades · ' + cop.format(r.valor) + ' al costo</span>',
+                        '<span class="tf-ai__meta">' + r.vence + ' · ' + txt + '</span>', chip(r.nivel, r.nivel === 'vencido' ? 'Vencido' : r.nivel === 'critico' ? 'Crítico' : 'Atención'));
+                });
+                if (!html) html = '<li class="tf-empty"><i class="fas fa-circle-check"></i>Ningún producto vence en los próximos ' + ia.parametros.dias_vencimiento + ' días.</li>';
+            } else {
+                ia.sin_rotacion.forEach(function (r) {
+                    html += fila('<span class="tf-ai__name">' + nombre(r.producto) + '</span><span class="tf-ai__meta">' + r.stock + ' unidades sin movimiento</span>',
+                        '<span class="tf-ai__meta">Sin ventas en ' + ia.parametros.dias_sin_rotacion + ' días</span>',
+                        '<span class="tf-ai__buy">Capital parado <b>' + cop.format(r.capital) + '</b></span>');
+                });
+                if (!html) html = '<li class="tf-empty"><i class="fas fa-circle-check"></i>Todos tus productos están rotando.</li>';
+            }
+            $ul.html(html);
+        }
+        $.get("{% url 'inteligencia_inventario' %}").done(function (d) {
+            ia = d;
+            $('#aiN-reposicion').text(d.reposicion.length); $('#aiN-vencer').text(d.por_vencer.length); $('#aiN-parado').text(d.sin_rotacion.length);
+            $('#aiCosto').text(cop.format(d.capital.costo)); $('#aiPublico').text(cop.format(d.capital.publico));
+            $('#aiMargen').text(cop.format(d.capital.margen_potencial) + ' · ' + d.capital.margen_pct.toLocaleString('es-CO') + ' %');
+            $('#aiInversion').text(cop.format(d.inversion_sugerida));
+            $('#aiSub').text('Predicción según tu ritmo de ventas de los últimos ' + d.parametros.dias_ventana + ' días · cobertura a ' + d.parametros.dias_cobertura + ' días');
+            pintarIA();
+        }).fail(function () { $('#aiList').html('<li class="tf-empty"><i class="fas fa-triangle-exclamation"></i>No se pudo analizar el inventario.</li>'); });
+        $('#aiTabs').on('click', 'button', function () {
+            $('#aiTabs button').removeClass('is-active'); $(this).addClass('is-active');
+            pestana = $(this).data('tab'); if (ia) pintarIA();
         });
 
         // ---------- Alertas de inventario ----------

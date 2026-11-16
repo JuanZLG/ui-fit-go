@@ -180,3 +180,19 @@ def test_jwt_manipulado_o_ausente_no_entra(anonimo):
     assert anonimo.get(reverse('ventas')).status_code == 302
     anonimo.cookies['jwt_token'] = jwt.encode({'id_rol': 1}, 'otra-clave', algorithm='HS256')
     assert anonimo.get(reverse('ventas')).status_code == 401
+
+
+def test_tienda_muestra_insignias_reales(anonimo, catalogo, db):
+    from sales.models import Detalleventa, Ventas
+    from customers.models import Clientes, Departamentos, Municipios
+    poco, popular, normal = catalogo('Poco', cantidad=3), catalogo('Popular', cantidad=50), catalogo('Normal', cantidad=50)
+    depto = Departamentos.objects.create(nombre_departamento='D')
+    muni = Municipios.objects.create(id_departamento=depto, nombre_municipio='M')
+    c = Clientes.objects.create(id_municipio=muni, documento='1', nombres='A', apellidos='B', celular='1', barrio='b', direccion='d', estado=True)
+    v = Ventas.objects.create(id_cliente_id=c.id_cliente, totalVenta=1, margenGanancia=0, descuentoVenta='', totalVentaDescuento='', estado=1)
+    Detalleventa.objects.create(id_producto_id=popular.id_producto, id_venta=v, cantidad=9, precio_compra=1, precio_venta=1,
+                                descuentoProducto='', totalProductoDescuento='', margenGanancia=0, precio_tot=1, estado=1)
+    html = anonimo.get(reverse('pageHome')).content.decode()
+    assert 'Últimas 3 unidades' in html and 'Más vendido' in html
+    assert html.count('product-badge--top') == 2 and html.count('product-badge--ultimas') == 2     # escritorio + movil
+    assert 'NUEVO' not in html

@@ -166,3 +166,116 @@ def obtener_datos_categorias_productos(request):
     except Exception as e:
         return JsonResponse({'error': str(e)})
 
+
+
+# ======================================================================================
+# Inteligencia de negocio (marcador comparativo, inventario inteligente, búsqueda global)
+# ======================================================================================
+from django.db.models import Q
+from django.urls import reverse
+from . import insights
+
+
+@jwt_cookie_required
+def obtener_resumen(request):
+    """Marcador: mes actual frente al mismo tramo del mes anterior + serie de 14 días."""
+    return JsonResponse(insights.resumen_marcador())
+
+
+@jwt_cookie_required
+def inteligencia_inventario(request):
+    """Reposición sugerida, productos por vencer, sin rotación y capital en inventario."""
+    return JsonResponse(insights.inventario_inteligente())
+
+
+@jwt_cookie_required
+@module_access_required('compras')
+def orden_compra_sugerida_pdf(request):
+    """PDF con lo que conviene comprar hoy para cubrir los próximos días de venta."""
+    from tuiranfitgo.reports import Informe, cop, E_PEQ
+    datos = insights.inventario_inteligente()
+    pedido = [r for r in datos['reposicion'] if r['sugerido'] > 0]
+    informe = Informe('Orden de compra sugerida', timezone.localdate().strftime('%d/%m/%Y'),
+                      f'Cobertura a {insights.DIAS_COBERTURA} días')
+    nombre = f'orden_compra_sugerida_{timezone.localdate()}.pdf'
+    if not pedido:
+        informe.aviso('Por ahora no hay productos que necesiten reposición.')
+        return informe.respuesta(nombre)
+
+    informe.espacio(2)
+    informe.tarjetas([('Productos a reponer', str(len(pedido))), ('Unidades sugeridas', str(sum(r['sugerido'] for r in pedido))),
+                      ('Inversión estimada', cop(datos['inversion_sugerida'])),
+                      ('Críticos', str(sum(1 for r in pedido if r['nivel'] == 'critico')))])
+    informe.seccion('Productos a comprar')
+    filas = [[r['producto'], r['stock'],
+              f"{r['ventas_por_dia']:g}", '—' if r['dias_restantes'] is None else f"{r['dias_restantes']:g}",
+              'CRÍTICO' if r['nivel'] == 'critico' else 'ATENCIÓN', r['sugerido'], cop(r['costo_estimado'])] for r in pedido]
+    informe.tabla(['Producto', 'Stock', 'Ventas/día', 'Días', 'Nivel', 'Comprar', 'Costo est.'], filas,
+                  [182, 44, 56, 40, 60, 54, 96], 'LCCCCCR', total=['', '', '', '', '', 'TOTAL', cop(datos['inversion_sugerida'])])
+    informe.espacio(14)
+    informe.parrafo(f'Calculado con el ritmo de ventas de los últimos {insights.DIAS_VENTANA} días. '
+                    'Es una sugerencia: ajústala según tus promociones, temporadas y plazos de entrega del proveedor.',
+                    E_PEQ)
+    return informe.respuesta(nombre)
+
+
+def _modulos_permitidos(request):
+    from users.models import Rolespermisos
+    rol = (getattr(request, 'user', None) or {}).get('id_rol')
+    permitidos = set()
+    for modulo in ('clientes', 'productos', 'proveedores', 'ventas', 'compras', 'usuarios'):
+        if Rolespermisos.objects.filter(id_rol=rol, **{f'id_permiso__{modulo}': 1}).exists():
+            permitidos.add(modulo)
+    return permitidos
+
+
+@jwt_cookie_required
+def buscar_global(request):
+    """Búsqueda para la paleta de comandos: productos, clientes, proveedores, ventas y pedidos."""
+    from customers.models import Clientes as ClientesApp
+    from eproviders.models import Proveedores as ProveedoresApp
+    from orders.models import Pedidos as PedidosApp
+    from products.models import Productos as ProductosApp
+    from sales.models import Ventas as VentasApp
+
+    q = (request.GET.get('q') or '').strip()
+    if len(q) < 2:
+        return JsonResponse({'grupos': []})
+    permitidos = _modulos_permitidos(request)
+    grupos = []
+
+    def agregar(titulo, icono, items):
+        if items:
+            grupos.append({'grupo': titulo, 'icono': icono, 'items': items})
+
+    if 'productos' in permitidos:
+        agregar('Productos', 'fa-box', [
+            {'label': p.nombre_producto, 'meta': f'Stock {p.cantidad} · ${p.precio_pub:,.0f}'.replace(',', '.'),
+             'url': reverse('editAProduct', args=[p.id_producto])}
+            for p in ProductosApp.objects.filter(nombre_producto__icontains=q).order_by('nombre_producto')[:5]])
+    if 'clientes' in permitidos:
+        agregar('Clientes', 'fa-user', [
+            {'label': f'{c.nombres} {c.apellidos}', 'meta': f'{c.documento} · {c.celular}',
+             'url': reverse('editarCliente', args=[c.id_cliente])}
+            for c in ClientesApp.objects.filter(Q(nombres__icontains=q) | Q(apellidos__icontains=q) | Q(documento__icontains=q))[:5]])
+    if 'proveedores' in permitidos:
+        agregar('Proveedores', 'fa-truck-field', [
+            {'label': p.nombre_proveedor, 'meta': f'{p.numero_documento_nit} · {p.telefono}',
+             'url': reverse('editarProveedor', args=[p.id_proveedor])}
+            for p in ProveedoresApp.objects.filter(Q(nombre_proveedor__icontains=q) | Q(numero_documento_nit__icontains=q))[:5]])
+    if 'ventas' in permitidos:
+        filtro = Q(id_cliente__nombres__icontains=q) | Q(id_cliente__apellidos__icontains=q) | Q(id_cliente__documento__icontains=q)
+        if q.isdigit():
+            filtro |= Q(id_venta=int(q))
+        agregar('Ventas', 'fa-receipt', [
+            {'label': f'Venta #{v.id_venta:06d} · {v.id_cliente.nombres} {v.id_cliente.apellidos}',
+             'meta': f'{v.fechareg:%d/%m/%Y} · ${v.totalVenta:,.0f}'.replace(',', '.'),
+             'url': reverse('generar_factura_pdf_venta', args=[v.id_venta]), 'nueva_pestana': True}
+            for v in VentasApp.objects.filter(filtro).select_related('id_cliente').order_by('-id_venta')[:5]])
+        agregar('Pedidos', 'fa-truck', [
+            {'label': f'Pedido #{p.id_pedido} · {p.id_cliente.nombres} {p.id_cliente.apellidos}',
+             'meta': f'{p.estado} · ${p.total_pedido:,.0f}'.replace(',', '.'),
+             'url': reverse('editarPedidoHome', args=[p.id_pedido])}
+            for p in PedidosApp.objects.filter(Q(id_cliente__nombres__icontains=q) | Q(id_cliente__apellidos__icontains=q)
+                                               | Q(id_cliente__documento__icontains=q)).select_related('id_cliente').order_by('-id_pedido')[:4]])
+    return JsonResponse({'grupos': grupos})

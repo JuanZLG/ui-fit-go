@@ -535,3 +535,10 @@ def generar_informe_pdf_ventas(request):
     informe.tabla(['N°', 'Fecha', 'Cliente', 'Documento', 'Total'], filas, [60, 70, 200, 90, 112], 'LLLLR',
                   total=['', '', '', 'TOTAL', cop(total)])
     return informe.respuesta(nombre)
+
+
+@jwt_cookie_required
+@module_access_required('ventas')
+def pos(request):
+    """Venta rápida: catálogo táctil + carrito. Usa los mismos endpoints (y validaciones) de la venta normal."""
+    return render(request, 'posSales.html')

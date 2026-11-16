@@ -24,6 +24,7 @@
     {% for producto in productos %}
     <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
       <div class="product-image">
+        {% if producto.badge %}<span class="product-badge product-badge--{{ producto.badge_tipo }}">{{ producto.badge }}</span>{% endif %}
         <!-- <img src="/media/landingproducts/products/{{ producto.iProductImg_name }}" alt="Imagen"> -->
         <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen"
           style="width: 100%; height: 100%; object-fit: cover; object-position: center;" class="img-fluid">
@@ -95,6 +96,7 @@
         {% for producto in productos %}
         <div class="product-card productDetailsButton" data-id="{{producto.id_producto}}">
           <div class="product-image">
+            {% if producto.badge %}<span class="product-badge product-badge--{{ producto.badge_tipo }}">{{ producto.badge }}</span>{% endif %}
             <img src="/media/{{ producto.iProductImg_name }}" alt="Imagen">
           </div>
           <div class="product-details">

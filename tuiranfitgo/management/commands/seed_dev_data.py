@@ -81,7 +81,7 @@ class Command(BaseCommand):
             productos.append(Productos.objects.create(
                 id_categoria=categorias[c], id_marca=marcas[m], nombre_producto=nom,
                 descripcion=f"{nom}. Suplemento de alta calidad para tu entrenamiento.",
-                cantidad=cant, fechaven=ahora + timedelta(days=180 + i * 20), sabor=sab,
+                cantidad=cant, fechaven=ahora + timedelta(days={4: 25, 6: 70}.get(i, 180 + i * 20)), sabor=sab,
                 presentacion=pres, estado=1, precio=costo, precio_pub=pub,
                 iProductImg=foto, iInfoImg=tabla,
             ))
@@ -125,7 +125,8 @@ class Command(BaseCommand):
             compra.totalCompra = total
             compra.save()
 
-        # --- Ventas de los ultimos 6 meses ---
+        # --- Ventas de los ultimos 6 meses (el cinturon nunca se vende: ejemplo de capital sin rotacion) ---
+        vendibles = [p for p in productos if 'Cinturon' not in p.nombre_producto]
         ventas = []
         for i in range(16):
             dias = rnd.randint(0, 14) if i < 6 else rnd.randint(15, 170)  # algunas ventas del mes actual
@@ -135,7 +136,7 @@ class Command(BaseCommand):
                 descuentoVenta="0", totalVentaDescuento="0", totalVenta=0,
                 margenGanancia=0, estado=1,
             )
-            for prod in rnd.sample(productos, rnd.randint(1, 3)):
+            for prod in rnd.sample(vendibles, rnd.randint(1, 3)):
                 cant = rnd.randint(1, 3)
                 sub = cant * prod.precio_pub
                 total += sub

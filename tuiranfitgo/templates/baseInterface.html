@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>window.TF_COLOMBIA_URL = "{% static 'data/colombia.json' %}";</script>
+    <script>window.TF_COLOMBIA_URL = "{% static 'data/colombia.json' %}"; window.TF_SEARCH_URL = "{% url 'buscar_global' %}";</script>
     <script src="{% static 'js/colombia.js' %}"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -164,6 +164,7 @@
                 </a>
                 <div id="collapseSales" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="collapse-inner">
+                        <a class="collapse-item" href="{% url 'ventas_pos' %}">Venta rápida (POS)</a>
                         <a class="collapse-item" href="{% url 'ventas' %}">Gestión de Ventas</a>
                     </div>
                 </div>
@@ -265,7 +266,7 @@
                         <!-- Paleta de comandos -->
                         <li class="nav-item d-flex align-items-center">
                             <button type="button" class="tf-cmd-trigger" data-tf-palette aria-label="Abrir buscador de módulos">
-                                <i class="fas fa-search"></i><span>Buscar</span><kbd>Ctrl K</kbd>
+                                <i class="fas fa-search"></i><span>Buscar o ir a…</span><kbd>Ctrl K</kbd>
                             </button>
                         </li>
 

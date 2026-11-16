@@ -243,3 +243,19 @@ def test_informe_de_ventas_valida_las_fechas(admin_client, datos):
 def test_informes_exigen_sesion(anonimo):
     assert anonimo.post(reverse('generar_informe_pdf_ventas'), {}).status_code == 302
     assert anonimo.get(reverse('generar_factura_pdf_venta', args=[1])).status_code == 302
+
+
+def test_pantalla_de_venta_rapida(admin_client, cliente_sin_permisos, anonimo):
+    url = reverse('ventas_pos')
+    html = admin_client.get(url).content.decode()
+    assert 'id="pos"' in html and 'data-url-venta' in html and 'js/pos.js' in html
+    assert cliente_sin_permisos.get(url).status_code == 302 and anonimo.get(url).status_code == 302
+
+
+def test_venta_rapida_usa_la_misma_validacion_de_stock(admin_client, catalogo, cliente_venta):
+    """El POS manda el mismo payload que la venta normal: el servidor sigue siendo la autoridad."""
+    p = catalogo(cantidad=2)
+    assert vender(admin_client, payload(p, 3)).status_code == 400
+    ok = vender(admin_client, payload(p, 2))
+    assert ok.status_code == 200 and 'id_venta' in ok.json()           # el POS usa id_venta para abrir el comprobante
+    p.refresh_from_db(); assert p.cantidad == 0
