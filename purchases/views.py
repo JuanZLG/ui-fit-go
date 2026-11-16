@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 from django.db.models import Q
 import qrcode
 from django.db import transaction
+from tuiranfitgo.inventory import (StockError, DatosInvalidos, reponer_stock, quitar_stock_compra,
+                                    entero_positivo, numero_no_negativo, nombre_imagen)
 
 
 @jwt_cookie_required
@@ -32,15 +34,13 @@ def crear_compra(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(data)
             proveedor_nombre = data.get('nombreProveedor', '')
-            totalCompra = data.get('totalCompra', '')
-            productos = data.get('productos', [])
+            productos = data.get('productos', {})
 
             if not proveedor_nombre:
                 return JsonResponse({'error': 'El nombre del proveedor es obligatorio.'}, status=400)
 
-            if not productos:
+            if not isinstance(productos, dict) or not productos:
                 return JsonResponse({'error': 'Debe agregar al menos un producto a la compra.'}, status=400)
 
             proveedor = Proveedores.objects.filter(nombre_proveedor=proveedor_nombre).first()
@@ -48,41 +48,47 @@ def crear_compra(request):
             if not proveedor:
                 return JsonResponse({'error': 'Proveedor no encontrado en la base de datos.'}, status=400)
 
-            compra = Compras.objects.create(id_proveedor=proveedor, totalCompra=totalCompra)
+            total_compra = numero_no_negativo(data.get('totalCompra'), 'total de la compra')
 
-            for producto_id, producto_datos in productos.items():
-                cantidad_comprada = producto_datos['cantidad']
-                precioCompra = producto_datos['precioCompra']
-                precioTotal = producto_datos['totalProducto']
+            # Todo o nada: si un producto falla no queda una compra a medias ni stock sumado
+            with transaction.atomic():
+                compra = Compras.objects.create(id_proveedor=proveedor, totalCompra=total_compra)
 
-                producto = Productos.objects.get(id_producto=producto_id)
+                for producto_id, producto_datos in productos.items():
+                    producto_id = entero_positivo(producto_id, 'producto')
+                    cantidad_comprada = entero_positivo(producto_datos.get('cantidad'), 'cantidad')
+                    precio_compra = numero_no_negativo(producto_datos.get('precioCompra'), 'precio de compra')
+                    precio_total = numero_no_negativo(producto_datos.get('totalProducto'), 'total del producto')
 
-                if producto:
-                    producto.cantidad += cantidad_comprada
-                    producto.save()
+                    producto = Productos.objects.filter(pk=producto_id).first()
+                    if producto is None:
+                        raise DatosInvalidos('Uno de los productos ya no existe.')
 
-                Detallecompra.objects.create(
-                    id_producto=producto,
-                    id_compra=compra,
-                    cantidad=cantidad_comprada,
-                    precio_uni=precioCompra,
-                    precio_tot=precioTotal
-                )
+                    reponer_stock(Productos, producto_id, cantidad_comprada)
 
-            response_data = {'success': True}
-            return JsonResponse(response_data)
+                    Detallecompra.objects.create(
+                        id_producto=producto,
+                        id_compra=compra,
+                        cantidad=cantidad_comprada,
+                        precio_uni=precio_compra,
+                        precio_tot=precio_total
+                    )
 
-        except json.JSONDecodeError as e:
-            response_data = {'success': False, 'error': str(e)}
-            return JsonResponse(response_data, status=400)
+            return JsonResponse({'success': True})
+
+        except DatosInvalidos as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+        except (json.JSONDecodeError, AttributeError) as e:
+            return JsonResponse({'success': False, 'error': 'Los datos enviados no son válidos.'}, status=400)
 
         except Exception as e:
-            response_data = {'success': False, 'error': str(e)}
-            return JsonResponse(response_data, status=500)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return render(request, 'createPurchases.html')
 
 
+@jwt_cookie_required
 def buscar_proveedor(request):
     nombre_proveedor = request.GET.get("q", "")
 
@@ -108,6 +114,7 @@ def buscar_proveedor(request):
     return JsonResponse({"resultados": resultados})
 
 
+@jwt_cookie_required
 def buscar_productos(request):
     q = request.GET.get("q", "")
 
@@ -130,7 +137,7 @@ def buscar_productos(request):
             'precio_ganancia': precio_ganancia,
             'marca': producto.id_marca.nombre_marca,
             'categoria': producto.id_categoria.nombre_categoria,
-            'presentacion': producto.iProductImg.decode('utf8')
+            'presentacion': nombre_imagen(producto.iProductImg)
         })
 
     return JsonResponse({"resultados": resultados})
@@ -156,6 +163,8 @@ def detalles_compra(request, compra_id):
     return JsonResponse({'detallecompra': detalles_data})
 
 
+@jwt_cookie_required
+@module_access_required('compras')
 def cambiarEstado(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         compra_id = request.GET.get('compra_id')
@@ -169,21 +178,13 @@ def cambiarEstado(request):
                     # Sumar productos solo si la compra está pasando de Inactivo a Activo
                     detalles = Detallecompra.objects.filter(id_compra=compra_id)
                     for detalle in detalles:
-                        producto = detalle.id_producto
-                        producto.cantidad += detalle.cantidad
-                        producto.save()
+                        reponer_stock(Productos, detalle.id_producto_id, detalle.cantidad)
                 elif nuevo_estado == "0" and compra.estado == 1:
                     # Restar productos solo si la compra está pasando de Activo a Inactivo
                     detalles = Detallecompra.objects.filter(id_compra=compra_id)
                     for detalle in detalles:
-                        producto = detalle.id_producto
-                        producto.cantidad -= detalle.cantidad
-                        if producto.cantidad < 0:
-                            # Revertir cambios y retornar mensaje de error
-                            transaction.set_rollback(True)
-                            return JsonResponse({'status': 'error', 'message': 'No es posible desactivar la compra, pues su stock quedaría negativo.'})
-
-                        producto.save()
+                        # Lanza StockError (y revierte todo) si el stock quedaría negativo
+                        quitar_stock_compra(Productos, detalle.id_producto_id, detalle.cantidad)
 
                 compra.estado = int(nuevo_estado)
                 compra.save()
@@ -192,6 +193,9 @@ def cambiarEstado(request):
 
         except Compras.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Compra no encontrada.'}, status=404)
+
+        except StockError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -328,6 +332,7 @@ def generar_qr_code(content):
     return img
 
 
+@jwt_cookie_required
 def generar_factura_pdf(request, compra_id):
     compra = get_object_or_404(Compras, id_compra=compra_id)
     detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
@@ -398,6 +403,7 @@ def generar_factura_pdf(request, compra_id):
 
     return response
 
+@jwt_cookie_required
 def generar_informe_pdf(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')

@@ -193,6 +193,7 @@ def verDetallesCliente(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 # @module_access_required('clientes')
+@jwt_cookie_required
 def validar_documento(request):
     documento = request.GET.get('documento', '')
 

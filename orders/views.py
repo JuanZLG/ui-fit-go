@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from orders.models import Pedidos, DetallePedido, Clientes, Detalleventa, Ventas, Productos
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
+from django.db import transaction
+from tuiranfitgo.inventory import StockError, DatosInvalidos, entero_positivo, nombre_imagen
 
 @jwt_cookie_required
 @module_access_required('ventas')
@@ -13,13 +15,20 @@ def Home(request):
 
 
 
+@jwt_cookie_required
+@module_access_required('ventas')
 def cambiarEstadoPedido(request):
-    if request.method == "GET":
-        id_pedido = request.GET.get('pedido_id')
-        pedido = Pedidos.objects.get(id_pedido=id_pedido)
-        pedido.estado = "cancelado"
-        pedido.save()
-        return JsonResponse({'status': 'success'})
+    if request.method != "GET":
+        return JsonResponse({'status': 'error', 'message': 'Solicitud no válida.'}, status=405)
+    pedido = Pedidos.objects.filter(pk=request.GET.get('pedido_id') or 0).first()
+    if pedido is None:
+        return JsonResponse({'status': 'error', 'message': 'Pedido no encontrado.'}, status=404)
+    if pedido.estado == 'confirmado':
+        return JsonResponse({'status': 'error',
+                             'message': 'El pedido ya fue confirmado en una venta. Anula la venta para cancelarlo.'})
+    pedido.estado = "cancelado"
+    pedido.save(update_fields=['estado'])
+    return JsonResponse({'status': 'success'})
 
 
 
@@ -32,7 +41,7 @@ def editarPedidoHome(request, id_pedido):
 
     for item in detalle:
         producto = Productos.objects.get(id_producto=item.id_producto.id_producto)
-        imagen_data = producto.iProductImg.decode('utf-8') if producto.iProductImg else None
+        imagen_data = nombre_imagen(producto.iProductImg) or None
         sabores = producto.sabor.split(',') if producto.sabor else []
         stock = producto.cantidad
         detalles.append({
@@ -49,38 +58,60 @@ def editarPedidoHome(request, id_pedido):
 
 
 @csrf_exempt
+@jwt_cookie_required
+@module_access_required('ventas')
 def editarPedido(request):
-    if request.method == 'POST':
-        try:
-            datos_pedido = json.loads(request.body)
-            detalles_pedido = datos_pedido.get('detalles')
-            id_pedido = datos_pedido.get('dataIdPedido')
-            total_pedido = datos_pedido.get('total_pedido')
+    """Edita las cantidades de un pedido en proceso validando inventario y recalculando totales."""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error_message': 'Solicitud no válida.'}, status=405)
+    try:
+        datos = json.loads(request.body)
+        detalles = datos.get('detalles')
+        id_pedido = entero_positivo(datos.get('dataIdPedido'), 'pedido')
+        if not isinstance(detalles, list) or not detalles:
+            raise DatosInvalidos('El pedido debe conservar al menos un producto.')
 
-            pedido = Pedidos.objects.get(id_pedido=id_pedido)
-            pedido.total_pedido = total_pedido
-            pedido.save()
+        with transaction.atomic():
+            pedido = Pedidos.objects.select_for_update().get(id_pedido=id_pedido)
+            if pedido.estado != 'en proceso':
+                raise DatosInvalidos(f'El pedido está {pedido.estado} y ya no se puede modificar.')
 
-            ids_detalles_actuales = [detalle['id_detalle'] for detalle in detalles_pedido]
+            ids_conservados, total, cambios = [], 0.0, []
+            for detalle in detalles:
+                id_detalle = entero_positivo(detalle.get('id_detalle'), 'detalle')
+                cantidad = entero_positivo(detalle.get('cantidad'), 'cantidad')
+                det = DetallePedido.objects.select_related('id_producto').filter(
+                    id_detallepedido=id_detalle, id_pedido=pedido).first()
+                if det is None:
+                    raise DatosInvalidos('Uno de los productos no pertenece a este pedido.')
+                disponible = max(det.id_producto.cantidad, 0)
+                if cantidad > disponible:
+                    raise StockError(f'Stock insuficiente de «{det.id_producto.nombre_producto}»: '
+                                     f'hay {disponible} disponible(s) y pediste {cantidad}.')
+                subtotal = det.precio_uni * cantidad          # el total se calcula en el servidor
+                total += subtotal
+                ids_conservados.append(id_detalle)
+                cambios.append((det, str(detalle.get('sabor', det.sabor))[:50], cantidad, subtotal))
 
-            DetallePedido.objects.filter(id_pedido=pedido).exclude(id_detallepedido__in=ids_detalles_actuales).delete()
+            DetallePedido.objects.filter(id_pedido=pedido).exclude(id_detallepedido__in=ids_conservados).delete()
+            for det, sabor, cantidad, subtotal in cambios:
+                det.sabor, det.cantidad, det.precio_tot = sabor, cantidad, subtotal
+                det.save()
+            pedido.total_pedido = total
+            pedido.save(update_fields=['total_pedido'])
 
-            for detalle in detalles_pedido:
-                detalle_pedido = DetallePedido.objects.get(id_detallepedido=detalle['id_detalle'])
-                detalle_pedido.sabor = detalle['sabor']
-                detalle_pedido.cantidad = detalle['cantidad']
-                detalle_pedido.precio_tot = detalle['total_producto']
-                detalle_pedido.save()
-
-            response_data = {'success': True}
-            return JsonResponse(response_data)
-        except Exception as e:
-            response_data = {'success': False, 'error_message': str(e)}
-            return JsonResponse(response_data, status=500)
-
-
+        return JsonResponse({'success': True})
+    except (DatosInvalidos, StockError) as e:
+        return JsonResponse({'success': False, 'error_message': str(e)}, status=400)
+    except Pedidos.DoesNotExist:
+        return JsonResponse({'success': False, 'error_message': 'Pedido no encontrado.'}, status=404)
+    except (json.JSONDecodeError, UnicodeDecodeError, AttributeError):
+        return JsonResponse({'success': False, 'error_message': 'Los datos enviados no son válidos.'}, status=400)
 
 
+
+
+@jwt_cookie_required
 def detalles_pedido(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_pedido = request.GET.get('pedido_id')

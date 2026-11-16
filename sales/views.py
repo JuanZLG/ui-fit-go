@@ -10,7 +10,20 @@ from tuiranfitgo.views import jwt_cookie_required, module_access_required
 import json
 from sales.models import Clientes, Detalleventa, Ventas, Productos, Marcas, Categorias, Pedidos, DetallePedido
 
+from django.db import transaction
 from django.db.models import Q
+import logging
+from tuiranfitgo.inventory import (
+    StockError, DatosInvalidos, descontar_stock, reponer_stock,
+    entero_positivo, numero_no_negativo, nombre_imagen,
+)
+
+logger = logging.getLogger(__name__)
+
+
+def _error(mensaje, status=400):
+    return JsonResponse({'success': False, 'error': mensaje}, status=status)
+
 
 @jwt_cookie_required
 @module_access_required('ventas')
@@ -23,94 +36,120 @@ def formatear_precios_email(valor):
     precio_formateado = '${:,.2f}'.format(valor)
     return precio_formateado
 
+@transaction.atomic
+def _registrar_venta(data):
+    """Crea la venta, sus detalles y descuenta el inventario. Todo o nada."""
+    documento = str(data.get('documentoCliente', '')).strip()
+    cliente = Clientes.objects.filter(documento=documento).first()
+    if cliente is None:
+        raise DatosInvalidos('Cliente no encontrado.')
+    if cliente.estado != 1:
+        raise DatosInvalidos('El cliente está inactivo.')
+
+    productos = data.get('productos')
+    if not isinstance(productos, dict) or not productos:
+        raise DatosInvalidos('Debe agregar al menos un producto a la venta.')
+
+    total_venta = numero_no_negativo(data.get('totalVenta'), 'total de la venta')
+    margen_venta = float(data.get('margenGananciaVenta') or 0)
+
+    # Un pedido solo puede confirmarse una vez y por su propio cliente
+    ids_pedido = set()
+    for datos in productos.values():
+        id_pedido = datos.get('idPedido')
+        if isinstance(id_pedido, int) or (isinstance(id_pedido, str) and id_pedido.isdigit()):
+            ids_pedido.add(int(id_pedido))
+    if len(ids_pedido) > 1:
+        raise DatosInvalidos('La venta no puede mezclar productos de pedidos distintos.')
+
+    pedido = None
+    if ids_pedido:
+        pedido = Pedidos.objects.select_for_update().filter(id_pedido=ids_pedido.pop()).first()
+        if pedido is None:
+            raise DatosInvalidos('El pedido indicado no existe.')
+        if pedido.id_cliente_id != cliente.id_cliente:
+            raise DatosInvalidos('El pedido pertenece a otro cliente.')
+        if pedido.estado != 'en proceso':
+            raise DatosInvalidos(f'El pedido ya está {pedido.estado}; no se puede volver a confirmar.')
+
+    venta = Ventas.objects.create(
+        id_cliente=cliente,
+        totalVenta=total_venta,
+        descuentoVenta=str(data.get('descuentoVenta', 'No aplica')),
+        totalVentaDescuento=str(data.get('totalVentaDescuento', 'No aplica')),
+        margenGanancia=margen_venta,
+    )
+
+    detalles_email = []
+    for id_producto, datos in productos.items():
+        id_producto = entero_positivo(id_producto, 'producto')
+        cantidad = entero_positivo(datos.get('cantidad'), 'cantidad')
+        precio_compra = numero_no_negativo(datos.get('precioCompra'), 'precio de compra')
+        precio_venta = numero_no_negativo(datos.get('precioVenta'), 'precio de venta')
+        total_producto = numero_no_negativo(datos.get('totalProducto'), 'total del producto')
+        margen_producto = float(datos.get('margenGananciaProducto') or 0)
+        descuento = str(datos.get('descuentoProducto', 'No aplica'))
+
+        # Descuento atómico: falla si no alcanza el stock (nunca queda negativo)
+        descontar_stock(Productos, id_producto, cantidad)
+        producto = Productos.objects.get(pk=id_producto)
+
+        Detalleventa.objects.create(
+            id_producto=producto, id_venta=venta, cantidad=cantidad,
+            precio_compra=precio_compra, precio_venta=precio_venta,
+            descuentoProducto=descuento,
+            totalProductoDescuento=str(datos.get('totalProductoDescuento', 'No aplica')),
+            margenGanancia=margen_producto, precio_tot=total_producto,
+        )
+
+        if pedido is not None:
+            DetallePedido.objects.filter(id_pedido=pedido, id_producto=producto).update(
+                cantidad=cantidad, precio_uni=precio_venta, precio_tot=total_producto,
+            )
+
+        detalles_email.append({
+            'nombre_producto': producto.nombre_producto,
+            'url': nombre_imagen(producto.iProductImg),
+            'cantidad': cantidad,
+            'precio_venta': formatear_precios_email(precio_venta),
+            'precio_tot': formatear_precios_email(total_producto),
+            'descuentoProducto': descuento,
+        })
+
+    if pedido is not None:
+        pedido.total_pedido = total_venta
+        pedido.estado = 'confirmado'
+        pedido.id_venta = venta          # enlaza el pedido con su venta (para poder anularlo juntos)
+        pedido.save()
+
+    return venta, cliente, detalles_email
+
+
 @csrf_exempt
 @jwt_cookie_required
+@module_access_required('ventas')
 def crear_venta(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            documento = data.get('documentoCliente', '')
-            totalVenta = data.get('totalVenta', '')
-            descuentoVenta = data.get('descuentoVenta', 'No aplica')
-            totalVentaDescuento = data.get('totalVentaDescuento', 'No aplica')
-            margenGananciaVenta = data.get('margenGananciaVenta')
-            productos = data.get('productos', [])
-            if productos:
-                primer_idProducto = list(productos.keys())[0]
-                primer_producto = productos[primer_idProducto]
-                idPedido = primer_producto.get('idPedido', None)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return _error('Los datos enviados no son válidos.')
+        if not isinstance(data, dict):
+            return _error('Los datos enviados no son válidos.')
 
+        try:
+            venta, cliente, detalles_email = _registrar_venta(data)
+        except (DatosInvalidos, StockError) as e:
+            return _error(str(e))
 
-            cliente = Clientes.objects.filter(documento=documento).first()
-            if cliente is None:
-                return JsonResponse({'success': False, 'error': 'Cliente no encontrado'}, status=400)
-            
-            pedido = Pedidos.objects.get(id_pedido=idPedido)
-            pedido.total_pedido = totalVenta
-            pedido.estado = "confirmado"
-            pedido.save()
+        # El correo se envía fuera de la transacción: si falla, la venta ya quedó registrada
+        try:
+            pedido_email_confirmacion(venta, cliente.correo, detalles_email,
+                                      formatear_precios_email(venta.totalVenta))
+        except Exception:
+            logger.exception('No se pudo enviar el correo de la venta %s', venta.id_venta)
 
-            venta = Ventas.objects.create(
-                id_cliente=cliente,
-                totalVenta=totalVenta,
-                descuentoVenta=descuentoVenta,
-                totalVentaDescuento=totalVentaDescuento,
-                margenGanancia=margenGananciaVenta
-            )
-
-            detalles_venta = []
-            for idProducto, producto_datos in productos.items():
-                cantidad_vendida = producto_datos['cantidad']
-                precioCompra = producto_datos['precioCompra']
-                precioVenta = producto_datos['precioVenta']
-                descuento = producto_datos['descuentoProducto']
-                totalProductoDescuento = producto_datos['totalProductoDescuento']
-                margenGananciaProducto = producto_datos['margenGananciaProducto']  
-                totalProducto = producto_datos['totalProducto']
-                
-                producto = Productos.objects.get(id_producto=idProducto)
-                if producto:
-                    producto.cantidad -= cantidad_vendida
-                    producto.save()
-
-                detalle_pedido = DetallePedido.objects.get(id_pedido=idPedido, id_producto=producto)
-
-                detalle_pedido.precio_uni = precioVenta
-                detalle_pedido.precio_tot = totalProducto
-                detalle_pedido.save()
-
-                Detalleventa.objects.create(
-                    id_producto=producto,
-                    id_venta=venta,
-                    cantidad=cantidad_vendida,
-                    precio_compra=precioCompra,
-                    precio_venta=precioVenta,
-                    descuentoProducto=descuento,
-                    totalProductoDescuento=totalProductoDescuento,
-                    margenGanancia=margenGananciaProducto,
-                    precio_tot=totalProducto,
-                )
-
-                precio_venta_formateado = formatear_precios_email(precioVenta)
-                total_producto_formateado = formatear_precios_email(totalProducto)
-
-                detalles_venta.append({
-                    'nombre_producto': producto.nombre_producto,
-                    'url': producto.iProductImg.decode('utf8'),
-                    'cantidad': producto.cantidad,
-                    'precio_venta': precio_venta_formateado,
-                    'precio_tot': total_producto_formateado,
-                    'descuentoProducto':descuento,
-                })
-
-            total_venta_formateado = formatear_precios_email(totalVenta)
-            pedido_email_confirmacion(venta, cliente.correo, detalles_venta, total_venta_formateado)
-
-            response_data = {'success': True}
-            return JsonResponse(response_data)
-        except json.JSONDecodeError as e:
-            response_data = {'success': False, 'error': str(e)}
-            return JsonResponse(response_data, status=400)
+        return JsonResponse({'success': True, 'id_venta': venta.id_venta})
 
     clientes = Clientes.objects.all()
     return render(request, 'createSales.html', {'clientes': clientes})
@@ -147,6 +186,7 @@ def pedido_email_confirmacion(venta, email, detalles_venta, total_venta_formatea
     server.quit()
 
 
+@jwt_cookie_required
 def buscar_productos(request):
     q = request.GET.get("q", "")
 
@@ -179,12 +219,13 @@ def buscar_productos(request):
             'precio_ganancia': precio_ganancia,
             'marca': marca,
             'categoria': categoria,
-            'presentacion': producto.iProductImg.decode('utf8')
+            'presentacion': nombre_imagen(producto.iProductImg)
         })
 
     return JsonResponse({"resultados": resultados})
 
 
+@jwt_cookie_required
 def agregarDetalleATabla(request):
     id_pedido = request.GET.get("id_pedido")
     id_producto = request.GET.get("id_producto")
@@ -220,27 +261,25 @@ def agregarDetalleATabla(request):
         'precio_ganancia': precio_ganancia,
         'marca': marca,
         'categoria': categoria,
-        'presentacion': producto.iProductImg.decode('utf8')
+        'presentacion': nombre_imagen(producto.iProductImg)
     }
 
     return JsonResponse({"resultado": resultado})
 
 
 
+@jwt_cookie_required
 def verificar_stock(request):
-    producto = request.GET.get('id_producto')
-    cantidad_str = request.GET.get('cantidad')
-    if cantidad_str.isdigit():
-        cantidad = int(cantidad_str)
-    else:
-        cantidad = 0  
     try:
-        producto_obj = Productos.objects.get(id_producto=producto)
-        supera_stock = cantidad > producto_obj.cantidad
-    except Productos.DoesNotExist:
-        supera_stock = False
-
-    return JsonResponse({'supera_stock': supera_stock, 'cantidad_disponible': producto_obj.cantidad})
+        cantidad = int(request.GET.get('cantidad', '0'))
+    except (TypeError, ValueError):
+        cantidad = 0
+    id_producto = request.GET.get('id_producto', '')
+    producto = Productos.objects.filter(pk=id_producto).first() if id_producto.isdigit() else None
+    if producto is None:
+        return JsonResponse({'supera_stock': True, 'cantidad_disponible': 0})
+    disponible = max(producto.cantidad, 0)
+    return JsonResponse({'supera_stock': cantidad > disponible, 'cantidad_disponible': disponible})
 
 from django.http import JsonResponse
 from django.db.models import Q
@@ -277,6 +316,7 @@ def buscar_pedidos(cliente):
     return pedidos_con_detalles
     
 
+@jwt_cookie_required
 def buscar_cliente(request):
     nombre_cliente = request.GET.get("nombreCliente")
     tipoPedido = request.GET.get("tipoPedido")
@@ -312,33 +352,50 @@ def buscar_cliente(request):
     return JsonResponse({"resultados": resultados})
 
 
+@jwt_cookie_required
+@module_access_required('ventas')
 def cambiarEstado(request):
-    if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        venta_id = request.GET.get('venta_id')
-        nuevo_estado = request.GET.get('nuevo_estado')
-        
-        venta = Ventas.objects.get(id_venta=venta_id)
-        venta.estado = int(nuevo_estado)
-        venta.save()
+    """Anula (0) o reactiva (1) una venta ajustando el inventario una sola vez."""
+    if request.method != "GET" or request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return JsonResponse({'status': 'error', 'message': 'Solicitud no válida.'}, status=400)
 
-        detalles = Detalleventa.objects.filter(id_venta=venta_id)
-        for detalle in detalles:
-            producto = detalle.id_producto
-            if venta.estado == 0: 
-                detalle.estado = 0  
-                producto.cantidad += detalle.cantidad 
-                producto.save()  
-            detalle.save() 
+    try:
+        nuevo_estado = int(request.GET.get('nuevo_estado'))
+        if nuevo_estado not in (0, 1):
+            raise ValueError
+        venta_id = int(request.GET.get('venta_id'))
+    except (TypeError, ValueError):
+        return JsonResponse({'status': 'error', 'message': 'Datos no válidos.'}, status=400)
 
-        pedidos = Pedidos.objects.filter(id_venta=venta_id)
-        for pedido in pedidos:
-            pedido.estado = "Cancelado"
-            pedido.save()
-        
-        return JsonResponse({'status': 'success'})
+    try:
+        with transaction.atomic():
+            venta = Ventas.objects.select_for_update().get(id_venta=venta_id)
+
+            # Si la venta ya está en ese estado no se toca el inventario (evita duplicar ajustes)
+            if venta.estado != nuevo_estado:
+                detalles = Detalleventa.objects.filter(id_venta=venta.id_venta)
+                if nuevo_estado == 0:
+                    for detalle in detalles.filter(estado=1):
+                        reponer_stock(Productos, detalle.id_producto_id, detalle.cantidad)
+                    detalles.update(estado=0)
+                    Pedidos.objects.filter(id_venta=venta.id_venta).update(estado='cancelado')
+                else:
+                    for detalle in detalles.filter(estado=0):
+                        descontar_stock(Productos, detalle.id_producto_id, detalle.cantidad)
+                    detalles.update(estado=1)
+                    Pedidos.objects.filter(id_venta=venta.id_venta).update(estado='confirmado')
+                venta.estado = nuevo_estado
+                venta.save(update_fields=['estado'])
+    except Ventas.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Venta no encontrada.'}, status=404)
+    except StockError as e:
+        return JsonResponse({'status': 'error', 'message': f'No se puede reactivar la venta. {e}'})
+
+    return JsonResponse({'status': 'success'})
 
 
 
+@jwt_cookie_required
 def detalles_venta(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_venta = request.GET.get('venta_id')
@@ -383,6 +440,7 @@ def detalles_venta(request):
     return JsonResponse({'status': 'error', 'message': 'Solicitud inválida'})
 
 
+@jwt_cookie_required
 def cargar_pedidos(request):
     ids_pedidos = request.GET.getlist('ids_pedidos[]')
     detalles_pedidos = list(DetallePedido.objects.filter(id_pedido__in=ids_pedidos).values())
@@ -405,6 +463,7 @@ def formatear_precios(valor):
     precio_formateado = '${:,.2f}'.format(valor)
     return precio_formateado
 
+@jwt_cookie_required
 def generar_factura_pdf_venta(request, venta_id):
     venta = get_object_or_404(Ventas, id_venta=venta_id)
     detalles_venta = Detalleventa.objects.filter(id_venta=venta_id)
@@ -482,6 +541,7 @@ from reportlab.lib.units import inch
 from django.http import HttpResponse
 from django.db.models import Sum
 
+@jwt_cookie_required
 def generar_informe_pdf_ventas(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')

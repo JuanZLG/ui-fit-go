@@ -10,17 +10,21 @@ Es idempotente: si ya hay usuarios no vuelve a cargar nada.
 NO usar contra la base de produccion.
 """
 import random
+import re
 from datetime import timedelta
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
+from authenticator.security import hashear
 from customers.models import Clientes, Departamentos, Municipios
 from eproviders.models import Proveedores
 from products.models import Categorias, Marcas, Productos
 from purchases.models import Compras, Detallecompra
 from sales.models import Detalleventa, Pedidos, Ventas
+from ._seed_images import (RED, RED_BRIGHT, RED_DEEP, guardar_imagen_producto,
+                           guardar_tabla_nutricional)
 from users.models import Permisos, Roles, Rolespermisos, Usuarios
 
 
@@ -45,7 +49,7 @@ class Command(BaseCommand):
         Rolespermisos.objects.create(id_rol=admin, id_permiso=permisos)
         Usuarios.objects.create(
             id_rol=admin, correo="admin@tuiranfit.test",
-            nombre_usuario="Admin", contrasena="admin123", estado=1,
+            nombre_usuario="Admin", contrasena=hashear("admin123"), estado=1,
         )
 
         # --- Catalogo ---
@@ -64,14 +68,22 @@ class Command(BaseCommand):
             ("Shaker Pro 700ml", 4, 4, "N/A", "1 und", 40, 12000, 24000),
             ("Cinturon Lumbar Cuero", 4, 4, "N/A", "1 und", 7, 55000, 89000),
             ("C4 Original Pre-Workout", 2, 4, "Blue Raspberry", "30 serv", 2, 88000, 125000),
+            ("Proteina Vegana Plant 2lb", 0, 4, "Vainilla", "2 lb", 11, 120000, 169000),
+            ("Pre-entreno Agotado Demo", 2, 3, "Limon", "30 serv", 0, 90000, 129000),
         ]
+        acentos = [RED, RED_BRIGHT, RED_DEEP]
         productos = []
         for i, (nom, c, m, sab, pres, cant, costo, pub) in enumerate(catalogo):
+            slug = re.sub(r"[^a-z0-9]+", "-", nom.lower()).strip("-")
+            forma = "shaker" if "shaker" in nom.lower() else "cinturon" if "cinturon" in nom.lower() else "envase"
+            foto = guardar_imagen_producto(slug, nom, marcas[m].nombre_marca, pres, forma, acentos[i % 3])
+            tabla = guardar_tabla_nutricional(slug, nom, pres)
             productos.append(Productos.objects.create(
                 id_categoria=categorias[c], id_marca=marcas[m], nombre_producto=nom,
                 descripcion=f"{nom}. Suplemento de alta calidad para tu entrenamiento.",
                 cantidad=cant, fechaven=ahora + timedelta(days=180 + i * 20), sabor=sab,
                 presentacion=pres, estado=1, precio=costo, precio_pub=pub,
+                iProductImg=foto, iInfoImg=tabla,
             ))
 
         # --- Geografia, clientes y proveedores ---

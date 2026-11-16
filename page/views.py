@@ -10,7 +10,7 @@ from django.shortcuts import render
 from dotenv import load_dotenv
 from .models import Productos, Marcas, Categorias, Pedidos, DetallePedido, Clientes, Departamentos, Municipios
 from django.db.models import Sum
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 
 def build_context(request, extra_context=None):
     context = {}
@@ -21,10 +21,13 @@ def build_context(request, extra_context=None):
         productos__cantidad__gt=0
     ).distinct()
     
+    # Los menús solo muestran productos activos y con stock (antes aparecían también los agotados)
     context["categorias"] = Categorias.objects.filter(
         productos__estado=1,
         productos__cantidad__gt=0
-    ).distinct()
+    ).distinct().prefetch_related(
+        Prefetch('productos_set', queryset=Productos.objects.filter(estado=1, cantidad__gt=0), to_attr='disponibles')
+    )
     
     if extra_context:
         context.update(extra_context)
@@ -82,16 +85,16 @@ def filter_products(request):
 
     if re.match(r'^marca-\d+$', tipo):
         id_marca = tipo.split('-')[1]
-        productos = Productos.objects.filter(id_marca=id_marca, cantidad__gt=1)
+        productos = Productos.objects.filter(id_marca=id_marca, cantidad__gt=0)
         marca = Marcas.objects.get(id_marca=id_marca) 
         dynamicTitle = marca.nombre_marca
     elif re.match(r'^categoria-\d+$', tipo):
         id_categoria = tipo.split('-')[1]
-        productos = Productos.objects.filter(id_categoria=id_categoria, cantidad__gt=1)
+        productos = Productos.objects.filter(id_categoria=id_categoria, cantidad__gt=0)
         categoria = Categorias.objects.get(id_categoria=id_categoria) 
         dynamicTitle = categoria.nombre_categoria
     elif re.match(r'^producto-\d+$', tipo):
-        productos = Productos.objects.filter(estado=1, cantidad__gt=1).all()
+        productos = Productos.objects.filter(estado=1, cantidad__gt=0).all()
         dynamicTitle = "Suplementos"
 
     if productos:
@@ -132,7 +135,7 @@ def search_products(request):
     productos = Productos.objects.filter(
         Q(estado=1),
         Q(nombre_producto__icontains=buscar),
-        Q(cantidad__gt=1) 
+        Q(cantidad__gt=0) 
     )[:5]
 
     data = []
@@ -154,7 +157,7 @@ def search_products(request):
 def mas_vendidos(request):
     productos = Productos.objects.annotate(
         total_vendido=Sum('detalleventa__cantidad')
-    ).filter(estado=1, cantidad__gt=1).order_by('-total_vendido')[:5]
+    ).filter(estado=1, cantidad__gt=0).order_by('-total_vendido')[:5]
 
     data = []
     for producto in productos:
@@ -173,7 +176,7 @@ def añadir_pedido(request, id_producto):
     if request.method == 'POST':
         return JsonResponse({'success': True})
 
-    producto = Productos.objects.get(id_producto=id_producto)
+    producto = get_object_or_404(Productos, id_producto=id_producto, estado=1)
     precio_formateado = "${:,.2f}".format(producto.precio_pub).rstrip('0').rstrip('.')
     producto.precio_pub = precio_formateado
     sabores = producto.sabor.split(',')
@@ -184,88 +187,138 @@ def añadir_pedido(request, id_producto):
 
 
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+import logging
+from tuiranfitgo.inventory import StockError, DatosInvalidos, entero_positivo
+
+logger = logging.getLogger(__name__)
+
+MAX_LINEAS_PEDIDO = 50
+MAX_UNIDADES_LINEA = 999
+
+
+def _texto(post, clave, etiqueta, maximo, obligatorio=True):
+    valor = (post.get(clave) or '').strip()
+    if obligatorio and not valor:
+        raise DatosInvalidos(f'El campo «{etiqueta}» es obligatorio.')
+    if len(valor) > maximo:
+        raise DatosInvalidos(f'El campo «{etiqueta}» no puede superar {maximo} caracteres.')
+    return valor
+
+
+@transaction.atomic
+def _crear_pedido_publico(post):
+    """Valida el carrito contra el inventario y crea el pedido. Todo o nada.
+
+    El precio SIEMPRE sale de la base de datos: el navegador no decide cuánto se cobra.
+    """
+    documento = _texto(post, 'documento', 'documento', 25)
+    nombre = _texto(post, 'nombre', 'nombre', 60)
+    apellido = _texto(post, 'apellido', 'apellido', 60)
+    celular = _texto(post, 'celular', 'celular', 15)
+    correo = _texto(post, 'correo', 'correo', 100)
+    departamento = _texto(post, 'departamento', 'departamento', 50)
+    municipio = _texto(post, 'municipio', 'municipio', 60)
+    barrio = _texto(post, 'barrio', 'barrio', 40, obligatorio=False)
+    direccion = _texto(post, 'direccion', 'dirección', 50, obligatorio=False)
+    try:
+        validate_email(correo)
+    except ValidationError:
+        raise DatosInvalidos('El correo electrónico no es válido.')
+
+    try:
+        carrito = json.loads(post.get('carrito') or '{}')
+    except (json.JSONDecodeError, TypeError):
+        raise DatosInvalidos('El carrito no es válido.')
+    if not isinstance(carrito, dict) or not carrito:
+        raise DatosInvalidos('Tu pedido está vacío.')
+    if len(carrito) > MAX_LINEAS_PEDIDO:
+        raise DatosInvalidos('El pedido tiene demasiados productos.')
+
+    # --- Cliente: si ya existe NO se sobrescriben sus datos (el formulario es público) ---
+    cliente = Clientes.objects.filter(documento=documento).first()
+    if cliente is not None:
+        if not cliente.estado:
+            raise DatosInvalidos('Tu cuenta de cliente está inactiva. Escríbenos por WhatsApp para ayudarte.')
+        pendientes = {'nombres': nombre, 'apellidos': apellido, 'celular': celular,
+                      'barrio': barrio, 'direccion': direccion, 'correo': correo}
+        cambios = [campo for campo, valor in pendientes.items() if valor and not getattr(cliente, campo)]
+        for campo in cambios:
+            setattr(cliente, campo, pendientes[campo])
+        if cambios:
+            cliente.save(update_fields=cambios)
+    else:
+        # Departamentos y municipios son compartidos: se reutilizan, nunca se renombran
+        depto = Departamentos.objects.filter(nombre_departamento__iexact=departamento).first() \
+            or Departamentos.objects.create(nombre_departamento=departamento)
+        muni = Municipios.objects.filter(id_departamento=depto, nombre_municipio__iexact=municipio).first() \
+            or Municipios.objects.create(id_departamento=depto, nombre_municipio=municipio)
+        cliente = Clientes.objects.create(
+            id_municipio=muni, documento=documento, nombres=nombre, apellidos=apellido,
+            celular=celular, barrio=barrio, direccion=direccion, correo=correo, estado=True,
+        )
+
+    # --- Carrito: productos activos, con stock suficiente y precio de la base de datos ---
+    lineas, demanda = [], {}
+    for item in carrito.values():
+        if not isinstance(item, dict):
+            raise DatosInvalidos('El carrito no es válido.')
+        id_producto = entero_positivo(item.get('idDelProducto'), 'producto')
+        cantidad = entero_positivo(item.get('cantidad'), 'cantidad')
+        if cantidad > MAX_UNIDADES_LINEA:
+            raise DatosInvalidos('La cantidad solicitada es demasiado alta.')
+        producto = Productos.objects.filter(pk=id_producto, estado=1).first()
+        if producto is None:
+            raise StockError('Uno de los productos ya no está disponible.')
+        sabor = str(item.get('sabor') or '').strip()
+        sabores = [x.strip() for x in (producto.sabor or '').split(',') if x.strip()]
+        if sabores and sabor not in sabores:
+            raise DatosInvalidos(f'El sabor elegido para «{producto.nombre_producto}» no es válido.')
+        demanda[id_producto] = demanda.get(id_producto, 0) + cantidad
+        lineas.append((producto, sabor[:50], cantidad))
+
+    for id_producto, pedido_total in demanda.items():
+        producto = next(p for p, _, _ in lineas if p.id_producto == id_producto)
+        if pedido_total > max(producto.cantidad, 0):
+            raise StockError(f'Solo quedan {max(producto.cantidad, 0)} unidad(es) de «{producto.nombre_producto}».')
+
+    pedido = Pedidos.objects.create(id_venta=None, id_cliente=cliente, total_pedido=0, estado='en proceso')
+    total = 0.0
+    for producto, sabor, cantidad in lineas:
+        subtotal = producto.precio_pub * cantidad
+        total += subtotal
+        DetallePedido.objects.create(
+            id_pedido=pedido, id_producto=producto, sabor=sabor, cantidad=cantidad,
+            precio_uni=producto.precio_pub, precio_tot=subtotal,
+        )
+    pedido.total_pedido = total
+    pedido.save(update_fields=['total_pedido'])
+    return pedido, cliente
+
+
 @csrf_exempt
 def ver_pedido(request):
-    if request.method == 'POST':
-        try:
-            documento_cliente = request.POST['documento']
-            nombre_departamento = request.POST['departamento']
-            nombre_municipio = request.POST['municipio']
+    if request.method != 'POST':
+        return render(request, 'pageOrder.html')
 
-            cliente = Clientes.objects.filter(documento=documento_cliente).first()
+    try:
+        pedido, cliente = _crear_pedido_publico(request.POST)
+    except (DatosInvalidos, StockError) as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception:
+        logger.exception('Error al crear un pedido desde la tienda')
+        return JsonResponse({'error': 'No se pudo registrar el pedido. Inténtalo de nuevo.'}, status=500)
 
-            if cliente:
-                municipio_actual = cliente.id_municipio
-                departamento_actual = municipio_actual.id_departamento
+    # El correo se envía fuera de la transacción: si falla, el pedido ya quedó registrado
+    try:
+        pedido_email_proceso(f"{cliente.nombres} {cliente.apellidos}", cliente.correo)
+    except Exception:
+        logger.exception('No se pudo enviar el correo del pedido %s', pedido.id_pedido)
 
-                if departamento_actual.nombre_departamento != nombre_departamento:
-                    departamento_actual.nombre_departamento = nombre_departamento
-                    departamento_actual.save()
-
-                if municipio_actual.nombre_municipio != nombre_municipio:
-                    municipio_actual.nombre_municipio = nombre_municipio
-                    municipio_actual.save()
-
-                cliente.nombres = request.POST['nombre']
-                cliente.apellidos = request.POST['apellido']
-                cliente.celular = request.POST['celular']
-                cliente.barrio = request.POST['barrio']
-                cliente.direccion = request.POST['direccion']
-                cliente.correo = request.POST['correo']
-                cliente.save()
-            else:
-                departamento = Departamentos.objects.create(nombre_departamento=nombre_departamento)
-                municipio = Municipios.objects.create(nombre_municipio=nombre_municipio, id_departamento=departamento)
-
-                cliente = Clientes.objects.create(
-                    id_municipio=municipio,
-                    documento=documento_cliente,
-                    nombres=request.POST['nombre'],
-                    apellidos=request.POST['apellido'],
-                    celular=request.POST['celular'],
-                    barrio=request.POST['barrio'],
-                    direccion=request.POST['direccion'],
-                    correo=request.POST['correo'],
-                )
-
-            carrito = json.loads(request.POST.get('carrito', '{}'))
-
-            pedido = Pedidos.objects.create(
-                id_venta=None,
-                id_cliente=cliente,
-                total_pedido=0,  
-                estado='en proceso',
-            )
-
-            total_pedido = 0
-            for idProducto, detalles in carrito.items():
-                precio_uni = float(detalles['precio'].replace('$', '').replace(',', ''))
-                cantidad = int(detalles['cantidad'])
-                idDelProducto = int(detalles['idDelProducto'])
-                precio_tot = precio_uni * cantidad
-                total_pedido += precio_tot  
-
-                producto_obj = Productos.objects.get(id_producto=idDelProducto)
-                DetallePedido.objects.create(
-                    id_pedido=pedido,
-                    id_producto=producto_obj,
-                    sabor=detalles['sabor'],
-                    cantidad=cantidad,
-                    precio_uni=precio_uni,
-                    precio_tot=precio_tot,
-                )
-
-            pedido.total_pedido = total_pedido
-            pedido.save()
-
-            nombreCompletoCliente = cliente.nombres + " " + cliente.apellidos
-            correo = cliente.correo
-            pedido_email_proceso(nombreCompletoCliente, correo)
-            return JsonResponse({'message': 'Datos guardados correctamente'})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
-    return render(request, 'pageOrder.html')
+    return JsonResponse({'message': 'Datos guardados correctamente'})
 
 from django.template.loader import get_template
 
@@ -309,18 +362,14 @@ def obtener_cliente(request):
             'estado': cliente.estado,
             'nombres': cliente.nombres,
             'apellidos': cliente.apellidos,
-            'celular': cliente.celular,
-            'correo': cliente.correo,
-            'barrio': cliente.barrio,
-            'direccion': cliente.direccion,
             'municipio': cliente.id_municipio.nombre_municipio,
             'departamento': cliente.id_municipio.id_departamento.nombre_departamento,
         }
         return JsonResponse({'success': data})
     except Clientes.DoesNotExist:
         return JsonResponse({'error': 'No se encontró un cliente con el documento proporcionado.'})
-    except Exception as e:
-        return JsonResponse({'error': str(e)})
+    except Exception:
+        return JsonResponse({'error': 'No se pudo consultar el cliente.'})
 
 
 

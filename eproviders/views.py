@@ -39,12 +39,14 @@ def crearProveedor(request):
     return render(request, 'createProvider.html')
 
 
+@jwt_cookie_required
 def proveedor_unico(request):
     proveedor = request.GET.get("proveedor", "")
     proveedor_existe = Proveedores.objects.filter(nombre_proveedor=proveedor).exists()
     return JsonResponse({"existe": proveedor_existe})
 
 
+@jwt_cookie_required
 def proveedor_unico_edit(request):
     nombre = request.GET.get("nombre", "")
     id_prov = request.GET.get("id_prov", "")
@@ -81,6 +83,8 @@ def editarProveedor(request, id_proveedor):
 
 
 # @module_access_required('proveedores')
+@jwt_cookie_required
+@module_access_required('proveedores')
 def cambiarEstadoProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')
@@ -97,6 +101,7 @@ def cambiarEstadoProveedor(request):
 
 
 # @module_access_required('proveedores')
+@jwt_cookie_required
 def verDetallesProveedor(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_proveedor = request.GET.get('proveedor_id')

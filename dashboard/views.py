@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from tuiranfitgo.views import jwt_cookie_required
+from tuiranfitgo.views import jwt_cookie_required, module_access_required
 from django.http import JsonResponse
 from .models import Compras, Ventas, Clientes, Proveedores, Productos
 from django.db.models import Sum
@@ -21,15 +21,18 @@ def Home(request):
 def UserGuide(request):
     return render(request, 'manual.html')
 
+@jwt_cookie_required
 def contar_clientes_activos(request):
     clientes_activos = Clientes.objects.filter(estado=1).count()
     return JsonResponse({'clientes_activos': clientes_activos}) 
 
+@jwt_cookie_required
 def contar_pedidos_en_proceso(request):
     pedidos_en_proceso = Pedidos.objects.filter(estado='en proceso').count()
     data = {'pedidos_en_proceso': pedidos_en_proceso}
     return JsonResponse(data)
 
+@jwt_cookie_required
 def calcular_total_compras_y_ventas(request):
     try:
         current_year = timezone.now().year
@@ -59,6 +62,7 @@ def calcular_total_compras_y_ventas(request):
         return JsonResponse({'error': str(e)})
 
 locale.setlocale(locale.LC_TIME, 'es_CO.utf8')
+@jwt_cookie_required
 def obtener_datos_ventas_y_compras(request):
     periodo = request.GET.get('periodo', 'semana')
     hoy = datetime.now().date()
@@ -104,6 +108,7 @@ def obtener_datos_ventas_y_compras(request):
 from django.http import JsonResponse
 from .models import Productos
 
+@jwt_cookie_required
 def obtener_todos_los_productos(request):
     try:
         productos = Productos.objects.filter(estado=1)
@@ -120,6 +125,7 @@ def obtener_todos_los_productos(request):
     except Exception as e:
         return JsonResponse({'error': str(e)})
     
+@jwt_cookie_required
 def obtener_margen_ganancia(request):
     try:
         current_year = timezone.now().year
@@ -139,6 +145,7 @@ def obtener_margen_ganancia(request):
 from django.http import JsonResponse
 from django.db.models import Sum
 
+@jwt_cookie_required
 def obtener_datos_categorias_productos(request):
     try:
         datos_categorias = (

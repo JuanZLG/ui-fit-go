@@ -94,7 +94,7 @@ class Pedidos(models.Model):
         ('confirmado', 'Confirmado'),
     ]
     id_pedido = models.AutoField(primary_key=True)
-    id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta')
+    id_venta = models.ForeignKey('Ventas', models.DO_NOTHING, db_column='id_venta', null=True, blank=True)
     id_cliente = models.ForeignKey('Clientes', models.DO_NOTHING, db_column='id_cliente')
     fecha_pedido = models.DateField(default=timezone.now)
     total_pedido = models.FloatField()

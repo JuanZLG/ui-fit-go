@@ -23,6 +23,10 @@ import re
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
+import secrets
+import time
+from django.views.decorators.http import require_POST
+from .security import verificar, hashear, esta_hasheada, es_valida, REGLA_CONTRASENA
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -50,12 +54,13 @@ class loginmio(APIView):
             if usuario.estado == 0:
                 return JsonResponse({'error': 'Usuario inactivo'}, status=401)
 
-            if usuario.contrasena == contrasena:
+            if verificar(contrasena, usuario.contrasena):
+                if not esta_hasheada(usuario.contrasena):
+                    # Cuenta antigua con contraseña en texto plano: se migra a hash
+                    usuario.contrasena = hashear(contrasena)
+                    usuario.save(update_fields=['contrasena'])
                 payload = custom_jwt_payload_handler(usuario_data)
                 payload['id_rol'] = usuario_data['id_rol']
-
-                print(usuario_data)
-                print("payload:", payload)
                 token = jwt_encode_handler(payload)
                 response_data = {
                     'token': token,
@@ -105,31 +110,55 @@ def verificar_correo(request):
     if existe:
         user = Usuarios.objects.filter(correo=correo).first()
         user = user.nombre_usuario
-        codigo = str(random.randint(10000, 99999))
-        request.session['correo_almacenado'] = correo  
-        request.session['codigo_almacenado'] = codigo  
+        codigo = str(secrets.randbelow(90000) + 10000)
+        request.session['correo_almacenado'] = correo
+        request.session['codigo_almacenado'] = codigo
+        request.session['codigo_emitido'] = time.time()
+        request.session['codigo_intentos'] = 0
+        request.session['codigo_verificado'] = False
         send_email_codigo(user, correo, codigo)
     return JsonResponse({'existe': existe})
 
 #---------------------------------------------------------------------------------------------------------------
 def verificar_codigo(request):
-    codigo_ingresado = request.GET.get('codigo')
-    codigo_almacenado = request.session.get('codigo_almacenado') 
-    if codigo_ingresado == codigo_almacenado:
-        return JsonResponse({'success': True})
-    else:
+    codigo_ingresado = request.GET.get('codigo') or ''
+    codigo_almacenado = request.session.get('codigo_almacenado')
+    emitido = request.session.get('codigo_emitido', 0)
+    intentos = request.session.get('codigo_intentos', 0)
+
+    # El código caduca a los 10 minutos y permite 5 intentos
+    if not codigo_almacenado or time.time() - emitido > 600 or intentos >= 5:
         return JsonResponse({'success': False})
+
+    request.session['codigo_intentos'] = intentos + 1
+    if secrets.compare_digest(codigo_ingresado, codigo_almacenado):
+        request.session['codigo_verificado'] = True
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 #------------------------------------------------------------------------------------------------------------------
 
 
+@require_POST
 def restablecer_contrasena(request):
-    if request.method == 'POST':
-        nueva_contrasena = request.POST.get('newPassword')
-        correo = request.session.get('correo_almacenado') 
+    # Solo se puede cambiar la contraseña si el código enviado al correo fue verificado
+    if not request.session.get('codigo_verificado'):
+        return JsonResponse({'error': 'Primero debes verificar el código enviado a tu correo.'}, status=403)
 
-        user = Usuarios.objects.get(correo=correo)
-        user.contrasena = nueva_contrasena
-        user.save()
+    nueva_contrasena = request.POST.get('newPassword') or ''
+    if not es_valida(nueva_contrasena):
+        return JsonResponse({'error': REGLA_CONTRASENA}, status=400)
+
+    correo = request.session.get('correo_almacenado')
+    user = Usuarios.objects.filter(correo=correo).first()
+    if user is None:
+        return JsonResponse({'error': 'Usuario no encontrado.'}, status=404)
+
+    user.contrasena = hashear(nueva_contrasena)
+    user.save(update_fields=['contrasena'])
+
+    # El código es de un solo uso
+    for clave in ('correo_almacenado', 'codigo_almacenado', 'codigo_emitido', 'codigo_intentos', 'codigo_verificado'):
+        request.session.pop(clave, None)
     return redirect('login_view')
 
 

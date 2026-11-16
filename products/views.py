@@ -11,6 +11,65 @@ from products.models import Productos, Categorias, Marcas
 import base64
 from django.core.files.base import ContentFile
 from tuiranfitgo.views import jwt_cookie_required, module_access_required
+import re
+from django.utils.dateparse import parse_date, parse_datetime
+from PIL import Image
+from tuiranfitgo.inventory import DatosInvalidos, entero_no_negativo, nombre_imagen
+
+MAX_IMAGEN_BYTES = 5 * 1024 * 1024
+
+
+def _texto(post, clave, etiqueta, maximo):
+    valor = (post.get(clave) or '').strip()
+    if not valor:
+        raise DatosInvalidos(f'El campo «{etiqueta}» es obligatorio.')
+    if len(valor) > maximo:
+        raise DatosInvalidos(f'El campo «{etiqueta}» no puede superar {maximo} caracteres.')
+    return valor
+
+
+def _precio(valor, etiqueta):
+    """Los precios llegan formateados ("12.500"): se quitan los separadores de miles."""
+    limpio = str(valor or '').replace(',', '').replace('.', '').strip()
+    if not re.fullmatch(r'\d+', limpio):
+        raise DatosInvalidos(f'El campo «{etiqueta}» debe ser un valor numérico.')
+    return float(limpio)
+
+
+def _imagen(archivo, etiqueta):
+    """Acepta solo imágenes reales de hasta 5 MB."""
+    if archivo is None:
+        return None
+    if archivo.size > MAX_IMAGEN_BYTES:
+        raise DatosInvalidos(f'La imagen «{etiqueta}» supera los 5 MB.')
+    try:
+        Image.open(archivo).verify()
+    except Exception:
+        raise DatosInvalidos(f'El archivo de «{etiqueta}» no es una imagen válida.')
+    archivo.seek(0)
+    return archivo
+
+
+def _datos_producto(post):
+    """Valida y normaliza el formulario de producto (crear y editar)."""
+    fecha_txt = (post.get('iFechaven') or '').strip()
+    fecha = parse_datetime(fecha_txt) or parse_date(fecha_txt)
+    if fecha is None:
+        raise DatosInvalidos('La fecha de vencimiento no es válida (usa AAAA-MM-DD).')
+    return {
+        'nombre_producto': _texto(post, 'iNombre', 'nombre', 75),
+        'descripcion': _texto(post, 'iDescripcion', 'descripción', 400),
+        'cantidad': entero_no_negativo(post.get('iCantidad'), 'cantidad'),
+        'fechaven': fecha,
+        'sabor': _texto(post, 'iSabor', 'sabor', 50),
+        'presentacion': _texto(post, 'iServices', 'presentación', 45),
+        'precio': _precio(post.get('iPrice'), 'precio de compra'),
+        'precio_pub': _precio(post.get('iPubPrice'), 'precio al público'),
+    }
+
+
+def _error_json(mensaje, status=400):
+    return JsonResponse({'success': False, 'error': mensaje}, status=status)
 
 
 @jwt_cookie_required
@@ -39,46 +98,25 @@ def createProduct(request):
     categorias = Categorias.objects.all()
         
     if request.method == 'POST':
-        nombre = request.POST['iNombre']
-        descripcion = request.POST['iDescripcion']
-        cantidad = request.POST['iCantidad']
-        fechavencimiento = request.POST['iFechaven']
-        sabor = request.POST['iSabor']
-        tamano = request.POST['iServices']
-        precio = request.POST['iPrice']
-        precioven = request.POST['iPubPrice']
-        categoria = request.POST['iCategoria']
-        marca = request.POST['iMarca']
-        iProductImg = request.FILES['iProductImg']
-        iInfoImg = request.FILES['iInfoImg']
-        
-        
-        m = Marcas.objects.get(id_marca=marca)
-        c = Categorias.objects.get(id_categoria=categoria)
-        
-        precio = precio.replace(',', '').replace('.', '')
-        precio = float(precio)
-        
-        precioven = precioven.replace(',', '').replace('.', '')
-        precioven = float(precioven)
+        try:
+            datos = _datos_producto(request.POST)
+            marca = Marcas.objects.filter(id_marca=request.POST.get('iMarca') or 0).first()
+            categoria = Categorias.objects.filter(id_categoria=request.POST.get('iCategoria') or 0).first()
+            if marca is None or categoria is None:
+                raise DatosInvalidos('Selecciona una marca y una categoría válidas.')
+            img_producto = _imagen(request.FILES.get('iProductImg'), 'imagen del producto')
+            img_info = _imagen(request.FILES.get('iInfoImg'), 'información nutricional')
+            if img_producto is None:
+                raise DatosInvalidos('La imagen del producto es obligatoria.')
+        except DatosInvalidos as e:
+            return _error_json(str(e))
 
         Productos.objects.create(
-            id_categoria=c,
-            id_marca=m,
-            nombre_producto=nombre,
-            descripcion=descripcion,
-            cantidad=cantidad,
-            fechaven=fechavencimiento,
-            sabor=sabor,
-            presentacion=tamano,
-            precio=precio,
-            precio_pub=precioven,
-            iProductImg=iProductImg,
-            iInfoImg=iInfoImg,
+            id_categoria=categoria, id_marca=marca,
+            iProductImg=img_producto, iInfoImg=img_info, **datos,
         )
-        
         return JsonResponse({'success': True})
-    
+
     return render(request, 'createProducts.html', {"marcas": marcas, "categorias": categorias})
 
 @jwt_cookie_required
@@ -88,75 +126,47 @@ def editProduct(request, id_producto):
     categorias = Categorias.objects.all()
     
     if request.method == 'POST':
-        category = request.POST['iCategoria']
-        brand = request.POST['iMarca']
-        name = request.POST['iNombre']
-        desc = request.POST['iDescripcion']
-        vdate = request.POST['iFechaven']
-        cant = request.POST['iCantidad']
-        flavor = request.POST['iSabor']
-        services = request.POST['iServices']
-        pPrice = request.POST['iPrice']
-        precioven = request.POST['iPubPrice']
+        producto = Productos.objects.filter(id_producto=id_producto).first()
+        if producto is None:
+            return _error_json('Producto no encontrado.', 404)
+        try:
+            datos = _datos_producto(request.POST)
+            marca = Marcas.objects.filter(id_marca=request.POST.get('iMarca') or 0).first()
+            categoria = Categorias.objects.filter(id_categoria=request.POST.get('iCategoria') or 0).first()
+            if marca is None or categoria is None:
+                raise DatosInvalidos('Selecciona una marca y una categoría válidas.')
+            img_producto = _imagen(request.FILES.get('iProductImg'), 'imagen del producto')
+            img_info = _imagen(request.FILES.get('iInfoImg'), 'información nutricional')
+        except DatosInvalidos as e:
+            return _error_json(str(e))
 
-        m = Marcas.objects.get(id_marca=brand)
-        c = Categorias.objects.get(id_categoria=category)
-
-        pPrice = pPrice.replace(',', '').replace('.', '')
-        pPrice = int(pPrice)
-
-        precioven = precioven.replace(',', '').replace('.', '')
-        # precioven = float(precioven)
-
-        iProductImg = request.FILES.get('iProductImg', None)
-        iInfoImg = request.FILES.get('iInfoImg', None)
-
-        productos = Productos.objects.filter(id_producto=id_producto)
-
-        
-        # products.precio = '{:,.0f}'.format(products.precio)
-
-        if iProductImg:
-            productos.update(iProductImg=iProductImg)
-        if iInfoImg:
-            productos.update(iInfoImg=iInfoImg)
-        productos.update(
-            id_categoria=c,
-            id_marca=m,
-            nombre_producto=name,
-            descripcion=desc,
-            fechaven=vdate,
-            cantidad=cant,
-            sabor=flavor,
-            presentacion=services,
-            precio=pPrice,
-            precio_pub=precioven,
-            estado=1
-        )
-
-        response_data = {'success': True}
-        return JsonResponse(response_data)
+        # Editar un producto NO cambia su estado (antes lo reactivaba sin avisar)
+        for campo, valor in datos.items():
+            setattr(producto, campo, valor)
+        producto.id_categoria, producto.id_marca = categoria, marca
+        if img_producto:
+            producto.iProductImg = img_producto
+        if img_info:
+            producto.iInfoImg = img_info
+        producto.save()
+        return JsonResponse({'success': True})
 
     products = Productos.objects.get(id_producto=id_producto)
     products.precio_pub = int(products.precio_pub)
     products.precio = int(products.precio)
     
     if products.iInfoImg:
-        if isinstance(products.iInfoImg, bytes):
-            products.iInfoImg_name = products.iInfoImg.split(b'/')[-1].decode('utf-8')
-        else:
-            products.iInfoImg_name = products.iInfoImg.name.split('/')[-1]
-    
+        products.iInfoImg_name = nombre_imagen(products.iInfoImg).split('/')[-1]
+
     if products.iProductImg:
-        if isinstance(products.iProductImg, bytes):
-            products.iProductImg_name = products.iProductImg.split(b'/')[-1].decode('utf-8')
-        else:
-            products.iProductImg_name = products.iProductImg.name.split('/')[-1]
+        products.iProductImg_name = nombre_imagen(products.iProductImg).split('/')[-1]
 
 
     return render(request, 'editProducts.html', {"Product": products, "marcas": marcas, "categorias": categorias})
 
 
+@jwt_cookie_required
+@module_access_required('productos')
 def cambiarEstadoDeProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_producto = request.GET.get('producto_id')
@@ -174,6 +184,7 @@ def cambiarEstadoDeProducto(request):
 
 
 
+@jwt_cookie_required
 def verDetallesProducto(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_producto = request.GET.get('producto_id')
@@ -192,7 +203,7 @@ def verDetallesProducto(request):
                     'status': producto.estado,
                     'servicios': producto.presentacion,
                     'precio_pub': producto.precio_pub,
-                    'img': producto.iProductImg.decode('utf8')
+                    'img': nombre_imagen(producto.iProductImg)
                 }
                 return JsonResponse({'success': data})
             except Productos.DoesNotExist:
@@ -225,6 +236,8 @@ def crear_marca(request):
     return render(request, 'productsHome.html', {'marcas': marcas})
 
 
+@jwt_cookie_required
+@module_access_required('productos')
 def eliminar_categoria(request):
     if request.method == 'POST':
         try:
@@ -247,6 +260,8 @@ def eliminar_categoria(request):
         return JsonResponse({'error': 'Método no permitido.'})
 
 
+@jwt_cookie_required
+@module_access_required('productos')
 def eliminar_marca(request):
     if request.method == 'POST':
         try:

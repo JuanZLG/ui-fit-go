@@ -1,4 +1,5 @@
 
+from authenticator.security import hashear, es_valida, generar_temporal, REGLA_CONTRASENA
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 import json
@@ -72,7 +73,6 @@ def change_password(request):
     try:
         # Obtén el ID del usuario desde el payload del token
         user_name = request.user.get('correo')
-        print(f'user_name: {user_name}')
 
         # Busca el usuario en la base de datos
         user = get_object_or_404(Usuarios, correo=user_name)
@@ -80,15 +80,14 @@ def change_password(request):
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
 
-        print(f'new_password: {new_password}')
-        print(f'confirm_password: {confirm_password}')
-
         if new_password != confirm_password:
             return HttpResponseBadRequest('Las contraseñas no coinciden.')
+        if not es_valida(new_password):
+            return HttpResponseBadRequest(REGLA_CONTRASENA)
 
-        # Cambia la contraseña y guarda el usuario
-        user.contrasena = new_password
-        user.save()
+        # Cambia la contraseña (se guarda con hash) y guarda el usuario
+        user.contrasena = hashear(new_password)
+        user.save(update_fields=['contrasena'])
 
         return JsonResponse({'detail': 'Contraseña actualizada correctamente.'})
 
@@ -99,6 +98,8 @@ def change_password(request):
 
 # @jwt_cookie_required
 # @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def cambiarEstadoDeUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -115,6 +116,7 @@ def cambiarEstadoDeUsuario(request):
 
 # @jwt_cookie_required
 # @module_access_required('usuarios')
+@jwt_cookie_required
 def verDetallesUsuario(request):
     if request.method == "GET" and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         id_usuario = request.GET.get('usuario_id')
@@ -158,9 +160,12 @@ def createUser(request):
         id_rol = request.POST['iRole']
         nombre_usuario = request.POST['iNombre']
         correo = request.POST['iCorreo']
-        contrasena = create_password()
+        if Usuarios.objects.filter(correo=correo).exists():
+            return JsonResponse({'success': False, 'error': 'Ya existe un usuario con ese correo.'}, status=400)
+        contrasena = generar_temporal()
         rl = Roles.objects.get(id_rol=id_rol)
-        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=contrasena)
+        # En la base se guarda el hash; el correo lleva la contraseña temporal
+        Usuarios.objects.create(id_rol=rl, nombre_usuario=nombre_usuario, correo=correo, contrasena=hashear(contrasena))
         send_email_create(nombre_usuario, contrasena, correo)
 
         return JsonResponse({'success': True})
@@ -343,12 +348,14 @@ def create_rol(request):
     return JsonResponse(response_data)
 
 
+@jwt_cookie_required
 def email_unique(request):
     email = request.GET.get("email", "")
     email_existe = Usuarios.objects.filter(correo=email).exists()
     return JsonResponse({"existe": email_existe})
 
 
+@jwt_cookie_required
 def email_unique_edit(request):
     email = request.GET.get("email", "")
     id_usuario = request.GET.get("id_usuario", "")
@@ -360,6 +367,7 @@ def email_unique_edit(request):
 
 @jwt_cookie_required
 # @module_access_required('usuarios')
+@jwt_cookie_required
 def obtener_datos(request):
         id_rol = request.GET.get('param')
         rolespermisos = Rolespermisos.objects.get(id_rol=id_rol)
@@ -392,6 +400,8 @@ def rol_unico(request):
 
 @jwt_cookie_required
 # @module_access_required('usuarios')
+@jwt_cookie_required
+@module_access_required('usuarios')
 def eliminar_rol(request):
     id_rol = request.GET.get('idrol')
     
