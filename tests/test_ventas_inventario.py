@@ -184,3 +184,62 @@ def test_verificar_stock(admin_client, catalogo):
     assert r == {'supera_stock': True, 'cantidad_disponible': 3}
     assert admin_client.get(reverse('verificar_stock'), {'id_producto': p.id_producto, 'cantidad': 3}).json()['supera_stock'] is False
     assert admin_client.get(reverse('verificar_stock'), {'id_producto': 99999, 'cantidad': 1}).json()['supera_stock'] is True
+
+
+def test_buscar_cliente_sin_pedido_incluye_clientes_con_historial(admin_client, cliente_venta):
+    """Un cliente que ya tuvo pedidos debe poder comprar 'sin pedido' (antes no aparecía y no se podía vender)."""
+    Pedidos.objects.create(id_venta=None, id_cliente_id=cliente_venta.id_cliente, total_pedido=0, estado='confirmado')
+    url = reverse('buscar_cliente')
+    sin = admin_client.get(url, {'nombreCliente': 'Ana', 'tipoPedido': 'sin pedido'}).json()['resultados']
+    assert [c['documento'] for c in sin] == ['123']
+    assert type(sin[0]['estado']) is int and sin[0]['estado'] == 1      # el front compara con === 1
+    # tambien se puede buscar por documento
+    assert admin_client.get(url, {'nombreCliente': '123', 'tipoPedido': 'sin pedido'}).json()['resultados']
+    # con pedido: solo si tiene uno en proceso
+    assert admin_client.get(url, {'nombreCliente': 'Ana', 'tipoPedido': 'con pedido'}).json()['resultados'] == []
+    Pedidos.objects.create(id_venta=None, id_cliente_id=cliente_venta.id_cliente, total_pedido=0, estado='en proceso')
+    assert len(admin_client.get(url, {'nombreCliente': 'Ana', 'tipoPedido': 'con pedido'}).json()['resultados']) == 1
+
+
+# ------------------------------------------------------------------ informes PDF
+def _venta_de_ejemplo(admin_client, catalogo, cliente_venta):
+    p = catalogo(cantidad=10, precio=100, precio_pub=150)
+    vender(admin_client, payload(p, 3, precio_venta=150))
+    return Ventas.objects.get(), p
+
+
+def test_comprobante_de_venta_es_un_pdf_con_precio_de_venta(admin_client, catalogo, cliente_venta, monkeypatch):
+    venta, _ = _venta_de_ejemplo(admin_client, catalogo, cliente_venta)
+    from tuiranfitgo import reports
+    capturado = []
+    original = reports.Informe.tabla
+    monkeypatch.setattr(reports.Informe, 'tabla',
+                        lambda self, enc, filas, *a, **k: (capturado.append((enc, filas)), original(self, enc, filas, *a, **k))[1])
+    r = admin_client.get(reverse('generar_factura_pdf_venta', args=[venta.id_venta]))
+    assert r.status_code == 200 and r['Content-Type'] == 'application/pdf' and r.content.startswith(b'%PDF')
+    assert 'comprobante_venta_' in r['Content-Disposition']
+    encabezados, filas = capturado[0]
+    assert filas[0][2] == '$150' and filas[0][4] == '$450'         # precio de VENTA, no el de compra ($100)
+
+
+def test_informe_de_ventas_por_rango(admin_client, catalogo, cliente_venta):
+    _venta_de_ejemplo(admin_client, catalogo, cliente_venta)
+    url = reverse('generar_informe_pdf_ventas')
+    hoy = Ventas.objects.get().fechareg
+    r = admin_client.post(url, {'fecha_inicio': str(hoy), 'fecha_fin': str(hoy)})
+    assert r.status_code == 200 and r.content.startswith(b'%PDF') and len(r.content) > 2000
+    # rango sin ventas: sigue generando un PDF con un aviso
+    vacio = admin_client.post(url, {'fecha_inicio': '2000-01-01', 'fecha_fin': '2000-01-31'})
+    assert vacio.status_code == 200 and vacio.content.startswith(b'%PDF')
+
+
+@pytest.mark.parametrize('datos', [{}, {'fecha_inicio': '2026-02-30', 'fecha_fin': '2026-03-01'},
+                                   {'fecha_inicio': '2026-05-10', 'fecha_fin': '2026-05-01'}, {'fecha_inicio': 'hoy', 'fecha_fin': 'x'}])
+def test_informe_de_ventas_valida_las_fechas(admin_client, datos):
+    r = admin_client.post(reverse('generar_informe_pdf_ventas'), datos)
+    assert r.status_code == 400 and not r.content.startswith(b'%PDF')
+
+
+def test_informes_exigen_sesion(anonimo):
+    assert anonimo.post(reverse('generar_informe_pdf_ventas'), {}).status_code == 302
+    assert anonimo.get(reverse('generar_factura_pdf_venta', args=[1])).status_code == 302

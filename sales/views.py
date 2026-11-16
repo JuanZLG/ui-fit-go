@@ -1,6 +1,7 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import locale
+import os
 import smtplib
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -318,26 +319,24 @@ def buscar_pedidos(cliente):
 
 @jwt_cookie_required
 def buscar_cliente(request):
-    nombre_cliente = request.GET.get("nombreCliente")
+    nombre_cliente = (request.GET.get("nombreCliente") or "").strip()
     tipoPedido = request.GET.get("tipoPedido")
     palabras_clave = nombre_cliente.split()
     clientes_encontrados = Clientes.objects.all()
-    
+
+    # Cada palabra puede coincidir con el nombre, el apellido o el documento
     for palabra_clave in palabras_clave:
         clientes_encontrados = clientes_encontrados.filter(
             Q(nombres__icontains=palabra_clave) | Q(apellidos__icontains=palabra_clave)
+            | Q(documento__icontains=palabra_clave)
         )
-    
+
     if tipoPedido == "con pedido":
-        clientes_con_pedido = clientes_encontrados.filter(
-            pedidos__estado="en proceso"
-        ).distinct()
-        clientes_encontrados = clientes_con_pedido
-    elif tipoPedido == "sin pedido":
-        clientes_sin_pedido = clientes_encontrados.filter(
-            pedidos__isnull=True
-        ).distinct()
-        clientes_encontrados = clientes_sin_pedido
+        # Solo clientes que tienen un pedido en proceso por confirmar
+        clientes_encontrados = clientes_encontrados.filter(pedidos__estado="en proceso").distinct()
+    # "sin pedido": cualquier cliente puede comprar sin pedido previo, tenga o no historial de pedidos
+    # (antes solo aparecian los clientes que NUNCA habian hecho un pedido y la venta quedaba bloqueada)
+    clientes_encontrados = clientes_encontrados[:30]
 
     resultados = []
     for cliente in clientes_encontrados:
@@ -345,7 +344,7 @@ def buscar_cliente(request):
         resultados.append({
             "documento": cliente.documento,
             "nombre_cliente": f"{cliente.nombres} {cliente.apellidos}",
-            "estado": cliente.estado,
+            "estado": 1 if cliente.estado else 0,     # siempre 0/1 (segun la base llegaba como true/false)
             "pedidos": pedidos_cliente,  
         })
 
@@ -446,182 +445,93 @@ def cargar_pedidos(request):
     detalles_pedidos = list(DetallePedido.objects.filter(id_pedido__in=ids_pedidos).values())
     return JsonResponse({'detalles': detalles_pedidos})
 
-
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
-from reportlab.lib.enums import TA_CENTER
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from .models import Detalleventa, Ventas
-import os
+from tuiranfitgo.reports import Informe, cop, fecha, rango_de_fechas
 
-def formatear_precios(valor):
-    valor = round(valor, 2)
-    precio_formateado = '${:,.2f}'.format(valor)
-    return precio_formateado
+
+def _porcentaje(texto):
+    """'10' -> '10%'; 'No aplica' / '0' -> '—'."""
+    try:
+        valor = float(str(texto).replace('%', '').strip())
+    except ValueError:
+        return '—'
+    return f'{valor:g}%' if valor > 0 else '—'
+
 
 @jwt_cookie_required
+@module_access_required('ventas')
 def generar_factura_pdf_venta(request, venta_id):
+    """Comprobante de una venta. Muestra el precio de VENTA (antes mostraba el de compra)."""
     venta = get_object_or_404(Ventas, id_venta=venta_id)
-    detalles_venta = Detalleventa.objects.filter(id_venta=venta_id)
+    cliente = venta.id_cliente
+    detalles = Detalleventa.objects.filter(id_venta=venta_id).select_related('id_producto')
 
-    totalVenta = 0
-    detalles = []
+    referencia = f'N° {venta.id_venta:06d}' + ('  ·  ANULADA' if venta.estado == 0 else '')
+    informe = Informe('Comprobante de venta', fecha(venta.fechareg), referencia)
+    informe.espacio(2)
+    informe.ficha([
+        ('Cliente', f'{cliente.nombres} {cliente.apellidos}'.strip()), ('Documento', cliente.documento),
+        ('Correo', cliente.correo), ('Fecha de venta', fecha(venta.fechareg)),
+    ])
+    informe.seccion('Detalle de la venta')
 
-    for detalle in detalles_venta:
-        producto = detalle.id_producto.nombre_producto
-        precioUnitario = formatear_precios(detalle.precio_compra)  # Usar precio_compra o precio_venta según corresponda
-        cantidad = detalle.cantidad
-        totalProducto = formatear_precios(detalle.precio_tot)
-        totalVenta += detalle.precio_tot
+    filas, subtotal = [], 0
+    for d in detalles:
+        filas.append([d.id_producto.nombre_producto, d.cantidad, cop(d.precio_venta),
+                      _porcentaje(d.descuentoProducto), cop(d.precio_tot)])
+        subtotal += d.precio_tot
+    informe.tabla(['Producto', 'Cant.', 'Precio unitario', 'Desc.', 'Total'], filas, [226, 44, 90, 50, 122], 'LCRCR')
 
-        detalles.append([producto, precioUnitario, cantidad, totalProducto])
+    lineas = [('Subtotal', cop(subtotal))]
+    descuento = subtotal - venta.totalVenta
+    if descuento > 0.5:
+        porcentaje = _porcentaje(venta.descuentoVenta)
+        lineas.append((f'Descuento {porcentaje}' if porcentaje != '—' else 'Descuento', '-' + cop(descuento)))
+    informe.totales(lineas, ('Total', cop(venta.totalVenta)))
+    informe.espacio(26)
+    informe.parrafo('Gracias por tu compra. Conserva este comprobante como soporte de tu pedido.')
+    return informe.respuesta(f'comprobante_venta_{venta.id_venta:06d}.pdf')
 
-    totalVentaFormateado = formatear_precios(totalVenta)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=Informe_venta_{venta.id_cliente.nombres}_{venta.id_cliente.apellidos}.pdf'
-
-    buffer = response
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
-
-    styles = getSampleStyleSheet()
-
-    elements = []
-
-    logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
-    logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
-    logo.drawHeight = 1.5 * inch
-    logo.drawWidth = 1.5 * inch
-    elements.append(logo)
-
-    elements.append(Spacer(1, 6))
-    elements.append(Paragraph('Informe de Venta', styles['Title']))
-    elements.append(Spacer(1, 6))
-
-    centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
-
-    elements.append(Paragraph(f'<b>Cliente:</b> {venta.id_cliente.nombres}', centered_style))
-    elements.append(Paragraph(f'<b>Documento:</b> {venta.id_cliente.documento}', centered_style))
-    elements.append(Paragraph(f'<b>Fecha de Registro:</b> {venta.fechareg}', centered_style))
-
-    elements.append(Spacer(1, 12))
-
-    data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
-    data.extend(detalles)
-    data.append(["", "", "", totalVentaFormateado])  
-
-    t = Table(data, colWidths=[180, 80, 60, 100])
-    t.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.grey)
-    ]))
-
-    elements.append(t)
-
-    doc.build(elements)
-
-    return response
-
-from io import BytesIO
-from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
-from reportlab.lib.units import inch
-from django.http import HttpResponse
-from django.db.models import Sum
 
 @jwt_cookie_required
+@module_access_required('ventas')
 def generar_informe_pdf_ventas(request):
-    if request.method == 'POST':
-        fecha_inicio = request.POST.get('fecha_inicio')
-        fecha_fin = request.POST.get('fecha_fin')
-        
-        ventas = Ventas.objects.filter(
-            fechareg__range=(fecha_inicio, fecha_fin),
-            estado=1
-        )
+    if request.method != 'POST':
+        return HttpResponse('Solicitud no válida.', status=405)
+    try:
+        inicio, fin = rango_de_fechas(request.POST)
+    except ValueError as e:
+        return HttpResponse(str(e), status=400)
 
-        totalventa = ventas.aggregate(Sum('totalVenta'))['totalVenta__sum'] or 0
+    ventas = list(Ventas.objects.filter(fechareg__range=(inicio, fin), estado=1)
+                  .select_related('id_cliente').order_by('fechareg', 'id_venta'))
+    informe = Informe('Informe de ventas', f'Del {fecha(inicio)} al {fecha(fin)}', 'Ventas registradas')
+    nombre = f'informe_ventas_{inicio}_{fin}.pdf'
+    if not ventas:
+        informe.aviso('No se encontraron ventas en el período seleccionado.')
+        return informe.respuesta(nombre)
 
-        response = HttpResponse(content_type='application/force-download')
-        response['Content-Disposition'] = f'attachment; filename=informe_ventas.pdf'
+    total = sum(v.totalVenta for v in ventas)
+    margen = sum(v.margenGanancia for v in ventas)
+    informe.espacio(2)
+    informe.tarjetas([('Total vendido', cop(total)), ('N° de ventas', str(len(ventas))),
+                      ('Ticket promedio', cop(total / len(ventas))),
+                      ('Margen de ganancia', cop(margen))])
 
-        buffer = response
-        doc = SimpleDocTemplate(buffer, pagesize=letter)
-        styles = getSampleStyleSheet()
+    top = (Detalleventa.objects.filter(id_venta__in=[v.id_venta for v in ventas], estado=1)
+           .values('id_producto__nombre_producto')
+           .annotate(unidades=Sum('cantidad'), ingresos=Sum('precio_tot')).order_by('-unidades')[:5])
+    if top:
+        informe.seccion('Productos más vendidos')
+        informe.tabla(['#', 'Producto', 'Unidades', 'Ingresos'],
+                      [[i, t['id_producto__nombre_producto'], t['unidades'], cop(t['ingresos'])] for i, t in enumerate(top, 1)],
+                      [30, 292, 80, 130], 'CLCR')
 
-        elements = []
-        logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
-        logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
-        logo.drawHeight = 1.5 * inch
-        logo.drawWidth = 1.5 * inch
-        elements.append(logo)
-
-        elements.append(Spacer(1, 6))
-        elements.append(Paragraph('Informe de Ventas', styles['Title']))
-        elements.append(Spacer(1, 6))
-        
-        # Estilo personalizado para el período de tiempo
-        periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
-        periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
-        
-        elements.append(periodo_paragraph)
-        elements.append(Spacer(1, 12))
-
-        if ventas:
-            detalles = []
-
-            for venta in ventas:
-                clientes = venta.id_cliente.nombres
-                documento_nit = venta.id_cliente.documento
-                fecha_registro = venta.fechareg
-                total_venta = formatear_precios(venta.totalVenta)
-                detalles.append([clientes, documento_nit, fecha_registro, total_venta])
-
-            totalventaFormateado = formatear_precios(totalventa)
-
-            data = [["Clientes", "Documento", "Fecha de Registro", "Total"]]
-            data.extend(detalles)
-            data.append(["", "", "", totalventaFormateado])
-
-            t = Table(data, colWidths=[180, 100, 100, 100])
-            t.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.grey)
-            ]))
-
-            elements.append(t)
-        else:
-            # Cambiamos el color del mensaje a rojo y lo centramos
-            mensaje_style = ParagraphStyle(name='MensajeStyle', alignment=TA_CENTER, textColor=colors.red)
-            mensaje = Paragraph("No se encontraron ventas en el período de tiempo.", mensaje_style)
-            elements.append(mensaje)
-
-        try:
-            doc.build(elements)
-            print("PDF generado con éxito")
-            print(response)
-        except Exception as e:
-            print(f"Error al generar el PDF: {str(e)}")
-            return HttpResponse("No se pudo generar el PDF")
-
-        return response
-
-    return HttpResponse("No se ha enviado una solicitud POST")
-
+    informe.seccion('Detalle de ventas')
+    filas = [[f'{v.id_venta:06d}', fecha(v.fechareg), f'{v.id_cliente.nombres} {v.id_cliente.apellidos}'.strip(),
+              v.id_cliente.documento, cop(v.totalVenta)] for v in ventas]
+    informe.tabla(['N°', 'Fecha', 'Cliente', 'Documento', 'Total'], filas, [60, 70, 200, 90, 112], 'LLLLR',
+                  total=['', '', '', 'TOTAL', cop(total)])
+    return informe.respuesta(nombre)

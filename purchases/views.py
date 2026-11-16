@@ -315,197 +315,96 @@ def obtener_detalles_compra(request, compra_id):
 #     return render(request, 'editPurchases.html', {"detalles": detalles, "compra": compra})
 
 
-def formatear_precios(valor):
-    valor = round(valor, 2)
-    precio_formateado = '${:,.2f}'.format(valor)
-    return precio_formateado
 def generar_qr_code(content):
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=10, border=2)
     qr.add_data(content)
     qr.make(fit=True)
-    img = qr.make_image(fill_color="black", back_color="white")
-    return img
+    return qr.make_image(fill_color="black", back_color="white")
 
 
 @jwt_cookie_required
+@module_access_required('compras')
 def generar_factura_pdf(request, compra_id):
+    """Comprobante de una compra, con código QR de verificación."""
+    from io import BytesIO
+    from django.http import HttpResponse
+    from reportlab.platypus import Image as PdfImage, Table as PdfTable, TableStyle as PdfTableStyle, Paragraph as PdfParagraph
+    from tuiranfitgo.reports import Informe, cop, fecha, esc, E_PEQ, E_CELDA_B, GRIS_FONDO, ANCHO_UTIL
+
     compra = get_object_or_404(Compras, id_compra=compra_id)
-    detalles_compra = Detallecompra.objects.filter(id_compra=compra_id)
+    proveedor = compra.id_proveedor
+    detalles = Detallecompra.objects.filter(id_compra=compra_id).select_related('id_producto')
 
-    totalCompra = 0
-    detalles = []
+    referencia = f'N° {compra.id_compra:06d}' + ('  ·  ANULADA' if compra.estado == 0 else '')
+    informe = Informe('Comprobante de compra', fecha(compra.fechareg), referencia)
+    informe.espacio(2)
+    informe.ficha([('Proveedor', proveedor.nombre_proveedor), ('Documento / NIT', proveedor.numero_documento_nit),
+                   ('Contacto', f'{proveedor.telefono}  ·  {proveedor.correo}'), ('Fecha de compra', fecha(compra.fechareg))])
+    informe.seccion('Productos comprados')
 
-    for detalle in detalles_compra:
-        producto = detalle.id_producto.nombre_producto
-        precioUnitario = formatear_precios(detalle.precio_uni)
-        cantidad = detalle.cantidad
-        totalProducto = formatear_precios(detalle.precio_tot)
-        totalCompra += detalle.precio_tot
+    filas, subtotal = [], 0
+    for d in detalles:
+        filas.append([d.id_producto.nombre_producto, d.cantidad, cop(d.precio_uni), cop(d.precio_tot)])
+        subtotal += d.precio_tot
+    informe.tabla(['Producto', 'Cant.', 'Precio unitario', 'Total'], filas, [276, 50, 100, 106], 'LCRR')
+    informe.totales([('Productos', str(sum(d.cantidad for d in detalles)))], ('Total compra', cop(compra.totalCompra or subtotal)))
 
-        detalles.append([producto, precioUnitario, cantidad, totalProducto])
+    # Código QR de verificación
+    qr = generar_qr_code(f'TUIRANFIT|COMPRA|{compra.id_compra}|{round(compra.totalCompra)}|{compra.fechareg}')
+    buffer = BytesIO()
+    qr.save(buffer, 'PNG')
+    buffer.seek(0)
+    verificacion = PdfTable([[PdfImage(buffer, 64, 64),
+                              [PdfParagraph('<b>CÓDIGO DE VERIFICACIÓN</b>', E_CELDA_B),
+                               PdfParagraph(esc(f'Compra N° {compra.id_compra:06d} · {cop(compra.totalCompra)} · {fecha(compra.fechareg)}'), E_PEQ)]]],
+                            colWidths=[76, ANCHO_UTIL - 76])
+    verificacion.setStyle(PdfTableStyle([('BACKGROUND', (0, 0), (-1, -1), GRIS_FONDO), ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                                         ('LEFTPADDING', (0, 0), (-1, -1), 10), ('TOPPADDING', (0, 0), (-1, -1), 8),
+                                         ('BOTTOMPADDING', (0, 0), (-1, -1), 8)]))
+    informe.espacio(22)
+    informe.adjuntar(verificacion)
+    return informe.respuesta(f'comprobante_compra_{compra.id_compra:06d}.pdf')
 
-    totalCompraFormateado = formatear_precios(totalCompra)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=Informe_compra_{compra.id_proveedor.nombre_proveedor}_{compra.id_proveedor.numero_documento_nit}.pdf'
-
-    buffer = response
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
-
-    styles = getSampleStyleSheet()
-
-   
-    elements = []
-
-   
-    logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
-    logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
-    logo.drawHeight = 1.5 * inch
-    logo.drawWidth = 1.5 * inch
-    elements.append(logo)
-
-    elements.append(Spacer(1, 6))
-    elements.append(Paragraph('Informe de Compra', styles['Title']))
-    elements.append(Spacer(1, 6))
-
-    centered_style = ParagraphStyle(name='CenteredStyle', alignment=TA_CENTER)
-
-    elements.append(Paragraph(f'<b>Proveedor:</b> {compra.id_proveedor.nombre_proveedor}', centered_style))
-    elements.append(Paragraph(f'<b>Documento/NIT:</b> {compra.id_proveedor.numero_documento_nit}', centered_style))
-    elements.append(Paragraph(f'<b>Fecha de Registro:</b> {compra.fechareg}', centered_style))
-
-    elements.append(Spacer(1, 12))
-
-    data = [["Producto", "Precio Unitario", "Cantidad", "Total"]]
-    data.extend(detalles)
-    data.append(["", "", "", totalCompraFormateado])  
-
-    t = Table(data, colWidths=[180, 80, 60, 100])
-    t.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.grey)
-    ]))
-
-    elements.append(t)
-
-    doc.build(elements)
-    print(response)
-
-    return response
 
 @jwt_cookie_required
+@module_access_required('compras')
 def generar_informe_pdf(request):
-    if request.method == 'POST':
-        fecha_inicio = request.POST.get('fecha_inicio')
-        fecha_fin = request.POST.get('fecha_fin')
-        
-        compras = Compras.objects.filter(
-            fechareg__range=(fecha_inicio, fecha_fin),
-            estado=1
-        )
+    from django.db.models import Count, Sum
+    from django.http import HttpResponse
+    from tuiranfitgo.reports import Informe, cop, fecha, rango_de_fechas
 
-        totalCompra = 0
-        detalles = []
+    if request.method != 'POST':
+        return HttpResponse('Solicitud no válida.', status=405)
+    try:
+        inicio, fin = rango_de_fechas(request.POST)
+    except ValueError as e:
+        return HttpResponse(str(e), status=400)
 
-        for compra in compras:
-            proveedor = compra.id_proveedor.nombre_proveedor
-            documento_nit = compra.id_proveedor.numero_documento_nit
-            fecha_registro = compra.fechareg
-            total_compra = formatear_precios(compra.totalCompra)
-            detalles.append([proveedor, documento_nit, fecha_registro, total_compra])
-            totalCompra += compra.totalCompra
+    compras = list(Compras.objects.filter(fechareg__range=(inicio, fin), estado=1)
+                   .select_related('id_proveedor').order_by('fechareg', 'id_compra'))
+    informe = Informe('Informe de compras', f'Del {fecha(inicio)} al {fecha(fin)}', 'Compras registradas')
+    nombre = f'informe_compras_{inicio}_{fin}.pdf'
+    if not compras:
+        informe.aviso('No se encontraron compras en el período seleccionado.')
+        return informe.respuesta(nombre)
 
-        totalCompraFormateado = formatear_precios(totalCompra)
+    total = sum(c.totalCompra for c in compras)
+    proveedores = {c.id_proveedor_id for c in compras}
+    informe.espacio(2)
+    informe.tarjetas([('Total comprado', cop(total)), ('N° de compras', str(len(compras))),
+                      ('Proveedores', str(len(proveedores))), ('Compra promedio', cop(total / len(compras)))])
 
-        response = HttpResponse(content_type='application/force-download')
-        response['Content-Disposition'] = f'attachment; filename=informe_compras.pdf'
+    por_proveedor = (Compras.objects.filter(id_compra__in=[c.id_compra for c in compras])
+                     .values('id_proveedor__nombre_proveedor')
+                     .annotate(n=Count('id_compra'), importe=Sum('totalCompra')).order_by('-importe')[:5])
+    informe.seccion('Principales proveedores')
+    informe.tabla(['#', 'Proveedor', 'Compras', 'Importe'],
+                  [[i, p['id_proveedor__nombre_proveedor'], p['n'], cop(p['importe'])] for i, p in enumerate(por_proveedor, 1)],
+                  [30, 292, 80, 130], 'CLCR')
 
-        buffer = response
-        doc = SimpleDocTemplate(buffer, pagesize=letter)
-        styles = getSampleStyleSheet()
-
-        elements = []
-        logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/img/GIcon.png')
-        logo = Image(logo_path, width=1.5 * inch, height=1.5 * inch)
-        logo.drawHeight = 1.5 * inch
-        logo.drawWidth = 1.5 * inch
-        elements.append(logo)
-
-        elements.append(Spacer(1, 6))
-        elements.append(Paragraph('Informe de Compras', styles['Title']))
-        elements.append(Spacer(1, 6))
-        
-        periodo_style = ParagraphStyle(name='PeriodoStyle', alignment=TA_CENTER, textColor=colors.red)
-        periodo_paragraph = Paragraph(f'Período de tiempo: {fecha_inicio} - {fecha_fin}', periodo_style)
-        
-        elements.append(periodo_paragraph)
-        elements.append(Spacer(1, 12))
-
-        if compras:
-            data = [["Proveedor", "Documento/NIT", "Fecha de Registro", "Total"]]
-            data.extend(detalles)
-            data.append(["", "", "", totalCompraFormateado])
-
-            t = Table(data, colWidths=[180, 100, 100, 100])
-            t.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.grey)
-            ]))
-
-            elements.append(t)
-        else:
-       
-            mensaje_style = ParagraphStyle(
-                name='MensajeStyle',
-                alignment=TA_CENTER,
-                textColor=colors.red
-            )
-            mensaje = Paragraph("No se encontraron compras en el período de tiempo.", mensaje_style)
-            elements.append(mensaje)
-
-        try:
-            doc.build(elements)
-            print("PDF generado con éxito")
-            print(response)
-        except Exception as e:
-            print(f"Error al generar el PDF: {str(e)}")
-            return HttpResponse("No se pudo generar el PDF")
-
-        return response
-
-    return HttpResponse("No se ha enviado una solicitud POST")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    informe.seccion('Detalle de compras')
+    filas = [[f'{c.id_compra:06d}', fecha(c.fechareg), c.id_proveedor.nombre_proveedor,
+              c.id_proveedor.numero_documento_nit, cop(c.totalCompra)] for c in compras]
+    informe.tabla(['N°', 'Fecha', 'Proveedor', 'Documento / NIT', 'Total'], filas, [60, 70, 190, 100, 112], 'LLLLR',
+                  total=['', '', '', 'TOTAL', cop(total)])
+    return informe.respuesta(nombre)

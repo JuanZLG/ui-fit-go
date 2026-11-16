@@ -180,3 +180,17 @@ def test_cambiar_estado_de_producto_exige_permiso(cliente_sin_permisos, anonimo,
     assert anonimo.get(url, args, HTTP_X_REQUESTED_WITH='XMLHttpRequest').status_code == 302
     assert cliente_sin_permisos.get(url, args, HTTP_X_REQUESTED_WITH='XMLHttpRequest').status_code == 302
     p.refresh_from_db(); assert p.estado == 1
+
+
+# ------------------------------------------------------------------ informes PDF de compras
+def test_comprobante_e_informe_de_compras(admin_client, catalogo, proveedor):
+    p = catalogo(cantidad=1)
+    comprar(admin_client, {str(p.id_producto): item(4, 100)}, total=400)
+    compra = Compras.objects.get()
+    r = admin_client.get(reverse('generar_factura_pdf', args=[compra.id_compra]))
+    assert r.status_code == 200 and r.content.startswith(b'%PDF') and 'comprobante_compra_' in r['Content-Disposition']
+    hoy = str(compra.fechareg)
+    r = admin_client.post(reverse('generar_informe_pdf'), {'fecha_inicio': hoy, 'fecha_fin': hoy})
+    assert r.status_code == 200 and r.content.startswith(b'%PDF')
+    assert admin_client.post(reverse('generar_informe_pdf'), {'fecha_inicio': hoy}).status_code == 400
+    assert admin_client.post(reverse('generar_informe_pdf'), {'fecha_inicio': '2000-01-01', 'fecha_fin': '2000-01-02'}).status_code == 200
